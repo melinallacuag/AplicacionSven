@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:gravity="center_vertical"
+    android:background="@drawable/header"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:layout_width="120sp"
+        android:layout_height="120sp"
+        android:layout_marginStart="100sp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="2sp"
+        android:src="@drawable/logoprincipal"
+        android:layout_gravity="center"
+        app:shapeAppearanceOverlay="@style/roudperfil"
+        android:layout_marginLeft="100sp" />
+</LinearLayout>

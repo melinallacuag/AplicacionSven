@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- TODO: Color de los Campos Input -->
+    <color name="colorPrimary">#001E8A</color>
+
+    <!-- TODO: Color de los Botones -->
+    <color name="colorPrimaryBtn">#001E8A</color>
+    <color name="colorSecondary">#6c757d</color>
+    <color name="colorSuccess">#198754</color>
+    <color name="colorDanger">#dc3545</color>
+    <color name="colorWarning">#ffc107</color>
+    <color name="colorInfo">#0dcaf0</color>
+    <color name="colorLigth">#f8f9fa</color>
+    <color name="colorDark">#212529</color>
+
+    <!-- TODO: Color de los Textos -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#001E8A</color>
+    <color name="black">#FF000000</color>
+    <color name="gris">#474747</color>
+    <color name="red_200">#E6E53D3D</color>
+    <color name="purple_200">#E69050F1</color>
+    <color name="skyclue_500">#D92B92EC</color>
+    <color name="teal_200">#D96ED6C3</color>
+
+    <!-- TODO: Color de los Menus -->
+    <color name="colorMenu">#001E8A</color>
+
+
+</resources>

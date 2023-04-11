@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/grifos"
+    tools:context=".Login">
+    <ImageButton
+        android:id="@+id/btnconfiguracion"
+        android:layout_width="20sp"
+        android:layout_height="20sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginEnd="10sp"
+        android:src="@drawable/icon_print"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginRight="10sp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:padding="25dp"
+        android:orientation="vertical"
+        android:background="@drawable/cardlogin"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/logoGrifo"
+            android:layout_width="match_parent"
+            android:layout_height="100sp"
+            app:srcCompat="@drawable/logo_app" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:letterSpacing="0.05"
+            android:text="@string/titulo_iniciarsesion"
+            android:fontFamily="@font/nunito_black"
+            android:textAlignment="center"
+            android:textColor="@color/blue"
+            android:textSize="18sp"
+            android:layout_marginBottom="10sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textusuario"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingresar Usuario"
+            app:boxBackgroundMode="outline"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:endIconMode="clear_text"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            android:layout_marginBottom="10sp"
+            app:startIconDrawable="@drawable/icon_user"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/usuario"
+                android:fontFamily="@font/nunito_semibold"
+                android:textSize="12sp"
+                android:maxLength="10"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textcontraseña"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingresar Contraseña"
+            app:boxBackgroundMode="outline"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:endIconMode="password_toggle"
+            android:layout_marginBottom="10sp"
+            app:counterEnabled="true"
+            app:counterMaxLength="6"
+            app:startIconDrawable="@drawable/icon_password"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contraseña"
+                android:fontFamily="@font/nunito_semibold"
+                android:textSize="12sp"
+                android:inputType="numberPassword"
+                android:maxLength="6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btnlogin"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:letterSpacing="0.05"
+            android:text="@string/btn_ingresarlogin"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:backgroundTint="@color/colorPrimaryBtn"
+            android:fontFamily="@font/nunito_black"
+            app:cornerRadius="10sp"/>
+
+        <TextView
+            android:id="@+id/imei"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:textAllCaps="true"
+            android:textSize="15sp"
+            android:textColor="#1E242B"
+            android:textAlignment="center"
+            android:fontFamily="@font/nunito_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:textAllCaps="true"
+            android:textSize="10sp"
+            android:text=" Version: 1.0"
+            android:textColor="#1E242B"
+            android:textAlignment="center"
+            android:fontFamily="@font/nunito_black" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn = "navigation_view">
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_dasboard"
+            android:icon="@drawable/icon_dasboard"
+            android:title="@string/menu_principal"/>
+        <item
+            android:id="@+id/nav_venta"
+            android:icon="@drawable/icon_salefuel"
+            android:title="@string/menu_ventas"/>
+        <item
+            android:id="@+id/nav_cierrex"
+            android:icon="@drawable/icon_cierrex"
+            android:title="@string/menu_cierrex"/>
+        <item
+            android:id="@+id/nav_cambioturno"
+            android:icon="@drawable/icon_cambioturno"
+            android:title="@string/menu_cambioturno"/>
+        <item
+            android:id="@+id/nav_iniciodia"
+            android:icon="@drawable/icon_iniciodia"
+            android:title="@string/menu_iniciodia"/>
+     <!--   <item
+            android:id="@+id/nav_consultacomprobante"
+            android:icon="@drawable/icon_consultacomprobante"
+            android:title="Consultar Comprobante"/>-->
+        <item
+            android:id="@+id/nav_salir"
+            android:icon="@drawable/ic_salida"
+            android:title="@string/salir"/>
+
+    </group>
+</menu>

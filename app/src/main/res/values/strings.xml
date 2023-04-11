@@ -1,0 +1,72 @@
+<resources>
+    <!-- TODO: Nombre de la APP -->
+    <string name="app_name">APPSVEN</string>
+    <string name="titulo_iniciarsesion">INICIAR SESIÓN</string>
+
+    <!-- TODO: Deslizar banner -->
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Navigation Drawer</string>
+
+    <!-- TODO: Menus -->
+    <string name="menu_principal">MENÚ PRINCIPAL</string>
+    <string name="menu_ventas">VENTAS</string>
+    <string name="menu_cierrex">CIERRE X</string>
+    <string name="menu_cambioturno">CAMBIO DE TURNO</string>
+    <string name="menu_iniciodia">INICIO DE DÍA</string>
+    <string name="salir">SALIR</string>
+
+    <!-- TODO: Botones de acciones -->
+    <string name="btn_cancelar">CANCELAR</string>
+    <string name="btn_agregar">AGREGAR</string>
+    <string name="btn_si">SI</string>
+    <string name="btn_no">NO</string>
+    <string name="btn_boletasimple">BOLETA SIMPLE</string>
+    <string name="btn_buscar">BUSCAR</string>
+    <string name="btn_reniec">RENIEC</string>
+    <string name="btn_sunat">SUNAT</string>
+    <string name="btn_imprimir">IMPRIMIR</string>
+    <string name="btn_stop">STOP</string>
+    <string name="btn_ingresarlogin">INGRESAR</string>
+
+    <!-- TODO: Botones y Modal -->
+    <string name="ope_libre">LIBRE</string>
+    <string name="ope_soles">SOLES</string>
+    <string name="ope_galones">GALONES</string>
+    <string name="ope_boleta">BOLETA</string>
+    <string name="ope_factura">FACTURA</string>
+    <string name="ope_NDespacho">N/DPCHO.</string>
+    <string name="ope_NDespachoLargo">NOTA DE DESPACHO</string>
+    <string name="ope_serafin">SERAFÍN</string>
+    <string name="ope_puntos">PUNTOS</string>
+    <string name="ope_canje">CANJE</string>
+
+    <!-- TODO: Datos de Transacciones -->
+    <string name="detalleV_Cara">CARA</string>
+    <string name="detalleV_TPago">T.PAGO</string>
+    <string name="detalleV_Impuesto">IMPUESTO</string>
+    <string name="detalleV_Placa">PLACA</string>
+    <string name="detalleV_TPuntos">T.PUNTOS</string>
+    <string name="detalleV_ClienteID">CLIENTE ID</string>
+    <string name="detalleV_RUC">RUC</string>
+    <string name="detalleV_RazSocial">RAZÓN SOCIAL</string>
+    <string name="detalleV_Direccion">DIRECCIÓN</string>
+    <string name="detalleV_TarjetaND">TARJ. NDESPACHO</string>
+    <string name="detalleV_TarjCredito">TARJ. CREDITO</string>
+    <string name="detalleV_NrpOperacion">NRO. OPE.</string>
+    <string name="detalleV_Observacion">OBSERVACIÓN</string>
+    <string name="detalleV_Kilometraje">KILOMETRAJE</string>
+    <string name="detalleV_Efectivo">EFECTIVO</string>
+    <string name="detalleV_SaldoCredito">SALDO CREDITO</string>
+    <string name="detalleV_PtosDisponibles">PTOS. DISPONIBLES</string>
+
+    <!-- TODO: Operaciones que realiza la Venta -->
+    <string name="ope_cara">CARA</string>
+    <string name="op_manguera">MANGUERA</string>
+    <string name="op_modalida">MODALIDAD</string>
+    <string name="op_operacion">OPERACIÓN</string>
+    <string name="op_transacciones">TRANSACCIONES</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Fragment.PuntosFragment">
+
+    <LinearLayout
+        android:layout_width="380sp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="30dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="30dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:text="PUNTOS"
+                android:textColor="#071C65"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/inputdni"
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:background="@drawable/input_border"
+                android:hint="Ingresar N° Tarjeta"
+                android:inputType="number"
+                android:paddingLeft="20sp"
+                android:textColor="#123456"
+                android:textColorHint="#404143"
+                android:textSize="14sp" />
+
+            <Button
+                android:id="@+id/btncanjeconsulta"
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:layout_gravity="right"
+                android:layout_marginStart="10sp"
+                android:layout_weight="1"
+                android:text="Consultar"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btncancelarpuntos"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10sp"
+            android:backgroundTint="#D51A30"
+            android:text="Cancelar"
+            android:textAllCaps="true"
+            android:textColor="#fff"
+            android:textSize="15sp"
+            app:cornerRadius="10sp" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayoutCompat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="20sp"
+        android:paddingTop="5sp"
+        android:paddingEnd="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/automatiStop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/colorSecondary"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/btn_stop"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:cornerRadius="10sp" />
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_black"
+                android:text="@string/ope_cara"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                />
+            <TextView
+                android:id="@+id/terminalID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_black"
+                android:textAlignment="textEnd"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:gravity="end" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/op_manguera"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerlado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/op_modalida"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnlibre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_libre"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnsoles"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_soles"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btngalones"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_galones"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/op_operacion"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnboleta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_boleta"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnfactura"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_factura"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnnotadespacho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_NDespacho"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnserafin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_serafin"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnpuntos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_puntos"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnimprimir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorPrimaryBtn"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_canje"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/op_transacciones"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardtransaccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorPrimaryBtn"
+            app:cardCornerRadius="10dp">
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="50sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Cara"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="50sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_TPago"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="60sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Impuesto"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="60sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Placa"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="60sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_TPuntos"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_ClienteID"
+                        android:textColor="@color/white"
+                        android:textSize="8sp"/>
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_RUC"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="150sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_RazSocial"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Direccion"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="100sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_TarjetaND"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="90sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_TarjCredito"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_NrpOperacion"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Observacion"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Kilometraje"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="70sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_Efectivo"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_SaldoCredito"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="@string/detalleV_PtosDisponibles"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+                </LinearLayout>
+            </HorizontalScrollView>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerdetalleventa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+  <!--      <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/input_border"
+                    android:backgroundTint="#fff"
+                    app:cardCornerRadius="10dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:columnCount="6"
+                        android:elevation="2sp"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/textcara"
+                            android:layout_width="34dp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="2sp"
+                            android:layout_marginRight="2sp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:gravity="center"
+                            android:textColor="#071C65"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtoperacion"
+                            android:layout_width="35sp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2sp"
+                            android:layout_marginRight="2sp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:gravity="center"
+                            android:textColor="#071C65"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textmanguera"
+                            android:layout_width="45sp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2sp"
+                            android:layout_marginRight="2sp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:gravity="center"
+                            android:textColor="#071C65"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/idcliente"
+                            android:layout_width="70sp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2sp"
+                            android:layout_marginRight="2sp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:gravity="center"
+                            android:text="11111111"
+                            android:textColor="#071C65"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtrazonsocial"
+                            android:layout_width="100sp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2sp"
+                            android:layout_marginRight="2sp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:gravity="center"
+                            android:text="CLIENTE VARIOS"
+                            android:textColor="#071C65"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtimporte"
+                            android:layout_width="40sp"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="2sp"
+                            android:layout_marginRight="2sp"
+                            android:fontFamily="@font/nunito_extrabold"
+                            android:gravity="center"
+                            android:textColor="#071C65"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </ScrollView>-->
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

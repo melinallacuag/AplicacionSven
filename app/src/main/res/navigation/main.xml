@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    app:startDestination="@id/ventaFragment">
+    <fragment
+        android:id="@+id/nav_dasboard"
+        android:name="com.anggastudio.sample.Fragment.DasboardFragment"
+        android:label="fragment_dasboard"
+        tools:layout="@layout/fragment_dasboard" />
+
+    <fragment
+        android:id="@+id/nav_cierrex"
+        android:name="com.anggastudio.sample.Fragment.CierreXFragment"
+        android:label="fragment_cierre_x"
+        tools:layout="@layout/fragment_cierre_x" />
+    <fragment
+        android:id="@+id/ventaFragment"
+        android:name="com.anggastudio.sample.Fragment.VentaFragment"
+        android:label="VentaFragment" />
+</navigation>
