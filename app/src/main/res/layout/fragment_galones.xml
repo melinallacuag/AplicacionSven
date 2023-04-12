@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragment.GalonesFragment">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="380sp"
@@ -14,6 +13,8 @@
         android:paddingBottom="10sp"
         android:paddingStart="20sp"
         android:paddingEnd="20sp"
+        android:background="@drawable/cardmodal"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -36,7 +37,7 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/alertgalones"
+                android:id="@+id/alertGalones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Cantidad de Galones"
@@ -47,7 +48,7 @@
                 app:endIconMode="clear_text"
                 app:startIconDrawable="@drawable/icon_galones">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputmontogalones"
+                    android:id="@+id/inputCantidadGalones"
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="14sp"
                     android:layout_width="match_parent"
@@ -62,7 +63,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btncancelargalones"
+                android:id="@+id/btnCancelarGalones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -77,7 +78,7 @@
                 app:cornerRadius="10sp" />
 
             <Button
-                android:id="@+id/btnagregargalones"
+                android:id="@+id/btnAgregarGalones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

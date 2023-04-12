@@ -11,23 +11,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.anggastudio.sample.R;
-import com.anggastudio.sample.WebApiSVEN.Models.Tipotarjeta;
+import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 
 import java.util.ArrayList;
 
-public class TipoTarjetaAdapter  extends ArrayAdapter<Tipotarjeta> {
+public class TipoPagoAdapter extends ArrayAdapter<TipoPago> {
+
     private Context context;
-    private ArrayList<Tipotarjeta> tipotarjeta;
+    private ArrayList<TipoPago> card;
     public Resources res;
-    Tipotarjeta currRowVal = null;
+    TipoPago currRowVal = null;
     LayoutInflater inflater;
 
-    public TipoTarjetaAdapter(@NonNull Context context, int textViewResourceId,ArrayList<Tipotarjeta> tipotarjeta,Resources resLocal) {
-        super(context, textViewResourceId, tipotarjeta);
+
+    public TipoPagoAdapter(@NonNull Context context, int textViewResourceId, ArrayList<TipoPago> card, Resources resLocal) {
+        super(context, textViewResourceId, card);
         this.context = context;
-        this.tipotarjeta = tipotarjeta;
-        this.res = resLocal;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.card    = card;
+        this.res     = resLocal;
+        inflater      = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
     @Override
@@ -41,19 +43,20 @@ public class TipoTarjetaAdapter  extends ArrayAdapter<Tipotarjeta> {
     }
     @Override
     public int getCount() {
-        return tipotarjeta.size();
+        return card.size();
     }
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
 
         View row = inflater.inflate(R.layout.item, parent, false);
         currRowVal = null;
-        currRowVal = (Tipotarjeta) tipotarjeta.get(position);
+        currRowVal = (TipoPago) card.get(position);
         TextView label = (TextView) row.findViewById(R.id.spinnerItem);
 
-        label.setText(currRowVal.getNombreTarjeta());
+        label.setText(currRowVal.getNames());
 
         return row;
     }
+
 
 }

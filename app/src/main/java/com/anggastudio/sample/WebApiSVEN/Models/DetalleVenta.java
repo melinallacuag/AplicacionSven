@@ -20,24 +20,12 @@ public class DetalleVenta {
     private Double mtoSaldoCredito;
     private Double ptosDisponible;
 
-    public DetalleVenta(String cara, String tipoPago, Double impuesto, String nroPlaca, String tarjetaPuntos, String clienteID, String clienteRUC, String clienteRS, String clienteDR, String tarjetaND, String tarjetaCredito, String operacionREF, String observacion, String kilometraje, Double montoSoles, Double mtoSaldoCredito, Double ptosDisponible) {
+    public DetalleVenta(String cara, String tipoPago, Double impuesto, String nroPlaca, String tarjetaPuntos) {
         this.cara = cara;
         this.tipoPago = tipoPago;
         this.impuesto = impuesto;
         this.nroPlaca = nroPlaca;
         this.tarjetaPuntos = tarjetaPuntos;
-        this.clienteID = clienteID;
-        this.clienteRUC = clienteRUC;
-        this.clienteRS = clienteRS;
-        this.clienteDR = clienteDR;
-        this.tarjetaND = tarjetaND;
-        this.tarjetaCredito = tarjetaCredito;
-        this.operacionREF = operacionREF;
-        this.observacion = observacion;
-        this.kilometraje = kilometraje;
-        this.montoSoles = montoSoles;
-        this.mtoSaldoCredito = mtoSaldoCredito;
-        this.ptosDisponible = ptosDisponible;
     }
 
     public String getCara() {

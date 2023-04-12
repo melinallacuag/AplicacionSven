@@ -16,7 +16,7 @@
             android:layout_gravity="center"
             android:orientation="horizontal">
             <TextView
-                android:id="@+id/textID"
+                android:id="@+id/cliente_ID"
                 android:layout_width="60sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
@@ -25,7 +25,7 @@
                 android:textSize="7sp"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/textRUC"
+                android:id="@+id/cliente_RUC"
                 android:layout_width="60sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
@@ -34,7 +34,7 @@
                 android:textSize="7sp"
                 android:textStyle="bold"/>
             <TextView
-                android:id="@+id/textRazoSocial"
+                android:id="@+id/cliente_RZ"
                 android:layout_width="150sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
@@ -43,7 +43,7 @@
                 android:textSize="7sp"
                 android:textStyle="bold"/>
             <TextView
-                android:id="@+id/textDireccon"
+                android:id="@+id/cliente_DR"
                 android:layout_width="80sp"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/nunito_extrabold"

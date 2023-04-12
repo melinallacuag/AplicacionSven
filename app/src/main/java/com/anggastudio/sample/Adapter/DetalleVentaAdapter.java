@@ -35,8 +35,6 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        DetalleVenta detalleVenta = detalleVentaList.get(position);
-
         holder.textLado.setText(detalleVentaList.get(position).getCara());
         holder.textTpago.setText(detalleVentaList.get(position).getTipoPago());
         holder.textImpuesto.setText(String.valueOf(detalleVentaList.get(position).getImpuesto()));

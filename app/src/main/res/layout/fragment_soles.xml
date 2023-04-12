@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragment.SolesFragment">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="380sp"
@@ -14,6 +13,8 @@
         android:paddingBottom="10sp"
         android:paddingStart="20sp"
         android:paddingEnd="20sp"
+        android:background="@drawable/cardmodal"
+        android:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,7 +31,7 @@
                 android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertsoles"
+            android:id="@+id/alertSoles"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Monto Soles"
@@ -40,13 +41,15 @@
             app:boxCornerRadiusTopEnd="15dp"
             app:endIconMode="clear_text"
             app:startIconDrawable="@drawable/icon_money">
+
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputmontosoles"
+                android:id="@+id/inputMontoSoles"
                 android:fontFamily="@font/nunito_semibold"
                 android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number" />
+
         </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
@@ -55,7 +58,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btncancelarsoles"
+                android:id="@+id/btnCancelarSoles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -69,7 +72,7 @@
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
             <Button
-                android:id="@+id/btnagregarsoles"
+                android:id="@+id/btnAgregarLibre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

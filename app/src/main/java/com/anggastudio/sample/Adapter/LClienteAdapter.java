@@ -11,29 +11,25 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.R;
-import com.anggastudio.sample.WebApiSVEN.Models.Cliente;
-import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
+import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ClienteAdapter  extends RecyclerView.Adapter<ClienteAdapter.ViewHolder>{
+public class LClienteAdapter extends RecyclerView.Adapter<LClienteAdapter.ViewHolder>{
 
-    public List<Cliente> clienteList;
+    public List<LClientes> clienteList;
     private Context context;
-
-    ArrayList<Cliente> listaOriginal;
-
-
+    ArrayList<LClientes> listaOriginal;
 
     public interface  OnItemClickListener{
-        void onItemClick(Cliente item);
+        void onItemClick(LClientes item);
     }
 
-    final ClienteAdapter.OnItemClickListener listener;
+    final LClienteAdapter.OnItemClickListener listener;
 
-    public ClienteAdapter(List<Cliente> clienteList, Context context,ClienteAdapter.OnItemClickListener listener){
+    public LClienteAdapter(List<LClientes> clienteList, Context context, LClienteAdapter.OnItemClickListener listener){
         this.clienteList = clienteList;
         this.context    = context;
         this.listener    = listener;
@@ -46,16 +42,16 @@ public class ClienteAdapter  extends RecyclerView.Adapter<ClienteAdapter.ViewHol
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardcliente,parent,false);
-        return new ClienteAdapter.ViewHolder(view);
+        return new LClienteAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ClienteAdapter.ViewHolder holder, int position) {
-        Cliente cliente = clienteList.get(position);
-        holder.textID.setText(clienteList.get(position).getClienteID());
-        holder.textRUC.setText(clienteList.get(position).getClienteRUC());
-        holder.textRazoSocial.setText(clienteList.get(position).getClienteRZ());
-        holder.textDireccon.setText(clienteList.get(position).getClienteDR());
+    public void onBindViewHolder(@NonNull LClienteAdapter.ViewHolder holder, int position) {
+        LClientes cliente = clienteList.get(position);
+        holder.cliente_ID.setText(clienteList.get(position).getClienteID());
+        holder.cliente_RUC.setText(clienteList.get(position).getClienteRUC());
+        holder.cliente_RZ.setText(clienteList.get(position).getClienteRZ());
+        holder.cliente_DR.setText(clienteList.get(position).getClienteDR());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,6 +64,7 @@ public class ClienteAdapter  extends RecyclerView.Adapter<ClienteAdapter.ViewHol
     public int getItemCount() {
         return clienteList.size();
     }
+
     public void filtrado(final String txtBuscar) {
 
         int longitud = txtBuscar.length();
@@ -76,13 +73,13 @@ public class ClienteAdapter  extends RecyclerView.Adapter<ClienteAdapter.ViewHol
             clienteList.addAll(listaOriginal);
         } else {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                List<Cliente> collecion = clienteList.stream()
+                List<LClientes> collecion = clienteList.stream()
                         .filter(i -> i.getClienteRZ().toLowerCase().contains(txtBuscar.toLowerCase()))
                         .collect(Collectors.toList());
                 clienteList.clear();
                 clienteList.addAll(collecion);
             } else {
-                for (Cliente c : listaOriginal) {
+                for (LClientes c : listaOriginal) {
                     if (c.getClienteRZ().toLowerCase().contains(txtBuscar.toLowerCase())) {
                         clienteList.add(c);
                     }
@@ -94,18 +91,18 @@ public class ClienteAdapter  extends RecyclerView.Adapter<ClienteAdapter.ViewHol
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public CardView cardView;
-        private TextView textID;
-        private TextView textRUC;
-        private TextView textRazoSocial;
-        private TextView textDireccon;
+        private TextView cliente_ID;
+        private TextView cliente_RUC;
+        private TextView cliente_RZ;
+        private TextView cliente_DR;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
             cardView        = itemView.findViewById(R.id.cardCliente);
-            textID          = itemView.findViewById(R.id.textID);
-            textRUC         = itemView.findViewById(R.id.textRUC);
-            textRazoSocial  = itemView.findViewById(R.id.textRazoSocial);
-            textDireccon    = itemView.findViewById(R.id.textDireccon);
+            cliente_ID      = itemView.findViewById(R.id.cliente_ID);
+            cliente_RUC     = itemView.findViewById(R.id.cliente_RUC);
+            cliente_RZ      = itemView.findViewById(R.id.cliente_RZ);
+            cliente_DR     = itemView.findViewById(R.id.cliente_DR);
         }
     }
 }

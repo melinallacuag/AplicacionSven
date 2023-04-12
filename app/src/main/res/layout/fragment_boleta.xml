@@ -55,13 +55,12 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_semibold"
                         android:inputType="textCapCharacters"
-                        android:maxLength="7"
                         android:text="000-0000"
                         android:textSize="12sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/btnplaca"
+                    android:id="@+id/buscarPlacaBoleta"
                     android:layout_width="200sp"
                     android:layout_height="wrap_content"
                     android:layout_margin="5sp"
@@ -106,7 +105,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
-                    android:id="@+id/btnrenic"
+                    android:id="@+id/buscarDNIBoleta"
                     android:layout_width="200sp"
                     android:layout_height="wrap_content"
 
@@ -217,7 +216,7 @@
                 android:textStyle="bold" />
 
             <RadioGroup
-                android:id="@+id/radioformapago"
+                android:id="@+id/radioFormaPago"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -255,7 +254,7 @@
             </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textdropStatus"
+                android:id="@+id/inputSelectTPago"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -265,7 +264,7 @@
                 android:visibility="gone">
 
                 <Spinner
-                    android:id="@+id/dropStatus"
+                    android:id="@+id/SpinnerTPago"
                     android:layout_width="match_parent"
                     android:layout_height="50sp"
                     android:layout_gravity="center"
@@ -274,7 +273,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
-                android:id="@+id/modopagoefectivo"
+                android:id="@+id/textMensajePEfectivo"
                 android:layout_width="match_parent"
                 android:layout_height="50sp"
                 android:layout_gravity="center"
@@ -340,7 +339,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btngenerarcliente"
+                    android:id="@+id/btnGenerarBoleta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -355,7 +354,7 @@
                     app:cornerRadius="10sp" />
 
                 <Button
-                    android:id="@+id/btncancelar"
+                    android:id="@+id/btnCancelarBoleta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -370,7 +369,7 @@
                     app:cornerRadius="10sp" />
 
                 <Button
-                    android:id="@+id/btnagregarboleta"
+                    android:id="@+id/btnAgregarBoleta"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

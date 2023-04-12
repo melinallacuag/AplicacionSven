@@ -9,15 +9,16 @@
 
     <!-- TODO: Menus -->
     <string name="menu_principal">MENÚ PRINCIPAL</string>
-    <string name="menu_ventas">VENTAS</string>
-    <string name="menu_cierrex">CIERRE X</string>
-    <string name="menu_cambioturno">CAMBIO DE TURNO</string>
-    <string name="menu_iniciodia">INICIO DE DÍA</string>
-    <string name="salir">SALIR</string>
+    <string name="menu_ventas">Ventas</string>
+    <string name="menu_cierrex">Cierre X</string>
+    <string name="menu_cambioturno">Cambio de Turno</string>
+    <string name="menu_iniciodia">Inicio de Día</string>
+    <string name="salir">Salir</string>
 
     <!-- TODO: Botones de acciones -->
-    <string name="btn_cancelar">CANCELAR</string>
-    <string name="btn_agregar">AGREGAR</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_agregar">Agregar</string>
+    <string name="btn_aceptar">Aceptar</string>
     <string name="btn_si">SI</string>
     <string name="btn_no">NO</string>
     <string name="btn_boletasimple">BOLETA SIMPLE</string>
@@ -29,9 +30,9 @@
     <string name="btn_ingresarlogin">INGRESAR</string>
 
     <!-- TODO: Botones y Modal -->
-    <string name="ope_libre">LIBRE</string>
-    <string name="ope_soles">SOLES</string>
-    <string name="ope_galones">GALONES</string>
+    <string name="ope_libre">Libre</string>
+    <string name="ope_soles">Soles</string>
+    <string name="ope_galones">Galones</string>
     <string name="ope_boleta">BOLETA</string>
     <string name="ope_factura">FACTURA</string>
     <string name="ope_NDespacho">N/DPCHO.</string>

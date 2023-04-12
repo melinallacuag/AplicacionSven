@@ -9,21 +9,43 @@
     android:paddingTop="5sp"
     android:paddingEnd="20sp">
 
-        <Button
-            android:id="@+id/automatiStop"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:backgroundTint="@color/colorSecondary"
-            android:fontFamily="@font/nunito_black"
-            android:text="@string/btn_stop"
-            android:textColor="@color/white"
-            android:textSize="10sp"
-            app:cornerRadius="10sp" />
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnAutomatico"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/colorSecondary"
+                android:fontFamily="@font/nunito_black"
+                android:text="@string/btn_stop"
+                android:layout_weight="1"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnListadoComprobante"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="0"
+                android:backgroundTint="@color/colorSuccess"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="Listado"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+        </LinearLayout>
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -31,21 +53,18 @@
                 android:text="@string/ope_cara"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_weight="1"
-                />
+                android:layout_weight="1" />
+
             <TextView
-                android:id="@+id/terminalID"
+                android:id="@+id/datos_terminal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_black"
                 android:textAlignment="textEnd"
                 android:textColor="@color/black"
                 android:textSize="15sp"
-                android:textStyle="bold"
                 android:layout_weight="1"
                 android:gravity="end" />
-
 
         </LinearLayout>
 
@@ -84,56 +103,58 @@
             android:fontFamily="@font/nunito_black"
             android:text="@string/op_modalida"
             android:textColor="@color/black"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="15sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btnlibre"
+                android:id="@+id/btnLibre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimaryBtn"
+                android:backgroundTint="@color/colorNer"
                 android:fontFamily="@font/nunito_black"
                 android:gravity="center"
                 android:text="@string/ope_libre"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="12sp"
+                android:textAllCaps="false"
                 app:cornerRadius="10sp" />
 
             <Button
-                android:id="@+id/btnsoles"
+                android:id="@+id/btnSoles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimaryBtn"
+                android:backgroundTint="@color/colorNer"
                 android:fontFamily="@font/nunito_black"
                 android:gravity="center"
                 android:text="@string/ope_soles"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="12sp"
+                android:textAllCaps="false"
                 app:cornerRadius="10sp" />
 
             <Button
-                android:id="@+id/btngalones"
+                android:id="@+id/btnGalones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimaryBtn"
+                android:backgroundTint="@color/colorNer"
                 android:fontFamily="@font/nunito_black"
                 android:gravity="center"
                 android:text="@string/ope_galones"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textSize="10sp"
+                android:textSize="12sp"
+                android:textAllCaps="false"
                 app:cornerRadius="10sp" />
         </LinearLayout>
 
@@ -151,7 +172,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btnboleta"
+                android:id="@+id/btnBoleta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
@@ -166,7 +187,7 @@
                 app:cornerRadius="10sp" />
 
             <Button
-                android:id="@+id/btnfactura"
+                android:id="@+id/btnFactura"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
@@ -201,7 +222,7 @@
             android:layout_height="wrap_content">
 
             <Button
-                android:id="@+id/btnserafin"
+                android:id="@+id/btnSerafin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
@@ -435,7 +456,7 @@
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerdetalleventa"
+                android:id="@+id/recyclerDetalleVenta"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

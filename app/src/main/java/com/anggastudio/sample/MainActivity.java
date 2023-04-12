@@ -224,13 +224,7 @@ public class MainActivity extends AppCompatActivity {
         }, this::showToast);
     }
 
-    private void printImagePhoto() {
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.rose);
-        Printama.with(this).connect(printama -> {
-            printama.printImage(bitmap, Printama.FULL_WIDTH);
-            printama.close();
-        }, this::showToast);
-    }
+
 
     private void printView() {
         View view = findViewById(R.id.root_view);

@@ -50,7 +50,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btncancelarserafin"
+                android:id="@+id/btnCancelarSerafin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -65,7 +65,7 @@
                 android:fontFamily="@font/nunito_extrabold" />
 
             <Button
-                android:id="@+id/btnimprimirserafin"
+                android:id="@+id/btnAgregarSerafin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

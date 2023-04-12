@@ -1,12 +1,11 @@
 package com.anggastudio.sample.WebApiSVEN.Models;
 
-public class Card {
+public class TipoPago {
 
     private Integer cardID;
     private String names;
 
-    public Card(Integer cardID,String names) {
-        this.cardID = cardID;
+    public TipoPago( String names) {
         this.names  = names;
     }
 

@@ -31,11 +31,12 @@
             android:textSize="18sp"/>
 
         <androidx.appcompat.widget.SearchView
-            android:id="@+id/searchView"
+            android:id="@+id/btnBuscadorClienteRZ"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textCapCharacters"
             android:layout_marginTop="5sp"
+            app:queryHint="Buscar Razon Social"
             android:background="@drawable/input_border" />
 
         <androidx.cardview.widget.CardView
@@ -96,7 +97,7 @@
             android:layout_height="300sp"
             android:orientation="vertical">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclercliente"
+                android:id="@+id/recyclerLCliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -106,7 +107,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/btncancelar"
+                android:id="@+id/btnCancelarLCliente"
                 android:layout_width="wrap_content"
                 android:layout_height="50sp"
                 android:text="@string/btn_cancelar"

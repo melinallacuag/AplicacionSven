@@ -20,9 +20,9 @@ import com.anggastudio.sample.R;
 public class DasboardFragment extends Fragment{
 
     TextView nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
-    CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia;
-    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio;
-    Dialog modalCambioTurno,modalInicioDia,modalAlerta;
+    CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
+    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
+    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -42,6 +42,7 @@ public class DasboardFragment extends Fragment{
         btn_Cierrex       = view.findViewById(R.id.btnCierreX);
         btn_Cambioturno   = view.findViewById(R.id.btnCambioTurno);
         btn_Iniciodia     = view.findViewById(R.id.btnInicioDia);
+        btn_Salir         = view.findViewById(R.id.btnSalir);
 
         nombre_grifero.setText("Manuel Porras Clemente");
         fecha_inicio_grifero.setText("FECHA : " + "08/05/2023");
@@ -173,6 +174,49 @@ public class DasboardFragment extends Fragment{
                 });
 
               }
+        });
+
+        modalSalir = new Dialog(getContext());
+        modalSalir.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalSalir.setContentView(R.layout.fragment_salir);
+        modalSalir.setCancelable(false);
+
+        btn_Salir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                modalSalir.show();
+
+                btncancelarsalida    = modalSalir.findViewById(R.id.btncancelarsalida);
+                btnsalir     = modalSalir.findViewById(R.id.btnsalir);
+
+                btncancelarsalida.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        modalSalir.dismiss();
+                    }
+                });
+
+                btnsalir.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        modalSalir.show();
+
+                        try {
+                            Intent intent = new Intent(getContext(), Login.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finalize();
+                            Toast.makeText(getContext(), "SE CERRO SESIÓN", Toast.LENGTH_SHORT).show();
+                        } catch (Throwable e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+
+            }
         });
 
         return view;

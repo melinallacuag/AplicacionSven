@@ -1,6 +1,6 @@
 package com.anggastudio.sample.WebApiSVEN.Models;
 
-public class Cliente {
+public class LClientes {
 
     private String clienteID;
     private String clienteRUC;
@@ -10,9 +10,11 @@ public class Cliente {
     private Double dias_Credito;
     private String tipo_Cliente;
 
-    public Cliente(String clienteID, String clienteRUC) {
+    public LClientes(String clienteID, String clienteRUC, String clienteRZ, String clienteDR) {
         this.clienteID = clienteID;
         this.clienteRUC = clienteRUC;
+        this.clienteRZ = clienteRZ;
+        this.clienteDR = clienteDR;
     }
 
     public String getClienteID() {

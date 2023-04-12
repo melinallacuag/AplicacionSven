@@ -20,7 +20,7 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
     private int selectedItem;
 
     public interface  OnItemClickListener{
-        void onItemClick(Mangueras item);
+        int onItemClick(Mangueras item);
     }
 
     public ManguerasAdapter(List<Mangueras> mangueraList, Context context, ManguerasAdapter.OnItemClickListener listener){
