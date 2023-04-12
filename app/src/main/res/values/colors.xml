@@ -13,6 +13,10 @@
     <color name="colorInfo">#0dcaf0</color>
     <color name="colorLigth">#f8f9fa</color>
     <color name="colorDark">#212529</color>
+    <color name="colorCest">#35B596</color>
+    <color name="colorNer">#2E7CC5</color>
+
+    <color name="colorGri">#343535</color>
 
     <!-- TODO: Color de los Textos -->
     <color name="white">#FFFFFFFF</color>

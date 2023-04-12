@@ -5,6 +5,10 @@ public class Lados {
     private String nroLado;
     private String terminalID;
 
+    public Lados(String nroLado) {
+        this.nroLado = nroLado;
+    }
+
     public String getNroLado() {
         return nroLado;
     }

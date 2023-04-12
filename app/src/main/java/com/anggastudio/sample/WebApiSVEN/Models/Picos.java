@@ -9,14 +9,9 @@ public class Picos {
     private String protocolo;
     private Double valor;
 
-    public Picos(String mangueraID, String nroLado, String posicion, String articuloID, String descripcion, String protocolo, Double valor) {
+    public Picos(String mangueraID, String descripcion) {
         this.mangueraID = mangueraID;
-        this.nroLado = nroLado;
-        this.posicion = posicion;
-        this.articuloID = articuloID;
         this.descripcion = descripcion;
-        this.protocolo = protocolo;
-        this.valor = valor;
     }
 
     public String getMangueraID() {

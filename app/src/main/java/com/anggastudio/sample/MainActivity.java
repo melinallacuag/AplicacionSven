@@ -15,13 +15,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.anggastudio.printama.Printama;
-import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
-import com.anggastudio.sample.mock.Mock;
-import com.anggastudio.sample.model.PrintBody;
-import com.anggastudio.sample.model.PrintFooter;
-import com.anggastudio.sample.model.PrintHeader;
-import com.anggastudio.sample.model.PrintModel;
-import com.anggastudio.sample.util.Util;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -35,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         findViewById(R.id.btn_printer_settings).setOnClickListener(v -> showPrinterList());
         findViewById(R.id.btn_print_text_left).setOnClickListener(v -> printTextLeft());
-        findViewById(R.id.btn_print_text_center).setOnClickListener(v -> printQrReceipt());
+
         findViewById(R.id.btn_print_text_right).setOnClickListener(v -> printView());
 
         getSavedPrinter();
@@ -247,47 +240,6 @@ public class MainActivity extends AppCompatActivity {
         }, this::showToast);
     }
 
-    private void printQrReceipt() {
-        PrintModel printModel = Mock.getPrintModelMock();
-        Bitmap logo = Printama.getBitmapFromVector(this, R.drawable.logo_app);
-        PrintHeader header = printModel.getPrintHeader();
-        PrintBody body = printModel.getPrintBody();
-        PrintFooter footer = printModel.getPrintFooter();
-        String date = "DATE: " + body.getDate();
-        String invoice = "INVOICE: " + body.getInvoice();
-
-        Printama.with(this).connect(printama -> {
-            printama.printImage(logo, 300);
-            printama.addNewLine(1);
-            printama.setNormalText();
-            printama.printTextln(header.getMerchantName().toUpperCase(), Printama.CENTER);
-            printama.printTextln(header.getMerchantAddress1().toUpperCase(), Printama.CENTER);
-            printama.printTextln(header.getMerchantAddress2().toUpperCase(), Printama.CENTER);
-            printama.printTextln("MERC" + header.getMerchantId().toUpperCase(), Printama.CENTER);
-            printama.printDoubleDashedLine();
-
-            // body
-            printama.printTextln(date);
-            printama.printTextln(invoice);
-
-            printama.printDashedLine();
-            printama.printTextln("TAGIHAN", Printama.CENTER);
-            printama.printDashedLine();
-            printama.printTextln("Scan kode QR untuk membayar", Printama.CENTER);
-            printama.printImage(Util.getQrCode(body.getQrCode()), 300);
-            printama.printTextln("TOTAL         " + body.getTotalPayment(), Printama.CENTER);
-
-            // footer
-            printama.printTextln(footer.getPaymentBy(), Printama.CENTER);
-            if (footer.getIssuer() != null) printama.printText(footer.getIssuer(), Printama.CENTER);
-            printama.printTextln(footer.getPowered(), Printama.CENTER);
-            if (footer.getEnvironment() != null)
-                printama.printTextln(footer.getEnvironment(), Printama.CENTER);
-            printama.addNewLine(4);
-
-            printama.close();
-        }, this::showToast);
-    }
 
     private void printQrReceipt2() {
         Bitmap logo = Printama.getBitmapFromVector(this, R.drawable.logo_app);

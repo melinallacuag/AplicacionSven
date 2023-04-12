@@ -16,27 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
 import com.anggastudio.sample.R;
-import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
-import com.anggastudio.sample.WebApiSVEN.Models.CDia;
-import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
-import com.anggastudio.sample.WebApiSVEN.Models.Company;
-import com.anggastudio.sample.WebApiSVEN.Models.Optran;
-import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
-import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 public class DasboardFragment extends Fragment{
 
-    private APIService mAPIService;
-
-    TextView nombreusuario,fecha,turno,nombregrigo,sucursal,slogangrifo;
-    CardView btnventa,btncierrex,btncambioturno,btniniciodia;
-
-    Button btncancelar,btnagregar;
-    private Dialog modalCambioTurno,modalIcioDia,modalAlerta;
+    TextView nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
+    CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia;
+    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio;
+    Dialog modalCambioTurno,modalInicioDia,modalAlerta;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -44,37 +30,37 @@ public class DasboardFragment extends Fragment{
 
         View view = inflater.inflate(R.layout.fragment_dasboard, container, false);
 
-        mAPIService = GlobalInfo.getAPIService();
+        nombre_grifero        = view.findViewById(R.id.nombre_grifero);
+        fecha_inicio_grifero  = view.findViewById(R.id.fecha_inicio);
+        turno_grifero         = view.findViewById(R.id.turno_grifero);
 
-        btnventa       = view.findViewById(R.id.btnventa);
-        btncierrex     = view.findViewById(R.id.btnCierreX);
-        btncambioturno = view.findViewById(R.id.btnCambioTurno);
-        btniniciodia   = view.findViewById(R.id.btnInicioDia);
+        nombre_empresa    = view.findViewById(R.id.nombre_empresa);
+        sucursal_empresa  = view.findViewById(R.id.sucursal_empresa);
+        slogan_empresa    = view.findViewById(R.id.slogan_empresa);
 
-        nombreusuario = view.findViewById(R.id.nombreuser);
-        fecha         = view.findViewById(R.id.fecha);
-        turno         = view.findViewById(R.id.turno);
+        btn_Venta         = view.findViewById(R.id.btnVenta);
+        btn_Cierrex       = view.findViewById(R.id.btnCierreX);
+        btn_Cambioturno   = view.findViewById(R.id.btnCambioTurno);
+        btn_Iniciodia     = view.findViewById(R.id.btnInicioDia);
 
-        nombregrigo   = view.findViewById(R.id.nombregrigo);
-        sucursal      = view.findViewById(R.id.nombresucursal);
-        slogangrifo   = view.findViewById(R.id.slogangrifo);
+        nombre_grifero.setText("Manuel Porras Clemente");
+        fecha_inicio_grifero.setText("FECHA : " + "08/05/2023");
+        turno_grifero.setText("TURNO : " + 01);
 
-        nombreusuario.setText(GlobalInfo.getuserName10);
-        fecha.setText(GlobalInfo.getterminalFecha10);
-        turno.setText(GlobalInfo.getterminalTurno10.toString());
+        nombre_empresa.setText("SERVICENTRO ROBLES E.I.R.L.");
+        sucursal_empresa.setText("AV. CORONEL PARRA 1239 PILCOMAYO-HUANCAYO-JUNIN");
+        slogan_empresa.setText("Cuida la naturaleza");
 
-        findCompany(GlobalInfo.getterminalCompanyID10);
 
-        btnventa.setOnClickListener(new View.OnClickListener() {
+        btn_Venta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
-
                 FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
-
                 int fragmentContainerVenta = R.id.fragment_container;
                 VentaFragment ventaFragment = new VentaFragment();
+
                 fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
                 fragmentTransactionVenta.addToBackStack(null);
                 fragmentTransactionVenta.commit();
@@ -82,16 +68,15 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        btncierrex.setOnClickListener(new View.OnClickListener() {
+        btn_Cierrex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 FragmentManager fragmentManagerCierreX = getActivity().getSupportFragmentManager();
-
                 FragmentTransaction fragmentTransactionCierreX = fragmentManagerCierreX.beginTransaction();
-
                 int fragmentContainerCierreX = R.id.fragment_container;
                 CierreXFragment cierreXFragment = new CierreXFragment();
+
                 fragmentTransactionCierreX.replace(fragmentContainerCierreX, cierreXFragment);
                 fragmentTransactionCierreX.addToBackStack(null);
                 fragmentTransactionCierreX.commit();
@@ -99,276 +84,98 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        /** Mostrar Modal de Cambio de Turno */
         modalAlerta = new Dialog(getContext());
         modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
         modalAlerta.setCancelable(true);
 
-        /** Mostrar Modal de Cambio de Turno */
         modalCambioTurno = new Dialog(getContext());
         modalCambioTurno.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalCambioTurno.setContentView(R.layout.fragment_cambio_turno);
         modalCambioTurno.setCancelable(false);
 
-        btncambioturno.setOnClickListener(new View.OnClickListener() {
+        btn_Cambioturno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                /** API Retrofit - Cambio de Turno */
-                findOptranTurno(GlobalInfo.getterminalImei10);
+                modalCambioTurno.show();
 
-                btncancelar    = modalCambioTurno.findViewById(R.id.btncancelarcambioturno);
-                btnagregar     = modalCambioTurno.findViewById(R.id.btnagregarcambioturno);
+                btnCancelarTurno    = modalCambioTurno.findViewById(R.id.btncancelarcambioturno);
+                btnAceptarTurno     = modalCambioTurno.findViewById(R.id.btnagregarcambioturno);
 
-                btncancelar.setOnClickListener(new View.OnClickListener() {
+                btnCancelarTurno.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         modalCambioTurno.dismiss();
                     }
                 });
-                btnagregar.setOnClickListener(new View.OnClickListener() {
+
+                btnAceptarTurno.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        try {
 
+                        modalAlerta.show();
+
+                        try {
                             Intent intent = new Intent(getContext(), Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                            cerrarTurno(GlobalInfo.getterminalID10);
-
                             startActivity(intent);
                             finalize();
                             Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
+
                     }
                 });
 
             }
         });
 
-        /** Mostrar Modal de Inicio de Día */
-        modalIcioDia = new Dialog(getContext());
-        modalIcioDia.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        modalIcioDia.setContentView(R.layout.fragment_inicio_dia);
-        modalIcioDia.setCancelable(false);
+        modalInicioDia = new Dialog(getContext());
+        modalInicioDia.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalInicioDia.setContentView(R.layout.fragment_inicio_dia);
+        modalInicioDia.setCancelable(false);
 
-        btniniciodia.setOnClickListener(new View.OnClickListener() {
+        btn_Iniciodia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                /** API Retrofit - Inicio de Día */
-                findOptranDia(GlobalInfo.getterminalImei10);
+                modalInicioDia.show();
 
-                btncancelar    = modalIcioDia.findViewById(R.id.btncancelariniciodia);
-                btnagregar     = modalIcioDia.findViewById(R.id.btnagregariniciodia);
+                btnCancelarInicio    = modalInicioDia.findViewById(R.id.btncancelariniciodia);
+                btnAceptarInicio     = modalInicioDia.findViewById(R.id.btnagregariniciodia);
 
-                btncancelar.setOnClickListener(new View.OnClickListener() {
+                btnCancelarInicio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        modalIcioDia.dismiss();
+                        modalInicioDia.dismiss();
                     }
                 });
-                btnagregar.setOnClickListener(new View.OnClickListener() {
+
+                btnAceptarInicio.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        modalAlerta.show();
+
                         try {
                             Intent intent = new Intent(getContext(), Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                            iniciarDia(GlobalInfo.getterminalID10);
-
                             startActivity(intent);
                             finalize();
                             Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
                         } catch (Throwable e) {
                             e.printStackTrace();
                         }
+
                     }
                 });
+
               }
         });
 
         return view;
-
-    }
-
-    private void cerrarTurno(String _terminalID){
-
-        Call<CTurno> call = mAPIService.postCTurno(_terminalID);
-
-        call.enqueue(new Callback<CTurno>() {
-            @Override
-            public void onResponse(Call<CTurno> call, Response<CTurno> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CTurno> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void iniciarDia(String _terminalID){
-
-        Call<CDia> call = mAPIService.postCDia(_terminalID);
-
-        call.enqueue(new Callback<CDia>() {
-            @Override
-            public void onResponse(Call<CDia> call, Response<CDia> response) {
-                if(!response.isSuccessful()){
-                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CDia> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    /** API SERVICE - Company */
-    private void findCompany(Integer id){
-
-        Call<List<Company>> call = mAPIService.findCompany(id);
-
-        call.enqueue(new Callback<List<Company>>() {
-            @Override
-            public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    List<Company> companyList = response.body();
-
-                    for(Company company: companyList){
-
-                        GlobalInfo.getNameCompany10    = String.valueOf(company.getNames());
-                        GlobalInfo.getRucCompany10     = String.valueOf(company.getRuc());
-                        GlobalInfo.getAddressCompany10 = String.valueOf(company.getAddress());
-                        GlobalInfo.getBranchCompany10  = String.valueOf(company.getBranch());
-                        GlobalInfo.getPhoneCompany10   = String.valueOf(company.getPhone());
-                        GlobalInfo.getMainCompany10    = String.valueOf(company.getMail());
-                        GlobalInfo.getManagerCompany10 = String.valueOf(company.getManager());
-                        GlobalInfo.getSloganCompany10  = String.valueOf(company.getEslogan());
-
-                        String DirSucursal = company.getBranch();
-
-                        DirSucursal = DirSucursal.replace("-","");
-
-                        nombregrigo.setText(company.getNames());
-                        sucursal.setText(DirSucursal.toString());
-                        slogangrifo.setText(company.getEslogan());
-
-                    }
-
-                }catch (Exception ex){
-                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Company>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** API SERVICE - Optran Cambio de Turno*/
-    private void findOptranTurno(String id){
-
-        Call<List<Optran>> call = mAPIService.findOptran(id);
-
-        call.enqueue(new Callback<List<Optran>>() {
-            @Override
-            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
-
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    List<Optran> optranList = response.body();
-
-                    GlobalInfo.getpase10 = false;
-
-                    for(Optran optran: optranList) {
-                        GlobalInfo.getpase10 = true;
-                    }
-
-                    if (GlobalInfo.getpase10 == true){
-                        modalAlerta.show();
-                    }else{
-                        modalCambioTurno.show();
-                    }
-
-                }catch (Exception ex){
-                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Optran>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    /** API SERVICE - Optran Inicio de Día */
-    private void findOptranDia(String id){
-
-        Call<List<Optran>> call = mAPIService.findOptran(id);
-
-        call.enqueue(new Callback<List<Optran>>() {
-            @Override
-            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
-
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    List<Optran> optranList = response.body();
-
-                    GlobalInfo.getpase10 = false;
-
-                    for(Optran optran: optranList) {
-                        GlobalInfo.getpase10 = true;
-                    }
-
-                    if (GlobalInfo.getpase10 == true){
-                        modalAlerta.show();
-                    }else{
-                        modalIcioDia.show();
-                    }
-
-                }catch (Exception ex){
-                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Optran>> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
