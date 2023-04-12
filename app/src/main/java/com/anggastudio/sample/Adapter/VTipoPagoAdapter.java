@@ -49,14 +49,14 @@ public class VTipoPagoAdapter extends RecyclerView.Adapter<VTipoPagoAdapter.View
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public CardView cardView;
+
         private TextView textventatipopago;
         private TextView textventatipopagomonto;
 
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            cardView                 = itemView.findViewById(R.id.cardmanguera);
+
             textventatipopago        = itemView.findViewById(R.id.textventatipopago);
             textventatipopagomonto   = itemView.findViewById(R.id.textventatipopagomonto);
 

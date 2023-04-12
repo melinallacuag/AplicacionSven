@@ -1,6 +1,7 @@
 package com.anggastudio.sample.WebApiSVEN.Models;
 
-public class Picos {
+public class Mangueras {
+
     private String mangueraID;
     private String nroLado;
     private String posicion;
@@ -9,7 +10,7 @@ public class Picos {
     private String protocolo;
     private Double valor;
 
-    public Picos(String mangueraID, String descripcion) {
+    public Mangueras(String mangueraID, String descripcion) {
         this.mangueraID = mangueraID;
         this.descripcion = descripcion;
     }

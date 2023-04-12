@@ -1,5 +1,4 @@
 package com.anggastudio.sample.Fragment;
-import android.app.Dialog;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -11,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.anggastudio.sample.Adapter.CaraAdapter;
-import com.anggastudio.sample.Adapter.MangueraAdapter;
+import com.anggastudio.sample.Adapter.LadosAdapter;
+import com.anggastudio.sample.Adapter.ManguerasAdapter;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
-import com.anggastudio.sample.WebApiSVEN.Models.Picos;
+import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +22,18 @@ import java.util.List;
 
 public class VentaFragment extends Fragment{
 
-    RecyclerView recyclerCara,recyclerManguera;
-    List<Lados> ladosList;
-    List<Picos> manguerasList;
-    CaraAdapter caraAdapter;
+    RecyclerView recyclerLados,recyclerMangueras;
 
-    MangueraAdapter mangueraAdapter;
+    List<Lados> ladosList;
+    LadosAdapter ladosAdapter;
+
+    List<Mangueras> manguerasList;
+    ManguerasAdapter manguerasAdapter;
 
     TextView  terminalID;
     Button    btnlibre,btnsoles,btngalones,btnboleta,btnfactura,btnnotadespacho,btnserafin,btnpuntos,automatiStop,imprimirserafin;
 
-    Dialog modalLibre;
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
@@ -50,9 +50,9 @@ public class VentaFragment extends Fragment{
         btnserafin      = view.findViewById(R.id.btnserafin);
         btnpuntos       = view.findViewById(R.id.btnpuntos);
 
-        /** Lado */
-        recyclerCara = view.findViewById(R.id.recycler);
-        recyclerCara.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        /** Listado de Card - Lado */
+        recyclerLados = view.findViewById(R.id.recyclerLado);
+        recyclerLados.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         ladosList = new ArrayList<>();
 
@@ -60,39 +60,42 @@ public class VentaFragment extends Fragment{
             ladosList.add(new Lados("01"));
             ladosList.add(new Lados("02"));
             ladosList.add(new Lados("03"));
+            ladosList.add(new Lados("04"));
+            ladosList.add(new Lados("05"));
         }
 
-        caraAdapter = new CaraAdapter(ladosList, getContext(), new CaraAdapter.OnItemClickListener() {
+        ladosAdapter = new LadosAdapter(ladosList, getContext(), new LadosAdapter.OnItemClickListener() {
             @Override
             public int onItemClick(Lados item) {
                 return 0;
             }
         });
 
-        recyclerCara.setAdapter(caraAdapter);
+        recyclerLados.setAdapter(ladosAdapter);
 
-        /** Manguera */
-        recyclerManguera = view.findViewById(R.id.recyclerlado);
-        recyclerManguera.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        /** Listado de Card - Manguera */
+        recyclerMangueras = view.findViewById(R.id.recyclerMangueras);
+        recyclerMangueras.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         manguerasList = new ArrayList<>();
 
         for (int i = 0; i < 1; i++){
-            manguerasList.add(new Picos("G-REGULAR","01"));
-            manguerasList.add(new Picos("G-PREMIUM","02"));
-            manguerasList.add(new Picos("GLP","03"));
+            manguerasList.add(new Mangueras("G-REGULAR","01"));
+            manguerasList.add(new Mangueras("G-PREMIUM","02"));
+            manguerasList.add(new Mangueras("GLP","03"));
+            manguerasList.add(new Mangueras("DIESEL","04"));
         }
 
-        mangueraAdapter = new MangueraAdapter(manguerasList, getContext(), new MangueraAdapter.OnItemClickListener() {
+        manguerasAdapter = new ManguerasAdapter(manguerasList, getContext(), new ManguerasAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(Picos item) {
+            public void onItemClick(Mangueras item) {
 
             }
         });
 
-        recyclerManguera.setAdapter(mangueraAdapter);
+        recyclerMangueras.setAdapter(manguerasAdapter);
 
-
+        /** Modal Libre */
         btnlibre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

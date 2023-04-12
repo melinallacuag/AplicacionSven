@@ -60,8 +60,8 @@
     <string name="detalleV_PtosDisponibles">PTOS. DISPONIBLES</string>
 
     <!-- TODO: Operaciones que realiza la Venta -->
-    <string name="ope_cara">CARA</string>
-    <string name="op_manguera">MANGUERA</string>
+    <string name="ope_cara">LADOS</string>
+    <string name="op_manguera">MANGUERAS</string>
     <string name="op_modalida">MODALIDAD</string>
     <string name="op_operacion">OPERACIÓN</string>
     <string name="op_transacciones">TRANSACCIONES</string>

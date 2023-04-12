@@ -1,60 +1,60 @@
 package com.anggastudio.sample.Adapter;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
-
 import java.util.List;
 
 
-public class CaraAdapter extends RecyclerView.Adapter<CaraAdapter.ViewHolder>{
-    private List<Lados> caraList;
+public class LadosAdapter extends RecyclerView.Adapter<LadosAdapter.ViewHolder>{
+
+    final LadosAdapter.OnItemClickListener listener;
+    private List<Lados> ladosList;
     private Context context;
-    final CaraAdapter.OnItemClickListener listener;
     private int selectedItem;
 
     public interface  OnItemClickListener{
         int onItemClick(Lados item);
     }
 
-    public CaraAdapter(List<Lados> caraList,Context context,CaraAdapter.OnItemClickListener listener){
-        this.caraList  = caraList;
+    public LadosAdapter(List<Lados> caraList, Context context, LadosAdapter.OnItemClickListener listener){
+
+        this.ladosList  = caraList;
         this.context   = context;
         this.listener  = listener;
         selectedItem   = -1;
+
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardcara,parent,false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_lados,parent,false);
         return new ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Lados lados = caraList.get(position);
-        holder.txtcara.setText(caraList.get(position).getNroLado());
 
-        holder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.white));
+        Lados lados = ladosList.get(position);
+
+        holder.nro_Lado.setText(ladosList.get(position).getNroLado());
+        holder.card_Lado.setCardBackgroundColor(context.getResources().getColor(R.color.colorGri));
 
         if (selectedItem == position) {
-            holder.cardView.setCardBackgroundColor(Color.parseColor("#5EA7DE"));
+            holder.card_Lado.setCardBackgroundColor(Color.parseColor("#35B596"));
         }
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.card_Lado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 int previousItem = selectedItem;
                 selectedItem = position;
@@ -62,22 +62,26 @@ public class CaraAdapter extends RecyclerView.Adapter<CaraAdapter.ViewHolder>{
                 notifyItemChanged(position);
 
                 listener.onItemClick(lados);
+
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return caraList.size();
+        return ladosList.size();
     }
+
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public CardView cardView;
-        private TextView txtcara;
+
+        public CardView card_Lado;
+        private TextView nro_Lado;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            cardView = itemView.findViewById(R.id.cardcara);
-            txtcara = itemView.findViewById(R.id.txtcara);
+            card_Lado = itemView.findViewById(R.id.card_Lado);
+            nro_Lado  = itemView.findViewById(R.id.nro_Lado);
         }
+
     }
 }

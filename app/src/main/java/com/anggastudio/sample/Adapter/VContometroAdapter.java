@@ -52,7 +52,7 @@ public class VContometroAdapter extends RecyclerView.Adapter<VContometroAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public CardView cardView;
+
         private TextView textlado;
         private TextView textproducto;
         private TextView textcantidadI;
@@ -61,7 +61,7 @@ public class VContometroAdapter extends RecyclerView.Adapter<VContometroAdapter.
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            cardView        = itemView.findViewById(R.id.cardmanguera);
+
             textlado        = itemView.findViewById(R.id.textlado);
             textproducto    = itemView.findViewById(R.id.textproducto);
             textcantidadI   = itemView.findViewById(R.id.textcantidadI);

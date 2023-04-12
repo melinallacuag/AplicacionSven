@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/linearLayoutCompat"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="20sp"
-        android:paddingTop="5sp"
-        android:paddingEnd="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="20sp"
+    android:paddingTop="5sp"
+    android:paddingEnd="20sp">
 
         <Button
             android:id="@+id/automatiStop"
@@ -29,6 +20,7 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             app:cornerRadius="10sp" />
+
         <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -62,7 +54,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
+                android:id="@+id/recyclerLado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -81,7 +73,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerlado"
+                android:id="@+id/recyclerMangueras"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -448,113 +440,4 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
-  <!--      <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:background="@drawable/input_border"
-                    android:backgroundTint="#fff"
-                    app:cardCornerRadius="10dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:columnCount="6"
-                        android:elevation="2sp"
-                        android:gravity="center">
-
-                        <TextView
-                            android:id="@+id/textcara"
-                            android:layout_width="34dp"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="2sp"
-                            android:layout_marginRight="2sp"
-                            android:fontFamily="@font/nunito_extrabold"
-                            android:gravity="center"
-                            android:textColor="#071C65"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/txtoperacion"
-                            android:layout_width="35sp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="2sp"
-                            android:layout_marginRight="2sp"
-                            android:fontFamily="@font/nunito_extrabold"
-                            android:gravity="center"
-                            android:textColor="#071C65"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/textmanguera"
-                            android:layout_width="45sp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="2sp"
-                            android:layout_marginRight="2sp"
-                            android:fontFamily="@font/nunito_extrabold"
-                            android:gravity="center"
-                            android:textColor="#071C65"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/idcliente"
-                            android:layout_width="70sp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="2sp"
-                            android:layout_marginRight="2sp"
-                            android:fontFamily="@font/nunito_extrabold"
-                            android:gravity="center"
-                            android:text="11111111"
-                            android:textColor="#071C65"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/txtrazonsocial"
-                            android:layout_width="100sp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="2sp"
-                            android:layout_marginRight="2sp"
-                            android:fontFamily="@font/nunito_extrabold"
-                            android:gravity="center"
-                            android:text="CLIENTE VARIOS"
-                            android:textColor="#071C65"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/txtimporte"
-                            android:layout_width="40sp"
-                            android:layout_height="match_parent"
-                            android:layout_marginEnd="2sp"
-                            android:layout_marginRight="2sp"
-                            android:fontFamily="@font/nunito_extrabold"
-                            android:gravity="center"
-                            android:textColor="#071C65"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-        </ScrollView>-->
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

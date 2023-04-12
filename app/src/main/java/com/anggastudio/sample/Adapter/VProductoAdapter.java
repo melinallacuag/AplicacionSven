@@ -49,7 +49,7 @@ public class VProductoAdapter extends RecyclerView.Adapter<VProductoAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
-        public CardView cardView;
+
         private TextView textPproducto;
         private TextView textPvolumen;
         private TextView textPsoles;
@@ -57,7 +57,7 @@ public class VProductoAdapter extends RecyclerView.Adapter<VProductoAdapter.View
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
-            cardView        = itemView.findViewById(R.id.cardmanguera);
+
             textPproducto        = itemView.findViewById(R.id.textPproducto);
             textPvolumen    = itemView.findViewById(R.id.textPvolumen);
             textPsoles   = itemView.findViewById(R.id.textPsoles);
