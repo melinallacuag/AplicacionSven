@@ -1,22 +1,29 @@
 package com.anggastudio.sample.Fragment;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.anggastudio.printama.Printama;
 import com.anggastudio.sample.Adapter.LadosAdapter;
+import com.anggastudio.sample.Adapter.ReporteTarjetasAdapter;
 import com.anggastudio.sample.Adapter.VContometroAdapter;
 import com.anggastudio.sample.Adapter.VProductoAdapter;
 import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
@@ -34,17 +41,18 @@ public class CierreXFragment extends Fragment {
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalpagobruto;
 
+    RecyclerView recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj;
+
+    ReporteTarjetasAdapter reporteTarjetasAdapter;
+    List<ReporteTarjetas> reporteTarjetasList;
 
     VContometroAdapter vContometroAdapter;
-    RecyclerView recyclerVContometro;
     List<VContometro> vContometroList;
 
     VProductoAdapter vProductoAdapter;
-    RecyclerView recyclerVProducto;
     List<VProducto> vProductoList;
 
     VTipoPagoAdapter vTipoPagoAdapter;
-    RecyclerView recyclerVTipoPago;
     List<VTipoPago> vTipoPagoList;
 
     @Override
@@ -69,6 +77,8 @@ public class CierreXFragment extends Fragment {
         TotalDescuento      = view.findViewById(R.id.TotalDescuento);
         TotalMontoPago      = view.findViewById(R.id.totalpago);
         totalpagobruto      = view.findViewById(R.id.totalpagobruto);
+
+        view.findViewById(R.id.imprimircierrex).setOnClickListener(v -> cierrex());
 
         /** Fecha de Impresión */
         Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
@@ -99,6 +109,8 @@ public class CierreXFragment extends Fragment {
             vContometroList.add(new VContometro("03","",452.00,47.512,487.256));
             vContometroList.add(new VContometro("04","",452.00,47.512,487.256));
             vContometroList.add(new VContometro("05","",452.00,47.512,487.256));
+            vContometroList.add(new VContometro("01","",452.00,47.512,487.256));
+            vContometroList.add(new VContometro("02","",452.00,47.512,487.256));
         }
 
         vContometroAdapter = new VContometroAdapter(vContometroList, getContext());
@@ -138,8 +150,38 @@ public class CierreXFragment extends Fragment {
 
         recyclerVTipoPago.setAdapter(vTipoPagoAdapter);
 
+        /** Reporte por Tarjetas */
+        recyclerReporteTarj = view.findViewById(R.id.recyclerReporteTarj);
+        recyclerReporteTarj.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        reporteTarjetasList = new ArrayList<>();
+
+        for (int i = 0; i < 1; i++){
+            reporteTarjetasList.add(new ReporteTarjetas("1245","B001-000254","VISA",25.00));
+            reporteTarjetasList.add(new ReporteTarjetas("7845","B008-000478","VISA",30.00));
+        }
+
+        reporteTarjetasAdapter = new ReporteTarjetasAdapter(reporteTarjetasList, getContext());
+
+        recyclerReporteTarj.setAdapter(reporteTarjetasAdapter);
+
 
         return view;
+    }
+
+    private void cierrex() {
+
+        Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
+        View view = getView().findViewById(R.id.linearLayout2);
+        Printama.with(getContext()).connect(printama -> {
+            printama.printImage(logoRobles, 100);
+            printama.printFromView(view);
+            new Handler().postDelayed(printama::close, 2000);
+        }, this::showToast);
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getContext(), "Conectar Bluetooth", Toast.LENGTH_SHORT).show();
     }
 
 }
