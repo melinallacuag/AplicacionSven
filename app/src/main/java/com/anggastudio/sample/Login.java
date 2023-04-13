@@ -38,9 +38,7 @@ public class Login extends AppCompatActivity {
         alertuser      = findViewById(R.id.textusuario);
         alertpassword  = findViewById(R.id.textcontraseña);
 
-        /**
-         * Boton par configurar la impresión bluetooth.
-         */
+        /*** Boton par configurar la impresión bluetooth.*/
 
         configuracion = findViewById(R.id.btnconfiguracion);
         configuracion.setOnClickListener(new View.OnClickListener() {
@@ -50,9 +48,7 @@ public class Login extends AppCompatActivity {
             }
         });
 
-        /**
-         * Detectar el IMEI
-         */
+        /** Detectar el IMEI*/
 
         imeii = findViewById(R.id.imei);
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
@@ -68,17 +64,19 @@ public class Login extends AppCompatActivity {
 
                 if(usuarioUser.isEmpty()){
                     alertuser.setError("El campo usuario es obligatorio");
-
+                    return;
                 }else if(contraseñaUser.isEmpty()){
                     alertpassword.setError("El campo contraseña es obligatorio");
-
-                }else{
-                    alertuser.setErrorEnabled(false);
-                    alertpassword.setErrorEnabled(false);
-                    Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent( getApplicationContext(),Menu.class));
-
+                    return;
                 }
+
+                alertuser.setErrorEnabled(false);
+                alertpassword.setErrorEnabled(false);
+
+                Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent( getApplicationContext(),Menu.class));
+
+
             }
         });
     }

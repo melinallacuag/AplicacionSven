@@ -165,7 +165,6 @@ public class CierreXFragment extends Fragment {
 
         recyclerReporteTarj.setAdapter(reporteTarjetasAdapter);
 
-
         return view;
     }
 
