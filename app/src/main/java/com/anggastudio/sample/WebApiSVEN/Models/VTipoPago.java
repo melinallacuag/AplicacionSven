@@ -5,6 +5,11 @@ public class VTipoPago {
     private String names;
     private Double soles;
 
+    public VTipoPago(String names, Double soles) {
+        this.names = names;
+        this.soles = soles;
+    }
+
     public String getPagoID() {
         return pagoID;
     }

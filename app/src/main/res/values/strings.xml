@@ -42,7 +42,7 @@
     <string name="ope_canje">CANJE</string>
 
     <!-- TODO: Datos de Transacciones -->
-    <string name="detalleV_Cara">CARA</string>
+    <string name="detalleV_Cara">LADO</string>
     <string name="detalleV_TPago">T.PAGO</string>
     <string name="detalleV_Impuesto">IMPUESTO</string>
     <string name="detalleV_Placa">PLACA</string>

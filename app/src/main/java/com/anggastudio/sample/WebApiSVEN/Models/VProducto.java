@@ -8,6 +8,13 @@ public class VProducto {
     private Double soles;
     private Double descuento;
 
+    public VProducto(String articuloDS, Double cantidad, Double soles, Double descuento) {
+        this.articuloDS = articuloDS;
+        this.cantidad = cantidad;
+        this.soles = soles;
+        this.descuento = descuento;
+    }
+
     public String getArticuloID() {
         return articuloID;
     }
