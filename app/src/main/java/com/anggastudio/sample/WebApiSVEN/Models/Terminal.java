@@ -28,6 +28,7 @@ public class Terminal {
     private String  serafin_Numero;
     private String  nDespacho_Serie;
     private String  nDespacho_Numero;
+    private String  fecha_Hora_Cierre;
 
     public String getTerminalID() {
         return terminalID;
@@ -236,4 +237,13 @@ public class Terminal {
     public void setnDespacho_Numero(String nDespacho_Numero) {
         this.nDespacho_Numero = nDespacho_Numero;
     }
+
+    public String getFecha_Hora_Cierre() {
+        return fecha_Hora_Cierre;
+    }
+
+    public void setFecha_Hora_Cierre(String fecha_Hora_Cierre) {
+        this.fecha_Hora_Cierre = fecha_Hora_Cierre;
+    }
+
 }

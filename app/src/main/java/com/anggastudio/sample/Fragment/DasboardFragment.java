@@ -201,8 +201,6 @@ public class DasboardFragment extends Fragment{
                     @Override
                     public void onClick(View v) {
 
-                        modalSalir.show();
-
                         try {
                             Intent intent = new Intent(getContext(), Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
