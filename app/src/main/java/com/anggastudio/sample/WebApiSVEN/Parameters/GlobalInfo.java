@@ -1,6 +1,11 @@
 package com.anggastudio.sample.WebApiSVEN.Parameters;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+
+import java.util.List;
 
 public class GlobalInfo {
 
@@ -17,7 +22,7 @@ public class GlobalInfo {
     public static String getAddressCompany10;
     public static String getBranchCompany10;
     public static String getPhoneCompany10;
-    public static String getMainCompany10;
+    public static String getMailCompany10;
     public static String getManagerCompany10;
     public static String getSloganCompany10;
 
@@ -42,7 +47,7 @@ public class GlobalInfo {
     public static String  getterminalImei10;
     public static String  getterminalFecha10;
     public static Integer getterminalTurno10;
-    public static Integer getterminalCompanyID10;
+    public static Integer getterminalCompanyID10 = 1;
     public static Integer getterminalAlmacenID10;
     public static String  getterminalFechaHoraCierre10;
 
@@ -185,6 +190,10 @@ public class GlobalInfo {
     public static Double  getconsultaventaMtoTotal10;
     public static String  getconsultaventaAnulado10;
 
+    /**
+     * Datos Recycler
+     */
+    public  static List<Lados> getladosList10;
 
     /**
      * URL - APIService

@@ -31,11 +31,13 @@ import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.Adapter.ManguerasAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.R;
+import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
+import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -44,6 +46,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class VentaFragment extends Fragment{
@@ -87,10 +93,14 @@ public class VentaFragment extends Fragment{
 
     SearchView btnBuscadorClienteRZ;
 
+    private APIService mAPIService;
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_venta, container, false);
+
+        mAPIService = GlobalInfo.getAPIService();
 
         btnAutomatico   = view.findViewById(R.id.btnAutomatico);
         btnListadoComprobante = view.findViewById(R.id.btnListadoComprobante);
@@ -142,24 +152,7 @@ public class VentaFragment extends Fragment{
         recyclerLados = view.findViewById(R.id.recyclerLado);
         recyclerLados.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        ladosList = new ArrayList<>();
-
-        for (int i = 0; i < 1; i++){
-            ladosList.add(new Lados("01"));
-            ladosList.add(new Lados("02"));
-            ladosList.add(new Lados("03"));
-            ladosList.add(new Lados("04"));
-            ladosList.add(new Lados("05"));
-        }
-
-        ladosAdapter = new LadosAdapter(ladosList, getContext(), new LadosAdapter.OnItemClickListener() {
-            @Override
-            public int onItemClick(Lados item) {
-                return 0;
-            }
-        });
-
-        recyclerLados.setAdapter(ladosAdapter);
+        Lados();
 
         /** Listado de Card - Manguera */
         recyclerMangueras = view.findViewById(R.id.recyclerMangueras);
@@ -1102,6 +1095,25 @@ public class VentaFragment extends Fragment{
 
         return view;
     }
+
+    private void Lados(){
+
+        ladosAdapter = new LadosAdapter(GlobalInfo.getladosList10, getContext(), new LadosAdapter.OnItemClickListener() {
+            @Override
+            public int onItemClick(Lados item) {
+                GlobalInfo.getCara10 = item.getNroLado();
+                return 0;
+
+            }
+        });
+
+        recyclerLados.setAdapter(ladosAdapter);
+    }
+
+
+
+
+
     private void modoAutomatico() {
 
         mTimerRunning = true;

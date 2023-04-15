@@ -16,6 +16,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
 import com.anggastudio.sample.R;
+import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DasboardFragment extends Fragment{
 
@@ -44,14 +52,17 @@ public class DasboardFragment extends Fragment{
         btn_Iniciodia     = view.findViewById(R.id.btnInicioDia);
         btn_Salir         = view.findViewById(R.id.btnSalir);
 
-        nombre_grifero.setText("Manuel Porras Clemente");
-        fecha_inicio_grifero.setText("FECHA : " + "08/05/2023");
-        turno_grifero.setText("TURNO : " + 01);
+        nombre_grifero.setText(GlobalInfo.getuserName10);
+        fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
+        turno_grifero.setText("TURNO : " + String.valueOf(GlobalInfo.getterminalTurno10));
 
-        nombre_empresa.setText("SERVICENTRO ROBLES E.I.R.L.");
-        sucursal_empresa.setText("AV. CORONEL PARRA 1239 PILCOMAYO-HUANCAYO-JUNIN");
-        slogan_empresa.setText("Cuida la naturaleza");
+        String DirSucursal = GlobalInfo.getBranchCompany10;
 
+        DirSucursal = DirSucursal.replace("-","");
+
+        nombre_empresa.setText(GlobalInfo.getNameCompany10);
+        sucursal_empresa.setText(DirSucursal);
+        slogan_empresa.setText(GlobalInfo.getSloganCompany10);
 
         btn_Venta.setOnClickListener(new View.OnClickListener() {
             @Override

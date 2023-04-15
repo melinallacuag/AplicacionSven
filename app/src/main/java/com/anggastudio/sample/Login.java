@@ -1,6 +1,7 @@
 package com.anggastudio.sample;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +12,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Company;
+import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
@@ -34,6 +38,7 @@ public class Login extends AppCompatActivity {
     String usuarioUser,contraseñaUser;
 
     List<Users> usersList;
+
 
     private APIService mAPIService;
 
@@ -68,8 +73,6 @@ public class Login extends AppCompatActivity {
 
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
-        findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
-
         btniniciar.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -97,6 +100,10 @@ public class Login extends AppCompatActivity {
 
             }
         });
+
+        findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
+
+
     }
 
 
@@ -180,6 +187,9 @@ public class Login extends AppCompatActivity {
                         GlobalInfo.getterminalAlmacenID10       = Integer.valueOf(terminal.getAlmacenID());
                         GlobalInfo.getterminalFechaHoraCierre10 = String.valueOf(terminal.getFecha_Hora_Cierre());
 
+                        findCompany(GlobalInfo.getterminalCompanyID10);
+                        findLados(GlobalInfo.getterminalImei10);
+
                     }
 
                     if (GlobalInfo.getterminalID10.isEmpty() || GlobalInfo.getterminalID10 == null) {
@@ -200,6 +210,80 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<Terminal>> call, Throwable t) {
                 Toast.makeText( getApplicationContext(), "Error de conexión APICORE Terminal - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /** API SERVICE - Company */
+    private void findCompany(Integer id){
+
+        Call<List<Company>> call = mAPIService.findCompany(id);
+
+        call.enqueue(new Callback<List<Company>>() {
+            @Override
+            public void onResponse(Call<List<Company>> call, Response<List<Company>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Company> companyList = response.body();
+
+                    for(Company company: companyList){
+
+                        GlobalInfo.getNameCompany10    = String.valueOf(company.getNames());
+                        GlobalInfo.getRucCompany10     = String.valueOf(company.getRuc());
+                        GlobalInfo.getAddressCompany10 = String.valueOf(company.getAddress());
+                        GlobalInfo.getBranchCompany10  = String.valueOf(company.getBranch());
+                        GlobalInfo.getPhoneCompany10   = String.valueOf(company.getPhone());
+                        GlobalInfo.getMailCompany10    = String.valueOf(company.getMail());
+                        GlobalInfo.getManagerCompany10 = String.valueOf(company.getManager());
+                        GlobalInfo.getSloganCompany10  = String.valueOf(company.getEslogan());
+
+                    }
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Company>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** API SERVICE - Lados */
+    private void findLados(String id) {
+
+        Call<List<Lados>> call = mAPIService.findLados(id);
+
+        call.enqueue(new Callback<List<Lados>>() {
+            @Override
+            public void onResponse(Call<List<Lados>> call, Response<List<Lados>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getladosList10 = response.body();
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Lados>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Cara - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
 

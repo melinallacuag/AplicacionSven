@@ -65,6 +65,7 @@
         android:layout_height="140sp"
         android:layout_marginBottom="10sp"
         android:background="@drawable/fondo_degradado"
+        android:backgroundTint="@color/colorSecondary"
         android:elevation="2sp">
 
         <LinearLayout
@@ -92,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:fontFamily="@font/nunito_black"
-                android:textColor="@color/white"
+                android:textColor="#B6B5B4"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -102,7 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textSize="16sp"
                 android:fontFamily="@font/nunito_black"
                 android:textStyle="bold" />
