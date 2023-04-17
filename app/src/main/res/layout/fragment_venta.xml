@@ -18,7 +18,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:backgroundTint="@color/colorSecondary"
+                android:backgroundTint="@color/colorDanger"
                 android:fontFamily="@font/nunito_black"
                 android:text="@string/btn_stop"
                 android:layout_weight="1"

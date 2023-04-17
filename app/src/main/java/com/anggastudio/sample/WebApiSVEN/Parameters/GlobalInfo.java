@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 
 import java.util.List;
 
@@ -15,7 +16,13 @@ public class GlobalInfo {
     public static Integer getNumeroVecesIMP10;
 
     /**
-     * Datos de la Compania
+     * Datos Recycler
+     */
+    public  static List<Lados> getladosList10;
+    public  static List<Mangueras> getmanguerasList10;
+
+    /**
+     * Datos de la Empresa
      */
     public static String getNameCompany10;
     public static String getRucCompany10;
@@ -27,7 +34,7 @@ public class GlobalInfo {
     public static String getSloganCompany10;
 
     /**
-     * Datos del User
+     * Datos del Usuario
      */
     public static String getuserID10;
     public static String getuserName10;
@@ -35,7 +42,7 @@ public class GlobalInfo {
     public static Boolean getuserLocked10;
 
     /**
-     * Datos de la Cara y Manguera
+     * Datos de los Lados y Mangueras
      */
     public static String getCara10;
     public static String getPistola10;
@@ -50,25 +57,6 @@ public class GlobalInfo {
     public static Integer getterminalCompanyID10 = 1;
     public static Integer getterminalAlmacenID10;
     public static String  getterminalFechaHoraCierre10;
-
-    /**
-     * Datos de la Placa
-     */
-    public static String getNroPlaca10;
-    public static String getplacaClienteID10;
-    public static String getplacaClienteRZ10;
-    public static String getplacaClienteDR10;
-
-    /**
-     * Datos del Cliente RUC-DNI
-     */
-    public static String  getclienteId10;
-    public static String  getclienteRUC10;
-    public static String  getclienteRZ10;
-    public static String  getclienteDR10;
-    public static Boolean getclienteConsulta_Sunat10;
-    public static Integer getclienteDiasCredito10;
-    public static String  getclienteTipoCliente10;
 
     /**
      * Datos de la Setting
@@ -90,6 +78,27 @@ public class GlobalInfo {
     public static String  getsettingNroPlaca10;
     public static Double  getsettingDNIMontoMinimo10;
     public static String  getsettingtimerAppVenta10;
+
+    /**
+     * Datos del Cliente RUC-DNI
+     */
+    public static String  getclienteId10;
+    public static String  getclienteRUC10;
+    public static String  getclienteRZ10;
+    public static String  getclienteDR10;
+    public static Boolean getclienteConsulta_Sunat10;
+    public static Integer getclienteDiasCredito10;
+    public static String  getclienteTipoCliente10;
+
+    /**
+     * Datos de la Placa
+     */
+    public static String getNroPlaca10;
+    public static String getplacaClienteID10;
+    public static String getplacaClienteRZ10;
+    public static String getplacaClienteDR10;
+
+
 
     /**
      * Datos de la Setting Task
@@ -190,10 +199,7 @@ public class GlobalInfo {
     public static Double  getconsultaventaMtoTotal10;
     public static String  getconsultaventaAnulado10;
 
-    /**
-     * Datos Recycler
-     */
-    public  static List<Lados> getladosList10;
+
 
     /**
      * URL - APIService

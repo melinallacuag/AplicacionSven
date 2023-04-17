@@ -18,6 +18,8 @@
 
     <color name="colorGri">#343535</color>
 
+    <color name="colorHumo">#A19E9E</color>
+
     <!-- TODO: Color de los Textos -->
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#001E8A</color>

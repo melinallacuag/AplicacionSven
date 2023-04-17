@@ -23,6 +23,11 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
         int onItemClick(Mangueras item);
     }
 
+    public void setMangueraList(List<Mangueras> manguera){
+        mangueraList = manguera;
+        notifyDataSetChanged();
+    }
+
     public ManguerasAdapter(List<Mangueras> mangueraList, Context context, ManguerasAdapter.OnItemClickListener listener){
         this.mangueraList = mangueraList;
         this.context    = context;
@@ -44,6 +49,7 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
 
         holder.manguera_ID.setText(mangueraList.get(position).getMangueraID());
         holder.descripcion.setText(mangueraList.get(position).getDescripcion());
+
         holder.card_Manguera.setCardBackgroundColor(context.getResources().getColor(R.color.colorGri));
 
         if (selectedItem == position) {

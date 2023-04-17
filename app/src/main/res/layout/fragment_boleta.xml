@@ -70,6 +70,7 @@
                     android:textColor="@color/white"
                     android:backgroundTint="@color/colorSecondary"
                     android:textSize="10sp"
+                    android:visibility="gone"
                     app:cornerRadius="10sp" />
             </LinearLayout>
 
@@ -279,7 +280,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/cardlogin"
                 android:backgroundTint="@color/colorInfo"
-                android:fontFamily="@font/nunito_extralight"
+                android:fontFamily="@font/nunito_semibold"
                 android:text="Se realizara el modo de Pago en Efectivo"
                 android:textAlignment="center"
                 android:gravity="center"

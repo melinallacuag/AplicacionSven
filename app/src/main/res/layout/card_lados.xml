@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5sp"
         android:clickable="true"
-        app:cardBackgroundColor="@color/colorGri"
+        app:cardBackgroundColor="#A19E9E"
         app:cardCornerRadius="15sp"
         app:cardElevation="5sp">
 

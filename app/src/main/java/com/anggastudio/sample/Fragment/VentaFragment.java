@@ -32,6 +32,7 @@ import com.anggastudio.sample.Adapter.ManguerasAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
@@ -58,21 +59,20 @@ public class VentaFragment extends Fragment{
 
     RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta;
 
+    LadosAdapter ladosAdapter;
+
+    List<Mangueras> filtrarMangueras;
+    ManguerasAdapter manguerasAdapter;
+
     List<LClientes> clientesList;
     LClienteAdapter lclienteAdapter;
 
-    List<Lados> ladosList;
-    LadosAdapter ladosAdapter;
-
-    List<Mangueras> manguerasList;
-    ManguerasAdapter manguerasAdapter;
+    DetalleVentaAdapter detalleVentaAdapter;
+    List<DetalleVenta> detalleVentaList;
 
     TipoPago tipoPago;
     List<TipoPago> tipoPagoList;
     TipoPagoAdapter tipoPagoAdapter;
-
-    DetalleVentaAdapter detalleVentaAdapter;
-    List<DetalleVenta> detalleVentaList;
 
     TextView  datos_terminal,textMensajePEfectivo;
 
@@ -114,6 +114,14 @@ public class VentaFragment extends Fragment{
         btnFactura      = view.findViewById(R.id.btnFactura);
         btnSerafin      = view.findViewById(R.id.btnSerafin);
 
+        /** Boton Bloqueados */
+        btnLibre.setEnabled(false);
+        btnSoles.setEnabled(false);
+        btnGalones.setEnabled(false);
+        btnBoleta.setEnabled(false);
+        btnFactura.setEnabled(false);
+        btnSerafin.setEnabled(false);
+
         /** Boton Automatico o Stop */
         btnAutomatico.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,35 +154,17 @@ public class VentaFragment extends Fragment{
         });
 
         /** Datos de Terminal ID y Turno */
-        datos_terminal.setText("PUNTO 7 - " +"TURNO: " +02);
+        datos_terminal.setText(GlobalInfo.getterminalID10 + " - " +"TURNO: " + String.valueOf(GlobalInfo.getterminalTurno10));
 
         /** Listado de Card - Lado */
         recyclerLados = view.findViewById(R.id.recyclerLado);
         recyclerLados.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
-        Lados();
+        Lados_ByTerminal();
 
         /** Listado de Card - Manguera */
         recyclerMangueras = view.findViewById(R.id.recyclerMangueras);
         recyclerMangueras.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
-        manguerasList = new ArrayList<>();
-
-        for (int i = 0; i < 1; i++){
-            manguerasList.add(new Mangueras("G-REGULAR","01"));
-            manguerasList.add(new Mangueras("G-PREMIUM","02"));
-            manguerasList.add(new Mangueras("GLP","03"));
-            manguerasList.add(new Mangueras("DIESEL","04"));
-        }
-
-        manguerasAdapter = new ManguerasAdapter(manguerasList, getContext(), new ManguerasAdapter.OnItemClickListener() {
-            @Override
-            public int onItemClick(Mangueras item) {
-                return 0;
-            }
-        });
-
-        recyclerMangueras.setAdapter(manguerasAdapter);
 
         /** Mostrar Formulario Libre y Realizar la Operacion */
         modalLibre = new Dialog(getContext());
@@ -1096,23 +1086,56 @@ public class VentaFragment extends Fragment{
         return view;
     }
 
-    private void Lados(){
+
+
+    private void Lados_ByTerminal(){
 
         ladosAdapter = new LadosAdapter(GlobalInfo.getladosList10, getContext(), new LadosAdapter.OnItemClickListener() {
             @Override
             public int onItemClick(Lados item) {
-                GlobalInfo.getCara10 = item.getNroLado();
-                return 0;
 
+                Manguera_ByLados();
+
+                GlobalInfo.getCara10 = item.getNroLado();
+
+                filtrarMangueras = new ArrayList<>();
+
+                for (Mangueras mangueras : GlobalInfo.getmanguerasList10){
+                    if (mangueras.getNroLado().equals(GlobalInfo.getCara10)){
+                        filtrarMangueras.add(mangueras);
+                    }
+                }
+
+                manguerasAdapter.setMangueraList(filtrarMangueras);
+                manguerasAdapter.notifyDataSetChanged();
+
+                return 0;
             }
         });
 
         recyclerLados.setAdapter(ladosAdapter);
     }
 
+    private void Manguera_ByLados(){
 
+        manguerasAdapter = new ManguerasAdapter(GlobalInfo.getmanguerasList10, getContext(), new ManguerasAdapter.OnItemClickListener() {
+            @Override
+            public int onItemClick(Mangueras item) {
 
+                /** Boton Activados */
+                btnLibre.setEnabled(true);
+                btnSoles.setEnabled(true);
+                btnGalones.setEnabled(true);
+                btnBoleta.setEnabled(true);
+                btnFactura.setEnabled(true);
+                btnSerafin.setEnabled(true);
 
+                return 0;
+            }
+        });
+
+        recyclerMangueras.setAdapter(manguerasAdapter);
+    }
 
     private void modoAutomatico() {
 
@@ -1126,7 +1149,7 @@ public class VentaFragment extends Fragment{
 
         mTimerRunning = false;
         btnAutomatico.setText("Stop");
-        btnAutomatico.setBackgroundColor(Color.parseColor("#6c757d"));
+        btnAutomatico.setBackgroundColor(Color.parseColor("#dc3545"));
     }
 
 

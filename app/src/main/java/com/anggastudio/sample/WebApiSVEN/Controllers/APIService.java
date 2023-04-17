@@ -9,6 +9,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
+import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.Placa;
 import com.anggastudio.sample.WebApiSVEN.Models.Reimpresion;
@@ -72,13 +73,13 @@ public interface APIService {
      * Manguera
      */
     @GET("api/picos/listado")
-    Call<List<Lados>> getLado();
+    Call<List<Mangueras>> getMangueras();
 
     @GET("api/picos/listado/{id}")
-    Call<List<Lados>> findLado(@Path("id") String id);
+    Call<List<Mangueras>> findMangueras(@Path("id") String id);
 
     @POST("api/picos/guardar")
-    Call<Lados> postLados(@Body Lados lados);
+    Call<Mangueras> postMangueras(@Body Lados lados);
 
     /**
      * VentaCA
