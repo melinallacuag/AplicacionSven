@@ -379,38 +379,13 @@ public class VentaFragment extends Fragment{
                         btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
 
+                        /** Listado de Card - Cliente DNI */
                         recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
                         recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                        clientesList = new ArrayList<>();
+                        ClienteDNI();
 
-                        for (int i = 0; i < 1; i++){
-                            clientesList.add(new LClientes("11111111","","CLIENTE VARIOS","CLEMENTE"));
-                            clientesList.add(new LClientes("11111112","","JUAN PEREZ","SAN JUAN"));
-                            clientesList.add(new LClientes("11111113","","CLEMENTE MAURICIO","UGARTE"));
-                            clientesList.add(new LClientes("11111114","","RAUL CONTRERAS","MIRAFLORES"));
-                            clientesList.add(new LClientes("11111115","","PAULO LOPEZ","GRAU"));
-                        }
-
-                        lclienteAdapter = new LClienteAdapter(clientesList, getContext(), new LClienteAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(LClientes item) {
-                                String SelectDNI       = item.getClienteID();
-                                String SelectNombre    = item.getClienteRZ();
-                                String SelectDireccion = item.getClienteDR();
-
-                                inputDNI.setText(SelectDNI);
-                                inputNombre.setText(SelectNombre);
-                                inputDireccion.setText(SelectDireccion);
-
-                                modalCliente.dismiss();
-
-                                return ;
-                            }
-                        });
-
-                        recyclerLCliente.setAdapter(lclienteAdapter);
-
+                        /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                             @Override
                             public boolean onQueryTextSubmit(String query) {
@@ -739,38 +714,13 @@ public class VentaFragment extends Fragment{
                         btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
 
+                        /** Listado de Card - Cliente RUC */
                         recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
                         recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                        clientesList = new ArrayList<>();
+                        ClienteRUC();
 
-                        for (int i = 0; i < 1; i++){
-                            clientesList.add(new LClientes("11111111","","CLIENTE VARIOS","CLEMENTE"));
-                            clientesList.add(new LClientes("11111112","","JUAN PEREZ","SAN JUAN"));
-                            clientesList.add(new LClientes("11111113","","CLEMENTE MAURICIO","UGARTE"));
-                            clientesList.add(new LClientes("11111114","","RAUL CONTRERAS","MIRAFLORES"));
-                            clientesList.add(new LClientes("11111115","","PAULO LOPEZ","GRAU"));
-                        }
-
-                        lclienteAdapter = new LClienteAdapter(clientesList, getContext(), new LClienteAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(LClientes item) {
-                                String SelectDNI       = item.getClienteID();
-                                String SelectNombre    = item.getClienteRZ();
-                                String SelectDireccion = item.getClienteDR();
-
-                                inputRUC.setText(SelectDNI);
-                                inputRazSocial.setText(SelectNombre);
-                                inputDireccion.setText(SelectDireccion);
-
-                                modalCliente.dismiss();
-
-                                return ;
-                            }
-                        });
-
-                        recyclerLCliente.setAdapter(lclienteAdapter);
-
+                        /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                             @Override
                             public boolean onQueryTextSubmit(String query) {
@@ -1087,13 +1037,20 @@ public class VentaFragment extends Fragment{
         return view;
     }
 
-
-
+    /** Listado - LADOS */
     private void Lados_ByTerminal(){
 
         ladosAdapter = new LadosAdapter(GlobalInfo.getladosList10, getContext(), new LadosAdapter.OnItemClickListener() {
             @Override
             public int onItemClick(Lados item) {
+
+                /** Boton Desactivado */
+                btnLibre.setEnabled(false);
+                btnSoles.setEnabled(false);
+                btnGalones.setEnabled(false);
+                btnBoleta.setEnabled(false);
+                btnFactura.setEnabled(false);
+                btnSerafin.setEnabled(false);
 
                 Manguera_ByLados();
 
@@ -1117,6 +1074,7 @@ public class VentaFragment extends Fragment{
         recyclerLados.setAdapter(ladosAdapter);
     }
 
+    /** Listado - MANGUERA */
     private void Manguera_ByLados(){
 
         manguerasAdapter = new ManguerasAdapter(GlobalInfo.getmanguerasList10, getContext(), new ManguerasAdapter.OnItemClickListener() {
@@ -1138,6 +1096,44 @@ public class VentaFragment extends Fragment{
         recyclerMangueras.setAdapter(manguerasAdapter);
     }
 
+    /** Listado - CLIENTE CON DNI */
+    private void ClienteDNI(){
+
+        lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(LClientes item) {
+
+                inputDNI.setText(item.getClienteID());
+                inputNombre.setText(item.getClienteRZ());
+                inputDireccion.setText(item.getClienteDR());
+
+                modalCliente.dismiss();
+
+            }
+        });
+
+        recyclerLCliente.setAdapter(lclienteAdapter);
+
+    }
+
+    /** Listado - CLIENTE CON RUC */
+    private void  ClienteRUC(){
+
+        lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(LClientes item) {
+
+                inputRUC.setText(item.getClienteID());
+                inputRazSocial.setText(item.getClienteRZ());
+                inputDireccion.setText(item.getClienteDR());
+
+                modalCliente.dismiss();
+            }
+        });
+
+        recyclerLCliente.setAdapter(lclienteAdapter);
+
+    }
     private void modoAutomatico() {
 
         mTimerRunning = true;
@@ -1152,7 +1148,5 @@ public class VentaFragment extends Fragment{
         btnAutomatico.setText("Stop");
         btnAutomatico.setBackgroundColor(Color.parseColor("#dc3545"));
     }
-
-
 
 }

@@ -3,6 +3,7 @@ package com.anggastudio.sample.WebApiSVEN.Parameters;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 
@@ -20,6 +21,7 @@ public class GlobalInfo {
      */
     public  static List<Lados> getladosList10;
     public  static List<Mangueras> getmanguerasList10;
+    public  static List<LClientes> getlclientesList10;
 
     /**
      * Datos de la Empresa

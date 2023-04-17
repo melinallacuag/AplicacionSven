@@ -117,6 +117,9 @@ public class Login extends AppCompatActivity {
 
         getMangueras();
 
+        getClienteDNI();
+        getClienteRUC();
+
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
 
     }
@@ -338,6 +341,93 @@ public class Login extends AppCompatActivity {
         });
     }
 
+    /** Listado de Clientes con DNI */
+    private void getClienteDNI(){
+
+        Call<List<LClientes>> call = mAPIService.getClienteDNI();
+
+        call.enqueue(new Callback<List<LClientes>>() {
+            @Override
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    GlobalInfo.getlclientesList10 = response.body();
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** Listado de Clientes con DNI */
+    private void getClienteRUC(){
+
+        Call<List<LClientes>> call = mAPIService.getClienteRUC();
+
+        call.enqueue(new Callback<List<LClientes>>() {
+            @Override
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    GlobalInfo.getlclientesList10 = response.body();
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** API SERVICE - Buscar Cliente DNI */
+    private  void findClienteDNI(String id){
+
+        Call<List<LClientes>> call = mAPIService.findClienteDNI(id);
+
+        call.enqueue(new Callback<List<LClientes>>() {
+            @Override
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientesList = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Cliente DNI - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     /** API SERVICE - Setting */
     private void findSetting(Integer id){
 
@@ -446,35 +536,6 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    /** API SERVICE - Buscar Cliente DNI */
-    private  void findClienteDNI(String id){
-
-        Call<List<LClientes>> call = mAPIService.findClienteDNI(id);
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    clientesList = response.body();
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Cliente DNI - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     /** API SERVICE - Buscar Cliente RUC */
     private  void findClienteRUC(String id){
 
@@ -503,65 +564,6 @@ public class Login extends AppCompatActivity {
             }
         });
     }
-
-    /** Listado de Clientes con DNI */
-    private void getClienteDNI(){
-
-        Call<List<LClientes>> call = mAPIService.getClienteDNI();
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    clientesList = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** Listado de Clientes con DNI */
-    private void getClienteRUC(){
-
-        Call<List<LClientes>> call = mAPIService.getClienteRUC();
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    clientesList = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
 
     private String checkpassword(String clave){
 
