@@ -46,10 +46,11 @@ public class LadosAdapter extends RecyclerView.Adapter<LadosAdapter.ViewHolder>{
         Lados lados = ladosList.get(position);
 
         holder.nro_Lado.setText(ladosList.get(position).getNroLado());
-        holder.card_Lado.setCardBackgroundColor(context.getResources().getColor(R.color.colorHumo));
 
         if (selectedItem == position) {
             holder.card_Lado.setCardBackgroundColor(Color.parseColor("#5EA7DE"));
+        }else {
+            holder.card_Lado.setCardBackgroundColor(context.getResources().getColor(R.color.colorHumo));
         }
 
         holder.card_Lado.setOnClickListener(new View.OnClickListener() {

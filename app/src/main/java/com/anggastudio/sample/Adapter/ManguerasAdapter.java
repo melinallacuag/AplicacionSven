@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -50,10 +52,28 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
         holder.manguera_ID.setText(mangueraList.get(position).getMangueraID());
         holder.descripcion.setText(mangueraList.get(position).getDescripcion());
 
-        holder.card_Manguera.setCardBackgroundColor(context.getResources().getColor(R.color.colorGri));
-
         if (selectedItem == position) {
-            holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#35B596"));
+            if (mangueras.getDescripcion().equals("DIESEL DB5")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#494242"));
+
+            } else if (mangueras.getDescripcion().equals("G-REGULAR")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#50B955"));
+
+            } else if (mangueras.getDescripcion().equals("G-PREMIUM")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#3A43FF"));
+
+            }else if (mangueras.getDescripcion().equals("GLP")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#DD890C"));
+
+            }else {
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#35B596"));
+            }
+        }else {
+            holder.card_Manguera.setCardBackgroundColor(context.getResources().getColor(R.color.colorHumo));
         }
 
         holder.card_Manguera.setOnClickListener(new View.OnClickListener() {
