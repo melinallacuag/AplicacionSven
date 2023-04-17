@@ -19,13 +19,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.Adapter.ListaComprobanteAdapter;
 import com.anggastudio.sample.R;
+import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
+import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ListaComprobantesFragment extends Fragment  {
+
+    private APIService mAPIService;
 
     RecyclerView recyclerLComprobante ;
     ListaComprobanteAdapter listaComprobanteAdapter;
@@ -42,6 +50,7 @@ public class ListaComprobantesFragment extends Fragment  {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_lista_comprobantes, container, false);
 
+        mAPIService  = GlobalInfo.getAPIService();
 
         BuscarRazonSocial   = view.findViewById(R.id.BuscarRazonSocial);
 
@@ -49,23 +58,41 @@ public class ListaComprobantesFragment extends Fragment  {
         recyclerLComprobante = view.findViewById(R.id.recyclerListaComprobante);
         recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        listaComprobanteList = new ArrayList<>();
-
-        for (int i = 0; i < 1; i++){
-            listaComprobanteList.add(new ListaComprobante("01/05/2023","111111111","CLIENTE VARIOS",20.50,"NO"));
-            listaComprobanteList.add(new ListaComprobante("30/04/2023","111111112","JUAN PAULO",15.50,"NO"));
-            listaComprobanteList.add(new ListaComprobante("29/04/2023","111111113","TOMAS TORRES",2.50,"NO"));
-            listaComprobanteList.add(new ListaComprobante("25/04/2023","111111114","JIMENA LOPEZ",100.00,"NO"));
-            listaComprobanteList.add(new ListaComprobante("24/04/2023","111111115","LORENZO BARGAS",50.30,"NO"));
-        }
-
         /** Mostrar Modal de Cambio de Turno */
         modalReimpresion = new Dialog(getContext());
         modalReimpresion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalReimpresion.setContentView(R.layout.modal_reimprimir);
         modalReimpresion.setCancelable(false);
 
-        listaComprobanteAdapter = new ListaComprobanteAdapter(listaComprobanteList, getContext(), new ListaComprobanteAdapter.OnItemClickListener() {
+        ListaComprobante();
+
+        /** Buscador por Razon Social */
+        BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                if (listaComprobanteList.isEmpty()) {
+
+                    Toast.makeText(getContext(), "No se encontró el dato", Toast.LENGTH_SHORT).show();
+
+                }
+
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                listaComprobanteAdapter.filtrado(newText);
+                return false;
+            }
+        });
+
+        return view;
+    }
+
+    public void ListaComprobante(){
+
+        listaComprobanteAdapter = new ListaComprobanteAdapter(GlobalInfo.getlistacomprobanteList10, getContext(), new ListaComprobanteAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(ListaComprobante item) {
 
@@ -107,28 +134,8 @@ public class ListaComprobantesFragment extends Fragment  {
         });
 
         recyclerLComprobante.setAdapter(listaComprobanteAdapter);
-
-        BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                if (listaComprobanteList.isEmpty()) {
-
-                    Toast.makeText(getContext(), "No se encontró el dato", Toast.LENGTH_SHORT).show();
-
-                }
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                listaComprobanteAdapter.filtrado(newText);
-                return false;
-            }
-        });
-
-        return view;
     }
+
+
 
 }

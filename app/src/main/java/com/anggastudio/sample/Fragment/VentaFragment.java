@@ -493,33 +493,13 @@ public class VentaFragment extends Fragment{
                     }
                 });
 
-                /** Boton Buscador - Placa */
-                buscarPlacaBoleta.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        String campoPlaca = inputPlaca.getText().toString();
-
-                        if (campoPlaca.isEmpty()) {
-                            alertPlaca.setError("* El campo Placa es obligatorio");
-                            return;
-                        }
-
-                            alertPlaca.setErrorEnabled(false);
-
-                            inputDNI.getText().clear();
-                            inputNombre.getText().clear();
-                            inputDireccion.getText().clear();
-                    }
-                });
-
                 /** Boton Buscador - Generar Cliente */
                 btnGenerarBoleta.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        inputPlaca.setText("000-0000");
-                        inputDNI.setText("11111111");
-                        inputNombre.setText("CLIENTE VARIOS");
+                        inputPlaca.setText(GlobalInfo.getsettingNroPlaca10);
+                        inputDNI.setText(GlobalInfo.getsettingClienteID10);
+                        inputNombre.setText(GlobalInfo.getsettingClienteRZ10);
                     }
                 });
 
@@ -820,26 +800,6 @@ public class VentaFragment extends Fragment{
                         inputRazSocial.getText().clear();
                         inputDireccion.getText().clear();
 
-                    }
-                });
-
-                /** Boton Buscador - Placa */
-                buscarPlacaFactura.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        String campoPlaca = inputPlaca.getText().toString();
-
-                        if (campoPlaca.isEmpty()) {
-                            alertPlaca.setError("* El campo Placa es obligatorio");
-                            return;
-                        }
-
-                        alertPlaca.setErrorEnabled(false);
-
-                        inputRUC.getText().clear();
-                        inputRazSocial.getText().clear();
-                        inputDireccion.getText().clear();
                     }
                 });
 

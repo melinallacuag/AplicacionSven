@@ -103,6 +103,13 @@ public interface APIService {
     Call<List<LClientes>> findClienteRUC(@Path("id") String id);
 
     /**
+     * Detalle de la Venta
+     */
+    @GET("api/detalleventa/listado/{id}")
+    Call<List<DetalleVenta>> findDetalleVenta(@Path("id") String id);
+
+
+    /**
      * VentaCA
      */
     @POST("api/ventaca/guardar")
@@ -114,11 +121,6 @@ public interface APIService {
     @GET("api/optran/listado/{id}")
     Call<List<Optran>> findOptran(@Path("id") String id);
 
-    /**
-     * Detalle de la Venta
-     */
-    @GET("api/detalleventa/listado/{id}")
-    Call<List<DetalleVenta>> findDetalleVenta(@Path("id") String id);
 
     /**
      * Tipo de Pago - Spinner Tarjeta
@@ -128,8 +130,6 @@ public interface APIService {
 
     @GET("api/card/listado/{id}")
     Call<List<TipoPago>> findTipoPago(@Path("id") Integer id);
-
-
 
     /**
      * Placa

@@ -6,6 +6,7 @@ import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 
@@ -26,6 +27,7 @@ public class GlobalInfo {
     public  static List<LClientes> getlclientesList10;
     public  static List<TipoPago> gettipopagoList10;
     public  static List<DetalleVenta> getdetalleVentaList10;
+    public  static List<ListaComprobante>  getlistacomprobanteList10;
 
     /**
      * Datos de la Empresa

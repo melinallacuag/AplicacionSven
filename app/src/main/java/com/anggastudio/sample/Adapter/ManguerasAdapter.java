@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,7 +65,7 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
 
             }else if (mangueras.getDescripcion().equals("GLP")){
 
-                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#DD890C"));
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#DF8600"));
 
             }else {
                 holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#35B596"));

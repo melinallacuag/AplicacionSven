@@ -16,7 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
 import com.anggastudio.sample.R;
+import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 
 import java.util.List;
@@ -27,9 +29,14 @@ import retrofit2.Response;
 
 public class DasboardFragment extends Fragment{
 
+    private APIService mAPIService;
+
     TextView nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
+
     CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
+
     Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
+
     Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir;
 
     @Override
@@ -37,6 +44,8 @@ public class DasboardFragment extends Fragment{
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_dasboard, container, false);
+
+        mAPIService = GlobalInfo.getAPIService();
 
         nombre_grifero        = view.findViewById(R.id.nombre_grifero);
         fecha_inicio_grifero  = view.findViewById(R.id.fecha_inicio);
