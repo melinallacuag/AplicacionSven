@@ -82,6 +82,27 @@ public interface APIService {
     Call<Mangueras> postMangueras(@Body Lados lados);
 
     /**
+     * Cliente RUC - DNI
+     */
+    @GET("api/cliente/listado")
+    Call<List<LClientes>> getCliente();
+
+    @GET("api/cliente/listado/{id}")
+    Call<List<LClientes>> findCliente(@Path("id") String id);
+
+    @GET("api/cliente/listado/DNI")
+    Call<List<LClientes>> getClienteDNI();
+
+    @GET("api/cliente/listado/DNI/{id}")
+    Call<List<LClientes>> findClienteDNI(@Path("id") String id);
+
+    @GET("api/cliente/listado/RUC")
+    Call<List<LClientes>> getClienteRUC();
+
+    @GET("api/cliente/listado/RUC/{id}")
+    Call<List<LClientes>> findClienteRUC(@Path("id") String id);
+
+    /**
      * VentaCA
      */
     @POST("api/ventaca/guardar")
@@ -108,26 +129,7 @@ public interface APIService {
     @GET("api/card/listado/{id}")
     Call<List<TipoPago>> findTipoPago(@Path("id") Integer id);
 
-    /**
-     * Cliente RUC - DNI
-     */
-    @GET("api/cliente/listado")
-    Call<List<LClientes>> getCliente();
 
-    @GET("api/cliente/listado/DNI")
-    Call<List<LClientes>> getClienteDNI();
-
-    @GET("api/cliente/listado/RUC")
-    Call<List<LClientes>> getClienteRUC();
-
-    @GET("api/cliente/listado/{id}")
-    Call<List<LClientes>> findCliente(@Path("id") String id);
-
-    @GET("api/cliente/listado/RUC/{id}")
-    Call<List<LClientes>> findClienteRUC(@Path("id") String id);
-
-    @GET("api/cliente/listado/DNI/{id}")
-    Call<List<LClientes>> findClienteDNI(@Path("id") String id);
 
     /**
      * Placa

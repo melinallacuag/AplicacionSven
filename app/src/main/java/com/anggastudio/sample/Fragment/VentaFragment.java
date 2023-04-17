@@ -65,14 +65,11 @@ public class VentaFragment extends Fragment{
     List<Mangueras> filtrarMangueras;
     ManguerasAdapter manguerasAdapter;
 
-    List<LClientes> clientesList;
     LClienteAdapter lclienteAdapter;
 
     DetalleVentaAdapter detalleVentaAdapter;
-    List<DetalleVenta> detalleVentaList;
 
     TipoPago tipoPago;
-    List<TipoPago> tipoPagoList;
     TipoPagoAdapter tipoPagoAdapter;
 
     TextView  datos_terminal,textMensajePEfectivo;
@@ -455,17 +452,7 @@ public class VentaFragment extends Fragment{
                 radioFormaPago.check(radioEfectivo.getId());
 
                 /** Seleccionar Opción - Tipo de Pago */
-                tipoPagoList = new ArrayList<>();
-
-                for (int i = 0; i < 1; i++){
-                    tipoPagoList.add(new TipoPago("VISA"));
-                    tipoPagoList.add(new TipoPago("YAPE"));
-
-                }
-
-                Resources res = getResources();
-                tipoPagoAdapter = new TipoPagoAdapter(getContext(), R.layout.item, (ArrayList<TipoPago>) tipoPagoList, res);
-                SpinnerTPago.setAdapter(tipoPagoAdapter);
+                TipoPago_Doc();
 
                 SpinnerTPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -492,7 +479,11 @@ public class VentaFragment extends Fragment{
                         }else if (campoDNI.length() < 8){
                             alertDNI.setError("* El DNI debe tener 8 dígitos");
                             return;
+                        }else if(campoDNI.equals(GlobalInfo.getclienteId10)){
+                            alertDNI.setError("* No se encontro DNI");
                         }
+
+                            findClienteDNI(campoDNI);
 
                             alertDNI.setErrorEnabled(false);
 
@@ -790,17 +781,7 @@ public class VentaFragment extends Fragment{
                 radioFormaPago.check(radioEfectivo.getId());
 
                 /** Seleccionar Opción - Tipo de Pago */
-                tipoPagoList = new ArrayList<>();
-
-                for (int i = 0; i < 1; i++){
-                    tipoPagoList.add(new TipoPago("VISA"));
-                    tipoPagoList.add(new TipoPago("YAPE"));
-
-                }
-
-                Resources res = getResources();
-                tipoPagoAdapter = new TipoPagoAdapter(getContext(), R.layout.item, (ArrayList<TipoPago>) tipoPagoList, res);
-                SpinnerTPago.setAdapter(tipoPagoAdapter);
+                TipoPago_Doc();
 
                 SpinnerTPago.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
@@ -827,7 +808,12 @@ public class VentaFragment extends Fragment{
                         }else if (campoRUC.length() < 11){
                             alertRUC.setError("* El RUC debe tener 11 dígitos");
                             return;
+                        }else if(campoRUC.equals(GlobalInfo.getclienteRUC10)){
+                            alertRUC.setError("* No se encontro RUC");
+                            return;
                         }
+
+                        findClienteRUC(campoRUC);
 
                         alertRUC.setErrorEnabled(false);
 
@@ -1020,19 +1006,8 @@ public class VentaFragment extends Fragment{
         recyclerDetalleVenta = view.findViewById(R.id.recyclerDetalleVenta);
         recyclerDetalleVenta.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        detalleVentaList = new ArrayList<>();
+        DetalleVenta();
 
-        for (int i = 0; i < 1; i++){
-            detalleVentaList.add(new DetalleVenta("01","E",0.18,"FG4-784",""));
-            detalleVentaList.add(new DetalleVenta("02","E",0.18,"S54-704",""));
-            detalleVentaList.add(new DetalleVenta("03","E",0.18,"R84-145",""));
-            detalleVentaList.add(new DetalleVenta("04","E",0.18,"CD4-870",""));
-            detalleVentaList.add(new DetalleVenta("05","E",0.18,"C94-555",""));
-        }
-
-        detalleVentaAdapter = new DetalleVentaAdapter(detalleVentaList, getContext());
-
-        recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
 
         return view;
     }
@@ -1109,6 +1084,8 @@ public class VentaFragment extends Fragment{
 
                 modalCliente.dismiss();
 
+                btnBuscadorClienteRZ.setQuery("", false);
+
             }
         });
 
@@ -1117,7 +1094,7 @@ public class VentaFragment extends Fragment{
     }
 
     /** Listado - CLIENTE CON RUC */
-    private void  ClienteRUC(){
+    private void ClienteRUC(){
 
         lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
             @Override
@@ -1128,12 +1105,108 @@ public class VentaFragment extends Fragment{
                 inputDireccion.setText(item.getClienteDR());
 
                 modalCliente.dismiss();
+
+                btnBuscadorClienteRZ.setQuery("", false);
             }
         });
 
         recyclerLCliente.setAdapter(lclienteAdapter);
 
     }
+
+    /** Listado - TIPO PAGO */
+    private void  TipoPago_Doc(){
+
+        Resources res = getResources();
+        tipoPagoAdapter = new TipoPagoAdapter(getContext(), R.layout.item, (ArrayList<TipoPago>) GlobalInfo.gettipopagoList10, res);
+        SpinnerTPago.setAdapter(tipoPagoAdapter);
+
+    }
+
+    /** Listado - DETALLE VENTA */
+    private void DetalleVenta(){
+
+        detalleVentaAdapter = new DetalleVentaAdapter(GlobalInfo.getdetalleVentaList10, getContext());
+        recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
+    }
+
+    /** API SERVICE - Buscar Cliente DNI */
+    private  void findClienteDNI(String id){
+
+        Call<List<LClientes>> call = mAPIService.findClienteDNI(id);
+
+        call.enqueue(new Callback<List<LClientes>>() {
+            @Override
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getlclientesList10 = response.body();
+
+                    LClientes lClientes = GlobalInfo.getlclientesList10.get(0);
+
+                    GlobalInfo.getclienteId10  = String.valueOf(lClientes.getClienteID());
+                    GlobalInfo.getclienteRZ10  = String.valueOf(lClientes.getClienteRZ());
+                    GlobalInfo.getclienteDR10  = String.valueOf(lClientes.getClienteDR());
+
+                    inputNombre.setText(GlobalInfo.getclienteRZ10 );
+                    inputDireccion.setText(GlobalInfo.getclienteDR10);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente DNI - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** API SERVICE - Buscar Cliente RUC */
+    private  void findClienteRUC(String id){
+
+        Call<List<LClientes>> call = mAPIService.findClienteRUC(id);
+
+        call.enqueue(new Callback<List<LClientes>>() {
+            @Override
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getlclientesList10 = response.body();
+
+                    LClientes lClientes = GlobalInfo.getlclientesList10.get(0);
+
+                    GlobalInfo.getclienteId10  = String.valueOf(lClientes.getClienteID());
+                    GlobalInfo.getclienteRUC10 = String.valueOf(lClientes.getClienteRUC());
+                    GlobalInfo.getclienteRZ10  = String.valueOf(lClientes.getClienteRZ());
+                    GlobalInfo.getclienteDR10  = String.valueOf(lClientes.getClienteDR());
+
+                    inputRazSocial.setText(GlobalInfo.getclienteRZ10);
+                    inputDireccion.setText(GlobalInfo.getclienteDR10);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente RUC - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void modoAutomatico() {
 
         mTimerRunning = true;

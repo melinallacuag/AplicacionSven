@@ -13,10 +13,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
 import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
+import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
@@ -120,6 +122,8 @@ public class Login extends AppCompatActivity {
         getClienteDNI();
         getClienteRUC();
 
+        getTipoPago();
+
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
 
     }
@@ -211,6 +215,8 @@ public class Login extends AppCompatActivity {
                         findSetting(GlobalInfo.getterminalCompanyID10);
 
                         findLados(GlobalInfo.getterminalImei10);
+
+                        findDetalleVenta(GlobalInfo.getterminalImei10);
 
                     }
 
@@ -312,6 +318,85 @@ public class Login extends AppCompatActivity {
 
     }
 
+    /** API SERVICE - Setting */
+    private void findSetting(Integer id){
+
+        Call<List<Setting>> call = mAPIService.findSetting(id);
+
+        call.enqueue(new Callback<List<Setting>>() {
+            @Override
+            public void onResponse(Call<List<Setting>> call, Response<List<Setting>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    settingList = response.body();
+
+                    for(Setting setting: settingList) {
+                        GlobalInfo.getsettingCompanyId10       = Integer.valueOf(setting.getCompanyID());
+                        GlobalInfo.getsettingTituloApp10       = String.valueOf(setting.getTituloApp());
+                        GlobalInfo.getsettingFuelName10        = String.valueOf(setting.getFuel_Name());
+                        GlobalInfo.getsettingFuelGrupoID10     = String.valueOf(setting.getFuel_GrupoID());
+                        GlobalInfo.getsettingFuelLados10       = Integer.valueOf(setting.getFuel_Lados());
+                        GlobalInfo.getsettingFuelMontoMinimo10 = Double.valueOf(setting.getFuel_Monto_Minimo());
+                        GlobalInfo.getsettingImpuestoID110     = Integer.valueOf(setting.getImpuestoID1());
+                        GlobalInfo.getsettingImpuestoValor110  = Integer.valueOf(setting.getImpuesto_Valor1());
+                        GlobalInfo.getsettingImpuestoID210     = Integer.valueOf(setting.getImpuestoID2());
+                        GlobalInfo.getsettingImpuestoValor210  = Integer.valueOf(setting.getImpuesto_Valor2());
+                        GlobalInfo.getsettingMonedaID10        = String.valueOf(setting.getMonedaID());
+                        GlobalInfo.getsettingMonedaValor10     = String.valueOf(setting.getMoneda_Valor());
+                        GlobalInfo.getsettingClienteID10       = String.valueOf(setting.getClienteID());
+                        GlobalInfo.getsettingClienteRZ10       = String.valueOf(setting.getClienteRZ());
+                        GlobalInfo.getsettingNroPlaca10        = String.valueOf(setting.getNroplaca());
+                        GlobalInfo.getsettingDNIMontoMinimo10  = Double.valueOf(setting.getDnI_Monto_Minimo());
+                        GlobalInfo.getsettingtimerAppVenta10   = String.valueOf(setting.getTimerAppVenta());
+                    }
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Setting>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Setting - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /** API SERVICE - Card Detalle de Ventas */
+    private void findDetalleVenta(String id){
+
+        Call<List<DetalleVenta>> call = mAPIService.findDetalleVenta(id);
+
+        call.enqueue(new Callback<List<DetalleVenta>>() {
+            @Override
+            public void onResponse(Call<List<DetalleVenta>> call, Response<List<DetalleVenta>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getdetalleVentaList10 = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<DetalleVenta>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Detalle Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     /**  API SERVICE - Mangueras */
     private void getMangueras(){
 
@@ -399,86 +484,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    /** API SERVICE - Buscar Cliente DNI */
-    private  void findClienteDNI(String id){
-
-        Call<List<LClientes>> call = mAPIService.findClienteDNI(id);
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    clientesList = response.body();
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Cliente DNI - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** API SERVICE - Setting */
-    private void findSetting(Integer id){
-
-        Call<List<Setting>> call = mAPIService.findSetting(id);
-
-        call.enqueue(new Callback<List<Setting>>() {
-            @Override
-            public void onResponse(Call<List<Setting>> call, Response<List<Setting>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    settingList = response.body();
-
-                    for(Setting setting: settingList) {
-                        GlobalInfo.getsettingCompanyId10       = Integer.valueOf(setting.getCompanyID());
-                        GlobalInfo.getsettingTituloApp10       = String.valueOf(setting.getTituloApp());
-                        GlobalInfo.getsettingFuelName10        = String.valueOf(setting.getFuel_Name());
-                        GlobalInfo.getsettingFuelGrupoID10     = String.valueOf(setting.getFuel_GrupoID());
-                        GlobalInfo.getsettingFuelLados10       = Integer.valueOf(setting.getFuel_Lados());
-                        GlobalInfo.getsettingFuelMontoMinimo10 = Double.valueOf(setting.getFuel_Monto_Minimo());
-                        GlobalInfo.getsettingImpuestoID110     = Integer.valueOf(setting.getImpuestoID1());
-                        GlobalInfo.getsettingImpuestoValor110  = Integer.valueOf(setting.getImpuesto_Valor1());
-                        GlobalInfo.getsettingImpuestoID210     = Integer.valueOf(setting.getImpuestoID2());
-                        GlobalInfo.getsettingImpuestoValor210  = Integer.valueOf(setting.getImpuesto_Valor2());
-                        GlobalInfo.getsettingMonedaID10        = String.valueOf(setting.getMonedaID());
-                        GlobalInfo.getsettingMonedaValor10     = String.valueOf(setting.getMoneda_Valor());
-                        GlobalInfo.getsettingClienteID10       = String.valueOf(setting.getClienteID());
-                        GlobalInfo.getsettingClienteRZ10       = String.valueOf(setting.getClienteRZ());
-                        GlobalInfo.getsettingNroPlaca10        = String.valueOf(setting.getNroplaca());
-                        GlobalInfo.getsettingDNIMontoMinimo10  = Double.valueOf(setting.getDnI_Monto_Minimo());
-                        GlobalInfo.getsettingtimerAppVenta10   = String.valueOf(setting.getTimerAppVenta());
-                    }
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<Setting>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Setting - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    /** Spinner de Tipo de Tarjetas */
+    /** Spinner de Tipo de Pago */
     private void getTipoPago(){
         Call<List<TipoPago>> call = mAPIService.getTipoPago();
 
@@ -492,7 +498,7 @@ public class Login extends AppCompatActivity {
                         return;
                     }
 
-                    tipoPagoList = response.body();
+                    GlobalInfo.gettipopagoList10 = response.body();
 
                 }catch (Exception ex){
                     Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -502,65 +508,6 @@ public class Login extends AppCompatActivity {
             @Override
             public void onFailure(Call<List<TipoPago>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** API SERVICE - Cliente */
-    private  void findCliente(String id, String tipodoc){
-
-        Call<List<LClientes>> call = mAPIService.findCliente(id);
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    clientesList = response.body();
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Cliente - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** API SERVICE - Buscar Cliente RUC */
-    private  void findClienteRUC(String id){
-
-        Call<List<LClientes>> call = mAPIService.findClienteRUC(id);
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    clientesList = response.body();
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Cliente RUC - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
     }
