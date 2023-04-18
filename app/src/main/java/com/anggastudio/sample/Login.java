@@ -216,8 +216,6 @@ public class Login extends AppCompatActivity {
 
                         findDetalleVenta(GlobalInfo.getterminalImei10);
 
-                        findConsultarVenta(GlobalInfo.getterminalID10);
-
                     }
 
                     if (GlobalInfo.getterminalID10.isEmpty() || GlobalInfo.getterminalID10 == null) {
@@ -395,38 +393,6 @@ public class Login extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error de conexión APICORE Detalle Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    /** API SERVICE - Card Consultar Venta */
-    private void findConsultarVenta(String id){
-
-        Call<List<ListaComprobante>> call = mAPIService.findConsultarVenta(id);
-
-        call.enqueue(new Callback<List<ListaComprobante>>() {
-            @Override
-            public void onResponse(Call<List<ListaComprobante>> call, Response<List<ListaComprobante>> response) {
-
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    GlobalInfo.getlistacomprobanteList10 = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<ListaComprobante>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Consulta Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-
     }
 
     /**  API SERVICE - Mangueras */

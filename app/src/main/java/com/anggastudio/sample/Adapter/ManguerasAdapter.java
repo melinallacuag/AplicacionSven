@@ -25,7 +25,7 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
 
     public void setMangueraList(List<Mangueras> manguera){
         mangueraList = manguera;
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
     public ManguerasAdapter(List<Mangueras> mangueraList, Context context, ManguerasAdapter.OnItemClickListener listener){

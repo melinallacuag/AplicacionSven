@@ -973,7 +973,7 @@ public class VentaFragment extends Fragment{
     }
 
     /** Listado - LADOS */
-    private void Lados_ByTerminal(){
+    private void Lados_ByTerminal() {
 
         ladosAdapter = new LadosAdapter(GlobalInfo.getladosList10, getContext(), new LadosAdapter.OnItemClickListener() {
             @Override
@@ -1007,6 +1007,7 @@ public class VentaFragment extends Fragment{
         });
 
         recyclerLados.setAdapter(ladosAdapter);
+
     }
 
     /** Listado - MANGUERA */
@@ -1029,6 +1030,7 @@ public class VentaFragment extends Fragment{
         });
 
         recyclerMangueras.setAdapter(manguerasAdapter);
+
     }
 
     /** Listado - CLIENTE CON DNI */

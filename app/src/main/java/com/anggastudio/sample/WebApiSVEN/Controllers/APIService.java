@@ -76,7 +76,7 @@ public interface APIService {
     Call<List<Mangueras>> getMangueras();
 
     @GET("api/picos/listado/{id}")
-    Call<List<Mangueras>> findMangueras(@Path("id") String id);
+    Call<List<Mangueras>> findManguerasByLado(@Path("id") String id);
 
     @POST("api/picos/guardar")
     Call<Mangueras> postMangueras(@Body Lados lados);
