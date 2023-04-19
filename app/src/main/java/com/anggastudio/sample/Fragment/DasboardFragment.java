@@ -65,7 +65,8 @@ public class DasboardFragment extends Fragment{
         fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
         turno_grifero.setText("TURNO : " + String.valueOf(GlobalInfo.getterminalTurno10));
 
-        String DirSucursal = GlobalInfo.getBranchCompany10;
+
+        String DirSucursal = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
 
         DirSucursal = DirSucursal.replace("-","");
 

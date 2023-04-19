@@ -1,6 +1,7 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.anggastudio.printama.Printama;
 import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
 import com.anggastudio.sample.Adapter.LClienteAdapter;
 import com.anggastudio.sample.Adapter.LadosAdapter;
@@ -43,6 +45,10 @@ import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -57,8 +63,14 @@ import retrofit2.Response;
 
 public class VentaFragment extends Fragment{
 
+
     private static final String AUTOMATICO_MODE_KEY = "automatico_mode_key";
-    private boolean mTimerRunning = false;
+
+    boolean mTimerRunning;
+    Timer timer;
+    TimerTask timerTask;
+    boolean mIsTaskScheduled = false;
+
 
     RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta;
 
@@ -126,21 +138,26 @@ public class VentaFragment extends Fragment{
             mTimerRunning = savedInstanceState.getBoolean(AUTOMATICO_MODE_KEY);
         }
 
+
         /** Boton Automatico o Stop */
         btnAutomatico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                mTimerRunning = !mTimerRunning;
-
                 if (mTimerRunning) {
-                    modoAutomatico();
-                } else {
                     modoStop();
+                } else {
+                    modoAutomatico();
                 }
 
             }
         });
+
+        if (mTimerRunning) {
+            modoStop();
+        } else {
+            modoAutomatico();
+        }
 
 
         /** Boton para Dirigirse al Listado de Comprobantes */
@@ -1236,39 +1253,91 @@ public class VentaFragment extends Fragment{
         });
     }
 
-    /** Se mantenga en el estado actual */
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mTimerRunning) {
-            modoAutomatico();
-        } else {
-            modoStop();
-        }
-    }
+    /** Boton Modo - AUTOMATICO */
+    private void modoAutomatico() {
 
-    /** Boton Modo - STOP */
-    @Override
-    public void onPause() {
-        super.onPause();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean(AUTOMATICO_MODE_KEY, mTimerRunning);
+        if (!mIsTaskScheduled) {
+
+            timer = new Timer();
+
+            timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Printama.with(getContext()).connect(printama -> {
+
+                        printama.printTextln("                 ", Printama.CENTER);
+                        printama.setSmallText();
+                        printama.printTextlnBold("NameCompany", Printama.CENTER);
+                        printama.printTextlnBold("PRINCIPAL: " + "Address1", Printama.CENTER);
+                        printama.printTextlnBold("Address2", Printama.CENTER);
+                        printama.printTextlnBold("SUCURSAL: " + "Branch1", Printama.CENTER);
+                        printama.printTextlnBold("Branch2", Printama.CENTER);
+                        printama.printTextlnBold("RUC: " + "RUCCompany", Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.feedPaper();
+                        printama.close();
+
+                    });
+                }
+            };
+
+            timer.schedule(timerTask,3000,3000);
+            mIsTaskScheduled = true;
+        }
+
+        mTimerRunning = true;
+        btnAutomatico.setText("Automático");
+        btnAutomatico.setBackgroundColor(Color.parseColor("#001E8A"));
+
+        btnListadoComprobante.setEnabled(false);
 
     }
 
     /** Boton Modo - STOP */
     private void modoStop() {
 
+        if (mIsTaskScheduled) {
+            timer.cancel();
+            timer.purge();
+            mIsTaskScheduled = false;
+        }
+
+        mTimerRunning = false;
         btnAutomatico.setText("Stop");
         btnAutomatico.setBackgroundColor(Color.parseColor("#dc3545"));
+
+        btnListadoComprobante.setEnabled(true);
+
     }
 
-    /** Boton Modo - AUTOMATICO */
-    private void modoAutomatico() {
+    /** Se mantenga en el estado actual */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mTimerRunning) {
+            modoStop();
+        } else {
+            modoAutomatico();
+        }
+    }
 
-        btnAutomatico.setText("Automático");
-        btnAutomatico.setBackgroundColor(Color.parseColor("#001E8A"));
+    /** Para detener el temporizador  */
+    @Override
+    public void onPause() {
+        super.onPause();
+        timer.cancel();
+        timer.purge();
 
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
     }
 
 }
