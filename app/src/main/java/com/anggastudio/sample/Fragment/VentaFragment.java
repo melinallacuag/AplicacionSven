@@ -534,93 +534,118 @@ public class VentaFragment extends Fragment{
                     @Override
                     public void onClick(View view) {
 
-                        String campoPlaca          = inputPlaca.getText().toString();
-                        String campoDNI            = inputDNI.getText().toString();
-                        String campoNombre         = inputNombre.getText().toString();
-                        String campoPEfectivo      = inputPEfectivo.getText().toString();
-                        String campoOperacion      = inputOperacion.getText().toString();
+                        for (DetalleVenta detalleVenta : GlobalInfo.getdetalleVentaList10 ){
 
-                        int checkedRadioButtonId   = radioFormaPago.getCheckedRadioButtonId();
+                            if(detalleVenta.getCara().equals(GlobalInfo.getCara10)){
 
-                        Double dosDecimales = Double.valueOf(campoPEfectivo);
-                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                                String campoPlaca          = inputPlaca.getText().toString();
+                                String campoDNI            = inputDNI.getText().toString();
+                                String campoNombre         = inputNombre.getText().toString();
+                                String campoPEfectivo      = inputPEfectivo.getText().toString();
+                                String campoOperacion      = inputOperacion.getText().toString();
 
-                        if (campoPlaca.isEmpty()) {
+                                int checkedRadioButtonId   = radioFormaPago.getCheckedRadioButtonId();
 
-                            alertPlaca.setError("* El campo Placa es obligatorio");
-                            return;
-                        } else if (campoDNI.isEmpty() ) {
+                                Double dosDecimales = Double.valueOf(campoPEfectivo);
+                                DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-                            alertDNI.setError("* El campo DNI es obligatorio");
-                            return;
-                        } else if (campoDNI.length() < 8) {
+                                if (campoPlaca.isEmpty()) {
 
-                            alertDNI.setError("* El DNI debe tener 8 dígitos");
-                            return;
-                        }else if (campoNombre.isEmpty()) {
+                                    alertPlaca.setError("* El campo Placa es obligatorio");
+                                    return;
+                                } else if (campoDNI.isEmpty() ) {
 
-                            alertNombre.setError("* El campo Nombre es obligatorio");
-                            return;
-                        }else if (checkedRadioButtonId == radioTarjeta.getId()) {
+                                    alertDNI.setError("* El campo DNI es obligatorio");
+                                    return;
+                                } else if (campoDNI.length() < 8) {
 
-                            if (campoOperacion.isEmpty()) {
-                                alertOperacion.setError("* El campo Nro Operación es obligatorio");
-                                return;
-                            } else if (campoOperacion.length() < 4) {
-                                alertOperacion.setError("* El  Nro Operación debe tener 4 dígitos");
-                                return;
-                            } else if (campoPEfectivo.isEmpty()) {
-                                alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
-                                return;
-                            } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
-                                alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
-                                return;
+                                    alertDNI.setError("* El DNI debe tener 8 dígitos");
+                                    return;
+                                }else if (campoNombre.isEmpty()) {
+
+                                    alertNombre.setError("* El campo Nombre es obligatorio");
+                                    return;
+                                }else if (checkedRadioButtonId == radioTarjeta.getId()) {
+
+                                    if (campoOperacion.isEmpty()) {
+                                        alertOperacion.setError("* El campo Nro Operación es obligatorio");
+                                        return;
+                                    } else if (campoOperacion.length() < 4) {
+                                        alertOperacion.setError("* El  Nro Operación debe tener 4 dígitos");
+                                        return;
+                                    } else if (campoPEfectivo.isEmpty()) {
+                                        alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
+                                        return;
+                                    } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
+                                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                                        return;
+                                    }
+
+                                } else if (checkedRadioButtonId == radioCredito.getId()) {
+
+                                    if (campoPEfectivo.isEmpty()) {
+                                        alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
+                                        return;
+                                    } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
+                                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                                        return;
+                                    }
+
+                                }
+
+                                alertPlaca.setErrorEnabled(false);
+                                alertDNI.setErrorEnabled(false);
+                                alertNombre.setErrorEnabled(false);
+                                alertOperacion.setErrorEnabled(false);
+                                alertPEfectivo.setErrorEnabled(false);
+
+                                detalleVenta.setNroPlaca(inputPlaca.getText().toString());
+                                detalleVenta.setClienteID("");
+                                detalleVenta.setClienteRUC(inputDNI.getText().toString());
+                                detalleVenta.setClienteRS(inputNombre.getText().toString());
+                                detalleVenta.setClienteDR(inputDireccion.getText().toString());
+                                detalleVenta.setKilometraje(inputKilometraje.getText().toString());
+                                detalleVenta.setObservacion(inputObservacion.getText().toString());
+
+                                detalleVenta.setTipoPago(radioNombreFormaPago.getText().toString().substring(0,1));
+
+                                detalleVenta.setTarjetaCredito("");
+                                detalleVenta.setOperacionREF("");
+                                detalleVenta.setMontoSoles(0.00);
+
+                                String NombreFormaPago = radioNombreFormaPago.getText().toString();
+
+                                if (NombreFormaPago.equals("Tarjeta")){
+
+                                    detalleVenta.setTarjetaCredito(String.valueOf(Integer.valueOf(tipoPago.getCardID())));
+                                    detalleVenta.setOperacionREF(inputOperacion.getText().toString());
+                                    detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
+
+                                }else if (NombreFormaPago.equals("Credito")) {
+
+                                    detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
+                                }
+
+                                Toast.makeText(getContext(), "Se agrego correctamente", Toast.LENGTH_SHORT).show();
+
+                                modalBoleta.dismiss();
+
+                                /** Limpiar el Formulario - Boleta*/
+                                inputPlaca.setText("000-0000");
+                                inputDNI.getText().clear();
+                                inputNombre.getText().clear();
+                                inputDireccion.getText().clear();
+                                inputKilometraje.getText().clear();
+                                inputObservacion.getText().clear();
+                                inputPEfectivo.setText("0");
+                                inputOperacion.getText().clear();
+                                radioFormaPago.check(radioEfectivo.getId());
+
                             }
 
-                        } else if (checkedRadioButtonId == radioCredito.getId()) {
-
-                            if (campoPEfectivo.isEmpty()) {
-                                alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
-                                return;
-                            } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
-                                alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
-                                return;
-                            }
+                            recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
 
                         }
-
-
-                        String NombreFormaPago = radioNombreFormaPago.getText().toString();
-
-                        if (NombreFormaPago.equals("Tarjeta")){
-
-
-
-
-                        }else if (NombreFormaPago.equals("Credito")) {
-
-
-                        }
-
-                        alertPlaca.setErrorEnabled(false);
-                        alertDNI.setErrorEnabled(false);
-                        alertNombre.setErrorEnabled(false);
-                        alertOperacion.setErrorEnabled(false);
-                        alertPEfectivo.setErrorEnabled(false);
-
-                        Toast.makeText(getContext(), "Se agrego correctamente", Toast.LENGTH_SHORT).show();
-                        modalBoleta.dismiss();
-
-                        /** Limpiar el Formulario - Boleta*/
-                        inputPlaca.setText("000-0000");
-                        inputDNI.getText().clear();
-                        inputNombre.getText().clear();
-                        inputDireccion.getText().clear();
-                        inputKilometraje.getText().clear();
-                        inputObservacion.getText().clear();
-                        inputPEfectivo.setText("0");
-                        inputOperacion.getText().clear();
-                        radioFormaPago.check(radioEfectivo.getId());
 
                     }
                 });
@@ -834,93 +859,123 @@ public class VentaFragment extends Fragment{
                     @Override
                     public void onClick(View view) {
 
-                        String campoPlaca          = inputPlaca.getText().toString();
-                        String campoRUC            = inputRUC.getText().toString();
-                        String campoRazSocial      = inputRazSocial.getText().toString();
-                        String campoPEfectivo      = inputPEfectivo.getText().toString();
-                        String campoOperacion      = inputOperacion.getText().toString();
+                        for (DetalleVenta detalleVenta : GlobalInfo.getdetalleVentaList10 ) {
 
-                        int checkedRadioButtonId   = radioFormaPago.getCheckedRadioButtonId();
+                            if (detalleVenta.getCara().equals(GlobalInfo.getCara10)) {
 
-                        Double dosDecimales = Double.valueOf(campoPEfectivo);
-                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                                String campoPlaca     = inputPlaca.getText().toString();
+                                String campoRUC       = inputRUC.getText().toString();
+                                String campoRazSocial = inputRazSocial.getText().toString();
+                                String campoPEfectivo = inputPEfectivo.getText().toString();
+                                String campoOperacion = inputOperacion.getText().toString();
 
-                        if (campoPlaca.isEmpty()) {
+                                int checkedRadioButtonId = radioFormaPago.getCheckedRadioButtonId();
 
-                            alertPlaca.setError("* El campo Placa es obligatorio");
-                            return;
-                        } else if (campoRUC.isEmpty() ) {
+                                Double dosDecimales = Double.valueOf(campoPEfectivo);
+                                DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-                            alertRUC.setError("* El campo RUC es obligatorio");
-                            return;
-                        } else if (campoRUC.length() < 11) {
+                                if (campoPlaca.isEmpty()) {
 
-                            alertRUC.setError("* El RUC debe tener 11 dígitos");
-                            return;
-                        }else if (campoRazSocial.isEmpty()) {
+                                    alertPlaca.setError("* El campo Placa es obligatorio");
+                                    return;
+                                } else if (campoRUC.isEmpty()) {
 
-                            alertRazSocial.setError("* El campo Nombre es obligatorio");
-                            return;
-                        }else if (checkedRadioButtonId == radioTarjeta.getId()) {
+                                    alertRUC.setError("* El campo RUC es obligatorio");
+                                    return;
+                                } else if (campoRUC.length() < 11) {
 
-                            if (campoOperacion.isEmpty()) {
-                                alertOperacion.setError("* El campo Nro Operación es obligatorio");
-                                return;
-                            } else if (campoOperacion.length() < 4) {
-                                alertOperacion.setError("* El  Nro Operación debe tener 4 dígitos");
-                                return;
-                            } else if (campoPEfectivo.isEmpty()) {
-                                alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
-                                return;
-                            } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
-                                alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
-                                return;
+                                    alertRUC.setError("* El RUC debe tener 11 dígitos");
+                                    return;
+                                } else if (campoRazSocial.isEmpty()) {
+
+                                    alertRazSocial.setError("* El campo Nombre es obligatorio");
+                                    return;
+                                } else if (checkedRadioButtonId == radioTarjeta.getId()) {
+
+                                    if (campoOperacion.isEmpty()) {
+
+                                        alertOperacion.setError("* El campo Nro Operación es obligatorio");
+                                        return;
+                                    } else if (campoOperacion.length() < 4) {
+
+                                        alertOperacion.setError("* El  Nro Operación debe tener 4 dígitos");
+                                        return;
+                                    } else if (campoPEfectivo.isEmpty()) {
+
+                                        alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
+                                        return;
+                                    } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))) {
+
+                                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                                        return;
+                                    }
+
+                                } else if (checkedRadioButtonId == radioCredito.getId()) {
+
+                                    if (campoPEfectivo.isEmpty()) {
+
+                                        alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
+                                        return;
+                                    } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))) {
+
+                                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                                        return;
+                                    }
+
+                                }
+
+                                alertPlaca.setErrorEnabled(false);
+                                alertRUC.setErrorEnabled(false);
+                                alertRazSocial.setErrorEnabled(false);
+                                alertOperacion.setErrorEnabled(false);
+                                alertPEfectivo.setErrorEnabled(false);
+
+                                detalleVenta.setNroPlaca(inputPlaca.getText().toString());
+                                detalleVenta.setClienteID("");
+                                detalleVenta.setClienteRUC(inputRUC.getText().toString());
+                                detalleVenta.setClienteRS(inputRazSocial.getText().toString());
+                                detalleVenta.setClienteDR(inputDireccion.getText().toString());
+                                detalleVenta.setKilometraje(inputKilometraje.getText().toString());
+                                detalleVenta.setObservacion(inputObservacion.getText().toString());
+
+                                detalleVenta.setTipoPago(radioNombreFormaPago.getText().toString().substring(0,1));
+
+                                detalleVenta.setTarjetaCredito("");
+                                detalleVenta.setOperacionREF("");
+                                detalleVenta.setMontoSoles(0.00);
+
+                                String NombreFormaPago = radioNombreFormaPago.getText().toString();
+
+                                if (NombreFormaPago.equals("Tarjeta")){
+
+                                    detalleVenta.setTarjetaCredito(String.valueOf(Integer.valueOf(tipoPago.getCardID())));
+                                    detalleVenta.setOperacionREF(inputOperacion.getText().toString());
+                                    detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
+
+                                }else if (NombreFormaPago.equals("Credito")) {
+
+                                    detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
+                                }
+
+                                Toast.makeText(getContext(), "Se agrego correctamente", Toast.LENGTH_SHORT).show();
+
+                                modalFactura.dismiss();
+
+                                /** Limpiar el Formulario - Boleta*/
+                                inputPlaca.setText("000-0000");
+                                inputRUC.getText().clear();
+                                inputRazSocial.getText().clear();
+                                inputDireccion.getText().clear();
+                                inputKilometraje.getText().clear();
+                                inputObservacion.getText().clear();
+                                inputPEfectivo.setText("0");
+                                inputOperacion.getText().clear();
+                                radioFormaPago.check(radioEfectivo.getId());
                             }
 
-                        } else if (checkedRadioButtonId == radioCredito.getId()) {
-
-                            if (campoPEfectivo.isEmpty()) {
-                                alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
-                                return;
-                            } else if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
-                                alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
-                                return;
-                            }
+                            recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
 
                         }
-
-
-                        String NombreFormaPago = radioNombreFormaPago.getText().toString();
-
-                        if (NombreFormaPago.equals("Tarjeta")){
-
-
-
-
-                        }else if (NombreFormaPago.equals("Credito")) {
-
-
-                        }
-
-                        alertPlaca.setErrorEnabled(false);
-                        alertRUC.setErrorEnabled(false);
-                        alertRazSocial.setErrorEnabled(false);
-                        alertOperacion.setErrorEnabled(false);
-                        alertPEfectivo.setErrorEnabled(false);
-
-                        Toast.makeText(getContext(), "Se agrego correctamente", Toast.LENGTH_SHORT).show();
-                        modalBoleta.dismiss();
-
-                        /** Limpiar el Formulario - Boleta*/
-                        inputPlaca.setText("000-0000");
-                        inputRUC.getText().clear();
-                        inputRazSocial.getText().clear();
-                        inputDireccion.getText().clear();
-                        inputKilometraje.getText().clear();
-                        inputObservacion.getText().clear();
-                        inputPEfectivo.setText("0");
-                        inputOperacion.getText().clear();
-                        radioFormaPago.check(radioEfectivo.getId());
 
                     }
                 });
@@ -1089,7 +1144,9 @@ public class VentaFragment extends Fragment{
     private void DetalleVenta(){
 
         detalleVentaAdapter = new DetalleVentaAdapter(GlobalInfo.getdetalleVentaList10, getContext());
+        detalleVentaAdapter.notifyDataSetChanged();
         recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
+
     }
 
     /** API SERVICE - Buscar Cliente DNI */
