@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -56,7 +57,8 @@ import retrofit2.Response;
 
 public class VentaFragment extends Fragment{
 
-    boolean mTimerRunning;
+    private static final String AUTOMATICO_MODE_KEY = "automatico_mode_key";
+    private boolean mTimerRunning = false;
 
     RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta;
 
@@ -120,18 +122,26 @@ public class VentaFragment extends Fragment{
         btnFactura.setEnabled(false);
         btnSerafin.setEnabled(false);
 
+        if (savedInstanceState != null) {
+            mTimerRunning = savedInstanceState.getBoolean(AUTOMATICO_MODE_KEY);
+        }
+
         /** Boton Automatico o Stop */
         btnAutomatico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                mTimerRunning = !mTimerRunning;
+
                 if (mTimerRunning) {
-                    modoStop();
-                } else {
                     modoAutomatico();
+                } else {
+                    modoStop();
                 }
+
             }
         });
+
 
         /** Boton para Dirigirse al Listado de Comprobantes */
         btnListadoComprobante.setOnClickListener(new View.OnClickListener() {
@@ -1226,19 +1236,39 @@ public class VentaFragment extends Fragment{
         });
     }
 
-    private void modoAutomatico() {
+    /** Se mantenga en el estado actual */
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mTimerRunning) {
+            modoAutomatico();
+        } else {
+            modoStop();
+        }
+    }
 
-        mTimerRunning = true;
-        btnAutomatico.setText("Automático");
-        btnAutomatico.setBackgroundColor(Color.parseColor("#001E8A"));
+    /** Boton Modo - STOP */
+    @Override
+    public void onPause() {
+        super.onPause();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean(AUTOMATICO_MODE_KEY, mTimerRunning);
 
     }
 
+    /** Boton Modo - STOP */
     private void modoStop() {
 
-        mTimerRunning = false;
         btnAutomatico.setText("Stop");
         btnAutomatico.setBackgroundColor(Color.parseColor("#dc3545"));
+    }
+
+    /** Boton Modo - AUTOMATICO */
+    private void modoAutomatico() {
+
+        btnAutomatico.setText("Automático");
+        btnAutomatico.setBackgroundColor(Color.parseColor("#001E8A"));
+
     }
 
 }

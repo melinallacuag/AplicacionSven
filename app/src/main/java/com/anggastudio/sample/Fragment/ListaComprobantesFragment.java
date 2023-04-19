@@ -246,7 +246,4 @@ public class ListaComprobantesFragment extends Fragment  {
         });
     }
 
-
-
-
 }
