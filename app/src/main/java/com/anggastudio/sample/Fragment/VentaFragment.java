@@ -1,14 +1,10 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -36,7 +32,6 @@ import com.anggastudio.sample.Adapter.ManguerasAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
-import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
@@ -45,10 +40,6 @@ import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -63,14 +54,12 @@ import retrofit2.Response;
 
 public class VentaFragment extends Fragment{
 
-
     private static final String AUTOMATICO_MODE_KEY = "automatico_mode_key";
 
     boolean mTimerRunning;
     Timer timer;
     TimerTask timerTask;
     boolean mIsTaskScheduled = false;
-
 
     RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta;
 
@@ -137,7 +126,6 @@ public class VentaFragment extends Fragment{
         if (savedInstanceState != null) {
             mTimerRunning = savedInstanceState.getBoolean(AUTOMATICO_MODE_KEY);
         }
-
 
         /** Boton Automatico o Stop */
         btnAutomatico.setOnClickListener(new View.OnClickListener() {
