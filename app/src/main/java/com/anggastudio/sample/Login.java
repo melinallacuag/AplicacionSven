@@ -122,11 +122,10 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        /** Mostrar el listado de Datos*/
         getMangueras();
-
         getClienteDNI();
         getClienteRUC();
-
         getTipoPago();
 
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
@@ -215,6 +214,7 @@ public class Login extends AppCompatActivity {
                         GlobalInfo.getterminalAlmacenID10       = Integer.valueOf(terminal.getAlmacenID());
                         GlobalInfo.getterminalFechaHoraCierre10 = String.valueOf(terminal.getFecha_Hora_Cierre());
 
+                        /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);
 
                         findSetting(GlobalInfo.getterminalCompanyID10);
@@ -222,12 +222,6 @@ public class Login extends AppCompatActivity {
                         findLados(GlobalInfo.getterminalImei10);
 
                         findDetalleVenta(GlobalInfo.getterminalImei10);
-
-                        findVContometro(GlobalInfo.getterminalID10);
-
-                        findVProducto(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
-
-                        findVTipoPago(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
                     }
 
@@ -523,101 +517,7 @@ public class Login extends AppCompatActivity {
         });
     }
 
-    /** API SERVICE - Venta por Contrometro */
-    private void findVContometro(String id){
-
-        Call<List<VContometro>> call = mAPIService.findVContometro(id);
-
-        call.enqueue(new Callback<List<VContometro>>() {
-            @Override
-            public void onResponse(Call<List<VContometro>> call, Response<List<VContometro>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    GlobalInfo.getvContometroList10 = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<VContometro>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }
-
-    /** API SERVICE - Venta por Contrometro */
-    private void findVProducto(String id,Integer turno){
-
-        Call<List<VProducto>> call = mAPIService.findVProducto(id,turno);
-
-        call.enqueue(new Callback<List<VProducto>>() {
-            @Override
-            public void onResponse(Call<List<VProducto>> call, Response<List<VProducto>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    GlobalInfo.getvProductoList10 = response.body();
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<VProducto>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }
-
-    /** API SERVICE - Venta por Tipo de Pago */
-    private void findVTipoPago(String id,Integer turno){
-
-        Call<List<VTipoPago>> call = mAPIService.findVTipoPago(id,turno);
-
-        call.enqueue(new Callback<List<VTipoPago>>() {
-            @Override
-            public void onResponse(Call<List<VTipoPago>> call, Response<List<VTipoPago>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    GlobalInfo.getvTipoPagoList10 = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<VTipoPago>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }
-
+    /** Hash de la Contraseña */
     private String checkpassword(String clave){
 
         String lResult = "";

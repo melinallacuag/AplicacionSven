@@ -44,6 +44,8 @@ import retrofit2.Response;
 
 public class CierreXFragment extends Fragment {
 
+    private APIService mAPIService;
+
     TextView TotalDocAnulados,DocAnulados,NroDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalpagobruto;
@@ -54,10 +56,13 @@ public class CierreXFragment extends Fragment {
     List<ReporteTarjetas> reporteTarjetasList;
 
     VContometroAdapter vContometroAdapter;
+    List<VContometro> vContometroList;
 
     VProductoAdapter vProductoAdapter;
+    List<VProducto> vProductoList;
 
     VTipoPagoAdapter vTipoPagoAdapter;
+    List<VTipoPago> vTipoPagoList;
 
     Double RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles;
 
@@ -66,6 +71,8 @@ public class CierreXFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_cierre_x, container, false);
+
+        mAPIService = GlobalInfo.getAPIService();
 
         textNombreEmpresa   = view.findViewById(R.id.textNombreEmpresa);
         textSucural         = view.findViewById(R.id.textSucural);
@@ -83,12 +90,6 @@ public class CierreXFragment extends Fragment {
         TotalDescuento      = view.findViewById(R.id.TotalDescuento);
         TotalMontoPago      = view.findViewById(R.id.totalpago);
         totalpagobruto      = view.findViewById(R.id.totalpagobruto);
-
-        RContometrosTotalGLL = 0.00;
-        RProductosTotalGLL   = 0.00;
-        RProductosTotalSoles = 0.00;
-        RProductosTotalDesc  = 0.00;
-        RPagosTotalSoles     = 0.00;
 
         view.findViewById(R.id.imprimircierrex).setOnClickListener(v -> cierrex());
 
@@ -109,20 +110,26 @@ public class CierreXFragment extends Fragment {
         DocAnulados.setText("0");
         TotalDocAnulados.setText("0.00");
 
+        RContometrosTotalGLL = 0.00;
+        RProductosTotalGLL   = 0.00;
+        RProductosTotalSoles = 0.00;
+        RProductosTotalDesc  = 0.00;
+        RPagosTotalSoles     = 0.00;
+
         /** Listado de Venta por Contometros  */
         recyclerVContometro = view.findViewById(R.id.recyclerVContometro);
         recyclerVContometro.setLayoutManager(new LinearLayoutManager(getContext()));
-        vContometro();
+        findVContometro(GlobalInfo.getterminalID10);
 
         /** Listado de Venta por Productos  */
         recyclerVProducto = view.findViewById(R.id.recyclerVProductos);
         recyclerVProducto.setLayoutManager(new LinearLayoutManager(getContext()));
-        vProducto();
+        findVProducto(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
         /** Listado de Venta por Tipo de Pago  */
         recyclerVTipoPago = view.findViewById(R.id.recyclerVTipoPago);
         recyclerVTipoPago.setLayoutManager(new LinearLayoutManager(getContext()));
-        vTipoPago();
+        findVTipoPago(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
         /** Reporte por Tarjetas */
         recyclerReporteTarj = view.findViewById(R.id.recyclerReporteTarj);
@@ -131,67 +138,151 @@ public class CierreXFragment extends Fragment {
 
         return view;
     }
+    /** API SERVICE - Venta por Contrometro */
+    private void findVContometro(String id){
 
-    private void vContometro(){
+        Call<List<VContometro>> call = mAPIService.findVContometro(id);
 
-        for(VContometro vContometro: GlobalInfo.getvContometroList10) {
+        call.enqueue(new Callback<List<VContometro>>() {
+            @Override
+            public void onResponse(Call<List<VContometro>> call, Response<List<VContometro>> response) {
+                try {
 
-            RContometrosTotalGLL += Double.valueOf(vContometro.getGalones());
-        }
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        String TVolumenContometro = String.format(Locale.getDefault(), "%,.3f" ,RContometrosTotalGLL);
+                    vContometroList = response.body();
 
-        TotalVolumenContometro.setText(TVolumenContometro);
+                    for(VContometro vContometro: vContometroList) {
 
-        vContometroAdapter = new VContometroAdapter(GlobalInfo.getvContometroList10, getContext());
+                        RContometrosTotalGLL += Double.valueOf(vContometro.getGalones());
+                    }
 
-        recyclerVContometro.setAdapter(vContometroAdapter);
+                    String TVolumenContometro = String.format(Locale.getDefault(), "%,.3f" ,RContometrosTotalGLL);
+
+                    TotalVolumenContometro.setText(TVolumenContometro);
+
+                    vContometroAdapter = new VContometroAdapter(vContometroList, getContext());
+
+                    recyclerVContometro.setAdapter(vContometroAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VContometro>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
-    private void vProducto(){
+    /** API SERVICE - Venta por Contrometro */
+    private void findVProducto(String id,Integer turno){
 
-        for(VProducto vProducto: GlobalInfo.getvProductoList10) {
+        Call<List<VProducto>> call = mAPIService.findVProducto(id,turno);
 
-            RProductosTotalGLL += Double.valueOf(vProducto.getCantidad());
-            RProductosTotalSoles += Double.valueOf(vProducto.getSoles());
-            RProductosTotalDesc += Double.valueOf(vProducto.getDescuento());
+        call.enqueue(new Callback<List<VProducto>>() {
+            @Override
+            public void onResponse(Call<List<VProducto>> call, Response<List<VProducto>> response) {
+                try {
 
-        }
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        String SProductosTotalGLL = String.format(Locale.getDefault(), "%,.3f" ,RProductosTotalGLL);
+                    vProductoList = response.body();
 
-        TotalMtogalones.setText(SProductosTotalGLL);
+                    for(VProducto vProducto: vProductoList) {
 
-        String SProductosTotalSoles = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles);
+                        RProductosTotalGLL += Double.valueOf(vProducto.getCantidad());
+                        RProductosTotalSoles += Double.valueOf(vProducto.getSoles());
+                        RProductosTotalDesc += Double.valueOf(vProducto.getDescuento());
 
-        TotalSolesproducto.setText(SProductosTotalSoles);
+                    }
 
-        String SProductosTotalDesc = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalDesc);
+                    String SProductosTotalGLL = String.format(Locale.getDefault(), "%,.3f" ,RProductosTotalGLL);
 
-        TotalDescuento.setText(SProductosTotalDesc);
+                    TotalMtogalones.setText(SProductosTotalGLL);
 
-        vProductoAdapter = new VProductoAdapter(GlobalInfo.getvProductoList10, getContext());
+                    String SProductosTotalSoles = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles);
 
-        recyclerVProducto.setAdapter(vProductoAdapter);
+                    TotalSolesproducto.setText(SProductosTotalSoles);
+
+                    String SProductosTotalDesc = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalDesc);
+
+                    TotalDescuento.setText(SProductosTotalDesc);
+
+                    vProductoAdapter = new VProductoAdapter(vProductoList, getContext());
+
+                    recyclerVProducto.setAdapter(vProductoAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VProducto>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
-    private void vTipoPago(){
+    /** API SERVICE - Venta por Tipo de Pago */
+    private void findVTipoPago(String id,Integer turno){
 
-        for(VTipoPago vTipoPago: GlobalInfo.getvTipoPagoList10) {
+        Call<List<VTipoPago>> call = mAPIService.findVTipoPago(id,turno);
 
-            RPagosTotalSoles += Double.valueOf(vTipoPago.getSoles());
+        call.enqueue(new Callback<List<VTipoPago>>() {
+            @Override
+            public void onResponse(Call<List<VTipoPago>> call, Response<List<VTipoPago>> response) {
+                try {
 
-        }
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        String TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
+                    vTipoPagoList = response.body();
 
-        TotalMontoPago.setText(TotalPagosSoles);
+                    for(VTipoPago vTipoPago: vTipoPagoList) {
 
-        totalpagobruto.setText(TotalPagosSoles);
+                        RPagosTotalSoles += Double.valueOf(vTipoPago.getSoles());
 
-        vTipoPagoAdapter = new VTipoPagoAdapter(GlobalInfo.getvTipoPagoList10, getContext());
+                    }
 
-        recyclerVTipoPago.setAdapter(vTipoPagoAdapter);
+                    String TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
+
+                    TotalMontoPago.setText(TotalPagosSoles);
+
+                    totalpagobruto.setText(TotalPagosSoles);
+
+                    vTipoPagoAdapter = new VTipoPagoAdapter(vTipoPagoList, getContext());
+
+                    recyclerVTipoPago.setAdapter(vTipoPagoAdapter);
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VTipoPago>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     private void vReporteTarjeta(){

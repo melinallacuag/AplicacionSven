@@ -1304,27 +1304,6 @@ public class VentaFragment extends Fragment{
 
             timer = new Timer();
 
-      /*      timerTask = new TimerTask() {
-                @Override
-                public void run() {
-                    Printama.with(getContext()).connect(printama -> {
-
-                        printama.printTextln("                 ", Printama.CENTER);
-                        printama.setSmallText();
-                        printama.printTextlnBold("NameCompany", Printama.CENTER);
-                        printama.printTextlnBold("PRINCIPAL: " + "Address1", Printama.CENTER);
-                        printama.printTextlnBold("Address2", Printama.CENTER);
-                        printama.printTextlnBold("SUCURSAL: " + "Branch1", Printama.CENTER);
-                        printama.printTextlnBold("Branch2", Printama.CENTER);
-                        printama.printTextlnBold("RUC: " + "RUCCompany", Printama.CENTER);
-                        printama.addNewLine(1);
-                        printama.setSmallText();
-                        printama.feedPaper();
-                        printama.close();
-
-                    });
-                }
-            };*/
             insertarDespacho();
 
             timer.schedule(timerTask,3000,3000);
@@ -1444,8 +1423,6 @@ public class VentaFragment extends Fragment{
         });
 
     }
-
-
 
     /** API SERVICE - Optran */
     private void OptranProcesar(String id){
