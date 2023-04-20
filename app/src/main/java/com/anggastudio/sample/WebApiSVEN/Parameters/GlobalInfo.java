@@ -53,7 +53,7 @@ public class GlobalInfo {
      * Datos de los Lados y Mangueras
      */
     public static String getCara10;
-    public static String getPistola10;
+    public static String getManguera10;
 
     /**
      * Datos de la Terminal

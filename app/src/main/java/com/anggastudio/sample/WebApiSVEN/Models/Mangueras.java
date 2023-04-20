@@ -10,9 +10,14 @@ public class Mangueras {
     private String protocolo;
     private Double valor;
 
-    public Mangueras(String mangueraID, String descripcion) {
+    public Mangueras(String mangueraID, String nroLado, String posicion, String articuloID, String descripcion, String protocolo, Double valor) {
         this.mangueraID = mangueraID;
+        this.nroLado = nroLado;
+        this.posicion = posicion;
+        this.articuloID = articuloID;
         this.descripcion = descripcion;
+        this.protocolo = protocolo;
+        this.valor = valor;
     }
 
     public String getMangueraID() {

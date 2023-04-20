@@ -79,7 +79,7 @@ public interface APIService {
     Call<List<Mangueras>> findManguerasByLado(@Path("id") String id);
 
     @POST("api/picos/guardar")
-    Call<Mangueras> postMangueras(@Body Lados lados);
+    Call<Mangueras> postMangueras(@Body Mangueras mangueras);
 
     /**
      * Cliente RUC - DNI
