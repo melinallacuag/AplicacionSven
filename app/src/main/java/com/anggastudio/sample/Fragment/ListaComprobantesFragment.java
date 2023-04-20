@@ -143,6 +143,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
                 modalReimpresion.show();
 
+                final FragmentManager fragmentManager = getFragmentManager();
+
                 btnCancelarRImpresion    = modalReimpresion.findViewById(R.id.btnCancelarRImpresion);
                 btnRImpresion       = modalReimpresion.findViewById(R.id.btnRImpresion);
                 btnAnular           = modalReimpresion.findViewById(R.id.btnAnular);
@@ -160,8 +162,8 @@ public class ListaComprobantesFragment extends Fragment  {
                 btnRImpresion.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        modalReimpresion.dismiss();
-                        Toast.makeText(getContext(), "Se Reimprimio", Toast.LENGTH_SHORT).show();
+
+                        Reimpresion(GlobalInfo.getconsultaventaTipoDocumentoID10,GlobalInfo.getconsultaventaSerieDocumento10 ,GlobalInfo.getconsultaventaNroDocumento10);
 
                     }
                 });
@@ -169,8 +171,18 @@ public class ListaComprobantesFragment extends Fragment  {
                 btnAnular.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        modalReimpresion.dismiss();
-                        Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
+
+                        if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
+
+                            Anular(GlobalInfo.getconsultaventaTipoDocumentoID10,GlobalInfo.getconsultaventaSerieDocumento10 ,GlobalInfo.getconsultaventaNroDocumento10,GlobalInfo.getuserID10);
+
+                            fragmentManager.popBackStack();
+
+                            modalReimpresion.dismiss();
+
+                        } else {
+                            Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
+                        }
 
                     }
                 });

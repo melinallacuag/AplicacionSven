@@ -17,6 +17,8 @@ import android.widget.Toast;
 import com.anggastudio.sample.Login;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.CDia;
+import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
@@ -65,7 +67,6 @@ public class DasboardFragment extends Fragment{
         fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
         turno_grifero.setText("TURNO : " + String.valueOf(GlobalInfo.getterminalTurno10));
 
-
         String DirSucursal = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
 
         DirSucursal = DirSucursal.replace("-","");
@@ -74,6 +75,7 @@ public class DasboardFragment extends Fragment{
         sucursal_empresa.setText(DirSucursal);
         slogan_empresa.setText(GlobalInfo.getSloganCompany10);
 
+        /** Ir a la Pantalla - Venta */
         btn_Venta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,6 +92,7 @@ public class DasboardFragment extends Fragment{
             }
         });
 
+        /** Ir a la Pantalla - Cierre X */
         btn_Cierrex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,11 +109,13 @@ public class DasboardFragment extends Fragment{
             }
         });
 
+        /** Mostrar Alerta - Sino tiene ninguna venta pendiente */
         modalAlerta = new Dialog(getContext());
         modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
         modalAlerta.setCancelable(true);
 
+        /** Mostrar Modal - Cambio de Turno */
         modalCambioTurno = new Dialog(getContext());
         modalCambioTurno.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalCambioTurno.setContentView(R.layout.fragment_cambio_turno);
@@ -119,6 +124,9 @@ public class DasboardFragment extends Fragment{
         btn_Cambioturno.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                /** API Retrofit - Cambio de Turno */
+                findOptranTurno(GlobalInfo.getterminalImei10);
 
                 modalCambioTurno.show();
 
@@ -141,8 +149,12 @@ public class DasboardFragment extends Fragment{
                         try {
                             Intent intent = new Intent(getContext(), Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            cerrarTurno(GlobalInfo.getterminalID10);
+
                             startActivity(intent);
                             finalize();
+
                             Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
                         } catch (Throwable e) {
                             e.printStackTrace();
@@ -154,6 +166,7 @@ public class DasboardFragment extends Fragment{
             }
         });
 
+        /** Mostrar Modal - Inicio de Día */
         modalInicioDia = new Dialog(getContext());
         modalInicioDia.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalInicioDia.setContentView(R.layout.fragment_inicio_dia);
@@ -162,6 +175,9 @@ public class DasboardFragment extends Fragment{
         btn_Iniciodia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                /** API Retrofit - Inicio de Día */
+                findOptranDia(GlobalInfo.getterminalImei10);
 
                 modalInicioDia.show();
 
@@ -184,8 +200,12 @@ public class DasboardFragment extends Fragment{
                         try {
                             Intent intent = new Intent(getContext(), Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                            iniciarDia(GlobalInfo.getterminalID10);
+
                             startActivity(intent);
                             finalize();
+
                             Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
                         } catch (Throwable e) {
                             e.printStackTrace();
@@ -197,6 +217,7 @@ public class DasboardFragment extends Fragment{
               }
         });
 
+        /** Mostrar Modal - Salir */
         modalSalir = new Dialog(getContext());
         modalSalir.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalSalir.setContentView(R.layout.fragment_salir);
@@ -239,6 +260,135 @@ public class DasboardFragment extends Fragment{
         });
 
         return view;
+
+    }
+
+    /** API SERVICE - Optran Cambio de Turno*/
+    private void findOptranTurno(String id){
+
+        Call<List<Optran>> call = mAPIService.findOptran(id);
+
+        call.enqueue(new Callback<List<Optran>>() {
+            @Override
+            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Optran> optranList = response.body();
+
+                    GlobalInfo.getpase10 = false;
+
+                    for(Optran optran: optranList) {
+                        GlobalInfo.getpase10 = true;
+                    }
+
+                    if (GlobalInfo.getpase10 == true){
+                        modalAlerta.show();
+                    }else{
+                        modalCambioTurno.show();
+                    }
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Optran>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /** API SERVICE - Optran Inicio de Día */
+    private void findOptranDia(String id){
+
+        Call<List<Optran>> call = mAPIService.findOptran(id);
+
+        call.enqueue(new Callback<List<Optran>>() {
+            @Override
+            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Optran> optranList = response.body();
+
+                    GlobalInfo.getpase10 = false;
+
+                    for(Optran optran: optranList) {
+                        GlobalInfo.getpase10 = true;
+                    }
+
+                    if (GlobalInfo.getpase10 == true){
+                        modalAlerta.show();
+                    }else{
+                        modalInicioDia.show();
+                    }
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Optran>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /** Cerrar - Turno */
+    private void cerrarTurno(String _terminalID){
+
+        Call<CTurno> call = mAPIService.postCTurno(_terminalID);
+
+        call.enqueue(new Callback<CTurno>() {
+            @Override
+            public void onResponse(Call<CTurno> call, Response<CTurno> response) {
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CTurno> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /** Inicio - Día */
+    private void iniciarDia(String _terminalID){
+
+        Call<CDia> call = mAPIService.postCDia(_terminalID);
+
+        call.enqueue(new Callback<CDia>() {
+            @Override
+            public void onResponse(Call<CDia> call, Response<CDia> response) {
+                if(!response.isSuccessful()){
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CDia> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

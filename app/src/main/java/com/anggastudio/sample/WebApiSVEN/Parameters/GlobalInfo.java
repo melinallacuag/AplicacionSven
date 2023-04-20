@@ -9,6 +9,9 @@ import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
+import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
+import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
+import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 
 import java.util.List;
 
@@ -28,6 +31,9 @@ public class GlobalInfo {
     public  static List<TipoPago> gettipopagoList10;
     public  static List<DetalleVenta> getdetalleVentaList10;
     public  static List<ListaComprobante>  getlistacomprobanteList10;
+    public  static List<VContometro> getvContometroList10;
+    public  static List<VProducto> getvProductoList10;
+    public  static List<VTipoPago> getvTipoPagoList10;
 
     /**
      * Datos de la Empresa

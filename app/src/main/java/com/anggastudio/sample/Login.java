@@ -17,6 +17,9 @@ import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
 import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.Adapter.ListaComprobanteAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
+import com.anggastudio.sample.Adapter.VContometroAdapter;
+import com.anggastudio.sample.Adapter.VProductoAdapter;
+import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
@@ -28,12 +31,16 @@ import com.anggastudio.sample.WebApiSVEN.Models.Setting;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
+import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
+import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
+import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -215,6 +222,12 @@ public class Login extends AppCompatActivity {
                         findLados(GlobalInfo.getterminalImei10);
 
                         findDetalleVenta(GlobalInfo.getterminalImei10);
+
+                        findVContometro(GlobalInfo.getterminalID10);
+
+                        findVProducto(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
+
+                        findVTipoPago(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
                     }
 
@@ -508,6 +521,101 @@ public class Login extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    /** API SERVICE - Venta por Contrometro */
+    private void findVContometro(String id){
+
+        Call<List<VContometro>> call = mAPIService.findVContometro(id);
+
+        call.enqueue(new Callback<List<VContometro>>() {
+            @Override
+            public void onResponse(Call<List<VContometro>> call, Response<List<VContometro>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getvContometroList10 = response.body();
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VContometro>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    /** API SERVICE - Venta por Contrometro */
+    private void findVProducto(String id,Integer turno){
+
+        Call<List<VProducto>> call = mAPIService.findVProducto(id,turno);
+
+        call.enqueue(new Callback<List<VProducto>>() {
+            @Override
+            public void onResponse(Call<List<VProducto>> call, Response<List<VProducto>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getvProductoList10 = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VProducto>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    /** API SERVICE - Venta por Tipo de Pago */
+    private void findVTipoPago(String id,Integer turno){
+
+        Call<List<VTipoPago>> call = mAPIService.findVTipoPago(id,turno);
+
+        call.enqueue(new Callback<List<VTipoPago>>() {
+            @Override
+            public void onResponse(Call<List<VTipoPago>> call, Response<List<VTipoPago>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getvTipoPagoList10 = response.body();
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VTipoPago>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
 
     private String checkpassword(String clave){

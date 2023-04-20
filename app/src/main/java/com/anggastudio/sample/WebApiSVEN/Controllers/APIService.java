@@ -42,6 +42,7 @@ public interface APIService {
     @GET("api/users/listado/{id}")
     Call<List<Users>> findUsers(@Path("id") String id);
 
+
     /**
      * Company
      */
@@ -50,6 +51,7 @@ public interface APIService {
 
     @GET("api/company/listado/{id}")
     Call<List<Company>> findCompany(@Path("id") Integer id);
+
 
     /**
      * Terminal
@@ -60,14 +62,16 @@ public interface APIService {
     @GET("api/terminal/listado/{id}")
     Call<List<Terminal>> findTerminal(@Path("id") String id);
 
+
     /**
-     * Cara o Lado
+     * Lados
      */
     @GET("api/lados/listado")
     Call<List<Lados>> getLados();
 
     @GET("api/lados/listado/{id}")
     Call<List<Lados>> findLados(@Path("id") String id);
+
 
     /**
      * Manguera
@@ -80,6 +84,7 @@ public interface APIService {
 
     @POST("api/picos/guardar")
     Call<Mangueras> postMangueras(@Body Mangueras mangueras);
+
 
     /**
      * Cliente RUC - DNI
@@ -102,6 +107,7 @@ public interface APIService {
     @GET("api/cliente/listado/RUC/{id}")
     Call<List<LClientes>> findClienteRUC(@Path("id") String id);
 
+
     /**
      * Detalle de la Venta
      */
@@ -114,6 +120,7 @@ public interface APIService {
      */
     @POST("api/ventaca/guardar")
     Call<VentaCA> postVentaCA(@Body VentaCA ventaCA);
+
 
     /**
      * Optran
@@ -140,6 +147,7 @@ public interface APIService {
     @GET("api/placa/listado/{id}")
     Call<List<Placa>> findPlaca(@Path("id") String id);
 
+
     /**
      * Configuración
      */
@@ -149,6 +157,7 @@ public interface APIService {
     @GET("api/setting/listado/{id}")
     Call<List<Setting>> findSetting(@Path("id") Integer id);
 
+
     /**
      * Ajustes
      */
@@ -157,6 +166,7 @@ public interface APIService {
 
     @GET("api/settingTask/listado/{id}")
     Call<List<SettingTask>> findSettingTask(@Path("id") String id);
+
 
     /**
      * Correlativo
@@ -178,6 +188,7 @@ public interface APIService {
     @GET("api/rcontom/listado/{id}")
     Call<List<VContometro>> findVContometro(@Path("id") String id);
 
+
     /**
      * Venta por Producto
      */
@@ -187,6 +198,7 @@ public interface APIService {
 
     @GET("api/rproducto/listado/{id}/{turno}")
     Call<List<VProducto>> findVProducto(@Path("id") String id,@Path("turno") Integer turno);
+
 
     /**
      * Venta por Pago
@@ -204,25 +216,27 @@ public interface APIService {
     @POST("api/cdia/iniciar/{id}")
     Call<CDia> postCDia(@Path("id") String id);
 
+
     /**
      * Cambio de Turno
      */
     @POST("api/cturno/cerrar/{id}")
     Call<CTurno> postCTurno(@Path("id") String id);
 
+
     /**
      * Descuentos
      */
-
     @GET("api/descuentos/listado/{id}")
     Call<List<Descuentos>> findDescuentos(@Path("id") String id);
+
 
     /**
      * Consultar Venta
      */
-
     @GET("api/consultarventa/listado/{id}")
     Call<List<ListaComprobante>> findConsultarVenta(@Path("id") String id);
+
 
     /**
      * Anular
@@ -230,10 +244,10 @@ public interface APIService {
     @POST("api/anular/anular/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}")
     Call<Anular> postAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid);
 
+
     /**
      * Reimprimir
      */
-
     @GET("api/reimpresion/listado/{tipodoc}/{seriedoc}/{nrodoc}")
     Call<List<Reimpresion>> findReimpresion(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc);
 
