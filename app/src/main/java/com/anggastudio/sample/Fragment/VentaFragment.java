@@ -1,5 +1,7 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -123,6 +125,7 @@ public class VentaFragment extends Fragment{
         btnFactura.setEnabled(false);
         btnSerafin.setEnabled(false);
 
+        /** Restaurar estado del botón automático */
         if (savedInstanceState != null) {
             mTimerRunning = savedInstanceState.getBoolean(AUTOMATICO_MODE_KEY);
         }
@@ -141,10 +144,12 @@ public class VentaFragment extends Fragment{
             }
         });
 
-        if (mTimerRunning) {
-            modoStop();
-        } else {
+        /** Establecer el botón automático en el estado correspondiente */
+        if (mIsTaskScheduled) {
             modoAutomatico();
+
+        } else {
+            modoStop();
         }
 
 
@@ -1241,6 +1246,32 @@ public class VentaFragment extends Fragment{
         });
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(AUTOMATICO_MODE_KEY, mIsTaskScheduled);
+    }
+
+    /** Se mantenga en el estado actual */
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mTimerRunning && !mIsTaskScheduled) {
+            modoStop();
+        }
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (timer != null) {
+            timer.cancel();
+            timer.purge();
+        }
+    }
+
     /** Boton Modo - AUTOMATICO */
     private void modoAutomatico() {
 
@@ -1297,35 +1328,6 @@ public class VentaFragment extends Fragment{
 
         btnListadoComprobante.setEnabled(true);
 
-    }
-
-    /** Se mantenga en el estado actual */
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mTimerRunning) {
-            modoStop();
-        } else {
-            modoAutomatico();
-        }
-    }
-
-    /** Para detener el temporizador  */
-    @Override
-    public void onPause() {
-        super.onPause();
-        timer.cancel();
-        timer.purge();
-
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (timer != null) {
-            timer.cancel();
-            timer.purge();
-        }
     }
 
 }
