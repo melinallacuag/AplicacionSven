@@ -123,7 +123,6 @@ public class Login extends AppCompatActivity {
         });
 
         /** Mostrar el listado de Datos*/
-        getMangueras();
         getClienteDNI();
         getClienteRUC();
         getTipoPago();
@@ -222,6 +221,8 @@ public class Login extends AppCompatActivity {
                         findLados(GlobalInfo.getterminalImei10);
 
                         findDetalleVenta(GlobalInfo.getterminalImei10);
+
+                        getManguerasByTerminal(GlobalInfo.getterminalID10);
 
                     }
 
@@ -403,9 +404,9 @@ public class Login extends AppCompatActivity {
     }
 
     /**  API SERVICE - Mangueras */
-    private void getMangueras(){
+    private void getManguerasByTerminal(String TerminalID){
 
-        Call<List<Mangueras>> call = mAPIService.getMangueras();
+        Call<List<Mangueras>> call = mAPIService.findManguerasByTerminal(TerminalID);
 
         call.enqueue(new Callback<List<Mangueras>>() {
             @Override

@@ -101,7 +101,7 @@ public class CierreXFragment extends Fragment {
         /** Datos de Cierre Parcial de Caja (X) */
         textNombreEmpresa.setText(GlobalInfo.getNameCompany10);
         textSucural.setText("SUCURSAL: " + GlobalInfo.getBranchCompany10);
-        FechaHoraIni.setText(GlobalInfo.getterminalFecha10);
+        FechaHoraIni.setText(GlobalInfo.getterminalFechaHoraCierre10);
         FechaHoraFin.setText(FechaHoraImpresion);
         FechaTrabajo.setText(GlobalInfo.getterminalFecha10);
         Turno.setText(String.valueOf(GlobalInfo.getterminalTurno10));
