@@ -1072,8 +1072,29 @@ public class VentaFragment extends Fragment{
                     @Override
                     public void onClick(View v) {
 
-                        Toast.makeText(getContext(), "SE GENERO SERAFIN", Toast.LENGTH_SHORT).show();
-                        modalSerafin.dismiss();
+                        for (DetalleVenta detalleVenta : GlobalInfo.getdetalleVentaList10) {
+
+                            if (detalleVenta.getCara().equals(GlobalInfo.getCara10)) {
+
+                                detalleVenta.setNroPlaca("");
+                                detalleVenta.setTipoPago("S");
+                                detalleVenta.setClienteID("");
+                                detalleVenta.setClienteRUC("");
+                                detalleVenta.setClienteRS("");
+                                detalleVenta.setClienteDR("");
+                                detalleVenta.setKilometraje("");
+                                detalleVenta.setObservacion("");
+                                detalleVenta.setOperacionREF("");
+                                detalleVenta.setTarjetaCredito("");
+                                detalleVenta.setMontoSoles(0.00);
+
+                                Toast.makeText(getContext(), "SE GENERO SERAFIN", Toast.LENGTH_SHORT).show();
+                                modalSerafin.dismiss();
+
+                            }
+                            recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
+
+                        }
                     }
 
                 });
