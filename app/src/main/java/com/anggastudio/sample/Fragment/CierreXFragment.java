@@ -52,7 +52,7 @@ public class CierreXFragment extends Fragment {
             TotalDescuento2,TotalIncremento,GranTotal;
 
     String TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,
-            TotalPagosSoles;
+            TotalPagosSoles,MontoBruto,TotalRTarjetasSoles;
 
     RecyclerView recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj;
 
@@ -276,6 +276,10 @@ public class CierreXFragment extends Fragment {
                     TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
                     TotalMontoPago.setText(TotalPagosSoles);
 
+                    /** Pago Bruto - Suma TotalPagosSoles,TotalDesc y TotalIncremento */
+                    MontoBruto = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles + RProductosTotalDesc);
+                    totalPagoBruto.setText(MontoBruto);
+
                     vTipoPagoAdapter = new VTipoPagoAdapter(vTipoPagoList, getContext());
                     recyclerVTipoPago.setAdapter(vTipoPagoAdapter);
 
@@ -317,12 +321,11 @@ public class CierreXFragment extends Fragment {
 
                     }
 
-                    String TotalRTarjetasSoles = String.format(Locale.getDefault(), "%,.2f" ,RTarjetasTotal);
-
+                    /** Ventas Reporte Tarjetas- Gran Total */
+                    TotalRTarjetasSoles = String.format(Locale.getDefault(), "%,.2f" ,RTarjetasTotal);
                     GranTotal.setText(TotalRTarjetasSoles);
 
                     reporteTarjetasAdapter = new ReporteTarjetasAdapter(reporteTarjetasList, getContext());
-
                     recyclerReporteTarj.setAdapter(reporteTarjetasAdapter);
 
                 }catch (Exception ex){

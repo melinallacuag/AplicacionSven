@@ -86,7 +86,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
                     android:gravity="left"
-                    android:text="Fecha/Hora Ini      :"
+                    android:text="Fecha/Hora Inicio  :"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -586,7 +586,7 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="17sp"
                     android:textStyle="bold"
-                    android:gravity="center" />
+                    android:gravity="end" />
 
                 <TextView
                     android:id="@+id/TotalSolesproducto"
@@ -598,7 +598,7 @@
                     android:textColor="@color/colorBlack"
                     android:textSize="17sp"
                     android:textStyle="bold"
-                    android:gravity="center" />
+                    android:gravity="end" />
 
                 <TextView
                     android:id="@+id/TotalDescuento"
@@ -946,7 +946,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
-                    android:gravity="center"
+                    android:gravity="end"
                     android:textColor="@color/colorBlack"
                     android:textSize="17sp"
                     android:textStyle="bold" />
