@@ -35,11 +35,10 @@ public class ReporteTarjetasAdapter  extends RecyclerView.Adapter<ReporteTarjeta
 
     @Override
     public void onBindViewHolder(@NonNull ReporteTarjetasAdapter.ViewHolder holder, int position) {
-        holder.textReferencia.setText(reporteTarjetasList.get(position).getNroReferencia());
-        holder.textNumDocumento.setText(reporteTarjetasList.get(position).getNroDocumento());
+        holder.textNumDocumento.setText(reporteTarjetasList.get(position).getDocumento());
         holder.textTipo.setText(reporteTarjetasList.get(position).getTipo());
-        holder.textMonto.setText(String.valueOf(reporteTarjetasList.get(position).getMonto()));
-
+        holder.textReferencia.setText(reporteTarjetasList.get(position).getRef());
+        holder.textMonto.setText(String.format(Locale.getDefault(), "%,.2f" ,reporteTarjetasList.get(position).getSoles()));
     }
 
     @Override
@@ -49,17 +48,17 @@ public class ReporteTarjetasAdapter  extends RecyclerView.Adapter<ReporteTarjeta
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
-        private TextView textReferencia;
         private TextView textNumDocumento;
         private TextView textTipo;
+        private TextView textReferencia;
         private TextView textMonto;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
 
-            textReferencia     = itemView.findViewById(R.id.textReferencia);
             textNumDocumento   = itemView.findViewById(R.id.textNumDocumento);
             textTipo           = itemView.findViewById(R.id.textTipo);
+            textReferencia     = itemView.findViewById(R.id.textReferencia);
             textMonto          = itemView.findViewById(R.id.textMonto);
         }
     }

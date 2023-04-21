@@ -2,32 +2,17 @@ package com.anggastudio.sample.WebApiSVEN.Models;
 
 public class ReporteTarjetas {
 
-    private String nroReferencia;
-    private String nroDocumento;
+    private String documento;
     private String tipo;
-    private Double monto;
+    private String ref;
+    private Double soles;
 
-    public ReporteTarjetas(String nroReferencia, String nroDocumento, String tipo, Double monto) {
-        this.nroReferencia = nroReferencia;
-        this.nroDocumento = nroDocumento;
-        this.tipo = tipo;
-        this.monto = monto;
+    public String getDocumento() {
+        return documento;
     }
 
-    public String getNroReferencia() {
-        return nroReferencia;
-    }
-
-    public void setNroReferencia(String nroReferencia) {
-        this.nroReferencia = nroReferencia;
-    }
-
-    public String getNroDocumento() {
-        return nroDocumento;
-    }
-
-    public void setNroDocumento(String nroDocumento) {
-        this.nroDocumento = nroDocumento;
+    public void setDocumento(String documento) {
+        this.documento = documento;
     }
 
     public String getTipo() {
@@ -38,11 +23,19 @@ public class ReporteTarjetas {
         this.tipo = tipo;
     }
 
-    public Double getMonto() {
-        return monto;
+    public String getRef() {
+        return ref;
     }
 
-    public void setMonto(Double monto) {
-        this.monto = monto;
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    public Double getSoles() {
+        return soles;
+    }
+
+    public void setSoles(Double soles) {
+        this.soles = soles;
     }
 }

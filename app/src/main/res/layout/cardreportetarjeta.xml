@@ -6,17 +6,6 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textReferencia"
-        android:layout_width="350sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fontFamily="@font/nunito_extrabold"
-        android:gravity="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="17sp"
-        android:textStyle="bold" />
-
-    <TextView
         android:id="@+id/textNumDocumento"
         android:layout_width="420sp"
         android:layout_height="wrap_content"
@@ -37,6 +26,19 @@
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textReferencia"
+        android:layout_width="350sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/nunito_extrabold"
+        android:gravity="center"
+        android:textColor="@color/colorBlack"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+
 
     <TextView
         android:id="@+id/textMonto"

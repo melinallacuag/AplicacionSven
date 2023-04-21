@@ -760,12 +760,12 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/TotalDescuento2"
                     android:layout_width="200sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
                     android:gravity="end"
-                    android:text="0.00"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -786,12 +786,12 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/TotalIncremento"
                     android:layout_width="200sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
                     android:gravity="end"
-                    android:text="0.00"
                     android:textColor="@color/black"
                     android:textSize="17sp"
                     android:textStyle="bold" />
@@ -859,17 +859,6 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_width="350sp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:gravity="center"
-                    android:text="REF."
-                    android:textColor="@color/colorBlack"
-                    android:textSize="17sp"
-                    android:textStyle="bold" />
-
-                <TextView
                     android:layout_width="420sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -887,6 +876,17 @@
                     android:fontFamily="@font/nunito_extrabold"
                     android:gravity="center"
                     android:text="TIPO"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="17sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="350sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:gravity="center"
+                    android:text="REF."
                     android:textColor="@color/colorBlack"
                     android:textSize="17sp"
                     android:textStyle="bold" />

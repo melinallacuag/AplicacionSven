@@ -13,6 +13,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.Placa;
 import com.anggastudio.sample.WebApiSVEN.Models.Reimpresion;
+import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTask;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
@@ -250,5 +251,13 @@ public interface APIService {
      */
     @GET("api/reimpresion/listado/{tipodoc}/{seriedoc}/{nrodoc}")
     Call<List<Reimpresion>> findReimpresion(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc);
+
+
+    /**
+     * Reporte por Tarjeta
+     */
+
+    @GET("api/rtarjeta/listado/{id}/{turno}")
+    Call<List<ReporteTarjetas>> findRTarjetas(@Path("id") String id, @Path("turno") Integer turno);
 
 }

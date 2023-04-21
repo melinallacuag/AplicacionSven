@@ -48,7 +48,11 @@ public class CierreXFragment extends Fragment {
 
     TextView TotalDocAnulados,DocAnulados,NroDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
-            TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalpagobruto;
+            TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalPagoBruto,
+            TotalDescuento2,TotalIncremento,GranTotal;
+
+    String TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,
+            TotalPagosSoles;
 
     RecyclerView recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj;
 
@@ -64,7 +68,7 @@ public class CierreXFragment extends Fragment {
     VTipoPagoAdapter vTipoPagoAdapter;
     List<VTipoPago> vTipoPagoList;
 
-    Double RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles;
+    Double RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,7 +93,12 @@ public class CierreXFragment extends Fragment {
         TotalSolesproducto  = view.findViewById(R.id.TotalSolesproducto);
         TotalDescuento      = view.findViewById(R.id.TotalDescuento);
         TotalMontoPago      = view.findViewById(R.id.totalpago);
-        totalpagobruto      = view.findViewById(R.id.totalpagobruto);
+        totalPagoBruto      = view.findViewById(R.id.totalpagobruto);
+
+        TotalDescuento2     = view.findViewById(R.id.TotalDescuento2);
+        TotalIncremento     = view.findViewById(R.id.TotalIncremento);
+
+        GranTotal           = view.findViewById(R.id.GranTotal);
 
         view.findViewById(R.id.imprimircierrex).setOnClickListener(v -> cierrex());
 
@@ -115,6 +124,7 @@ public class CierreXFragment extends Fragment {
         RProductosTotalSoles = 0.00;
         RProductosTotalDesc  = 0.00;
         RPagosTotalSoles     = 0.00;
+        RTarjetasTotal       = 0.00;
 
         /** Listado de Venta por Contometros  */
         recyclerVContometro = view.findViewById(R.id.recyclerVContometro);
@@ -134,7 +144,7 @@ public class CierreXFragment extends Fragment {
         /** Reporte por Tarjetas */
         recyclerReporteTarj = view.findViewById(R.id.recyclerReporteTarj);
         recyclerReporteTarj.setLayoutManager(new LinearLayoutManager(getContext()));
-        vReporteTarjeta();
+        findRTarjetas(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
         return view;
     }
@@ -160,12 +170,11 @@ public class CierreXFragment extends Fragment {
                         RContometrosTotalGLL += Double.valueOf(vContometro.getGalones());
                     }
 
-                    String TVolumenContometro = String.format(Locale.getDefault(), "%,.3f" ,RContometrosTotalGLL);
-
+                    /** Ventas Por Contometro - Volumen */
+                    TVolumenContometro = String.format(Locale.getDefault(), "%,.3f" ,RContometrosTotalGLL);
                     TotalVolumenContometro.setText(TVolumenContometro);
 
                     vContometroAdapter = new VContometroAdapter(vContometroList, getContext());
-
                     recyclerVContometro.setAdapter(vContometroAdapter);
 
                 }catch (Exception ex){
@@ -207,20 +216,23 @@ public class CierreXFragment extends Fragment {
 
                     }
 
-                    String SProductosTotalGLL = String.format(Locale.getDefault(), "%,.3f" ,RProductosTotalGLL);
-
+                    /** Ventas Por Productos - Volumen */
+                    SProductosTotalGLL = String.format(Locale.getDefault(), "%,.3f" ,RProductosTotalGLL);
                     TotalMtogalones.setText(SProductosTotalGLL);
 
-                    String SProductosTotalSoles = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles);
-
+                    /** Ventas Por Productos - Soles */
+                    SProductosTotalSoles = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles);
                     TotalSolesproducto.setText(SProductosTotalSoles);
 
-                    String SProductosTotalDesc = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalDesc);
-
+                    /** Ventas Por Productos - Descuento */
+                    SProductosTotalDesc = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalDesc);
                     TotalDescuento.setText(SProductosTotalDesc);
 
-                    vProductoAdapter = new VProductoAdapter(vProductoList, getContext());
+                    /** Descuntos y Incrementos */
+                    TotalDescuento2.setText(SProductosTotalDesc);
+                    TotalIncremento.setText("0.00");
 
+                    vProductoAdapter = new VProductoAdapter(vProductoList, getContext());
                     recyclerVProducto.setAdapter(vProductoAdapter);
 
                 }catch (Exception ex){
@@ -260,14 +272,11 @@ public class CierreXFragment extends Fragment {
 
                     }
 
-                    String TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
-
+                    /** Ventas Por Tipo de Pago - Total Neto */
+                    TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
                     TotalMontoPago.setText(TotalPagosSoles);
 
-                    totalpagobruto.setText(TotalPagosSoles);
-
                     vTipoPagoAdapter = new VTipoPagoAdapter(vTipoPagoList, getContext());
-
                     recyclerVTipoPago.setAdapter(vTipoPagoAdapter);
 
 
@@ -285,18 +294,48 @@ public class CierreXFragment extends Fragment {
 
     }
 
-    private void vReporteTarjeta(){
+    /** API SERVICE - Venta por Tipo de Pago */
+    private void findRTarjetas(String id,Integer turno){
 
-        reporteTarjetasList = new ArrayList<>();
+        Call<List<ReporteTarjetas>> call = mAPIService.findRTarjetas(id,turno);
 
-        for (int i = 0; i < 1; i++){
-            reporteTarjetasList.add(new ReporteTarjetas("1245","B001-000254","VISA",25.00));
-            reporteTarjetasList.add(new ReporteTarjetas("7845","B008-000478","VISA",30.00));
-        }
+        call.enqueue(new Callback<List<ReporteTarjetas>>() {
+            @Override
+            public void onResponse(Call<List<ReporteTarjetas>> call, Response<List<ReporteTarjetas>> response) {
+                try {
 
-        reporteTarjetasAdapter = new ReporteTarjetasAdapter(reporteTarjetasList, getContext());
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        recyclerReporteTarj.setAdapter(reporteTarjetasAdapter);
+                    reporteTarjetasList = response.body();
+
+                    for(ReporteTarjetas reporteTarjetas: reporteTarjetasList) {
+
+                        RTarjetasTotal += Double.valueOf(reporteTarjetas.getSoles());
+
+                    }
+
+                    String TotalRTarjetasSoles = String.format(Locale.getDefault(), "%,.2f" ,RTarjetasTotal);
+
+                    GranTotal.setText(TotalRTarjetasSoles);
+
+                    reporteTarjetasAdapter = new ReporteTarjetasAdapter(reporteTarjetasList, getContext());
+
+                    recyclerReporteTarj.setAdapter(reporteTarjetasAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReporteTarjetas>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
 
     }
 
