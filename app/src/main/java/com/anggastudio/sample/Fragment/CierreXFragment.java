@@ -232,6 +232,10 @@ public class CierreXFragment extends Fragment {
                     TotalDescuento2.setText(SProductosTotalDesc);
                     TotalIncremento.setText("0.00");
 
+                    /** Pago Bruto - Suma TotalPagosSoles,TotalDesc y TotalIncremento */
+                    MontoBruto = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles + RProductosTotalDesc);
+                    totalPagoBruto.setText(MontoBruto);
+
                     vProductoAdapter = new VProductoAdapter(vProductoList, getContext());
                     recyclerVProducto.setAdapter(vProductoAdapter);
 
@@ -276,9 +280,7 @@ public class CierreXFragment extends Fragment {
                     TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
                     TotalMontoPago.setText(TotalPagosSoles);
 
-                    /** Pago Bruto - Suma TotalPagosSoles,TotalDesc y TotalIncremento */
-                    MontoBruto = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles + RProductosTotalDesc);
-                    totalPagoBruto.setText(MontoBruto);
+
 
                     vTipoPagoAdapter = new VTipoPagoAdapter(vTipoPagoList, getContext());
                     recyclerVTipoPago.setAdapter(vTipoPagoAdapter);

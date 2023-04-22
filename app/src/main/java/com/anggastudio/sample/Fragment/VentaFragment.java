@@ -1403,7 +1403,7 @@ public class VentaFragment extends Fragment{
             public void onResponse(Call<Mangueras> call, Response<Mangueras> response) {
 
                 if(!response.isSuccessful()){
-                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Codigo de error : " + response.code(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -1644,9 +1644,10 @@ public class VentaFragment extends Fragment{
             @Override
             public void onResponse(Call<VentaCA> call, Response<VentaCA> response) {
                 if(!response.isSuccessful()){
-                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Codigo de error Venta CA: " + response.code(), Toast.LENGTH_SHORT).show();
                     return;
                 }
+
             }
 
             @Override
@@ -1993,8 +1994,6 @@ public class VentaFragment extends Fragment{
 
                     break;
                 case "98" :
-                    printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
-                    break;
                 case "99" :
                     printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
                     break;

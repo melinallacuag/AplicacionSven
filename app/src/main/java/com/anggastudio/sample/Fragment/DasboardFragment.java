@@ -39,7 +39,7 @@ public class DasboardFragment extends Fragment{
 
     Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
 
-    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir;
+    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +114,12 @@ public class DasboardFragment extends Fragment{
         modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
         modalAlerta.setCancelable(true);
+
+        /** Mostrar Alerta - Por fuera de fecha */
+        modalAlertaFecha = new Dialog(getContext());
+        modalAlertaFecha.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalAlertaFecha.setContentView(R.layout.alerta_cambioinicio_fecha);
+        modalAlertaFecha.setCancelable(true);
 
         /** Mostrar Modal - Cambio de Turno */
         modalCambioTurno = new Dialog(getContext());
