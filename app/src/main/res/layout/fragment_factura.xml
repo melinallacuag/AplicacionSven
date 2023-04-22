@@ -125,6 +125,7 @@
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:endIconMode="clear_text"
+            app:counterEnabled="true"
             android:layout_weight="1">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputRazSocial"

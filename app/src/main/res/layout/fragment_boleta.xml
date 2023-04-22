@@ -132,6 +132,7 @@
                 app:boxBackgroundMode="outline"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
+                app:counterEnabled="true"
                 app:endIconMode="clear_text">
 
                 <com.google.android.material.textfield.TextInputEditText

@@ -605,6 +605,10 @@ public class VentaFragment extends Fragment{
 
                                     alertNombre.setError("* El campo Nombre es obligatorio");
                                     return;
+                                } else if (campoNombre.length() < 8 ) {
+
+                                    alertNombre.setError("* El Nombre debe tener mínino 8 dígitos");
+                                    return;
                                 }else if (checkedRadioButtonId == radioTarjeta.getId()) {
 
                                     if (campoOperacion.isEmpty()) {
@@ -937,9 +941,13 @@ public class VentaFragment extends Fragment{
                                     return;
                                 } else if (campoRazSocial.isEmpty()) {
 
-                                    alertRazSocial.setError("* El campo Nombre es obligatorio");
+                                    alertRazSocial.setError("* La Razon Social es obligatorio");
                                     return;
-                                } else if (checkedRadioButtonId == radioTarjeta.getId()) {
+                                }  else if (campoRazSocial.length() < 8 ) {
+
+                                    alertRazSocial.setError("* La Razon Social debe tener mínino 8 dígitos");
+                                    return;
+                                }else if (checkedRadioButtonId == radioTarjeta.getId()) {
 
                                     if (campoOperacion.isEmpty()) {
 
