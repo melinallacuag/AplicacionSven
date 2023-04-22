@@ -295,9 +295,11 @@ public class DasboardFragment extends Fragment{
 
                     if (GlobalInfo.getpase10 == true){
                         modalAlerta.show();
-                    }else{
-                        modalCambioTurno.show();
+                        modalCambioTurno.dismiss();
+                        return;
                     }
+
+                    modalCambioTurno.show();
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -338,9 +340,11 @@ public class DasboardFragment extends Fragment{
 
                     if (GlobalInfo.getpase10 == true){
                         modalAlerta.show();
-                    }else{
-                        modalInicioDia.show();
+                        modalInicioDia.dismiss();
+                        return;
                     }
+
+                    modalInicioDia.show();
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
