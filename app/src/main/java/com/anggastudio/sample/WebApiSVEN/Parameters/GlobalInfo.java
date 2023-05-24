@@ -54,6 +54,7 @@ public class GlobalInfo {
     public static String getuserName10;
     public static String getuserPass10;
     public static Boolean getuserLocked10;
+    public static Boolean getuserCancel10;
 
     /**
      * Datos de los Lados y Mangueras
@@ -218,7 +219,7 @@ public class GlobalInfo {
     /**
      * URL - APIService
      */
-    public static final String BASE_URL = "http://192.168.1.227:8081/";
+    public static final String BASE_URL = "http://192.168.1.3:8081/";
 
     public static APIService getAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(APIService.class);

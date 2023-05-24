@@ -159,17 +159,23 @@ public class Login extends AppCompatActivity {
 
                     }
 
-                    String getName = usuario.getText().toString();
-                    String getPass = checkpassword(contraseña.getText().toString());
+                    if (GlobalInfo.getuserLocked10 == false) {
+                        Toast.makeText( getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else {
 
-                    if( getName.equals(GlobalInfo.getuserName10)  || getPass.equals(GlobalInfo.getuserPass10)){
+                        String getName = usuario.getText().toString();
+                        String getPass = checkpassword(contraseña.getText().toString());
 
-                        Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent( getApplicationContext(),Menu.class));
+                        if( getName.equals(GlobalInfo.getuserName10)  || getPass.equals(GlobalInfo.getuserPass10)){
 
-                    }
-                    else {
-                        Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent( getApplicationContext(),Menu.class));
+
+                        }
+                        else {
+                            Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
 
                 }catch (Exception ex){

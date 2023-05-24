@@ -1,12 +1,28 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.NfcAdapter;
+import android.nfc.Tag;
+import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
+import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -66,9 +82,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class VentaFragment extends Fragment{
+@RequiresApi(api = Build.VERSION_CODES.KITKAT)
+public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback{
 
     private static final String AUTOMATICO_MODE_KEY = "automatico_mode_key";
+
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] intentFilters;
+    private String[][] techLists;
 
     boolean mTimerRunning;
     Timer timer;
@@ -99,7 +121,7 @@ public class VentaFragment extends Fragment{
 
     TextInputLayout alertSoles,alertGalones,alertPlaca,alertDNI,alertRUC,alertNombre,alertRazSocial,alertPEfectivo,alertOperacion,alertSelectTPago;
 
-    TextInputEditText inputMontoSoles,inputCantidadGalones,inputPlaca,inputDNI,inputRUC,inputNombre,inputRazSocial,inputDireccion,inputKilometraje,
+    TextInputEditText inputNFC,inputMontoSoles,inputCantidadGalones,inputPlaca,inputDNI,inputRUC,inputNombre,inputRazSocial,inputDireccion,
             inputObservacion,inputOperacion,inputPEfectivo;
 
     RadioGroup radioFormaPago;
@@ -383,10 +405,11 @@ public class VentaFragment extends Fragment{
                 inputDNI          = modalBoleta.findViewById(R.id.inputDNI);
                 inputNombre       = modalBoleta.findViewById(R.id.inputNombre);
                 inputDireccion    = modalBoleta.findViewById(R.id.inputDireccion);
-                inputKilometraje  = modalBoleta.findViewById(R.id.inputKilometraje);
                 inputObservacion  = modalBoleta.findViewById(R.id.inputObservacion);
                 inputPEfectivo    = modalBoleta.findViewById(R.id.inputPEfectivo);
                 inputOperacion    = modalBoleta.findViewById(R.id.inputOperacion);
+
+                inputNFC          = modalBoleta.findViewById(R.id.input_EtiquetaNFC);
 
                 SpinnerTPago      = modalBoleta.findViewById(R.id.SpinnerTPago);
                 alertSelectTPago  = modalBoleta.findViewById(R.id.inputSelectTPago);
@@ -403,6 +426,28 @@ public class VentaFragment extends Fragment{
                 btnGenerarBoleta  = modalBoleta.findViewById(R.id.btnGenerarBoleta);
                 btnCancelarBoleta = modalBoleta.findViewById(R.id.btnCancelarBoleta);
                 btnAgregarBoleta  = modalBoleta.findViewById(R.id.btnAgregarBoleta);
+
+                /**
+                 * Inicio de Detector NFC
+                 * **/
+                inputNFC.setKeyListener(null);
+
+                nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
+
+                Intent intent = new Intent(getContext(), getActivity().getClass());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+
+                IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+                intentFilters = new IntentFilter[]{tagIntentFilter};
+                techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                        NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                        MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                        Ndef.class.getName()}};
+
+                /**
+                 * Final de Detector NFC
+                 * **/
 
                 /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
                 modalCliente = new Dialog(getContext());
@@ -558,7 +603,7 @@ public class VentaFragment extends Fragment{
                         inputDNI.getText().clear();
                         inputNombre.getText().clear();
                         inputDireccion.getText().clear();
-                        inputKilometraje.getText().clear();
+                        inputNFC.getText().clear();
                         inputObservacion.getText().clear();
                         radioFormaPago.check(radioEfectivo.getId());
                         inputPEfectivo.setText("0");
@@ -642,7 +687,7 @@ public class VentaFragment extends Fragment{
                                 detalleVenta.setClienteRUC("");
                                 detalleVenta.setClienteRS(inputNombre.getText().toString());
                                 detalleVenta.setClienteDR(inputDireccion.getText().toString());
-                                detalleVenta.setKilometraje(inputKilometraje.getText().toString());
+
                                 detalleVenta.setObservacion(inputObservacion.getText().toString());
 
                                 detalleVenta.setTipoPago(radioNombreFormaPago.getText().toString().substring(0,1));
@@ -691,7 +736,7 @@ public class VentaFragment extends Fragment{
                                 inputDNI.getText().clear();
                                 inputNombre.getText().clear();
                                 inputDireccion.getText().clear();
-                                inputKilometraje.getText().clear();
+                                inputNFC.getText().clear();
                                 inputObservacion.getText().clear();
                                 inputPEfectivo.setText("0");
                                 inputOperacion.getText().clear();
@@ -731,10 +776,10 @@ public class VentaFragment extends Fragment{
                 inputRUC           = modalFactura.findViewById(R.id.inputRUC);
                 inputRazSocial     = modalFactura.findViewById(R.id.inputRazSocial);
                 inputDireccion     = modalFactura.findViewById(R.id.inputDireccion);
-                inputKilometraje   = modalFactura.findViewById(R.id.inputKilometraje);
                 inputObservacion   = modalFactura.findViewById(R.id.inputObservacion);
                 inputOperacion     = modalFactura.findViewById(R.id.inputOperacion);
                 inputPEfectivo     = modalFactura.findViewById(R.id.inputPEfectivo);
+                inputNFC           = modalFactura.findViewById(R.id.input_EtiquetaNFC);
 
                 SpinnerTPago       = modalFactura.findViewById(R.id.SpinnerTPago);
                 alertSelectTPago   = modalFactura.findViewById(R.id.inputSelectTPago);
@@ -896,7 +941,7 @@ public class VentaFragment extends Fragment{
                         inputRUC.getText().clear();
                         inputRazSocial.getText().clear();
                         inputDireccion.getText().clear();
-                        inputKilometraje.getText().clear();
+                        inputNFC.getText().clear();
                         inputObservacion.getText().clear();
                         radioFormaPago.check(radioEfectivo.getId());
                         inputPEfectivo.setText("0");
@@ -984,7 +1029,6 @@ public class VentaFragment extends Fragment{
                                 detalleVenta.setClienteRUC(inputRUC.getText().toString());
                                 detalleVenta.setClienteRS(inputRazSocial.getText().toString());
                                 detalleVenta.setClienteDR(inputDireccion.getText().toString());
-                                detalleVenta.setKilometraje(inputKilometraje.getText().toString());
                                 detalleVenta.setObservacion(inputObservacion.getText().toString());
 
                                 detalleVenta.setTipoPago(radioNombreFormaPago.getText().toString().substring(0,1));
@@ -1037,7 +1081,7 @@ public class VentaFragment extends Fragment{
                                 inputRUC.getText().clear();
                                 inputRazSocial.getText().clear();
                                 inputDireccion.getText().clear();
-                                inputKilometraje.getText().clear();
+                                inputNFC.getText().clear();
                                 inputObservacion.getText().clear();
                                 inputPEfectivo.setText("0");
                                 inputOperacion.getText().clear();
@@ -1327,15 +1371,7 @@ public class VentaFragment extends Fragment{
     }
 
     /** Se mantenga en el estado actual */
-    @Override
-    public void onResume() {
-        super.onResume();
 
-        if (mTimerRunning && !mIsTaskScheduled) {
-            modoStop();
-        }
-
-    }
 
     @Override
     public void onDestroyView() {
@@ -2429,6 +2465,47 @@ public class VentaFragment extends Fragment{
     /** Alerta de Conexión de Bluetooth */
     private void showToast(String message) {
         Toast.makeText(getContext(), "Conectar Bluetooth", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (nfcAdapter != null) {
+            nfcAdapter.enableReaderMode(getActivity(), this,
+                    NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B |
+                            NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V, null);
+        }
+
+        if (mTimerRunning && !mIsTaskScheduled) {
+            modoStop();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (nfcAdapter != null) {
+            nfcAdapter.disableReaderMode(getActivity());
+        }
+    }
+
+    @Override
+    public void onTagDiscovered(Tag tag) {
+        String nfcTag = ByteArrayToHexString(tag.getId());
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                inputNFC.setText(nfcTag);
+            }
+        });
+    }
+
+    private String ByteArrayToHexString(byte[] byteArray) {
+        StringBuilder sb = new StringBuilder(byteArray.length * 2);
+        for (byte b : byteArray) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 
 }

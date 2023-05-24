@@ -72,6 +72,27 @@
                 android:layout_marginLeft="10sp" />
         </LinearLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textNFC"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Detectar la Etiqueta NFC"
+            app:boxBackgroundColor="#E4E4E4"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            android:layout_marginBottom="5sp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/input_EtiquetaNFC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:textSize="12sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,26 +170,6 @@
             android:layout_weight="1">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputDireccion"
-                android:fontFamily="@font/nunito_semibold"
-                android:textSize="12sp"
-                android:inputType="textCapCharacters"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/alertKilometraje"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Ingresar Kilometraje"
-            app:boxBackgroundMode="outline"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxCornerRadiusBottomEnd="15dp"
-            app:boxCornerRadiusTopEnd="15dp"
-            app:endIconMode="clear_text"
-            android:layout_weight="1">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/inputKilometraje"
                 android:fontFamily="@font/nunito_semibold"
                 android:textSize="12sp"
                 android:inputType="textCapCharacters"
