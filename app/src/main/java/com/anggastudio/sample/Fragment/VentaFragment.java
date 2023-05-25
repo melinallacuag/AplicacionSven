@@ -113,11 +113,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     TextView  datos_terminal,textMensajePEfectivo;
 
-    Dialog modalLibre,modalSoles,modalGalones,modalBoleta,modalCliente,modalFactura,modalSerafin;
+    Dialog modalLibre,modalSoles,modalGalones,modalBoleta,modalCliente,modalFactura,modalNotaDespacho,modalSerafin;
 
     Button btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
            btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
-            btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnSerafin,btnCancelarSerafin,btnAgregarSerafin;
+            btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin;
 
     TextInputLayout alertSoles,alertGalones,alertPlaca,alertDNI,alertRUC,alertNombre,alertRazSocial,alertPEfectivo,alertOperacion,alertSelectTPago;
 
@@ -149,6 +149,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnGalones      = view.findViewById(R.id.btnGalones);
         btnBoleta       = view.findViewById(R.id.btnBoleta);
         btnFactura      = view.findViewById(R.id.btnFactura);
+        btnNotaDespacho = view.findViewById(R.id.btnnotadespacho);
         btnSerafin      = view.findViewById(R.id.btnSerafin);
 
         /** Boton Bloqueados */
@@ -157,6 +158,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnGalones.setEnabled(false);
         btnBoleta.setEnabled(false);
         btnFactura.setEnabled(false);
+        btnNotaDespacho.setEnabled(false);
         btnSerafin.setEnabled(false);
 
         /** Restaurar estado del botón automático */
@@ -1098,6 +1100,21 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
         });
 
+
+        /** Mostrar Formulario Nota de Despacho y Realizar la Operacion */
+        modalNotaDespacho = new Dialog(getContext());
+        modalNotaDespacho.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalNotaDespacho.setContentView(R.layout.fragment_notadespacho);
+        modalNotaDespacho.setCancelable(true);
+
+        btnNotaDespacho.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modalNotaDespacho.show();
+            }
+        });
+
+
         /** Mostrar Modal Serafin y Realizar la Operacion */
         modalSerafin = new Dialog(getContext());
         modalSerafin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1176,6 +1193,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnGalones.setEnabled(false);
                 btnBoleta.setEnabled(false);
                 btnFactura.setEnabled(false);
+                btnNotaDespacho.setEnabled(false);
                 btnSerafin.setEnabled(false);
 
                 Manguera_ByLados();
@@ -1214,6 +1232,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnGalones.setEnabled(true);
                 btnBoleta.setEnabled(true);
                 btnFactura.setEnabled(true);
+                btnNotaDespacho.setEnabled(true);
                 btnSerafin.setEnabled(true);
 
                 GlobalInfo.getManguera10 = item.getMangueraID();

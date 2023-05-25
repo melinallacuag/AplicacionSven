@@ -1,7 +1,10 @@
 package com.anggastudio.sample.Fragment;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,6 +15,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,7 @@ import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
@@ -53,6 +58,9 @@ public class CierreXFragment extends Fragment {
 
     String TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,
             TotalPagosSoles,MontoBruto,TotalRTarjetasSoles;
+
+    Button imprimirCierreX;
+    Dialog modalAlerta;
 
     RecyclerView recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj;
 
@@ -100,7 +108,24 @@ public class CierreXFragment extends Fragment {
 
         GranTotal           = view.findViewById(R.id.GranTotal);
 
-        view.findViewById(R.id.imprimircierrex).setOnClickListener(v -> cierrex());
+        imprimirCierreX = view.findViewById(R.id.imprimircierrex);
+
+        /** Mostrar Alerta - Sino tiene ninguna venta pendiente */
+        modalAlerta = new Dialog(getContext());
+        modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
+        modalAlerta.setCancelable(true);
+
+        imprimirCierreX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                /** API Retrofit - Cambio de Turno */
+                findOptranTurno(GlobalInfo.getterminalImei10);
+
+            }
+        });
+
 
         /** Fecha de Impresión */
         Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
@@ -339,6 +364,49 @@ public class CierreXFragment extends Fragment {
             public void onFailure(Call<List<ReporteTarjetas>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
 
+            }
+        });
+
+    }
+
+    /** API SERVICE - Optran Cambio de Turno*/
+    private void findOptranTurno(String id){
+
+        Call<List<Optran>> call = mAPIService.findOptran(id);
+
+        call.enqueue(new Callback<List<Optran>>() {
+            @Override
+            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Optran> optranList = response.body();
+
+                    GlobalInfo.getpase10 = false;
+
+                    for(Optran optran: optranList) {
+                        GlobalInfo.getpase10 = true;
+                    }
+
+                    if (GlobalInfo.getpase10 == true){
+                        modalAlerta.show();
+                        return;
+                    }
+                    cierrex();
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Optran>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
 
