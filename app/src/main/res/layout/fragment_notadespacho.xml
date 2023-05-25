@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/nunito_black"
-                android:text="@string/ope_factura"
+                android:text="@string/ope_NDespachoLargo"
                 android:textColor="@color/blue"
                 android:textSize="20sp" />
 
@@ -197,137 +197,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Forma de Pago:"
-                android:fontFamily="@font/nunito_extrabold"
-                android:textColor="@color/blue"
-                android:textSize="16sp" />
-
-            <RadioGroup
-                android:id="@+id/radioFormaPago"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radioEfectivo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:text="Efectivo"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:textColor="@color/gris"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/radioTarjeta"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:text="Tarjeta"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:textColor="@color/gris"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/radioCredito"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:checked="false"
-                    android:text="Credito"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:textColor="@color/gris"
-                    android:textSize="14sp" />
-            </RadioGroup>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSelectTPago"
-                android:layout_width="match_parent"
-                android:gravity="center"
-                android:background="@drawable/cardlogin"
-                android:backgroundTint="#AFB1B1"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:layout_height="wrap_content">
-                <Spinner
-                    android:id="@+id/SpinnerTPago"
-                    android:layout_marginTop="-22sp"
-                    android:gravity="center"
-                    android:layout_gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="50sp"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <TextView
-                android:id="@+id/textMensajePEfectivo"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_gravity="center"
-                android:background="@drawable/cardlogin"
-                android:backgroundTint="@color/colorInfo"
-                android:fontFamily="@font/nunito_semibold"
-                android:gravity="center"
-                android:text="Se realizara el modo de Pago en Efectivo"
-                android:textAlignment="center"
-                android:textColor="#fff"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:visibility="gone"/>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/alertOperacion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingresar Nro.Operacion"
-                app:boxBackgroundMode="outline"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                app:endIconMode="clear_text"
-                android:layout_weight="1">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputOperacion"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:textSize="12sp"
-                    android:inputType="number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/alertPEfectivo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingresar Pago Efectivo"
-                app:boxBackgroundMode="outline"
-                android:visibility="gone"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                app:endIconMode="clear_text"
-                android:layout_weight="1">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputPEfectivo"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:textSize="12sp"
-                    android:inputType="numberDecimal"
-                    android:text="0"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <Button
-                    android:id="@+id/btnCancelarFactura"
+                    android:id="@+id/btnCancelarNotaDespacho"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_cancelar"
@@ -343,7 +219,7 @@
 
 
                 <Button
-                    android:id="@+id/btnAgregarFactura"
+                    android:id="@+id/btnAgregarNotaDespacho"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_agregar"

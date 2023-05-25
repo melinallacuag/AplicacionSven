@@ -30,6 +30,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -71,6 +73,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -117,7 +120,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     Button btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
            btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
-            btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin;
+            btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnCancelarNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin;
 
     TextInputLayout alertSoles,alertGalones,alertPlaca,alertDNI,alertRUC,alertNombre,alertRazSocial,alertPEfectivo,alertOperacion,alertSelectTPago;
 
@@ -451,7 +454,31 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                  * Final de Detector NFC
                  * **/
 
-                /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
+
+                // Agrega un Listener a tu campo de texto NFC
+                inputNFC.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.length() == 16) {
+                            String nfcCode = s.toString();
+                            String correspondingName = findCorrespondingName(nfcCode);
+                            inputNombre.setText(correspondingName);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // No se necesita hacer nada después de que cambie el texto
+                    }
+                });
+
+
+
+                        /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
                 modalCliente = new Dialog(getContext());
                 modalCliente.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 modalCliente.setContentView(R.layout.fragment_clientes);
@@ -463,6 +490,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         modalCliente.show();
 
+                        String campoDNI = inputDNI.getText().toString();
+
                         btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
 
@@ -470,7 +499,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
                         recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                        ClienteDNI();
+
+
+                        findClienteDNI(campoDNI);
 
                         /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -810,6 +841,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         modalCliente.show();
 
+                        String campoRUC = inputRUC.getText().toString();
+
                         btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
 
@@ -817,7 +850,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
                         recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                        ClienteRUC();
+                        findClienteRUC(campoRUC);
+
 
                         /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -1105,12 +1139,25 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         modalNotaDespacho = new Dialog(getContext());
         modalNotaDespacho.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalNotaDespacho.setContentView(R.layout.fragment_notadespacho);
-        modalNotaDespacho.setCancelable(true);
+        modalNotaDespacho.setCancelable(false);
 
         btnNotaDespacho.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 modalNotaDespacho.show();
+
+                btnCancelarNotaDespacho   = modalNotaDespacho.findViewById(R.id.btnCancelarNotaDespacho);
+
+                /** Boton Buscador - Cancelar Operacion */
+                btnCancelarNotaDespacho.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        modalNotaDespacho.dismiss();
+
+                    }
+                });
+
             }
         });
 
@@ -1332,6 +1379,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     inputNombre.setText(GlobalInfo.getclienteRZ10 );
                     inputDireccion.setText(GlobalInfo.getclienteDR10);
 
+                    ClienteDNI();
+
                 }catch (Exception ex){
                     Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -1370,6 +1419,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     inputRazSocial.setText(GlobalInfo.getclienteRZ10);
                     inputDireccion.setText(GlobalInfo.getclienteDR10);
+
+                    ClienteRUC();
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -2525,6 +2576,20 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             sb.append(String.format("%02X", b));
         }
         return sb.toString();
+    }
+
+    private String findCorrespondingName(String nfcCode) {
+
+        List<String> nfcCodes = Arrays.asList("0D746CE5500104E0", "3C746CE5500104E0");
+        List<String> names = Arrays.asList("Nombre 1", "Nombre 2");
+
+        int index = nfcCodes.indexOf(nfcCode);
+        if (index != -1) {
+            return names.get(index);
+        }
+
+        // Si no se encuentra un nombre correspondiente, puedes devolver una cadena vacía o un valor predeterminado.
+        return "";
     }
 
 }
