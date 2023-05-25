@@ -689,8 +689,6 @@ public class ListaComprobantesFragment extends Fragment  {
         });
     }
 
-
-
     /** API SERVICE - Usuarios */
     private void findUsers(String id){
 

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
+import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,17 +68,18 @@ public class LClienteAdapter extends RecyclerView.Adapter<LClienteAdapter.ViewHo
 
     public void filtrado(final String txtBuscar) {
 
-        int longitud = txtBuscar.length();
-        if (longitud == 0) {
-            clienteList.clear();
+        clienteList.clear();
+
+        if (txtBuscar.isEmpty()) {
             clienteList.addAll(listaOriginal);
         } else {
+            String txtBuscarLowerCase = txtBuscar.toLowerCase();
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                List<LClientes> collecion = clienteList.stream()
-                        .filter(i -> i.getClienteRZ().toLowerCase().contains(txtBuscar.toLowerCase()))
+                List<LClientes> filteredList = listaOriginal.stream()
+                        .filter(i -> i.getClienteRZ().toLowerCase().contains(txtBuscarLowerCase))
                         .collect(Collectors.toList());
-                clienteList.clear();
-                clienteList.addAll(collecion);
+                clienteList.addAll(filteredList);
             } else {
                 for (LClientes c : listaOriginal) {
                     if (c.getClienteRZ().toLowerCase().contains(txtBuscar.toLowerCase())) {
@@ -86,6 +88,7 @@ public class LClienteAdapter extends RecyclerView.Adapter<LClienteAdapter.ViewHo
                 }
             }
         }
+
         notifyDataSetChanged();
     }
 

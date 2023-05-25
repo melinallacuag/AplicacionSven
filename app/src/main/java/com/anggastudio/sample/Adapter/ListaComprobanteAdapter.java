@@ -89,28 +89,27 @@ public class ListaComprobanteAdapter extends RecyclerView.Adapter<ListaComproban
     }
 
     public void filtrado(final String txtBuscar) {
+        listaComprobanteList.clear();
 
-        int longitud = txtBuscar.length();
-        if (longitud == 0) {
-            listaComprobanteList.clear();
+        if (txtBuscar.isEmpty()) {
             listaComprobanteList.addAll(listaOriginal);
         } else {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                List<ListaComprobante> collecion = listaComprobanteList.stream()
-                        .filter(i -> i.getClienteRZ().toLowerCase().contains(txtBuscar.toLowerCase()))
-                        .collect(Collectors.toList());
-                listaComprobanteList.clear();
-                listaComprobanteList.addAll(collecion);
-            } else {
-                for (ListaComprobante a : listaOriginal) {
-                    if (a.getClienteRZ().toLowerCase().contains(txtBuscar.toLowerCase())) {
-                        listaComprobanteList.add(a);
+            String txtBuscarLowerCase = txtBuscar.toLowerCase();
 
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                List<ListaComprobante> filteredList = listaOriginal.stream()
+                        .filter(i -> i.getClienteRZ().toLowerCase().contains(txtBuscarLowerCase))
+                        .collect(Collectors.toList());
+                listaComprobanteList.addAll(filteredList);
+            } else {
+                for (ListaComprobante comprobante : listaOriginal) {
+                    if (comprobante.getClienteRZ().toLowerCase().contains(txtBuscarLowerCase)) {
+                        listaComprobanteList.add(comprobante);
                     }
                 }
-
             }
         }
+
         notifyDataSetChanged();
     }
 
