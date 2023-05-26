@@ -287,6 +287,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         inputMontoSoles.getText().clear();
 
+                        alertSoles.setErrorEnabled(false);
+
                     }
                 });
 
@@ -349,6 +351,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         modalGalones.dismiss();
 
                         inputCantidadGalones.getText().clear();
+
+                        alertGalones.setErrorEnabled(false);
 
                     }
                 });
@@ -490,8 +494,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         modalCliente.show();
 
-                        String campoDNI = inputDNI.getText().toString();
-
                         btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
 
@@ -499,9 +501,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
                         recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-
-
-                        findClienteDNI(campoDNI);
+                        ClienteDNI();
 
                         /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -841,8 +841,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         modalCliente.show();
 
-                        String campoRUC = inputRUC.getText().toString();
-
                         btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
 
@@ -850,8 +848,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
                         recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                        findClienteRUC(campoRUC);
-
+                        ClienteRUC();
 
                         /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -1292,46 +1289,101 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     }
 
+
+
     /** Listado - CLIENTE CON DNI */
     private void ClienteDNI(){
 
-        lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
+        Call<List<LClientes>> call = mAPIService.getClienteDNI();
+
+        call.enqueue(new Callback<List<LClientes>>() {
             @Override
-            public void onItemClick(LClientes item) {
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
 
-                inputDNI.setText(item.getClienteID());
-                inputNombre.setText(item.getClienteRZ());
-                inputDireccion.setText(item.getClienteDR());
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    GlobalInfo.getlclientesList10 = response.body();
 
-                modalCliente.dismiss();
+                    lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(LClientes item) {
 
-                btnBuscadorClienteRZ.setQuery("", false);
+                            String SelectDNI       = item.getClienteID();
+                            String SelectNombre    = item.getClienteRZ();
+                            String SelectDireccion = item.getClienteDR();
 
+                            inputDNI.setText(SelectDNI);
+                            inputNombre.setText(SelectNombre);
+                            inputDireccion.setText(SelectDireccion);
+
+                            modalCliente.dismiss();
+
+                            btnBuscadorClienteRZ.setQuery("", false);
+
+                        }
+                    });
+
+                    recyclerLCliente.setAdapter(lclienteAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente DNI - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
-
-        recyclerLCliente.setAdapter(lclienteAdapter);
 
     }
 
     /** Listado - CLIENTE CON RUC */
     private void ClienteRUC(){
 
-        lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
+        Call<List<LClientes>> call = mAPIService.getClienteRUC();
+
+        call.enqueue(new Callback<List<LClientes>>() {
             @Override
-            public void onItemClick(LClientes item) {
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
 
-                inputRUC.setText(item.getClienteID());
-                inputRazSocial.setText(item.getClienteRZ());
-                inputDireccion.setText(item.getClienteDR());
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    GlobalInfo.getlclientesList10 = response.body();
 
-                modalCliente.dismiss();
+                    lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(LClientes item) {
 
-                btnBuscadorClienteRZ.setQuery("", false);
+                            inputRUC.setText(item.getClienteID());
+                            inputRazSocial.setText(item.getClienteRZ());
+                            inputDireccion.setText(item.getClienteDR());
+
+                            modalCliente.dismiss();
+
+                            btnBuscadorClienteRZ.setQuery("", false);
+                        }
+                    });
+
+                    recyclerLCliente.setAdapter(lclienteAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente DNI - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
 
-        recyclerLCliente.setAdapter(lclienteAdapter);
 
     }
 
@@ -1379,8 +1431,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     inputNombre.setText(GlobalInfo.getclienteRZ10 );
                     inputDireccion.setText(GlobalInfo.getclienteDR10);
 
-                    ClienteDNI();
-
                 }catch (Exception ex){
                     Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
@@ -1419,8 +1469,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     inputRazSocial.setText(GlobalInfo.getclienteRZ10);
                     inputDireccion.setText(GlobalInfo.getclienteDR10);
-
-                    ClienteRUC();
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
