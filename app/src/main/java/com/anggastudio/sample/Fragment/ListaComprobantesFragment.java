@@ -202,6 +202,8 @@ public class ListaComprobantesFragment extends Fragment  {
                                 @Override
                                 public void onClick(View view) {
                                     modalAnulacion.dismiss();
+                                    alertuser.setErrorEnabled(false);
+                                    alertpassword.setErrorEnabled(false);
                                 }
                             });
 
