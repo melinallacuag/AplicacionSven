@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -34,12 +35,17 @@ import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringJoiner;
 import java.util.TimeZone;
 
 import retrofit2.Call;
@@ -191,12 +197,12 @@ public class CierreXFragment extends Fragment {
                     vContometroList = response.body();
 
                     for(VContometro vContometro: vContometroList) {
-
                         RContometrosTotalGLL += Double.valueOf(vContometro.getGalones());
                     }
 
                     /** Ventas Por Contometro - Volumen */
-                    TVolumenContometro = String.format(Locale.getDefault(), "%,.3f" ,RContometrosTotalGLL);
+                    TVolumenContometro = String.format(Locale.getDefault(), "%,.2f" ,RContometrosTotalGLL);
+                    GlobalInfo.getTVolumenContometro10 = TVolumenContometro;
                     TotalVolumenContometro.setText(TVolumenContometro);
 
                     vContometroAdapter = new VContometroAdapter(vContometroList, getContext());
@@ -243,14 +249,17 @@ public class CierreXFragment extends Fragment {
 
                     /** Ventas Por Productos - Volumen */
                     SProductosTotalGLL = String.format(Locale.getDefault(), "%,.3f" ,RProductosTotalGLL);
+                    GlobalInfo.getTSProductosTotalGLL10 = SProductosTotalGLL;
                     TotalMtogalones.setText(SProductosTotalGLL);
 
                     /** Ventas Por Productos - Soles */
                     SProductosTotalSoles = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles);
+                    GlobalInfo.getTSProductosTotalSoles10 = SProductosTotalSoles;
                     TotalSolesproducto.setText(SProductosTotalSoles);
 
                     /** Ventas Por Productos - Descuento */
                     SProductosTotalDesc = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalDesc);
+                    GlobalInfo.getTSProductosTotalDesc10 = SProductosTotalDesc;
                     TotalDescuento.setText(SProductosTotalDesc);
 
                     /** Descuntos y Incrementos */
@@ -259,6 +268,7 @@ public class CierreXFragment extends Fragment {
 
                     /** Pago Bruto - Suma TotalPagosSoles,TotalDesc y TotalIncremento */
                     MontoBruto = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles + RProductosTotalDesc);
+                    GlobalInfo.getMontoBruto10 = MontoBruto;
                     totalPagoBruto.setText(MontoBruto);
 
                     vProductoAdapter = new VProductoAdapter(vProductoList, getContext());
@@ -303,6 +313,7 @@ public class CierreXFragment extends Fragment {
 
                     /** Ventas Por Tipo de Pago - Total Neto */
                     TotalPagosSoles = String.format(Locale.getDefault(), "%,.2f" ,RPagosTotalSoles);
+                    GlobalInfo.getTotalPagosSoles10 = TotalPagosSoles;
                     TotalMontoPago.setText(TotalPagosSoles);
 
 
@@ -350,6 +361,7 @@ public class CierreXFragment extends Fragment {
 
                     /** Ventas Reporte Tarjetas- Gran Total */
                     TotalRTarjetasSoles = String.format(Locale.getDefault(), "%,.2f" ,RTarjetasTotal);
+                    GlobalInfo.getTotalRTarjetasSoles10 = TotalRTarjetasSoles;
                     GranTotal.setText(TotalRTarjetasSoles);
 
                     reporteTarjetasAdapter = new ReporteTarjetasAdapter(reporteTarjetasList, getContext());
@@ -415,13 +427,170 @@ public class CierreXFragment extends Fragment {
     private void cierrex() {
 
         Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
-        View view = getView().findViewById(R.id.contenedorCierreX);
+        /*  View view = getView().findViewById(R.id.contenedorCierreX);*/
+
+        String NameCompany   = GlobalInfo.getNameCompany10;
+
+        String BranchCompany = GlobalInfo.getBranchCompany10;
+        String Branch1       = BranchCompany.substring(0,32);
+        String Branch2       = BranchCompany.substring(35,51);
+
+        String FechaHoraIni  = GlobalInfo.getterminalFechaHoraCierre10;
+
+        /** Fecha de Impresión */
+        Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
+        SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        String FechaHoraImpresion    = formatdate.format(calendarprint.getTime());
+        String FechaHoraFin          = FechaHoraImpresion;
+
+        String FechaTrabajo     = GlobalInfo.getterminalFecha10;
+        String Turno            = String.valueOf(GlobalInfo.getterminalTurno10);
+        String Cajero           = GlobalInfo.getuserName10;
+        String NroDespacho      = "0";
+        String DocAnulados      = "0";
+        String TotalDocAnulados = "0";
+
+        /**  Venta por Contometro Digitales **/
+        StringBuilder VContometroBuilder = new StringBuilder();
+
+        for(VContometro vContometro: vContometroList) {
+            String lado = vContometro.getNroLado();
+            String producto = vContometro.getArticuloDS();
+            String cantidadI = String.format("%.2f", vContometro.getContomInicial());
+            String cantidadF = String.format("%.2f", vContometro.getContomFinal());
+            String galones = String.format(Locale.getDefault(), "%,.2f", vContometro.getGalones());
+
+            String line = String.format(Locale.getDefault(), "%-5s %-8s %-10s %10s %10s", lado, producto, cantidadI, cantidadF, galones);
+            VContometroBuilder.append(line).append("\n");
+        }
+
+
+        /**  Venta por Productos **/
+        StringBuilder VProductoBuilder = new StringBuilder();
+
+        for(VProducto vProducto: vProductoList) {
+            String producto = vProducto.getArticuloDS();
+            String volumen = String.format("%,.3f",vProducto.getCantidad());
+            String soles = String.format("%,.2f", vProducto.getSoles());
+            String descuentos = String.format("%,.2f", vProducto.getDescuento());
+
+            String line = String.format(Locale.getDefault(), "%-15s %-11s %-11s %8s", producto, volumen, soles, descuentos);
+            VProductoBuilder.append(line).append("\n");
+        }
+
+       /** Ventas por Tipo de Pago **/
+        StringBuilder VTipoPagoBuilder = new StringBuilder();
+
+        for(VTipoPago vTipoPago: vTipoPagoList) {
+            String tipopago = vTipoPago.getNames();
+            String soles = String.format("%,.2f",vTipoPago.getSoles());
+
+            String line = String.format(Locale.getDefault(), " %-36s %10s", tipopago, soles);
+            VTipoPagoBuilder.append(line).append("\n");
+        }
+
+        /**  Reporte por Tarjetas **/
+        StringBuilder ReporteTarjetasBuilder = new StringBuilder();
+
+        for(ReporteTarjetas reporteTarjetas: reporteTarjetasList) {
+            String ndocumento = reporteTarjetas.getDocumento();
+            String tipo = reporteTarjetas.getTipo();
+            String ref    = reporteTarjetas.getRef();
+            String monto    = String.format("%.2f",reporteTarjetas.getSoles());
+
+            String line = String.format(Locale.getDefault(), "%-15s  %-8s %8s %12s", ndocumento, tipo,ref,monto);
+            ReporteTarjetasBuilder.append(line).append("\n");
+
+        }
+
+        String TVolumenContometro    = GlobalInfo.getTVolumenContometro10;
+        String TSProductosTotalGLL   = GlobalInfo.getTSProductosTotalGLL10;
+        String TSProductosTotalSoles = GlobalInfo.getTSProductosTotalSoles10;
+        String TSProductosTotalDesc  = GlobalInfo.getTSProductosTotalDesc10;
+
+        String TotalPagosSoles     = GlobalInfo.getTotalPagosSoles10;
+        String MontoBruto          = GlobalInfo.getMontoBruto10;
+        String TotalRTarjetasSoles = GlobalInfo.getTotalRTarjetasSoles10;
+
+        /** Imprimir Cierre X**/
         Printama.with(getContext()).connect(printama -> {
+            printama.printTextln("                 ", Printama.CENTER);
+            printama.printImage(logoRobles, 200);
+            printama.setSmallText();
+            printama.printTextlnBold(NameCompany, Printama.CENTER);
+            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
+            printama.printTextlnBold(Branch2, Printama.CENTER);
+            printama.setSmallText();
+            printama.printDoubleDashedLine();
+            printama.addNewLine(1);
+            printama.setSmallText();
+            printama.printTextlnBold("CIERRE PARCIAL DE CAJA (X)",Printama.CENTER);
+            printama.addNewLine(1);
+            printama.printTextlnBold("Fecha/Hora Inicio : "+ FechaHoraIni,Printama.LEFT);
+            printama.printTextlnBold("Fecha/Hora Fin    : "+ FechaHoraFin , Printama.LEFT);
+            printama.printTextlnBold("Fecha Trabajo     : "+ FechaTrabajo, Printama.LEFT);
+            printama.printTextlnBold("Turno             : "+ Turno, Printama.LEFT);
+            printama.printTextlnBold("Cajero            : "+ Cajero, Printama.LEFT);
+            printama.printTextlnBold("Nro. Despachos    : "+ NroDespacho, Printama.LEFT);
+            printama.printTextlnBold("Total        (S/) : "+ "0", Printama.LEFT);
+            printama.printTextlnBold("Doc. Anulados     : "+ DocAnulados, Printama.LEFT);
+            printama.printTextlnBold("Total Doc. Anulados (S/) : "+ TotalDocAnulados, Printama.LEFT);
+            printama.setSmallText();
+            printama.printDoubleDashedLine();
+            printama.addNewLine(1);
+            printama.setSmallText();
+            printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES",Printama.CENTER);
+            printama.addNewLine(1);
+            printama.printTextlnBold(" L    "+" P       "+"C. INICIO    "+"C. FINAL    "+"VOLUMEN",Printama.RIGHT);
+            printama.setSmallText();
+            printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
+            printama.printTextlnBold("TOTAL VOLUMEN :                            "+TVolumenContometro,Printama.RIGHT);
+            printama.setSmallText();
+            printama.printDoubleDashedLine();
+            printama.addNewLine(1);
+            printama.setSmallText();
+            printama.printTextlnBold("VENTAS POR PRODUCTOS",Printama.CENTER);
+            printama.addNewLine(1);
+            printama.printTextlnBold("PRODUCTO       "+"VOLUMEN      "+"SOLES      "+"DESCUENTO",Printama.RIGHT);
+            printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "   " + "---------" + "     " + "---------", Printama.RIGHT);
+            printama.printTextlnBold("TOTALES :       "+TSProductosTotalGLL+"    "+TSProductosTotalSoles+ "          "+TSProductosTotalDesc,Printama.RIGHT);
+            printama.setSmallText();
+            printama.printDoubleDashedLine();
+            printama.addNewLine(1);
+            printama.setSmallText();
+            printama.printTextlnBold("VENTAS POR TIPO DE PAGO",Printama.CENTER);
+            printama.addNewLine(1);
+            printama.printTextlnBold( VTipoPagoBuilder.toString(), Printama.RIGHT);
+            printama.printTextlnBold("Transferencia Gratuito                      "+"0.00",Printama.RIGHT);
+            printama.printTextlnBold("Promociones                                 "+"0.00",Printama.RIGHT);
+            printama.printTextlnBold("---------",Printama.RIGHT);
+            printama.printTextlnBold("TOTAL NETO S/  "+TotalPagosSoles,Printama.RIGHT);
+            printama.addNewLine(1);
+            printama.setSmallText();
+            printama.printTextlnBold("Total Descuento                             "+TSProductosTotalDesc,Printama.RIGHT);
+            printama.printTextlnBold("Total Incremento                            "+"0.00",Printama.RIGHT);
+            printama.printTextlnBold("---------",Printama.RIGHT);
+            printama.printTextlnBold("TOTAL BRUTO S/ "+MontoBruto,Printama.RIGHT);
+            printama.setSmallText();
+            printama.printDoubleDashedLine();
+            printama.addNewLine(1);
+            printama.setSmallText();
+            printama.printTextlnBold("REPORTE POR TARJETAS",Printama.CENTER);
+            printama.addNewLine(1);
+            printama.printTextlnBold("NRO DOCUMENTO     "+"TIPO         "+"REF.      "+"  MONTO",Printama.RIGHT);
+            printama.printTextlnBold( ReporteTarjetasBuilder.toString() + "---------", Printama.RIGHT);
+            printama.printTextlnBold("GRAN TOTAL :                               "+TotalRTarjetasSoles,Printama.RIGHT);
+            printama.setSmallText();
+            printama.feedPaper();
+            printama.close();
+        }, this::showToast);
+
+     /*   Printama.with(getContext()).connect(printama -> {
             printama.printImage(logoRobles, 100);
             printama.printFromView(view);
             new Handler().postDelayed(printama::close, 2000);
         }, this::showToast);
-
+*/
     }
 
     private void showToast(String message) {

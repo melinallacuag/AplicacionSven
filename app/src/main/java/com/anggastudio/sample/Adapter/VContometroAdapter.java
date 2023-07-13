@@ -39,9 +39,9 @@ public class VContometroAdapter extends RecyclerView.Adapter<VContometroAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.textlado.setText(vContometroList.get(position).getNroLado());
         holder.textproducto.setText(vContometroList.get(position).getArticuloDS());
-        holder.textcantidadI.setText(String.valueOf(String.format("%.3f",vContometroList.get(position).getContomInicial())));
-        holder.textcantidadF.setText(String.valueOf(String.format("%.3f",vContometroList.get(position).getContomFinal())));
-        holder.textgalones.setText(String.valueOf(String.format(Locale.getDefault(), "%,.3f" ,vContometroList.get(position).getGalones())));
+        holder.textcantidadI.setText(String.valueOf(String.format("%.2f",vContometroList.get(position).getContomInicial())));
+        holder.textcantidadF.setText(String.valueOf(String.format("%.2f",vContometroList.get(position).getContomFinal())));
+        holder.textgalones.setText(String.valueOf(String.format(Locale.getDefault(), "%,.2f" ,vContometroList.get(position).getGalones())));
     }
 
     @Override

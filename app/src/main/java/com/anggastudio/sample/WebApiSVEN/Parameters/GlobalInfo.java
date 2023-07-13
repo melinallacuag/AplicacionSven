@@ -22,6 +22,18 @@ public class GlobalInfo {
      */
     public static Integer getNumeroVecesIMP10;
 
+
+    /**
+     * Variable de impresión para el Cierre X
+     */
+    public static String getTVolumenContometro10;
+    public static String getTSProductosTotalGLL10;
+    public static String getTSProductosTotalSoles10;
+    public static String getTSProductosTotalDesc10;
+    public static String getTotalPagosSoles10;
+    public static String getTotalRTarjetasSoles10;
+    public static String getMontoBruto10;
+
     /**
      * Datos Recycler
      */
@@ -219,7 +231,8 @@ public class GlobalInfo {
     /**
      * URL - APIService
      */
-    public static final String BASE_URL = "http://192.168.1.2:8081/";
+    public static final String BASE_URL = "http://4-fact.com:8081/";
+  //  public static final String BASE_URL = "http://192.168.1.10:8081/";
 
     public static APIService getAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(APIService.class);
