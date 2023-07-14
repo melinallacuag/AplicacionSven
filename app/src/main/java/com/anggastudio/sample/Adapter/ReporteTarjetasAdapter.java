@@ -38,7 +38,7 @@ public class ReporteTarjetasAdapter  extends RecyclerView.Adapter<ReporteTarjeta
         holder.textNumDocumento.setText(reporteTarjetasList.get(position).getDocumento());
         holder.textTipo.setText(reporteTarjetasList.get(position).getTipo());
         holder.textReferencia.setText(reporteTarjetasList.get(position).getRef());
-        holder.textMonto.setText(String.format(Locale.getDefault(), "%,.2f" ,reporteTarjetasList.get(position).getSoles()));
+        holder.textMonto.setText(String.format(Locale.getDefault(), "%,10.2f" ,reporteTarjetasList.get(position).getSoles()));
     }
 
     @Override

@@ -551,11 +551,11 @@ public class CierreXFragment extends Fragment {
         for(VContometro vContometro: vContometroList) {
             String lado = vContometro.getNroLado();
             String producto = vContometro.getArticuloDS();
-            String cantidadI = String.format("%.2f", vContometro.getContomInicial());
-            String cantidadF = String.format("%.2f", vContometro.getContomFinal());
-            String galones = String.format(Locale.getDefault(), "%,.2f", vContometro.getGalones());
+            String cantidadI = String.format("%10.2f", vContometro.getContomInicial());
+            String cantidadF = String.format("%10.2f", vContometro.getContomFinal());
+            String galones = String.format(Locale.getDefault(), "%,10.2f", vContometro.getGalones());
 
-            String line = String.format(Locale.getDefault(), "%-5s %-8s %-10s %10s %10s", lado, producto, cantidadI, cantidadF, galones);
+            String line = String.format(Locale.getDefault(), "%-5s %-6s %-11s %12s %10s", lado, producto, cantidadI, cantidadF, galones);
             VContometroBuilder.append(line).append("\n");
         }
 
@@ -565,11 +565,11 @@ public class CierreXFragment extends Fragment {
 
         for(VProducto vProducto: vProductoList) {
             String producto = vProducto.getArticuloDS();
-            String volumen = String.format("%,.3f",vProducto.getCantidad());
-            String soles = String.format("%,.2f", vProducto.getSoles());
-            String descuentos = String.format("%,.2f", vProducto.getDescuento());
+            String volumen = String.format("%,10.3f",vProducto.getCantidad());
+            String soles = String.format("%,10.2f", vProducto.getSoles());
+            String descuentos = String.format("%,10.2f", vProducto.getDescuento());
 
-            String line = String.format(Locale.getDefault(), "%-15s %-11s %-11s %8s", producto, volumen, soles, descuentos);
+            String line = String.format(Locale.getDefault(), "%-11s %-10s %12s %12s", producto, volumen, soles, descuentos);
             VProductoBuilder.append(line).append("\n");
         }
 
@@ -578,7 +578,7 @@ public class CierreXFragment extends Fragment {
 
         for(VTipoPago vTipoPago: vTipoPagoList) {
             String tipopago = vTipoPago.getNames();
-            String soles = String.format("%,.2f",vTipoPago.getSoles());
+            String soles = String.format("%,10.2f",vTipoPago.getSoles());
 
             String line = String.format(Locale.getDefault(), " %-36s %10s", tipopago, soles);
             VTipoPagoBuilder.append(line).append("\n");
@@ -591,7 +591,7 @@ public class CierreXFragment extends Fragment {
             String ndocumento = reporteTarjetas.getDocumento();
             String tipo = reporteTarjetas.getTipo();
             String ref    = reporteTarjetas.getRef();
-            String monto    = String.format("%.2f",reporteTarjetas.getSoles());
+            String monto    = String.format("%,10.2f",reporteTarjetas.getSoles());
 
             String line = String.format(Locale.getDefault(), "%-15s  %-8s %8s %12s", ndocumento, tipo,ref,monto);
             ReporteTarjetasBuilder.append(line).append("\n");
@@ -636,7 +636,7 @@ public class CierreXFragment extends Fragment {
             printama.setSmallText();
             printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES",Printama.CENTER);
             printama.addNewLine(1);
-            printama.printTextlnBold(" L    "+" P       "+"C. INICIO    "+"C. FINAL    "+"VOLUMEN",Printama.RIGHT);
+            printama.printTextlnBold("L    "+" P      "+"C. INICIO      "+"C. FINAL    "+"VOLUMEN",Printama.RIGHT);
             printama.setSmallText();
             printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
             printama.printTextlnBold("TOTAL VOLUMEN :                            "+TVolumenContometro,Printama.RIGHT);
@@ -646,9 +646,9 @@ public class CierreXFragment extends Fragment {
             printama.setSmallText();
             printama.printTextlnBold("VENTAS POR PRODUCTOS",Printama.CENTER);
             printama.addNewLine(1);
-            printama.printTextlnBold("PRODUCTO       "+"VOLUMEN      "+"SOLES      "+"DESCUENTO",Printama.RIGHT);
-            printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "   " + "---------" + "     " + "---------", Printama.RIGHT);
-            printama.printTextlnBold("TOTALES :       "+TSProductosTotalGLL+"    "+TSProductosTotalSoles+ "          "+TSProductosTotalDesc,Printama.RIGHT);
+            printama.printTextlnBold("PRODUCTO       "+"VOLUMEN        "+"SOLES    "+"DESCUENTO",Printama.RIGHT);
+            printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "    " + "---------" + "    " + "---------", Printama.RIGHT);
+            printama.printTextlnBold("TOTALES :       "+TSProductosTotalGLL+"       "+TSProductosTotalSoles+ "         "+TSProductosTotalDesc,Printama.RIGHT);
             printama.setSmallText();
             printama.printDoubleDashedLine();
             printama.addNewLine(1);
@@ -659,13 +659,13 @@ public class CierreXFragment extends Fragment {
             printama.printTextlnBold("Transferencia Gratuito                      "+"0.00",Printama.RIGHT);
             printama.printTextlnBold("Promociones                                 "+"0.00",Printama.RIGHT);
             printama.printTextlnBold("---------",Printama.RIGHT);
-            printama.printTextlnBold("TOTAL NETO S/  "+TotalPagosSoles,Printama.RIGHT);
+            printama.printTextlnBold("TOTAL NETO S/    "+TotalPagosSoles,Printama.RIGHT);
             printama.addNewLine(1);
             printama.setSmallText();
             printama.printTextlnBold("Total Descuento                             "+TSProductosTotalDesc,Printama.RIGHT);
             printama.printTextlnBold("Total Incremento                            "+"0.00",Printama.RIGHT);
             printama.printTextlnBold("---------",Printama.RIGHT);
-            printama.printTextlnBold("TOTAL BRUTO S/ "+MontoBruto,Printama.RIGHT);
+            printama.printTextlnBold("TOTAL BRUTO S/    "+MontoBruto,Printama.RIGHT);
             printama.setSmallText();
             printama.printDoubleDashedLine();
             printama.addNewLine(1);

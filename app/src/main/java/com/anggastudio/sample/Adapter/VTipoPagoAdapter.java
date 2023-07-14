@@ -38,7 +38,7 @@ public class VTipoPagoAdapter extends RecyclerView.Adapter<VTipoPagoAdapter.View
     @Override
     public void onBindViewHolder(@NonNull VTipoPagoAdapter.ViewHolder holder, int position) {
         holder.textventatipopago.setText(vTipoPagoList.get(position).getNames());
-        holder.textventatipopagomonto.setText(String.valueOf(String.format(Locale.getDefault(), "%,.2f" ,vTipoPagoList.get(position).getSoles())));
+        holder.textventatipopagomonto.setText(String.valueOf(String.format(Locale.getDefault(), "%,10.2f" ,vTipoPagoList.get(position).getSoles())));
 
     }
 
