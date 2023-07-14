@@ -232,10 +232,10 @@ public class GlobalInfo {
      */
 
     public static Integer  getrAnuladosCantidad10;
-    public static Double  getrAnuladosSoles10;
+    public static String  getrAnuladosSoles10;
 
     public static Integer  getrDespachosCantidad10;
-    public static Double  getrDespachosSoles10;
+    public static String  getrDespachosSoles10;
 
     /**
      * URL - APIService

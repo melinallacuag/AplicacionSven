@@ -85,6 +85,7 @@ public class CierreXFragment extends Fragment {
     List<VTipoPago> vTipoPagoList;
 
     List<RAnulados> rAnuladosList;
+    List<RAnulados> rDescuentoList;
 
 
     Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal;
@@ -161,7 +162,7 @@ public class CierreXFragment extends Fragment {
         RTarjetasTotal       = 0.00;
 
         /** Listado de R. Despacho */
-        findRDespacho(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "D");
+        findRDespacho(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "B");
 
         /** Listado de R.Anulados */
         findRAnulados(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "A");
@@ -203,15 +204,15 @@ public class CierreXFragment extends Fragment {
                         return;
                     }
 
-                    rAnuladosList = response.body();
+                    rDescuentoList = response.body();
 
-                    for(RAnulados rAnulados: rAnuladosList){
+                    for(RAnulados rAnulados: rDescuentoList){
                         GlobalInfo.getrDespachosCantidad10 = rAnulados.getCantidad();
                         DespachosSoles10     = rAnulados.getSoles();
                     }
 
-                    RDespachosSoles10 = String.format(Locale.getDefault(), "%,.2f" ,DespachosSoles10);
-                    GlobalInfo.getrDespachosSoles10 = Double.valueOf(RDespachosSoles10);
+                    RDespachosSoles10 = String.format(Locale.getDefault(), "%,.2f", DespachosSoles10);
+                    GlobalInfo.getrDespachosSoles10 = RDespachosSoles10;
                     TotalDespacho.setText(RDespachosSoles10);
 
                     NroDespacho.setText(String.valueOf(GlobalInfo.getrDespachosCantidad10));
@@ -253,9 +254,10 @@ public class CierreXFragment extends Fragment {
                         AnuladosSoles10    = rAnulados.getSoles();
                     }
 
-                    RAnuladosSoles10 = String.format(Locale.getDefault(), "%,.2f" ,AnuladosSoles10);
-                    GlobalInfo.getrAnuladosSoles10 = Double.valueOf(RAnuladosSoles10);
+                    RAnuladosSoles10 = String.format(Locale.getDefault(), "%,.2f", AnuladosSoles10);
+                    GlobalInfo.getrAnuladosSoles10 = RAnuladosSoles10;
                     TotalDocAnulados.setText(RAnuladosSoles10);
+
 
                     DocAnulados.setText(String.valueOf(GlobalInfo.getrAnuladosCantidad10));
 
@@ -541,9 +543,9 @@ public class CierreXFragment extends Fragment {
         String Turno            = String.valueOf(GlobalInfo.getterminalTurno10);
         String Cajero           = GlobalInfo.getuserName10;
         String NroDespacho      = String.valueOf(GlobalInfo.getrDespachosCantidad10);
-        String TotalDespacho    = String.valueOf(String.format("%.2f", GlobalInfo.getrDespachosSoles10));
+        String TotalDespacho    = String.valueOf(GlobalInfo.getrDespachosSoles10);
         String DocAnulados      = String.valueOf(GlobalInfo.getrAnuladosCantidad10);
-        String TotalDocAnulados = String.valueOf(String.format("%.2f", GlobalInfo.getrAnuladosSoles10));;
+        String TotalDocAnulados = String.valueOf(GlobalInfo.getrAnuladosSoles10);
 
         /**  Venta por Contometro Digitales **/
         StringBuilder VContometroBuilder = new StringBuilder();
@@ -639,7 +641,7 @@ public class CierreXFragment extends Fragment {
             printama.printTextlnBold("L    "+" P      "+"C. INICIO      "+"C. FINAL    "+"VOLUMEN",Printama.RIGHT);
             printama.setSmallText();
             printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
-            printama.printTextlnBold("TOTAL VOLUMEN :                            "+TVolumenContometro,Printama.RIGHT);
+            printama.printTextlnBold("TOTAL VOLUMEN :                           "+TVolumenContometro,Printama.RIGHT);
             printama.setSmallText();
             printama.printDoubleDashedLine();
             printama.addNewLine(1);
@@ -648,7 +650,7 @@ public class CierreXFragment extends Fragment {
             printama.addNewLine(1);
             printama.printTextlnBold("PRODUCTO       "+"VOLUMEN        "+"SOLES    "+"DESCUENTO",Printama.RIGHT);
             printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "    " + "---------" + "    " + "---------", Printama.RIGHT);
-            printama.printTextlnBold("TOTALES :       "+TSProductosTotalGLL+"       "+TSProductosTotalSoles+ "         "+TSProductosTotalDesc,Printama.RIGHT);
+            printama.printTextlnBold("TOTALES :      "+TSProductosTotalGLL+"     "+TSProductosTotalSoles+ "        "+TSProductosTotalDesc,Printama.RIGHT);
             printama.setSmallText();
             printama.printDoubleDashedLine();
             printama.addNewLine(1);
@@ -662,7 +664,7 @@ public class CierreXFragment extends Fragment {
             printama.printTextlnBold("TOTAL NETO S/    "+TotalPagosSoles,Printama.RIGHT);
             printama.addNewLine(1);
             printama.setSmallText();
-            printama.printTextlnBold("Total Descuento                             "+TSProductosTotalDesc,Printama.RIGHT);
+            printama.printTextlnBold("Total Descuento                           "+TSProductosTotalDesc,Printama.RIGHT);
             printama.printTextlnBold("Total Incremento                            "+"0.00",Printama.RIGHT);
             printama.printTextlnBold("---------",Printama.RIGHT);
             printama.printTextlnBold("TOTAL BRUTO S/    "+MontoBruto,Printama.RIGHT);
@@ -674,7 +676,7 @@ public class CierreXFragment extends Fragment {
             printama.addNewLine(1);
             printama.printTextlnBold("NRO DOCUMENTO     "+"TIPO         "+"REF.      "+"  MONTO",Printama.RIGHT);
             printama.printTextlnBold( ReporteTarjetasBuilder.toString() + "---------", Printama.RIGHT);
-            printama.printTextlnBold("GRAN TOTAL :                               "+TotalRTarjetasSoles,Printama.RIGHT);
+            printama.printTextlnBold("GRAN TOTAL :                              "+TotalRTarjetasSoles,Printama.RIGHT);
             printama.setSmallText();
             printama.feedPaper();
             printama.close();

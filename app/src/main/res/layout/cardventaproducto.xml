@@ -7,7 +7,7 @@
 
         <TextView
             android:id="@+id/textPproducto"
-            android:layout_width="400sp"
+            android:layout_width="360sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"
@@ -18,7 +18,7 @@
 
         <TextView
             android:id="@+id/textPvolumen"
-            android:layout_width="380sp"
+            android:layout_width="330sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"
@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/textPsoles"
-            android:layout_width="380sp"
+            android:layout_width="340sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"
@@ -40,11 +40,11 @@
 
         <TextView
             android:id="@+id/textPdescuento"
-            android:layout_width="400sp"
+            android:layout_width="370sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"
-            android:gravity="center"
+            android:gravity="end"
             android:textColor="@color/colorBlack"
             android:textSize="17sp"
             android:textStyle="bold" />
