@@ -28,8 +28,10 @@ import com.anggastudio.sample.Adapter.VProductoAdapter;
 import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
+import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
@@ -57,12 +59,12 @@ public class CierreXFragment extends Fragment {
 
     private APIService mAPIService;
 
-    TextView TotalDocAnulados,DocAnulados,NroDespacho,Cajero,Turno,FechaTrabajo,
+    TextView TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalPagoBruto,
             TotalDescuento2,TotalIncremento,GranTotal;
 
-    String TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,
+    String RAnuladosSoles10,RDespachosSoles10, TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,
             TotalPagosSoles,MontoBruto,TotalRTarjetasSoles;
 
     Button imprimirCierreX;
@@ -82,7 +84,10 @@ public class CierreXFragment extends Fragment {
     VTipoPagoAdapter vTipoPagoAdapter;
     List<VTipoPago> vTipoPagoList;
 
-    Double RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal;
+    List<RAnulados> rAnuladosList;
+
+
+    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,6 +105,7 @@ public class CierreXFragment extends Fragment {
         Turno               = view.findViewById(R.id.Turno);
         Cajero              = view.findViewById(R.id.Cajero);
         NroDespacho         = view.findViewById(R.id.NroDespacho);
+        TotalDespacho       = view.findViewById(R.id.TotalDespacho);
         DocAnulados         = view.findViewById(R.id.DocAnulados);
         TotalDocAnulados    = view.findViewById(R.id.TotalDocAnulados);
         TotalVolumenContometro = view.findViewById(R.id.TotalVolumenContometro);
@@ -146,9 +152,6 @@ public class CierreXFragment extends Fragment {
         FechaTrabajo.setText(GlobalInfo.getterminalFecha10);
         Turno.setText(String.valueOf(GlobalInfo.getterminalTurno10));
         Cajero.setText(GlobalInfo.getuserName10);
-        NroDespacho.setText("0");
-        DocAnulados.setText("0");
-        TotalDocAnulados.setText("0.00");
 
         RContometrosTotalGLL = 0.00;
         RProductosTotalGLL   = 0.00;
@@ -156,6 +159,12 @@ public class CierreXFragment extends Fragment {
         RProductosTotalDesc  = 0.00;
         RPagosTotalSoles     = 0.00;
         RTarjetasTotal       = 0.00;
+
+        /** Listado de R. Despacho */
+        findRDespacho(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "D");
+
+        /** Listado de R.Anulados */
+        findRAnulados(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "A");
 
         /** Listado de Venta por Contometros  */
         recyclerVContometro = view.findViewById(R.id.recyclerVContometro);
@@ -179,6 +188,91 @@ public class CierreXFragment extends Fragment {
 
         return view;
     }
+    /** API SERVICE - R. Despacho */
+    private void findRDespacho(String terminalId, String turno, String tipo){
+
+        Call<List<RAnulados>> call = mAPIService.findRAnulados(terminalId,turno,tipo);
+
+        call.enqueue(new Callback<List<RAnulados>>() {
+            @Override
+            public void onResponse(Call<List<RAnulados>> call, Response<List<RAnulados>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    rAnuladosList = response.body();
+
+                    for(RAnulados rAnulados: rAnuladosList){
+                        GlobalInfo.getrDespachosCantidad10 = rAnulados.getCantidad();
+                        DespachosSoles10     = rAnulados.getSoles();
+                    }
+
+                    RDespachosSoles10 = String.format(Locale.getDefault(), "%,.2f" ,DespachosSoles10);
+                    GlobalInfo.getrDespachosSoles10 = Double.valueOf(RDespachosSoles10);
+                    TotalDespacho.setText(RDespachosSoles10);
+
+                    NroDespacho.setText(String.valueOf(GlobalInfo.getrDespachosCantidad10));
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RAnulados>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE R Anulados - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    /** API SERVICE - R. Anulados */
+    private void findRAnulados(String terminalId, String turno, String tipo){
+
+        Call<List<RAnulados>> call = mAPIService.findRAnulados(terminalId,turno,tipo);
+
+        call.enqueue(new Callback<List<RAnulados>>() {
+            @Override
+            public void onResponse(Call<List<RAnulados>> call, Response<List<RAnulados>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    rAnuladosList = response.body();
+
+                    for(RAnulados rAnulados: rAnuladosList){
+                        GlobalInfo.getrAnuladosCantidad10 = rAnulados.getCantidad();
+                        AnuladosSoles10    = rAnulados.getSoles();
+                    }
+
+                    RAnuladosSoles10 = String.format(Locale.getDefault(), "%,.2f" ,AnuladosSoles10);
+                    GlobalInfo.getrAnuladosSoles10 = Double.valueOf(RAnuladosSoles10);
+                    TotalDocAnulados.setText(RAnuladosSoles10);
+
+                    DocAnulados.setText(String.valueOf(GlobalInfo.getrAnuladosCantidad10));
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RAnulados>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE R Anulados - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
     /** API SERVICE - Venta por Contrometro */
     private void findVContometro(String id){
 
@@ -446,9 +540,10 @@ public class CierreXFragment extends Fragment {
         String FechaTrabajo     = GlobalInfo.getterminalFecha10;
         String Turno            = String.valueOf(GlobalInfo.getterminalTurno10);
         String Cajero           = GlobalInfo.getuserName10;
-        String NroDespacho      = "0";
-        String DocAnulados      = "0";
-        String TotalDocAnulados = "0";
+        String NroDespacho      = String.valueOf(GlobalInfo.getrDespachosCantidad10);
+        String TotalDespacho    = String.valueOf(String.format("%.2f", GlobalInfo.getrDespachosSoles10));
+        String DocAnulados      = String.valueOf(GlobalInfo.getrAnuladosCantidad10);
+        String TotalDocAnulados = String.valueOf(String.format("%.2f", GlobalInfo.getrAnuladosSoles10));;
 
         /**  Venta por Contometro Digitales **/
         StringBuilder VContometroBuilder = new StringBuilder();
@@ -532,7 +627,7 @@ public class CierreXFragment extends Fragment {
             printama.printTextlnBold("Turno             : "+ Turno, Printama.LEFT);
             printama.printTextlnBold("Cajero            : "+ Cajero, Printama.LEFT);
             printama.printTextlnBold("Nro. Despachos    : "+ NroDespacho, Printama.LEFT);
-            printama.printTextlnBold("Total        (S/) : "+ "0", Printama.LEFT);
+            printama.printTextlnBold("Total        (S/) : "+ TotalDespacho, Printama.LEFT);
             printama.printTextlnBold("Doc. Anulados     : "+ DocAnulados, Printama.LEFT);
             printama.printTextlnBold("Total Doc. Anulados (S/) : "+ TotalDocAnulados, Printama.LEFT);
             printama.setSmallText();

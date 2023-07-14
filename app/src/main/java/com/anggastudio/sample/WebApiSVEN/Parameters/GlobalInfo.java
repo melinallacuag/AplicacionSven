@@ -227,12 +227,21 @@ public class GlobalInfo {
     public static String  getconsultaventaAnulado10;
 
 
+    /**
+     * Datos R. Anulados
+     */
+
+    public static Integer  getrAnuladosCantidad10;
+    public static Double  getrAnuladosSoles10;
+
+    public static Integer  getrDespachosCantidad10;
+    public static Double  getrDespachosSoles10;
 
     /**
      * URL - APIService
      */
-    public static final String BASE_URL = "http://4-fact.com:8081/";
-  //  public static final String BASE_URL = "http://192.168.1.10:8081/";
+   // public static final String BASE_URL = "http://4-fact.com:8081/";
+   public static final String BASE_URL = "http://192.168.1.227:8081/";
 
     public static APIService getAPIService() {
         return RetrofitClient.getClient(BASE_URL).create(APIService.class);

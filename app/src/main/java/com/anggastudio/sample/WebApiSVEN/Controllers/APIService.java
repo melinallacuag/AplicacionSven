@@ -12,6 +12,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.Placa;
+import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
 import com.anggastudio.sample.WebApiSVEN.Models.Reimpresion;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
@@ -259,5 +260,12 @@ public interface APIService {
 
     @GET("api/rtarjeta/listado/{id}/{turno}")
     Call<List<ReporteTarjetas>> findRTarjetas(@Path("id") String id, @Path("turno") Integer turno);
+
+    /**
+     * R. Anulados
+     */
+
+    @GET("api/ranulados/listado/{terminalId}/{turno}/{tipo}")
+    Call<List<RAnulados>> findRAnulados(@Path("terminalId") String terminalId, @Path("turno") String turno, @Path("tipo") String tipo);
 
 }
