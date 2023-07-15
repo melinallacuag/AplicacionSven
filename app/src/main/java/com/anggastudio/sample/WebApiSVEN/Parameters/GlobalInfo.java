@@ -1,5 +1,11 @@
 package com.anggastudio.sample.WebApiSVEN.Parameters;
 
+import static com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient.getClient;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
+
+import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
@@ -14,6 +20,8 @@ import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 
 import java.util.List;
+
+import retrofit2.Retrofit;
 
 public class GlobalInfo {
 
@@ -247,7 +255,7 @@ public class GlobalInfo {
    public static final String BASE_URL = "http://192.168.1.227:8081/";
 
     public static APIService getAPIService() {
-        return RetrofitClient.getClient(BASE_URL).create(APIService.class);
+        return getClient(BASE_URL).create(APIService.class);
     }
 
 }

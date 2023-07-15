@@ -1,5 +1,4 @@
 package com.anggastudio.sample.WebApiSVEN.Parameters;
-
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -16,5 +15,4 @@ public class RetrofitClient {
         }
         return retrofit;
     }
-
 }
