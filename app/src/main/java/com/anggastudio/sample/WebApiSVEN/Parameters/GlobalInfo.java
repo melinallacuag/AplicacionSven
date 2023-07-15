@@ -65,6 +65,7 @@ public class GlobalInfo {
     public static String getuserID10;
     public static String getuserName10;
     public static String getuserPass10;
+    public static String getuseridentFID10;
     public static Boolean getuserLocked10;
     public static Boolean getuserCancel10;
 

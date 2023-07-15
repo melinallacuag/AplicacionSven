@@ -156,6 +156,7 @@ public class Login extends AppCompatActivity {
                         GlobalInfo.getuserName10 = user.getNames();
                         GlobalInfo.getuserPass10  = user.getPassword();
                         GlobalInfo.getuserLocked10  = user.getLocked();
+                        GlobalInfo.getuseridentFID10 = user.getIdentFID();
 
                     }
 
