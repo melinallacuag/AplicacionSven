@@ -600,9 +600,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         }else if (campoDNI.length() < 8){
                             alertDNI.setError("* El DNI debe tener 8 dígitos");
                             return;
-                        }else if(campoDNI.equals(GlobalInfo.getclienteId10)){
+                        }/*else if(campoDNI.equals(GlobalInfo.getclienteId10)){
                             alertDNI.setError("* No se encontro DNI");
-                        }
+                        }*/
 
                             findClienteDNI(campoDNI);
 
@@ -947,10 +947,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         }else if (campoRUC.length() < 11){
                             alertRUC.setError("* El RUC debe tener 11 dígitos");
                             return;
-                        }else if(campoRUC.equals(GlobalInfo.getclienteRUC10)){
+                        }/*else if(campoRUC.equals(GlobalInfo.getclienteRUC10)){
                             alertRUC.setError("* No se encontro RUC");
                             return;
-                        }
+                        }*/
 
                         findClienteRUC(campoRUC);
 
@@ -1303,6 +1303,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                     GlobalInfo.getlclientesList10 = response.body();
 
                     lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {
@@ -1353,6 +1354,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                     GlobalInfo.getlclientesList10 = response.body();
 
                     lclienteAdapter = new LClienteAdapter(GlobalInfo.getlclientesList10, getContext(), new LClienteAdapter.OnItemClickListener() {

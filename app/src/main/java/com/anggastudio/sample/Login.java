@@ -124,8 +124,8 @@ public class Login extends AppCompatActivity {
         });
 
         /** Mostrar el listado de Datos*/
-        getClienteDNI();
-        getClienteRUC();
+      /*  getClienteDNI();
+        getClienteRUC();*/
         getTipoPago();
 
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
@@ -454,6 +454,7 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                     GlobalInfo.getlclientesList10 = response.body();
 
 
@@ -483,6 +484,7 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                     GlobalInfo.getlclientesList10 = response.body();
 
 
@@ -500,6 +502,7 @@ public class Login extends AppCompatActivity {
 
     /** Spinner de Tipo de Pago */
     private void getTipoPago(){
+
         Call<List<TipoPago>> call = mAPIService.getTipoPago();
 
         call.enqueue(new Callback<List<TipoPago>>() {
