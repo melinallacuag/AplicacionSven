@@ -238,6 +238,8 @@ public class GlobalInfo {
     public static Integer  getrDespachosCantidad10;
     public static String  getrDespachosSoles10;
 
+    public static String getTotalRVenddorSoles10;
+
     /**
      * URL - APIService
      */

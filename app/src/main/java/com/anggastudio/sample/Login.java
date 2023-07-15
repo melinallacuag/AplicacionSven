@@ -116,6 +116,7 @@ public class Login extends AppCompatActivity {
                 GlobalInfo.getuserID10 = "";
                 GlobalInfo.getuserName10 = "";
                 GlobalInfo.getuserPass10 = "";
+                GlobalInfo.getuseridentFID10 = "";
 
                 findUsers(usuario.getText().toString());
 

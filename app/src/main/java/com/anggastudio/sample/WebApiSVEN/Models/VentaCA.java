@@ -30,6 +30,7 @@ public class VentaCA {
     private Double  puntosDisponibles;
     private Double  montoCanjeado;
     private String  userID;
+    private String  identFID;
     private Integer nroItem;
     private String  articuloID;
     private String  articuloDS;
@@ -52,7 +53,7 @@ public class VentaCA {
     private Double  mtoPagoUSD;
     private String  observacionPag;
 
-    public VentaCA(Integer companyID, String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, Integer turno, String fechaProceso, String fechaDocumento, String fechaAtencion, Double mtoDescuento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String odometro, String tipoVenta, String observacion, String referencia, String nroTarjetaNotaD, String nroTarjetaPuntos, Double puntosGanados, Double puntosDisponibles, Double montoCanjeado, String userID, Integer nroItem, String articuloID, String articuloDS, String uniMed, Integer almacenID, Integer impuestoID, Integer impuestoValor, Double precio1, Double precio2, Double cantidad, Double fise, String tranID, String nroLado, String manguera, String observacionDet, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag) {
+    public VentaCA(Integer companyID, String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, Integer turno, String fechaProceso, String fechaDocumento, String fechaAtencion, Double mtoDescuento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String odometro, String tipoVenta, String observacion, String referencia, String nroTarjetaNotaD, String nroTarjetaPuntos, Double puntosGanados, Double puntosDisponibles, Double montoCanjeado, String userID, String identFID, Integer nroItem, String articuloID, String articuloDS, String uniMed, Integer almacenID, Integer impuestoID, Integer impuestoValor, Double precio1, Double precio2, Double cantidad, Double fise, String tranID, String nroLado, String manguera, String observacionDet, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag) {
         this.companyID = companyID;
         this.tipoDocumento = tipoDocumento;
         this.serieDocumento = serieDocumento;
@@ -81,6 +82,7 @@ public class VentaCA {
         this.puntosDisponibles = puntosDisponibles;
         this.montoCanjeado = montoCanjeado;
         this.userID = userID;
+        this.identFID = identFID;
         this.nroItem = nroItem;
         this.articuloID = articuloID;
         this.articuloDS = articuloDS;
@@ -326,6 +328,14 @@ public class VentaCA {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    public String getIdentFID() {
+        return identFID;
+    }
+
+    public void setIdentFID(String identFID) {
+        this.identFID = identFID;
     }
 
     public Integer getNroItem() {

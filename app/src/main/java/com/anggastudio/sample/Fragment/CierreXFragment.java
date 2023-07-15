@@ -64,10 +64,10 @@ public class CierreXFragment extends Fragment {
     TextView TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalPagoBruto,
-            TotalDescuento2,TotalIncremento,GranTotal;
+            TotalDescuento2,TotalIncremento,GranTotal,GranVendedorTotal;
 
     String RAnuladosSoles10,RDespachosSoles10, TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,
-            TotalPagosSoles,MontoBruto,TotalRTarjetasSoles;
+            TotalPagosSoles,MontoBruto,TotalRTarjetasSoles,TotalRVendedorSoles;
 
     Button imprimirCierreX;
     Dialog modalAlerta;
@@ -93,7 +93,7 @@ public class CierreXFragment extends Fragment {
     List<RAnulados> rDescuentoList;
 
 
-    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal;
+    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -125,6 +125,7 @@ public class CierreXFragment extends Fragment {
         TotalIncremento     = view.findViewById(R.id.TotalIncremento);
 
         GranTotal           = view.findViewById(R.id.GranTotal);
+        GranVendedorTotal   = view.findViewById(R.id.GranVendedorTotal);
 
         imprimirCierreX = view.findViewById(R.id.imprimircierrex);
 
@@ -165,6 +166,7 @@ public class CierreXFragment extends Fragment {
         RProductosTotalDesc  = 0.00;
         RPagosTotalSoles     = 0.00;
         RTarjetasTotal       = 0.00;
+        RVendedorTotal       = 0.00;
 
         /** Listado de R. Despacho */
         findRDespacho(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "B");
@@ -195,17 +197,7 @@ public class CierreXFragment extends Fragment {
         /** Reporte por Vendedores */
         recyclerReporteVendedores = view.findViewById(R.id.recyclerReporteVendedores);
         recyclerReporteVendedores.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        reporteVendedorList = new ArrayList<>();
-
-        for (int i = 0; i < 1; i++){
-
-            reporteVendedorList.add(new ReporteVendedor("Melina Llacua Guere",1,25.00));
-            reporteVendedorList.add(new ReporteVendedor("Melina Llacua Guere",1,25.00));
-
-        }
-        reporteVendedorAdapter = new ReporteVendedorAdapter(reporteVendedorList, getContext());
-        recyclerReporteVendedores.setAdapter(reporteVendedorAdapter);
+        findRVendedor(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10));
 
         return view;
     }
@@ -471,7 +463,7 @@ public class CierreXFragment extends Fragment {
 
                     for(ReporteTarjetas reporteTarjetas: reporteTarjetasList) {
 
-                        RTarjetasTotal += Double.valueOf(reporteTarjetas.getSoles());
+                        RTarjetasTotal += reporteTarjetas.getSoles();
 
                     }
 
@@ -490,6 +482,51 @@ public class CierreXFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<ReporteTarjetas>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    /** API SERVICE - R. Vendedor */
+    private void findRVendedor(String id,String turno){
+
+        Call<List<ReporteVendedor>> call = mAPIService.findRVendedor(id,turno);
+
+        call.enqueue(new Callback<List<ReporteVendedor>>() {
+            @Override
+            public void onResponse(Call<List<ReporteVendedor>> call, Response<List<ReporteVendedor>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    reporteVendedorList = response.body();
+
+                     for(ReporteVendedor reporteVendedor: reporteVendedorList) {
+
+                        RVendedorTotal += reporteVendedor.getSoles();
+
+                    }
+
+                    TotalRVendedorSoles = String.format(Locale.getDefault(), "%,.2f" ,RVendedorTotal);
+                    GlobalInfo.getTotalRVenddorSoles10 = TotalRVendedorSoles;
+                    GranVendedorTotal.setText(TotalRVendedorSoles);
+
+
+                    reporteVendedorAdapter = new ReporteVendedorAdapter(reporteVendedorList, getContext());
+                    recyclerReporteVendedores.setAdapter(reporteVendedorAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReporteVendedor>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
 
             }
@@ -676,28 +713,28 @@ public class CierreXFragment extends Fragment {
         String linesS = String.format(Locale.getDefault(), "%-36s  %10s", RTarjetaTotalC, TotalRTarjetasSoles);
         RTarjetaTotal.append(linesS);
 
+        /**  Reporte por Vendedor **/
+        StringBuilder ReporteVendedorBuilder = new StringBuilder();
 
-        /** Reporte por Vendedor*/
+        for(ReporteVendedor reporteVendedor: reporteVendedorList) {
+            String nombreV      = reporteVendedor.getNombres();
+            String ndespachosV  = String.valueOf(reporteVendedor.getDespachos());
+            String solesV       = String.format("%,10.2f",reporteVendedor.getSoles());
 
-        StringBuilder RVendedorTotal = new StringBuilder();
+            String linnesS = String.format(Locale.getDefault(), "%-22s %4s %20s", nombreV, ndespachosV,solesV);
+            ReporteVendedorBuilder.append(linnesS).append("\n");
 
-        String RNombres   = "Melina Anali Llacua Guere";
-        String RDespachos = "Nro 01";
-        String RSoles     = "1000.00";
-
-        String linnesS = String.format(Locale.getDefault(), "%-26s %10s %10s",RNombres, RDespachos, RSoles);
-        RVendedorTotal.append(linnesS);
+        }
 
         /** Gran Total de R Vendedor */
 
         StringBuilder GranRVendedorTotal = new StringBuilder();
 
-        String GranRVendedorTotalC   = "TOTAL VENDEDOR :";
-        String TotalSolesC = "1,000.00";
+        String GranRVendedorTotalC   = "GRAN TOTAL :";
+        String TotalSolesC           = GlobalInfo.getTotalRVenddorSoles10;
 
-        String linneesS = String.format(Locale.getDefault(), "%-36s %10s", GranRVendedorTotalC, TotalSolesC);
+        String linneesS = String.format(Locale.getDefault(),"%-36s %11s", GranRVendedorTotalC, TotalSolesC);
         GranRVendedorTotal.append(linneesS);
-
 
         /** Imprimir Cierre X**/
         Printama.with(getContext()).connect(printama -> {
@@ -738,7 +775,7 @@ public class CierreXFragment extends Fragment {
             printama.setSmallText();
             printama.printTextlnBold("VENTAS POR PRODUCTOS",Printama.CENTER);
             printama.addNewLine(1);
-            printama.printTextlnBold("PRODUCTO       "+"VOLUMEN       "+"SOLES    "+" DESCUENTO",Printama.RIGHT);
+            printama.printTextlnBold("PRODUCTO       "+"VOLUMEN        "+"SOLES   "+" DESCUENTO",Printama.RIGHT);
             printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "    " + "---------" + "    " + "---------", Printama.RIGHT);
           //  printama.printTextlnBold("TOTALES :      "+TSProductosTotalGLL+"     "+TSProductosTotalSoles+ "         "+TSProductosTotalDesc,Printama.RIGHT);
             printama.printTextlnBold(TotalVolumenPro.toString(),Printama.RIGHT);
@@ -774,9 +811,10 @@ public class CierreXFragment extends Fragment {
             printama.setSmallText();
             printama.printTextlnBold("REPORTE POR VENDEDOR",Printama.CENTER);
             printama.addNewLine(1);
-            printama.printTextlnBold("NOMBRES                   "+"NRO DESPACHOS   "+" SOLES",Printama.RIGHT);
-            printama.printTextlnBold(RVendedorTotal.toString() + "---------",Printama.RIGHT);
+            printama.printTextlnBold("NOMBRES             "+"NRO DESPACHOS         "+" SOLES",Printama.RIGHT);
+            printama.printTextlnBold(ReporteVendedorBuilder.toString() + "---------",Printama.RIGHT);
             printama.printTextlnBold(GranRVendedorTotal.toString(),Printama.RIGHT);
+            printama.addNewLine(1);
             printama.feedPaper();
             printama.close();
         }, this::showToast);

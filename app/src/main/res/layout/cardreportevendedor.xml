@@ -14,6 +14,7 @@
         android:gravity="start"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
+        android:layout_gravity="center"
         android:textStyle="bold" />
 
     <TextView
@@ -25,6 +26,7 @@
         android:gravity="center"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
+        android:layout_gravity="center"
         android:text=""
         android:textStyle="bold" />
 
@@ -35,6 +37,7 @@
         android:layout_weight="1"
         android:fontFamily="@font/nunito_extrabold"
         android:gravity="end"
+        android:layout_gravity="center"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
         android:textStyle="bold" />

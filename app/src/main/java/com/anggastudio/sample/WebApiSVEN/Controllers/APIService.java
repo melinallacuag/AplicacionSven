@@ -15,6 +15,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Placa;
 import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
 import com.anggastudio.sample.WebApiSVEN.Models.Reimpresion;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
+import com.anggastudio.sample.WebApiSVEN.Models.ReporteVendedor;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTask;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
@@ -267,5 +268,12 @@ public interface APIService {
 
     @GET("api/ranulados/listado/{terminalId}/{turno}/{tipo}")
     Call<List<RAnulados>> findRAnulados(@Path("terminalId") String terminalId, @Path("turno") String turno, @Path("tipo") String tipo);
+
+    /**
+     * R. Vendedor
+     */
+
+    @GET("api/rvendedor/listado/{idterminal}/{turno}")
+    Call<List<ReporteVendedor>> findRVendedor(@Path("idterminal") String idterminal, @Path("turno") String turno);
 
 }
