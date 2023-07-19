@@ -78,6 +78,14 @@ public class GlobalInfo {
     public static Boolean getuserCancel10;
 
     /**
+     * Datos del Usuario Anulacion
+     */
+    public static String getuserIDAnular10;
+    public static String getuserNameAnular10;
+    public static String getuserPassAnular10;
+    public static Boolean getuserCancelAnular10;
+
+    /**
      * Datos de los Lados y Mangueras
      */
     public static String getCara10;

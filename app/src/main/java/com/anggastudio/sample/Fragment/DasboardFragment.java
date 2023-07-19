@@ -83,7 +83,10 @@ public class DasboardFragment extends Fragment{
                 FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
                 int fragmentContainerVenta = R.id.fragment_container;
-                VentaFragment ventaFragment = new VentaFragment();
+                VentaFragment ventaFragment = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    ventaFragment = new VentaFragment();
+                }
 
                 fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
                 fragmentTransactionVenta.addToBackStack(null);
