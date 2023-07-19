@@ -45,7 +45,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
     public static final String TAG = "ListaComprobantesFragment";
 
-    private APIService mAPIService;
+
 
     TextInputEditText usuario, contraseña;
     TextInputLayout alertuser,alertpassword;
@@ -64,6 +64,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
     List<Users> usersAnuladoList;
 
+    private APIService mAPIService;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
 
@@ -73,15 +75,15 @@ public class ListaComprobantesFragment extends Fragment  {
 
         BuscarRazonSocial   = view.findViewById(R.id.BuscarRazonSocial);
 
+        /** Listado de Comprobantes  */
+        recyclerLComprobante = view.findViewById(R.id.recyclerListaComprobante);
+        recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));
+
         /** Mostrar Modal de Cambio de Turno */
         modalReimpresion = new Dialog(getContext());
         modalReimpresion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalReimpresion.setContentView(R.layout.modal_reimprimir);
         modalReimpresion.setCancelable(false);
-        
-        /** Listado de Comprobantes  */
-        recyclerLComprobante = view.findViewById(R.id.recyclerListaComprobante);
-        recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));
 
         findConsultarVenta(GlobalInfo.getterminalID10);
 
@@ -104,13 +106,6 @@ public class ListaComprobantesFragment extends Fragment  {
         });
 
         return view;
-    }
-
-    public void moveToDescription(ListaComprobante item) {
-        GlobalInfo.getconsultaventaTipoDocumentoID10  = item.getTipoDocumento();
-        GlobalInfo.getconsultaventaSerieDocumento10   = item.getSerieDocumento();
-        GlobalInfo.getconsultaventaNroDocumento10     = item.getNroDocumento();
-        GlobalInfo.getconsultaventaAnulado10          = item.getAnulado();
     }
 
     /** API SERVICE - Card Consultar Venta */
@@ -165,6 +160,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                 });
 
                                 /** Mostrar Modal de Anulación */
+
                                 modalAnulacion = new Dialog(getContext());
                                 modalAnulacion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 modalAnulacion.setContentView(R.layout.modal_anulacion);
@@ -176,9 +172,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
 
-                                            if (!modalAnulacion.isShowing()) {
-                                                modalAnulacion.show();
-                                            }
+                                            modalAnulacion.show();
 
                                             btnCancelarAnular = modalAnulacion.findViewById(R.id.btnCancelarAnular);
                                             btnAceptarIngreso = modalAnulacion.findViewById(R.id.btnAceptarIngreso);
@@ -237,6 +231,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                     }
                                 });
+
                             }
                         });
                         listaComprobanteAdapter.notifyDataSetChanged();
@@ -254,6 +249,13 @@ public class ListaComprobantesFragment extends Fragment  {
                     Toast.makeText(getContext(), "Error de conexión APICORE Consulta Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
                 }
             });
+    }
+
+    public void moveToDescription(ListaComprobante item) {
+        GlobalInfo.getconsultaventaTipoDocumentoID10  = item.getTipoDocumento();
+        GlobalInfo.getconsultaventaSerieDocumento10   = item.getSerieDocumento();
+        GlobalInfo.getconsultaventaNroDocumento10     = item.getNroDocumento();
+        GlobalInfo.getconsultaventaAnulado10          = item.getAnulado();
     }
 
     /** API SERVICE - Usuarios */
@@ -287,16 +289,16 @@ public class ListaComprobantesFragment extends Fragment  {
                             Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         } else {
 
+                            FragmentManager fragmentManager = getFragmentManager();
+
                             String getName = usuario.getText().toString();
                             String getPass = checkpassword(contraseña.getText().toString());
 
-                            FragmentManager fragmentManager = getFragmentManager();
-
                             if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
 
-                                Anular(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10);
+                                Anular(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10,GlobalInfo.getterminalID10);
 
-                               fragmentManager.popBackStack();
+                                fragmentManager.popBackStack();
 
                                 modalAnulacion.dismiss();
 
@@ -318,9 +320,9 @@ public class ListaComprobantesFragment extends Fragment  {
 
     }
 
-    private void Anular(String tipodoc, String seriedoc, String nrodoc, String anuladoid) {
+    private void Anular(String tipodoc, String seriedoc, String nrodoc, String anuladoid, String terminalid) {
 
-        Call<Anular> call = mAPIService.postAnular(tipodoc, seriedoc, nrodoc, anuladoid);
+        Call<Anular> call = mAPIService.postAnular(tipodoc, seriedoc, nrodoc, anuladoid, terminalid);
 
             call.enqueue(new Callback<Anular>() {
                 @Override

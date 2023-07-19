@@ -1019,9 +1019,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                                     alertRazSocial.setError("* La Razon Social es obligatorio");
                                     return;
-                                }  else if (campoRazSocial.length() < 8 ) {
+                                }  else if (campoRazSocial.length() < 4 ) {
 
-                                    alertRazSocial.setError("* La Razon Social debe tener mínino 8 dígitos");
+                                    alertRazSocial.setError("* La Razon Social debe tener mínino 4 dígitos");
                                     return;
                                 }else if (checkedRadioButtonId == radioTarjeta.getId()) {
 

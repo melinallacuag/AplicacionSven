@@ -23,7 +23,10 @@ import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +42,7 @@ public class DasboardFragment extends Fragment{
 
     Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
 
-    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha;
+    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha,modalAlertaDiaActual;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -112,17 +115,23 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        /** Mostrar Alerta - Sino tiene ninguna venta pendiente */
+        /** Mostrar Alerta - Si tiene ninguna venta pendiente */
         modalAlerta = new Dialog(getContext());
         modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
         modalAlerta.setCancelable(true);
 
-        /** Mostrar Alerta - Por fuera de fecha */
+        /** Mostrar Alerta - Cambio de Inicio*/
         modalAlertaFecha = new Dialog(getContext());
         modalAlertaFecha.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlertaFecha.setContentView(R.layout.alerta_cambioinicio_fecha);
         modalAlertaFecha.setCancelable(true);
+
+        /** Mostrar Alerta - Por fuera de fecha */
+        modalAlertaDiaActual = new Dialog(getContext());
+        modalAlertaDiaActual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalAlertaDiaActual.setContentView(R.layout.alerta_iniciodia_fechaactual);
+        modalAlertaDiaActual.setCancelable(true);
 
         /** Mostrar Modal - Cambio de Turno */
         modalCambioTurno = new Dialog(getContext());
@@ -185,43 +194,54 @@ public class DasboardFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
-                /** API Retrofit - Inicio de Día */
-                findOptranDia(GlobalInfo.getterminalImei10);
+                /** Hora Actual */
+                Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
+                SimpleDateFormat formatdate  = new SimpleDateFormat("HHmmss");
+                String FechaHoraImpresion    = formatdate.format(calendarprint.getTime());
+                Integer HoraActual           = Integer.valueOf(FechaHoraImpresion);
 
-                modalInicioDia.show();
+                if (HoraActual >= 55000 && HoraActual <= 61000) {
 
-                btnCancelarInicio    = modalInicioDia.findViewById(R.id.btncancelariniciodia);
-                btnAceptarInicio     = modalInicioDia.findViewById(R.id.btnagregariniciodia);
+                    /** API Retrofit - Inicio de Día */
+                    findOptranDia(GlobalInfo.getterminalImei10);
 
-                btnCancelarInicio.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        modalInicioDia.dismiss();
-                    }
-                });
+                    modalInicioDia.show();
 
-                btnAceptarInicio.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
+                    btnCancelarInicio    = modalInicioDia.findViewById(R.id.btncancelariniciodia);
+                    btnAceptarInicio     = modalInicioDia.findViewById(R.id.btnagregariniciodia);
 
-                        modalAlerta.show();
-
-                        try {
-                            Intent intent = new Intent(getContext(), Login.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                            iniciarDia(GlobalInfo.getterminalID10);
-
-                            startActivity(intent);
-                            finalize();
-
-                            Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
-                        } catch (Throwable e) {
-                            e.printStackTrace();
+                    btnCancelarInicio.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            modalInicioDia.dismiss();
                         }
+                    });
 
-                    }
-                });
+                    btnAceptarInicio.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            modalAlerta.show();
+
+                            try {
+                                Intent intent = new Intent(getContext(), Login.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                                iniciarDia(GlobalInfo.getterminalID10);
+
+                                startActivity(intent);
+                                finalize();
+
+                                Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    });
+                } else {
+                    modalAlertaDiaActual.show();
+                }
 
               }
         });

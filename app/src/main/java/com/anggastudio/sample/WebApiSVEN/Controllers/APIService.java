@@ -244,8 +244,8 @@ public interface APIService {
     /**
      * Anular
      */
-    @POST("api/anular/anular/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}")
-    Call<Anular> postAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid);
+    @POST("api/anular/anular/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}/{terminalid}")
+    Call<Anular> postAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid, @Path("terminalid") String terminalid);
 
 
     /**
