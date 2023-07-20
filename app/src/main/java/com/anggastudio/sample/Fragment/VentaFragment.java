@@ -443,7 +443,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                 Intent intent = new Intent(getContext(), getActivity().getClass());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+                pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
                 IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
                 intentFilters = new IntentFilter[]{tagIntentFilter};
@@ -480,7 +480,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
 
 
-                        /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
+                /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
                 modalCliente = new Dialog(getContext());
                 modalCliente.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 modalCliente.setContentView(R.layout.fragment_clientes);
@@ -592,7 +592,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         String campoDNI = inputDNI.getText().toString();
 
-                        if (campoDNI.isEmpty() || campoDNI == null) {
+                        if (campoDNI.isEmpty() || campoDNI == null){
                             alertDNI.setError("* El campo DNI es obligatorio");
                             return;
                         }else if (campoDNI.length() < 8){
@@ -826,6 +826,24 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 buscarPlacaFactura = modalFactura.findViewById(R.id.buscarPlacaFactura);
                 btnCancelarFactura = modalFactura.findViewById(R.id.btnCancelarFactura);
                 btnAgregarFactura  = modalFactura.findViewById(R.id.btnAgregarFactura);
+
+                /**
+                 * Inicio de Detector NFC
+                 * **/
+                inputNFC.setKeyListener(null);
+
+                nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
+
+                Intent intent = new Intent(getContext(), getActivity().getClass());
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+                IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+                intentFilters = new IntentFilter[]{tagIntentFilter};
+                techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                        NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                        MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                        Ndef.class.getName()}};
 
                 /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
                 modalCliente = new Dialog(getContext());
@@ -2893,10 +2911,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             nfcAdapter.enableReaderMode(getActivity(), this,
                     NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B |
                             NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V, null);
+            return;
         }
 
         if (mTimerRunning && !mIsTaskScheduled) {
             modoStop();
+            return;
         }
     }
 
