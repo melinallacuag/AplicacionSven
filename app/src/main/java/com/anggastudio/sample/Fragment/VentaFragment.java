@@ -114,7 +114,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     TextView  datos_terminal,textMensajePEfectivo;
 
-    Dialog modalLibre,modalSoles,modalGalones,modalBoleta,modalCliente,modalFactura,modalNotaDespacho,modalSerafin;
+    Dialog modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin;
 
     Button btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
            btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
@@ -456,8 +456,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                  * Final de Detector NFC
                  * **/
 
-
-                // Agrega un Listener a tu campo de texto NFC
+                /**
+                 * Agrega un Listener a tu campo de texto NFC
+                 * */
                 inputNFC.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -478,30 +479,31 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     }
                 });
 
+                /**
+                 * Mostrar Listado de Cliente para Boleta y Seleccionar - DNI y Nombre
+                 * */
+                modalClienteDNI = new Dialog(getContext());
+                modalClienteDNI.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalClienteDNI.setContentView(R.layout.fragment_clientes);
+                modalClienteDNI.setCancelable(false);
 
+                /* Listado de Card - Cliente DNI */
+                recyclerLCliente = modalClienteDNI.findViewById(R.id.recyclerLCliente);
+                recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
+                ClienteDNI();
 
-                /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
-                modalCliente = new Dialog(getContext());
-                modalCliente.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                modalCliente.setContentView(R.layout.fragment_clientes);
-                modalCliente.setCancelable(false);
+                /* Inicio Doble click para abrir modal - Cliente DNI */
+                GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
 
-                final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
 
-                        modalCliente.show();
+                        modalClienteDNI.show();
 
-                        btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
-                        btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
+                        btnCancelarLCliente   = modalClienteDNI.findViewById(R.id.btnCancelarLCliente);
+                        btnBuscadorClienteRZ  = modalClienteDNI.findViewById(R.id.btnBuscadorClienteRZ);
 
-                        /** Listado de Card - Cliente DNI */
-                        recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
-                        recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                        ClienteDNI();
-
-                        /** Buscardor por Cliente Raz. Social */
+                        /* Buscardor por Nombre del Cliente */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                             @Override
                             public boolean onQueryTextSubmit(String query) {
@@ -510,7 +512,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                             @Override
                             public boolean onQueryTextChange(String newText) {
-                                lclienteAdapter.filtrado(newText);
+                                String userInput = newText.toLowerCase();
+                                if (lclienteAdapter != null) {
+                                    lclienteAdapter.filtrado(userInput);
+                                }
                                 return false;
                             }
                         });
@@ -518,11 +523,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
-                                modalCliente.dismiss();
-
                                 btnBuscadorClienteRZ.setQuery("", false);
-
+                                modalClienteDNI.dismiss();
                             }
                         });
 
@@ -541,6 +543,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         return true;
                     }
                 });
+
+                /* Fin Doble click para abrir modal - Cliente DNI */
 
                 /** Seleccionar Opción - Forma de Pago */
                 radioFormaPago.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -598,11 +602,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         }else if (campoDNI.length() < 8){
                             alertDNI.setError("* El DNI debe tener 8 dígitos");
                             return;
-                        }/*else if(campoDNI.equals(GlobalInfo.getclienteId10)){
-                            alertDNI.setError("* No se encontro DNI");
-                        }*/
+                        }
 
-                            findClienteDNI(campoDNI);
+                        findClienteDNI(campoDNI);
 
                             alertDNI.setErrorEnabled(false);
 
@@ -845,26 +847,28 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         MifareClassic.class.getName(), MifareUltralight.class.getName(),
                         Ndef.class.getName()}};
 
-                /** Mostrar Formulario de Listado de Cliente y Realizar la Operacion */
-                modalCliente = new Dialog(getContext());
-                modalCliente.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                modalCliente.setContentView(R.layout.fragment_clientes);
-                modalCliente.setCancelable(false);
+                /**
+                 * Mostrar Listado de Cliente para Factura y Seleccionar RUC - Raz. Social
+                 */
+                modalClienteRUC = new Dialog(getContext());
+                modalClienteRUC.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalClienteRUC.setContentView(R.layout.fragment_clientes);
+                modalClienteRUC.setCancelable(false);
 
+                /* Listado de Card - Cliente RUC */
+                recyclerLCliente = modalClienteRUC.findViewById(R.id.recyclerLCliente);
+                recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
+                ClienteRUC();
+
+                /* Inicio Doble click para abrir modal - Cliente RUC */
                 final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
 
-                        modalCliente.show();
+                        modalClienteRUC.show();
 
-                        btnCancelarLCliente   = modalCliente.findViewById(R.id.btnCancelarLCliente);
-                        btnBuscadorClienteRZ  = modalCliente.findViewById(R.id.btnBuscadorClienteRZ);
-
-                        /** Listado de Card - Cliente RUC */
-                        recyclerLCliente = modalCliente.findViewById(R.id.recyclerLCliente);
-                        recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
-
-                        ClienteRUC();
+                        btnCancelarLCliente   = modalClienteRUC.findViewById(R.id.btnCancelarLCliente);
+                        btnBuscadorClienteRZ  = modalClienteRUC.findViewById(R.id.btnBuscadorClienteRZ);
 
                         /** Buscardor por Cliente Raz. Social */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -875,7 +879,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                             @Override
                             public boolean onQueryTextChange(String newText) {
-                                lclienteAdapter.filtrado(newText);
+                                String userInput = newText.toLowerCase();
+                                if (lclienteAdapter != null) {
+                                    lclienteAdapter.filtrado(userInput);
+                                }
                                 return false;
                             }
                         });
@@ -883,11 +890,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-
-                                modalCliente.dismiss();
-
                                 btnBuscadorClienteRZ.setQuery("", false);
-
+                                modalClienteRUC.dismiss();
                             }
                         });
 
@@ -906,6 +910,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         return true;
                     }
                 });
+                /* Fin Doble click para abrir modal - Cliente RUC */
 
                 /** Seleccionar Opción - Forma de Pago */
                 radioFormaPago.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -1147,7 +1152,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
         });
 
-
         /** Mostrar Formulario Nota de Despacho y Realizar la Operacion */
         modalNotaDespacho = new Dialog(getContext());
         modalNotaDespacho.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1232,9 +1236,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         /** Listado de Detalle de Transacciones */
         recyclerDetalleVenta = view.findViewById(R.id.recyclerDetalleVenta);
         recyclerDetalleVenta.setLayoutManager(new LinearLayoutManager(getContext()));
-
         DetalleVenta();
-
 
         return view;
     }
@@ -1325,21 +1327,14 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         @Override
                         public void onItemClick(LClientes item) {
 
-                            String SelectDNI       = item.getClienteID();
-                            String SelectNombre    = item.getClienteRZ();
-                            String SelectDireccion = item.getClienteDR();
-
-                            inputDNI.setText(SelectDNI);
-                            inputNombre.setText(SelectNombre);
-                            inputDireccion.setText(SelectDireccion);
-
-                            modalCliente.dismiss();
+                            inputDNI.setText(item.getClienteID());
+                            inputNombre.setText(item.getClienteRZ());
+                            inputDireccion.setText(item.getClienteDR());
 
                             btnBuscadorClienteRZ.setQuery("", false);
-
+                            modalClienteDNI.dismiss();
                         }
                     });
-                    recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerLCliente.setAdapter(lclienteAdapter);
 
                 }catch (Exception ex){
@@ -1376,16 +1371,14 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         @Override
                         public void onItemClick(LClientes item) {
 
-                            inputRUC.setText(item.getClienteID());
+                            inputRUC.setText(item.getClienteRUC());
                             inputRazSocial.setText(item.getClienteRZ());
                             inputDireccion.setText(item.getClienteDR());
 
-                            modalCliente.dismiss();
-
                             btnBuscadorClienteRZ.setQuery("", false);
+                            modalClienteRUC.dismiss();
                         }
                     });
-                    recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
                     recyclerLCliente.setAdapter(lclienteAdapter);
 
                 }catch (Exception ex){
