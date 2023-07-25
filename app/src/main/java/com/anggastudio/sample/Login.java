@@ -53,7 +53,7 @@ public class Login extends AppCompatActivity {
 
     ImageButton configuracion;
     Button btniniciar;
-    TextInputEditText usuario, contraseña;
+    TextInputEditText inputUsuario, inputContraseña;
     TextInputLayout alertuser,alertpassword;
     TextView imeii;
     String usuarioUser,contraseñaUser;
@@ -74,11 +74,11 @@ public class Login extends AppCompatActivity {
 
          mAPIService = GlobalInfo.getAPIService();
 
-        btniniciar     = findViewById(R.id.btnlogin);
-        usuario        = findViewById(R.id.usuario);
-        contraseña     = findViewById(R.id.contraseña);
-        alertuser      = findViewById(R.id.textusuario);
-        alertpassword  = findViewById(R.id.textcontraseña);
+        btniniciar      = findViewById(R.id.btnlogin);
+        inputUsuario    = findViewById(R.id.usuario);
+        inputContraseña = findViewById(R.id.contraseña);
+        alertuser       = findViewById(R.id.textusuario);
+        alertpassword   = findViewById(R.id.textcontraseña);
 
         /*** Boton par configurar la impresión bluetooth.*/
 
@@ -102,8 +102,8 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                usuarioUser    = usuario.getText().toString();
-                contraseñaUser = contraseña.getText().toString();
+                usuarioUser    = inputUsuario.getText().toString();
+                contraseñaUser = inputContraseña.getText().toString();
 
                 if(usuarioUser.isEmpty()){
                     alertuser.setError("El campo usuario es obligatorio");
@@ -121,7 +121,7 @@ public class Login extends AppCompatActivity {
                 GlobalInfo.getuserPass10 = "";
                 GlobalInfo.getuseridentFID10 = "";
 
-                findUsers(usuario.getText().toString());
+                findUsers(usuarioUser);
 
             }
         });
@@ -153,7 +153,7 @@ public class Login extends AppCompatActivity {
 
                     usersList = response.body();
 
-                    for(Users user: usersList) {
+                  /*  for(Users user: usersList) {
 
                         usuario.setText(user.getUserID());
                         GlobalInfo.getuserID10 = user.getUserID();
@@ -181,6 +181,36 @@ public class Login extends AppCompatActivity {
                             Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                         }
 
+                    }*/
+
+                    if (usersList != null && !usersList.isEmpty()) {
+
+                        Users user = usersList.get(0);
+
+                        inputUsuario.setText(user.getUserID());
+                        GlobalInfo.getuserID10 = user.getUserID();
+                        GlobalInfo.getuserName10 = user.getNames();
+                        GlobalInfo.getuserPass10 = user.getPassword();
+                        GlobalInfo.getuserLocked10 = user.getLocked();
+
+                        if (GlobalInfo.getuserLocked10 == false) {
+                            Toast.makeText( getApplicationContext(), "El Usuario se encuentra bloqueado.", Toast.LENGTH_SHORT).show();
+                        }else {
+
+                            String getName = usuarioUser.trim();
+                            String getPass = checkpassword(contraseñaUser.trim());
+
+                            if(getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)){
+                                Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent( getApplicationContext(),Menu.class));
+                            }
+                            else {
+                                Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "El Usuario o la Contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                 }catch (Exception ex){

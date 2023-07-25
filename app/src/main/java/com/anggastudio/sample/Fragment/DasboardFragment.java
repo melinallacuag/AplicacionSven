@@ -200,7 +200,7 @@ public class DasboardFragment extends Fragment{
                 String FechaHoraImpresion    = formatdate.format(calendarprint.getTime());
                 Integer HoraActual           = Integer.valueOf(FechaHoraImpresion);
 
-                if (HoraActual >= 55000 && HoraActual <= 61000) {
+                if (HoraActual >= 55000 && HoraActual <= 62000) {
 
                     /** API Retrofit - Inicio de Día */
                     findOptranDia(GlobalInfo.getterminalImei10);

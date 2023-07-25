@@ -127,7 +127,7 @@
             android:layout_marginTop="20sp"
             android:textAllCaps="true"
             android:textSize="10sp"
-            android:text=" Version: 1.0"
+            android:text=" Version: 1.1"
             android:textColor="#1E242B"
             android:textAlignment="center"
             android:fontFamily="@font/nunito_black" />

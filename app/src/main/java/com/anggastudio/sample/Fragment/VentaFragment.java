@@ -2945,7 +2945,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     private String findCorrespondingName(String nfcCode) {
 
-        List<String> nfcCodes = Arrays.asList("0D746CE5500104E0", "3C746CE5500104E0");
+        List<String> nfcCodes = Arrays.asList("EB776CE5500104E0", "13B46CE5500104E0");
         List<String> names = Arrays.asList("Nombre 1", "Nombre 2");
 
         int index = nfcCodes.indexOf(nfcCode);
