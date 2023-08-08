@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/nunito_black"
-            android:text="LISTA DE CLIENTES"
+            android:text="LISTA DE CLIENTES DE CREIDTO"
             android:textAlignment="center"
             android:textColor="@color/blue"
             android:textSize="18sp"/>
@@ -40,57 +40,56 @@
             android:background="@drawable/input_border" />
 
         <androidx.cardview.widget.CardView
-           android:id="@+id/cardclientes"
+            android:id="@+id/cardclientes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:backgroundTint="@color/colorPrimaryBtn"
             app:cardCornerRadius="10dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="40sp"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40sp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="150sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:text="CLIENTE"
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
 
-                    <TextView
-                        android:layout_width="70sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="ID CLIENTE"
-                        android:textColor="@color/white"
-                        android:textSize="10sp" />
-                    <TextView
-                        android:layout_width="70sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="RUC CLIENTE"
-                        android:visibility="gone"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"/>
+                <TextView
+                    android:layout_width="80sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:gravity="center"
+                    android:text="NRO TARJETA"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
 
-                    <TextView
-                        android:layout_width="250sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="RAZÓN SOCIAL"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"/>
+                <TextView
+                    android:layout_width="60sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:gravity="center"
+                    android:text="SALDO"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
 
-                    <TextView
-                        android:layout_width="80sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="DIRECCIÓN"
-                        android:textColor="@color/white"
-                        android:visibility="gone"
-                        android:textSize="7.5sp"/>
+                <TextView
+                    android:layout_width="60sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:gravity="center"
+                    android:text="TIPO"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"/>
 
-                </LinearLayout>
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <LinearLayout
@@ -99,7 +98,7 @@
             android:layout_height="300sp"
             android:orientation="vertical">
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerLCliente"
+                android:id="@+id/recyclerLClienteCredito"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -109,7 +108,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <Button
-                android:id="@+id/btnCancelarLCliente"
+                android:id="@+id/btnCancelarLClienteCredito"
                 android:layout_width="wrap_content"
                 android:layout_height="50sp"
                 android:text="@string/btn_cancelar"

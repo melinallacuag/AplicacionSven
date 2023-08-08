@@ -19,6 +19,7 @@ public class Setting {
     private String nroplaca;
     private Double dnI_Monto_Minimo;
     private Integer timerAppVenta;
+    private String passAnula;
 
     public Integer getCompanyID() {
         return companyID;
@@ -154,5 +155,13 @@ public class Setting {
 
     public void setTimerAppVenta(Integer timerAppVenta) {
         this.timerAppVenta = timerAppVenta;
+    }
+
+    public String getPassAnula() {
+        return passAnula;
+    }
+
+    public void setPassAnula(String passAnula) {
+        this.passAnula = passAnula;
     }
 }

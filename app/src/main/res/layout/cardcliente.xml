@@ -17,30 +17,31 @@
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/cliente_ID"
-                android:layout_width="60sp"
+                android:layout_width="70sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="center"
                 android:textColor="@color/blue"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:textStyle="bold" />
             <TextView
                 android:id="@+id/cliente_RUC"
-                android:layout_width="60sp"
+                android:layout_width="70sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="center"
                 android:textColor="@color/blue"
-                android:textSize="7sp"
+                android:textSize="10sp"
+                android:visibility="gone"
                 android:textStyle="bold"/>
             <TextView
                 android:id="@+id/cliente_RZ"
-                android:layout_width="150sp"
+                android:layout_width="250sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="center"
                 android:textColor="@color/blue"
-                android:textSize="7sp"
+                android:textSize="10sp"
                 android:textStyle="bold"/>
             <TextView
                 android:id="@+id/cliente_DR"
@@ -50,6 +51,7 @@
                 android:gravity="center"
                 android:textColor="@color/blue"
                 android:textSize="7sp"
+                android:visibility="gone"
                 android:textStyle="bold" />
         </LinearLayout>
 </androidx.cardview.widget.CardView>

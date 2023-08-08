@@ -2,6 +2,7 @@ package com.anggastudio.sample.WebApiSVEN.Controllers;
 import com.anggastudio.sample.WebApiSVEN.Models.Anular;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
+import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.Descuentos;
@@ -18,6 +19,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteVendedor;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTask;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
@@ -247,6 +249,9 @@ public interface APIService {
     @POST("api/anular/anular/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}/{terminalid}")
     Call<Anular> postAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid, @Path("terminalid") String terminalid);
 
+    @GET("api/anular/listado/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}/{terminalid}")
+    Call<List<Anular>> findAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid, @Path("terminalid") String terminalid);
+
 
     /**
      * Reimprimir
@@ -275,5 +280,17 @@ public interface APIService {
 
     @GET("api/rvendedor/listado/{idterminal}/{turno}")
     Call<List<ReporteVendedor>> findRVendedor(@Path("idterminal") String idterminal, @Path("turno") String turno);
+
+    /**
+     * Cliente Credito
+     */
+    @GET("api/clientelineacredito/listado")
+    Call<List<ClienteCredito>> getClienteCredito();
+
+    /**
+     * Setting Turno
+     */
+    @GET("api/settingturno/listado")
+    Call<List<SettingTurno>> getSettingTurno();
 
 }

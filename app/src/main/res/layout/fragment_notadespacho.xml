@@ -30,118 +30,35 @@
                 android:textColor="@color/blue"
                 android:textSize="20sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/alertPlaca"
-                    android:layout_width="300sp"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingresar N° de Placa"
-                    app:boxBackgroundMode="outline"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="15dp"
-                    app:boxCornerRadiusTopEnd="15dp"
-                    app:endIconMode="clear_text"
-                    android:layout_weight="1">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/inputPlaca"
-                        android:fontFamily="@font/nunito_semibold"
-                        android:textSize="12sp"
-                        android:text="000-0000"
-                        android:inputType="textCapCharacters"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </com.google.android.material.textfield.TextInputLayout>
-                <Button
-                    android:id="@+id/buscarPlacaFactura"
-                    android:layout_width="200sp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10sp"
-                    android:text="@string/btn_buscar"
-                    android:textSize="10sp"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:layout_weight="1"
-                    app:cornerRadius="10sp"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/colorSecondary"
-                    android:layout_marginTop="2sp"
-                    android:visibility="gone"
-                    android:layout_marginLeft="10sp" />
-            </LinearLayout>
+
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textNFC"
+                android:id="@+id/alertCCliente"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Detectar la Etiqueta NFC"
+                android:hint="Seleccionar Cliente de Credito"
                 app:boxBackgroundColor="#E4E4E4"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
-                android:layout_marginBottom="5sp">
-
+                app:endIconMode="clear_text"
+                android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_EtiquetaNFC"
+                    android:id="@+id/inputCCliente"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:inputType="number"
                     android:focusable="false"
                     android:textSize="12sp" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/alertRUC"
-                    android:layout_width="300sp"
-                    android:layout_height="wrap_content"
-                    android:hint="Ingresar RUC"
-                    app:boxBackgroundMode="outline"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:boxCornerRadiusBottomEnd="15dp"
-                    app:boxCornerRadiusTopEnd="15dp"
-                    app:endIconMode="clear_text"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="11"
-                    android:layout_weight="1">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/inputRUC"
-                        android:fontFamily="@font/nunito_semibold"
-                        android:textSize="12sp"
-                        android:inputType="number"
-                        android:maxLength="11"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </com.google.android.material.textfield.TextInputLayout>
-                <Button
-                    android:id="@+id/buscarRUCFactura"
-                    android:layout_width="200sp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10sp"
-                    android:text="@string/btn_sunat"
-                    android:textSize="10sp"
-                    android:layout_weight="1"
-                    app:cornerRadius="10sp"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/colorSecondary"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:layout_marginTop="-8sp"
-                    android:layout_marginLeft="10sp" />
-            </LinearLayout>
-
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/alertRazSocial"
+                android:id="@+id/alertCRazSocial"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingresar Razon Social"
-                app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="#E4E4E4"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
@@ -149,9 +66,52 @@
                 app:counterEnabled="true"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputRazSocial"
+                    android:id="@+id/inputCRazSocial"
+
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="12sp"
+                    android:focusable="false"
+                    android:inputType="textCapCharacters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/alertTarjeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nro. Tarjeta"
+                app:boxBackgroundColor="#E4E4E4"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                android:layout_marginBottom="5sp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_CNTarjeta"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:textSize="12sp" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/alertPlaca"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresar N° de Placa"
+                app:boxBackgroundMode="outline"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:endIconMode="clear_text"
+                android:layout_weight="1">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCPlaca"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textSize="12sp"
+                    android:text="000-0000"
                     android:inputType="textCapCharacters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -162,14 +122,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Ingresar Dirección"
-                app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="#E4E4E4"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
                 app:endIconMode="clear_text"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputDireccion"
+                    android:id="@+id/inputCDireccion"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textSize="12sp"
+                    android:focusable="false"
+                    android:inputType="textCapCharacters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/alertKilometraje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresar Kilometraje"
+                app:boxBackgroundMode="outline"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:endIconMode="clear_text"
+                android:layout_weight="1">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCKilometraje"
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="12sp"
                     android:inputType="textCapCharacters"
@@ -190,13 +172,14 @@
                 android:layout_weight="1">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputObservacion"
+                    android:id="@+id/inputCObservacion"
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="12sp"
                     android:inputType="textCapCharacters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -2,26 +2,20 @@ package com.anggastudio.sample.WebApiSVEN.Parameters;
 
 import static com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient.getClient;
 
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
-
-import androidx.asynclayoutinflater.view.AsyncLayoutInflater;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 
 import java.util.List;
-
-import retrofit2.Retrofit;
 
 public class GlobalInfo {
 
@@ -48,8 +42,10 @@ public class GlobalInfo {
     public  static List<Lados> getladosList10;
     public  static List<Mangueras> getmanguerasList10;
     public  static List<LClientes> getlclientesList10;
+    public  static List<ClienteCredito> getlclientesCreditoList10;
     public  static List<TipoPago> gettipopagoList10;
     public  static List<DetalleVenta> getdetalleVentaList10;
+    public  static List<SettingTurno> getsettingTurnoList10;
     public  static List<ListaComprobante>  getlistacomprobanteList10;
     public  static List<VContometro> getvContometroList10;
     public  static List<VProducto> getvProductoList10;
@@ -122,6 +118,7 @@ public class GlobalInfo {
     public static String  getsettingNroPlaca10;
     public static Double  getsettingDNIMontoMinimo10;
     public static String  getsettingtimerAppVenta10;
+    public static String  getsettingPassAnula10;
 
     /**
      * Datos del Cliente RUC-DNI
@@ -257,9 +254,18 @@ public class GlobalInfo {
     public static String getTotalRVenddorSoles10;
 
     /**
+     * Setting Turno
+     */
+
+    public static Integer  getSettingCompanyId10;
+    public static Integer  getSettingTurno10;
+    public static Integer  getSettingRango110;
+    public static Integer  getSettingRango210;
+
+    /**
      * URL - APIService
      */
-   // public static final String BASE_URL = "http://4-fact.com:8081/";
+   //public static final String BASE_URL = "http://4-fact.com:8081/";
    public static final String BASE_URL = "http://192.168.1.227:8081/";
 
     public static APIService getAPIService() {

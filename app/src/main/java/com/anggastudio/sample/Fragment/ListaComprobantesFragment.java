@@ -43,10 +43,6 @@ import retrofit2.Response;
 
 public class ListaComprobantesFragment extends Fragment  {
 
-    public static final String TAG = "ListaComprobantesFragment";
-
-
-
     TextInputEditText usuario, contraseña;
     TextInputLayout alertuser,alertpassword;
     String usuarioUser,contraseñaUser;
@@ -111,144 +107,176 @@ public class ListaComprobantesFragment extends Fragment  {
     /** API SERVICE - Card Consultar Venta */
     private void findConsultarVenta(String id){
 
-            Call<List<ListaComprobante>> call = mAPIService.findConsultarVenta(id);
+        Call<List<ListaComprobante>> call = mAPIService.findConsultarVenta(id);
 
-            call.enqueue(new Callback<List<ListaComprobante>>() {
-                @Override
-                public void onResponse(Call<List<ListaComprobante>> call, Response<List<ListaComprobante>> response) {
+        call.enqueue(new Callback<List<ListaComprobante>>() {
+            @Override
+            public void onResponse(Call<List<ListaComprobante>> call, Response<List<ListaComprobante>> response) {
 
-                    try {
+                try {
 
-                        if (!response.isSuccessful()) {
+                    if (!response.isSuccessful()) {
 
-                            Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        listaComprobanteList = response.body();
+                    listaComprobanteList = response.body();
 
-                        listaComprobanteAdapter = new ListaComprobanteAdapter(listaComprobanteList, getContext(), new ListaComprobanteAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(ListaComprobante item) {
+                    listaComprobanteAdapter = new ListaComprobanteAdapter(listaComprobanteList, getContext(), new ListaComprobanteAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(ListaComprobante item) {
 
-                                moveToDescription(item);
+                            moveToDescription(item);
 
-                                if (!modalReimpresion.isShowing()) {
-                                    modalReimpresion.show();
+                            if (!modalReimpresion.isShowing()) {
+                                modalReimpresion.show();
+                            }
+
+                            btnCancelarRImpresion = modalReimpresion.findViewById(R.id.btnCancelarRImpresion);
+                            btnRImpresion         = modalReimpresion.findViewById(R.id.btnRImpresion);
+                            btnAnular             = modalReimpresion.findViewById(R.id.btnAnular);
+                            campo_correlativo     = modalReimpresion.findViewById(R.id.campo_correlativo);
+
+                            campo_correlativo.setText("NroDocumento: " + GlobalInfo.getconsultaventaSerieDocumento10 + "-" + GlobalInfo.getconsultaventaNroDocumento10);
+
+                            btnCancelarRImpresion.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    modalReimpresion.dismiss();
                                 }
+                            });
 
-                                btnCancelarRImpresion = modalReimpresion.findViewById(R.id.btnCancelarRImpresion);
-                                btnRImpresion         = modalReimpresion.findViewById(R.id.btnRImpresion);
-                                btnAnular             = modalReimpresion.findViewById(R.id.btnAnular);
-                                campo_correlativo     = modalReimpresion.findViewById(R.id.campo_correlativo);
+                            btnRImpresion.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Reimpresion(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
+                                    modalReimpresion.dismiss();
+                                }
+                            });
 
-                                campo_correlativo.setText("NroDocumento: " + GlobalInfo.getconsultaventaSerieDocumento10 + "-" + GlobalInfo.getconsultaventaNroDocumento10);
+                        /* contraseña        = modalReimpresion.findViewById(R.id.contraseñaAdmin);
+                           alertpassword     = modalReimpresion.findViewById(R.id.textcontraseñaAdmin);
 
-                                btnCancelarRImpresion.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        modalReimpresion.dismiss();
-                                    }
-                                });
+                           btnAnular.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
 
-                                btnRImpresion.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Reimpresion(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
-                                        modalReimpresion.dismiss();
-                                    }
-                                });
+                                    if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
 
-                                /** Mostrar Modal de Anulación */
+                                        contraseñaUser = contraseña.getText().toString();
 
-                                modalAnulacion = new Dialog(getContext());
-                                modalAnulacion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                modalAnulacion.setContentView(R.layout.modal_anulacion);
-                                modalAnulacion.setCancelable(false);
-
-                                btnAnular.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-
-                                        if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
-
-                                            modalAnulacion.show();
-
-                                            btnCancelarAnular = modalAnulacion.findViewById(R.id.btnCancelarAnular);
-                                            btnAceptarIngreso = modalAnulacion.findViewById(R.id.btnAceptarIngreso);
-                                            usuario = modalAnulacion.findViewById(R.id.inputUserAnulado);
-                                            contraseña = modalAnulacion.findViewById(R.id.inputContraseñaAnulado);
-                                            alertuser = modalAnulacion.findViewById(R.id.alertUserAnulado);
-                                            alertpassword = modalAnulacion.findViewById(R.id.alertContraseñaAnulado);
-
-                                            btnCancelarAnular.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-
-                                                    modalAnulacion.dismiss();
-
-                                                    usuario.getText().clear();
-                                                    contraseña.getText().clear();
-
-                                                    alertuser.setErrorEnabled(false);
-                                                    alertpassword.setErrorEnabled(false);
-
-                                                }
-                                            });
-
-                                            btnAceptarIngreso.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
-
-                                                    usuarioUser = usuario.getText().toString();
-                                                    contraseñaUser = contraseña.getText().toString();
-
-                                                    if (usuarioUser.isEmpty()) {
-                                                        alertuser.setError("El campo usuario es obligatorio");
-                                                        return;
-                                                    } else if (contraseñaUser.isEmpty()) {
-                                                        alertpassword.setError("El campo contraseña es obligatorio");
-                                                        return;
-                                                    }
-
-                                                    alertuser.setErrorEnabled(false);
-                                                    alertpassword.setErrorEnabled(false);
-
-                                                    findUsers(usuarioUser);
-
-                                                    modalReimpresion.dismiss();
-
-                                                    GlobalInfo.getuserIDAnular10   = "";
-                                                    GlobalInfo.getuserNameAnular10 = "";
-                                                    GlobalInfo.getuserPassAnular10 = "";
-
-                                                }
-                                            });
-
-                                        } else {
-                                            Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
+                                        if (contraseñaUser.isEmpty()) {
+                                            alertpassword.setError("El campo contraseña es obligatorio");
+                                            return;
+                                        }else if (contraseñaUser.equals(GlobalInfo.getsettingPassAnula10)){
+                                            Anulars(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserID10,GlobalInfo.getterminalID10);
+                                            Toast.makeText(getContext(), "Se anulo correctamente", Toast.LENGTH_SHORT).show();
+                                            modalReimpresion.dismiss();
+                                            return;
+                                        }else {
+                                            Toast.makeText(getContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
                                         }
 
+                                        alertpassword.setErrorEnabled(false);
+
+
+
+                                    } else {
+                                        Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
                                     }
-                                });
 
-                            }
-                        });
-                        listaComprobanteAdapter.notifyDataSetChanged();
+                                }
 
-                        recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerLComprobante.setAdapter(listaComprobanteAdapter);
+                            });*/
 
-                    } catch (Exception ex) {
-                        Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+                           modalAnulacion = new Dialog(getContext());
+                           modalAnulacion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                           modalAnulacion.setContentView(R.layout.modal_anulacion);
+                           modalAnulacion.setCancelable(false);
+
+                           btnAnular.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+
+                                    if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
+
+                                        if (!modalAnulacion.isShowing()) {
+                                            modalAnulacion.show();
+                                        }
+
+                                        btnCancelarAnular = modalAnulacion.findViewById(R.id.btnCancelarAnular);
+                                        btnAceptarIngreso = modalAnulacion.findViewById(R.id.btnAceptarIngreso);
+                                        usuario           = modalAnulacion.findViewById(R.id.inputUserAnulado);
+                                        contraseña        = modalAnulacion.findViewById(R.id.inputContraseñaAnulado);
+                                        alertuser         = modalAnulacion.findViewById(R.id.alertUserAnulado);
+                                        alertpassword     = modalAnulacion.findViewById(R.id.alertContraseñaAnulado);
+
+                                        btnCancelarAnular.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                modalAnulacion.dismiss();
+
+                                                usuario.getText().clear();
+                                                contraseña.getText().clear();
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+                                        btnAceptarIngreso.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                usuarioUser = usuario.getText().toString();
+                                                contraseñaUser = contraseña.getText().toString();
+
+                                                if (usuarioUser.isEmpty()) {
+                                                    alertuser.setError("El campo usuario es obligatorio");
+                                                    return;
+                                                } else if (contraseñaUser.isEmpty()) {
+                                                    alertpassword.setError("El campo contraseña es obligatorio");
+                                                    return;
+                                                }
+
+                                                findUsers(usuarioUser);
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+                                    } else {
+                                        Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                }
+
+                            });
+
+                        }
+
+                    });
+                    listaComprobanteAdapter.notifyDataSetChanged();
+
+                    recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));
+                    recyclerLComprobante.setAdapter(listaComprobanteAdapter);
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<List<ListaComprobante>> call, Throwable t) {
-                    Toast.makeText(getContext(), "Error de conexión APICORE Consulta Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
-                }
-            });
+            @Override
+            public void onFailure(Call<List<ListaComprobante>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Consulta Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void moveToDescription(ListaComprobante item) {
@@ -261,62 +289,66 @@ public class ListaComprobantesFragment extends Fragment  {
     /** API SERVICE - Usuarios */
     private void findUsers(String id){
 
-            Call<List<Users>> call = mAPIService.findUsers(id);
+        Call<List<Users>> call = mAPIService.findUsers(id);
 
-            call.enqueue(new Callback<List<Users>>() {
-                @Override
-                public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
 
-                    try {
+                try {
 
-                        if (!response.isSuccessful()) {
-                            Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        usersAnuladoList = response.body();
-
-                        for (Users user : usersAnuladoList) {
-
-                            GlobalInfo.getuserIDAnular10 = user.getUserID();
-                            GlobalInfo.getuserNameAnular10 = user.getNames();
-                            GlobalInfo.getuserPassAnular10 = user.getPassword();
-                            GlobalInfo.getuserCancelAnular10 = user.getCancel();
-
-                        }
-
-                        if (GlobalInfo.getuserCancelAnular10 == false) {
-                            Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                            FragmentManager fragmentManager = getFragmentManager();
-
-                            String getName = usuario.getText().toString();
-                            String getPass = checkpassword(contraseña.getText().toString());
-
-                            if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
-
-                                Anular(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10,GlobalInfo.getterminalID10);
-
-                                fragmentManager.popBackStack();
-
-                                modalAnulacion.dismiss();
-
-                            } else {
-                                Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                    } catch (Exception ex) {
-                        Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                }
 
-                @Override
-                public void onFailure(Call<List<Users>> call, Throwable t) {
-                    Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+                    usersAnuladoList = response.body();
+
+                    for (Users user : usersAnuladoList) {
+
+                        GlobalInfo.getuserIDAnular10 = user.getUserID();
+                        GlobalInfo.getuserNameAnular10 = user.getNames();
+                        GlobalInfo.getuserPassAnular10 = user.getPassword();
+                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+
+                    }
+
+                    if (GlobalInfo.getuserCancelAnular10 == true) {
+
+                        FragmentManager fragmentManager = getFragmentManager();
+
+                        String getName = usuario.getText().toString();
+                        String getPass = checkpassword(contraseña.getText().toString());
+
+                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
+
+                            Anulars(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10,GlobalInfo.getterminalID10);
+
+                            Toast.makeText(getContext(), "Se anulo correctamente", Toast.LENGTH_SHORT).show();
+                            fragmentManager.popBackStack();
+
+                            modalAnulacion.dismiss();
+
+                        } else {
+                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                    modalReimpresion.dismiss();
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -324,22 +356,50 @@ public class ListaComprobantesFragment extends Fragment  {
 
         Call<Anular> call = mAPIService.postAnular(tipodoc, seriedoc, nrodoc, anuladoid, terminalid);
 
-            call.enqueue(new Callback<Anular>() {
-                @Override
-                public void onResponse(Call<Anular> call, Response<Anular> response) {
+        call.enqueue(new Callback<Anular>() {
+            @Override
+            public void onResponse(Call<Anular> call, Response<Anular> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Anular> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Anular", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void Anulars(String tipodoc, String seriedoc, String nrodoc, String anuladoid, String terminalid) {
+
+        Call<List<Anular>> call = mAPIService.findAnular(tipodoc, seriedoc, nrodoc, anuladoid, terminalid);
+        call.enqueue(new Callback<List<Anular>>() {
+            @Override
+            public void onResponse(Call<List<Anular>> call, Response<List<Anular>> response) {
+
+                try {
+
                     if (!response.isSuccessful()) {
                         Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
-                @Override
-                public void onFailure(Call<Anular> call, Throwable t) {
-                    Toast.makeText(getContext(), "Error de conexión APICORE Anular", Toast.LENGTH_SHORT).show();
-                }
-            });
+            }
+
+            @Override
+            public void onFailure(Call<List<Anular>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Anular - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+
+        });
     }
-
     private void Reimpresion(String tipodoc, String seriedoc, String nrodoc) {
 
         Call<List<Reimpresion>> call = mAPIService.findReimpresion(tipodoc, seriedoc, nrodoc);

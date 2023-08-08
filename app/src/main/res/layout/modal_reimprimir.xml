@@ -98,6 +98,33 @@
 
 
         </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textcontraseñaAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingresar Contraseña"
+            app:boxBackgroundMode="outline"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            android:paddingTop="10dp"
+            app:endIconMode="password_toggle"
+            android:layout_marginBottom="10sp"
+            app:counterEnabled="true"
+            app:counterMaxLength="6"
+            android:visibility="gone"
+            app:startIconDrawable="@drawable/icon_password"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/contraseñaAdmin"
+                android:fontFamily="@font/nunito_semibold"
+                android:textSize="12sp"
+                android:inputType="numberPassword"
+                android:maxLength="6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

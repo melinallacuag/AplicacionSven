@@ -43,4 +43,5 @@ public class Bienvenida extends AppCompatActivity {
         },3000);
     }
 
+
 }
