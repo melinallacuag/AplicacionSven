@@ -17,24 +17,18 @@ public class Menu extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        DasboardFragment dasboardFragment = new DasboardFragment();
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, dasboardFragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new DasboardFragment()).commit();
+
 
     }
    @Override
     public void onBackPressed() {
 
-       if (!atDashboard) { // Reemplazar fragmento solo si no está en el Dashboard
-           if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-               getSupportFragmentManager().popBackStack();
-           }
-           atDashboard = true;
+       if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+           getSupportFragmentManager().popBackStack();
        }else{
-           getSupportFragmentManager().beginTransaction()
-                   .replace(R.id.fragment_container, new DasboardFragment()).commit();
+           getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new DasboardFragment()).commit();
        }
     }
 }

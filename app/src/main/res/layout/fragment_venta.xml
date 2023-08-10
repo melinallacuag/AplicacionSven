@@ -24,14 +24,15 @@
                 android:layout_weight="1"
                 android:textColor="@color/white"
                 android:textSize="10sp"
+                android:layout_marginEnd="8sp"
                 app:cornerRadius="10sp" />
 
             <Button
                 android:id="@+id/btnListadoComprobante"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
-                android:layout_weight="0"
+                android:layout_weight="2"
                 android:backgroundTint="@color/colorSuccess"
                 android:fontFamily="@font/nunito_black"
                 android:gravity="center"
@@ -69,12 +70,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerLado"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 
@@ -88,12 +89,12 @@
             android:textStyle="bold" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerMangueras"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
 

@@ -214,26 +214,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
         });
 
-
-       /* btnListadoComprobante.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-
-                ListaComprobantesFragment listaComprobantesFragment = (ListaComprobantesFragment) fragmentManager.findFragmentByTag(ListaComprobantesFragment.TAG);
-                if (listaComprobantesFragment == null) {
-                    listaComprobantesFragment = new ListaComprobantesFragment();
-                }
-
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.fragment_container, listaComprobantesFragment, ListaComprobantesFragment.TAG);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
-
-            }
-        });*/
-
         /** Datos de Terminal ID y Turno */
         datos_terminal.setText(GlobalInfo.getterminalID10 + " - " +"TURNO: " + String.valueOf(GlobalInfo.getterminalTurno10));
 
@@ -513,12 +493,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 modalClienteDNI.setContentView(R.layout.fragment_clientes);
                 modalClienteDNI.setCancelable(false);
 
-                /* Listado de Card - Cliente DNI */
+                /** Listado de Card - Cliente DNI */
                 recyclerLCliente = modalClienteDNI.findViewById(R.id.recyclerLCliente);
                 recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
                 ClienteDNI();
 
-                /* Inicio Doble click para abrir modal - Cliente DNI */
+                /** Inicio Doble click para abrir modal - Cliente DNI */
                 GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
 
                     @Override
@@ -529,7 +509,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         btnCancelarLCliente   = modalClienteDNI.findViewById(R.id.btnCancelarLCliente);
                         btnBuscadorClienteRZ  = modalClienteDNI.findViewById(R.id.btnBuscadorClienteRZ);
 
-                        /* Buscardor por Nombre del Cliente */
+                        /** Buscardor por Nombre del Cliente */
                         btnBuscadorClienteRZ.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                             @Override
                             public boolean onQueryTextSubmit(String query) {
@@ -883,10 +863,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 modalClienteRUC.setContentView(R.layout.fragment_clientes);
                 modalClienteRUC.setCancelable(false);
 
-                /* Listado de Card - Cliente RUC */
+                /** Listado de Card - Cliente RUC */
                 recyclerLCliente = modalClienteRUC.findViewById(R.id.recyclerLCliente);
                 recyclerLCliente.setLayoutManager(new LinearLayoutManager(getContext()));
                 ClienteRUC();
+
 
                 /* Inicio Doble click para abrir modal - Cliente RUC */
                 final GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
@@ -2623,9 +2604,15 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoImpuesto0 = mnMtoTotal - mnMtoSubTotal1;
                                     mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
 
-                                } else if (GlobalInfo.getoptranArticuloID10.equals("93") && GlobalInfo.getoptranSoles10 >= 9999.00) {
+                                } else if (GlobalInfo.getoptranArticuloID10.equals("93") && GlobalInfo.getoptranSoles10 >= 3000.00) {
 
-                                    mnMtoDescuentoUnitario = 0.20;
+                                  /*  if (GlobalInfo.getoptranGalones10 > 200.00) {
+                                        mnMtoDescuentoUnitario = 0.25;
+                                    } else {
+                                        mnMtoDescuentoUnitario = 0.20;
+                                    }*/
+
+                                    mnMtoDescuentoUnitario = 0.25;
 
                                     mnMtoDescuento0 = mnMtoDescuentoUnitario * GlobalInfo.getoptranGalones10;
                                     mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;

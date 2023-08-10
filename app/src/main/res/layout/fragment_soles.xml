@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
 
     <LinearLayout
-        android:layout_width="380sp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="20sp"
-        android:paddingBottom="10sp"
-        android:paddingStart="20sp"
-        android:paddingEnd="20sp"
         android:background="@drawable/cardmodal"
         android:backgroundTint="@color/white"
+        android:minWidth="600sp"
+        android:orientation="vertical"
+        android:paddingStart="20sp"
+        android:paddingTop="20sp"
+        android:paddingEnd="20sp"
+        android:paddingBottom="10sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:text="@string/ope_soles"
-                android:fontFamily="@font/nunito_black"
-                android:textColor="@color/blue"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/nunito_black"
+            android:text="@string/ope_soles"
+            android:textColor="@color/blue"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/alertSoles"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Monto Soles"
             app:boxBackgroundMode="outline"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:endIconMode="clear_text"
@@ -44,11 +44,11 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/inputMontoSoles"
-                android:fontFamily="@font/nunito_semibold"
-                android:textSize="14sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number" />
+                android:fontFamily="@font/nunito_semibold"
+                android:inputType="number"
+                android:textSize="14sp" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -62,28 +62,29 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="5sp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorDanger"
-                android:text="@string/btn_cancelar"
-                android:layout_margin="5sp"
                 android:fontFamily="@font/nunito_extrabold"
+                android:text="@string/btn_cancelar"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
+
             <Button
                 android:id="@+id/btnAgregarSoles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_margin="5sp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorSuccess"
+                android:fontFamily="@font/nunito_extrabold"
                 android:text="@string/btn_agregar"
                 android:textAllCaps="true"
-                android:layout_margin="5sp"
                 android:textColor="@color/white"
                 android:textSize="10sp"
-                android:fontFamily="@font/nunito_extrabold"
                 app:cornerRadius="10sp" />
         </LinearLayout>
 

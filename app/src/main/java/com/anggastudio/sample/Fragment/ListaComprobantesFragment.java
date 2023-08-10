@@ -155,40 +155,6 @@ public class ListaComprobantesFragment extends Fragment  {
                                 }
                             });
 
-                        /* contraseña        = modalReimpresion.findViewById(R.id.contraseñaAdmin);
-                           alertpassword     = modalReimpresion.findViewById(R.id.textcontraseñaAdmin);
-
-                           btnAnular.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
-
-                                        contraseñaUser = contraseña.getText().toString();
-
-                                        if (contraseñaUser.isEmpty()) {
-                                            alertpassword.setError("El campo contraseña es obligatorio");
-                                            return;
-                                        }else if (contraseñaUser.equals(GlobalInfo.getsettingPassAnula10)){
-                                            Anulars(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserID10,GlobalInfo.getterminalID10);
-                                            Toast.makeText(getContext(), "Se anulo correctamente", Toast.LENGTH_SHORT).show();
-                                            modalReimpresion.dismiss();
-                                            return;
-                                        }else {
-                                            Toast.makeText(getContext(), "Contraseña incorrecta", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        alertpassword.setErrorEnabled(false);
-
-
-
-                                    } else {
-                                        Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
-                                    }
-
-                                }
-
-                            });*/
 
                            modalAnulacion = new Dialog(getContext());
                            modalAnulacion.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -262,6 +228,7 @@ public class ListaComprobantesFragment extends Fragment  {
                         }
 
                     });
+
                     listaComprobanteAdapter.notifyDataSetChanged();
 
                     recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -400,6 +367,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
         });
     }
+
     private void Reimpresion(String tipodoc, String seriedoc, String nrodoc) {
 
         Call<List<Reimpresion>> call = mAPIService.findReimpresion(tipodoc, seriedoc, nrodoc);

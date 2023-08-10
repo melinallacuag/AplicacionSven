@@ -12,6 +12,7 @@ android:layout_height="match_parent">
     android:background="@drawable/cardmodal"
     android:backgroundTint="#FFFFFF"
     android:padding="20sp"
+    android:minWidth="600sp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">

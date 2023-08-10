@@ -17,6 +17,7 @@
             android:background="@drawable/cardmodal"
             android:backgroundTint="@color/white"
             android:orientation="vertical"
+            android:minWidth="600sp"
             android:paddingStart="20sp"
             android:paddingTop="10sp"
             android:paddingEnd="20sp"
