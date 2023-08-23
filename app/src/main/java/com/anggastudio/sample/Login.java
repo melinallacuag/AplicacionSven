@@ -91,7 +91,7 @@ public class Login extends AppCompatActivity {
         });
 
         /** Detectar el IMEI*/
-
+/**comentario*/
         imeii = findViewById(R.id.imei);
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
 
