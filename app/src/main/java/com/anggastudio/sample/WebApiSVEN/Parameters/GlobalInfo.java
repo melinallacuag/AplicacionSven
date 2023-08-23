@@ -265,7 +265,8 @@ public class GlobalInfo {
     /**
      * URL - APIService
      */
-   public static final String BASE_URL = "http://4-fact.com:8081/";
+  // public static final String BASE_URL = "http://4-fact.com:8081/";
+    public static final String BASE_URL = "http://192.168.1.11:8081/";
   // public static final String BASE_URL = "http://192.168.1.227:8081/";
   // public static final String BASE_URL = "http://192.168.1.245:8081/";
 
