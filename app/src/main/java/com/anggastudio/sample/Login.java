@@ -1,12 +1,24 @@
 package com.anggastudio.sample;
 
+import static androidx.core.content.ContentProviderCompat.requireContext;
 import static java.security.AccessController.getContext;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.nfc.NfcAdapter;
+import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -49,7 +61,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Login extends AppCompatActivity {
+public class Login extends AppCompatActivity{
 
     ImageButton configuracion;
     Button btniniciar;
@@ -66,12 +78,18 @@ public class Login extends AppCompatActivity {
 
     private APIService mAPIService;
 
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] intentFilters;
+    private String[][] techLists;
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
          mAPIService = GlobalInfo.getAPIService();
 
         btniniciar      = findViewById(R.id.btnlogin);
@@ -79,6 +97,19 @@ public class Login extends AppCompatActivity {
         inputContraseña = findViewById(R.id.contraseña);
         alertuser       = findViewById(R.id.textusuario);
         alertpassword   = findViewById(R.id.textcontraseña);
+
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+            nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+            Intent intent = new Intent(this, this.getClass())
+                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+            intentFilters = new IntentFilter[]{tagIntentFilter};
+            techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                    NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                    MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                    Ndef.class.getName()}};
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
         /*** Boton par configurar la impresión bluetooth.*/
 
@@ -133,6 +164,20 @@ public class Login extends AppCompatActivity {
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
 
     }
+
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, techLists);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcAdapter.disableForegroundDispatch(this);
+    }
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     /** API SERVICE - Usuarios */
     private void findUsers(String id){
