@@ -1,8 +1,19 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.NfcAdapter;
+import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -35,6 +46,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class DasboardFragment extends Fragment{
 
     private APIService mAPIService;
@@ -48,6 +60,41 @@ public class DasboardFragment extends Fragment{
     Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
 
     Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha,modalAlertaDiaActual,modalAlertaCTurnoActual,modalAlertaRIDiaActual;
+
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] intentFilters;
+    private String[][] techLists;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext());
+        Intent intent = new Intent(requireContext(), getActivity().getClass())
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        intentFilters = new IntentFilter[]{tagIntentFilter};
+        techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                Ndef.class.getName()}};
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(requireActivity(), pendingIntent, intentFilters, techLists);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcAdapter.disableForegroundDispatch(requireActivity());
+    }
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

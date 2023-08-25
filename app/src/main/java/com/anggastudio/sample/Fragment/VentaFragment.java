@@ -141,6 +141,28 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     Double monto;
 
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+    private NfcAdapter nfcAdapterP;
+    private PendingIntent pendingIntentP;
+    private IntentFilter[] intentFiltersP;
+    private String[][] techListsP;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        nfcAdapterP = NfcAdapter.getDefaultAdapter(requireContext());
+        Intent intent = new Intent(requireContext(), getActivity().getClass())
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pendingIntentP = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        intentFiltersP = new IntentFilter[]{tagIntentFilter};
+        techListsP = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                Ndef.class.getName()}};
+    }
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
+
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
 
@@ -443,6 +465,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 /**
                  * Inicio de Detector NFC
                  * **/
+
                 inputNFC.setKeyListener(null);
 
                 nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
@@ -843,7 +866,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputNFC.setKeyListener(null);
 
                 nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
-
+                nfcAdapter.enableForegroundDispatch(getActivity(), pendingIntent, intentFilters, techLists);
                 Intent intent = new Intent(getContext(), getActivity().getClass());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -854,6 +877,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
                         MifareClassic.class.getName(), MifareUltralight.class.getName(),
                         Ndef.class.getName()}};
+
 
                 /**
                  * Mostrar Listado de Cliente para Factura y Seleccionar RUC - Raz. Social
@@ -1158,6 +1182,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 });
 
             }
+
         });
 
         /** Mostrar Formulario Nota de Despacho y Realizar la Operacion */
@@ -3118,6 +3143,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     @Override
     public void onResume() {
         super.onResume();
+
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+        nfcAdapterP.enableForegroundDispatch(requireActivity(), pendingIntentP, intentFiltersP, techListsP);
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+
         if (nfcAdapter != null) {
             nfcAdapter.enableReaderMode(getActivity(), this,
                     NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B |
@@ -3137,6 +3167,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         if (nfcAdapter != null) {
             nfcAdapter.disableReaderMode(getActivity());
         }
+
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+        nfcAdapterP.disableForegroundDispatch(requireActivity());
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
+
     }
 
     @Override

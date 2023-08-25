@@ -1,10 +1,21 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.nfc.NfcAdapter;
+import android.nfc.tech.IsoDep;
+import android.nfc.tech.MifareClassic;
+import android.nfc.tech.MifareUltralight;
+import android.nfc.tech.Ndef;
+import android.nfc.tech.NfcA;
+import android.nfc.tech.NfcB;
+import android.nfc.tech.NfcF;
+import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +72,38 @@ public class ListaComprobantesFragment extends Fragment  {
     List<Users> usersAnuladoList;
 
     private APIService mAPIService;
+
+    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] intentFilters;
+    private String[][] techLists;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext());
+        Intent intent = new Intent(requireContext(), getActivity().getClass())
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        intentFilters = new IntentFilter[]{tagIntentFilter};
+        techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                Ndef.class.getName()}};
+    }
+
+    public void onResume() {
+        super.onResume();
+        nfcAdapter.enableForegroundDispatch(requireActivity(), pendingIntent, intentFilters, techLists);
+    }
+
+    public void onPause() {
+        super.onPause();
+        nfcAdapter.disableForegroundDispatch(requireActivity());
+    }
+    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -871,15 +914,5 @@ public class ListaComprobantesFragment extends Fragment  {
     public void onDestroyView() {
         super.onDestroyView();
         recyclerLComprobante.setAdapter(null);
-    }
+    }}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-}

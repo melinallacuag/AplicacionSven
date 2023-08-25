@@ -27,7 +27,8 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Bienvenida"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
