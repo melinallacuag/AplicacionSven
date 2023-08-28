@@ -866,7 +866,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputNFC.setKeyListener(null);
 
                 nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
-                nfcAdapter.enableForegroundDispatch(getActivity(), pendingIntent, intentFilters, techLists);
                 Intent intent = new Intent(getContext(), getActivity().getClass());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);

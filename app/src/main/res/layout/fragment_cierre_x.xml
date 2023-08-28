@@ -33,7 +33,8 @@
                 android:layout_width="150px"
                 android:layout_height="125px"
                 android:layout_gravity="center"
-                android:src="@drawable/logoprincipal" />
+                android:src="@drawable/logoprincipal"
+                android:id="@+id/LogoCierreX"/>
 
             <TextView
                 android:id="@+id/textNombreEmpresa"
