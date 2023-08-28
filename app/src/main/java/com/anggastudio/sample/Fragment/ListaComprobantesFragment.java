@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.nfc.NfcAdapter;
@@ -47,6 +48,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.io.File;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -469,7 +472,17 @@ public class ListaComprobantesFragment extends Fragment  {
                         Context context = getContext();
 
                         if (context != null) {
-                            Bitmap logoRobles = Printama.getBitmapFromVector(context, R.drawable.logoprincipal);
+                            //Bitmap logoRobles = Printama.getBitmapFromVector(context, R.drawable.logoprincipal);
+                            //Bitmap logoRobles = Printama.getBitmapFromVector(context, R.drawable.logoprincipal);
+
+                    /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO ======================*/
+                            File file = new File("/storage/emulated/0/appSven/logo.jpg");
+                            String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+                            if(!file.exists()){
+                                rutaImagen = "/storage/emulated/0/appSven/logo.png";
+                            }
+                            Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+                    /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO -FIN ================*/
                             String TipoDNI = "1";
                             String CVarios = "11111111";
 

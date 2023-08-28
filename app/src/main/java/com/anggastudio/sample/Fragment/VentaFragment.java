@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.nfc.NfcAdapter;
@@ -70,6 +71,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -2074,7 +2076,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                               Double _mtoCanjeado, Double _mtoDescuento){
 
 
-        Bitmap logoRobles = Printama.getBitmapFromVector(getContext(), R.drawable.logoprincipal);
+        //Bitmap logoRobles = Printama.getBitmapFromVector(getContext(), R.drawable.logoprincipal);
+
+        /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO ======================*/
+        File file = new File("/storage/emulated/0/appSven/logo.jpg");
+        String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+        if(!file.exists()){
+            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+        }
+        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+        /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO -FIN ================*/
 
         String TipoDNI = "1";
         String CVarios = "11111111";
