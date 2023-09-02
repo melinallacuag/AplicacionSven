@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
@@ -23,6 +24,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
@@ -36,7 +38,9 @@ import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
+import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -60,6 +64,8 @@ public class DasboardFragment extends Fragment{
     Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
 
     Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha,modalAlertaDiaActual,modalAlertaCTurnoActual,modalAlertaRIDiaActual;
+
+    ShapeableImageView img_Logo;
 
     /*============================== Manejo pasivo de lecturas NFC ===============================*/
     private NfcAdapter nfcAdapter;
@@ -117,10 +123,21 @@ public class DasboardFragment extends Fragment{
         btn_Cambioturno   = view.findViewById(R.id.btnCambioTurno);
         btn_Iniciodia     = view.findViewById(R.id.btnInicioDia);
         btn_Salir         = view.findViewById(R.id.btnSalir);
+        img_Logo           = view.findViewById(R.id.logo_dashboard);
 
         nombre_grifero.setText(GlobalInfo.getuserName10);
         fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
         turno_grifero.setText("TURNO : " + String.valueOf(GlobalInfo.getterminalTurno10));
+
+    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL ===================== */
+        File file = new File("/storage/emulated/0/appSven/logo.jpg");
+        String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+        if(!file.exists()){
+            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+        }
+        Uri logoUri = Uri.parse("file://" + rutaImagen);
+        img_Logo.setImageURI(logoUri);
+    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL - FIN =============== */
 
         String DirSucursal = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
 

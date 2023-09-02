@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
@@ -33,6 +34,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +62,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -107,6 +110,8 @@ public class CierreXFragment extends Fragment {
 
     List<RAnulados> rAnuladosList;
     List<RAnulados> rDescuentoList;
+
+    ImageView logoCierreX;
 
 
     Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal;
@@ -179,6 +184,8 @@ public class CierreXFragment extends Fragment {
 
         imprimirCierreX = view.findViewById(R.id.imprimircierrex);
 
+        logoCierreX = view.findViewById(R.id.LogoCierreX);
+
         /** Mostrar Alerta - Sino tiene ninguna venta pendiente */
         modalAlerta = new Dialog(getContext());
         modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -200,6 +207,16 @@ public class CierreXFragment extends Fragment {
         Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
         SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String FechaHoraImpresion    = formatdate.format(calendarprint.getTime());
+
+    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL ===================== */
+        File file = new File("/storage/emulated/0/appSven/logo.jpg");
+        String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+        if(!file.exists()){
+            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+        }
+        Uri logoUri = Uri.parse("file://" + rutaImagen);
+        logoCierreX.setImageURI(logoUri);
+    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL - FIN =============== */
 
         /** Datos de Cierre Parcial de Caja (X) */
         textNombreEmpresa.setText(GlobalInfo.getNameCompany10);
@@ -627,9 +644,20 @@ public class CierreXFragment extends Fragment {
 
     }
 
+
     private void cierrex() {
 
-        Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
+        //Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
+
+    /* ==================OBTENER LOGO DE FACTURAS DESDE EL ALMACENAMIENTO INTERNO================ */
+        File file = new File("/storage/emulated/0/appSven/logo.jpg");
+        String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+        if(!file.exists()){
+            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+        }
+        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+    /* ==================OBTENER LOGO DE FACTURAS DESDE EL ALMACENAMIENTO INTERNO - FIN ========= */
+
         /*  View view = getView().findViewById(R.id.contenedorCierreX);*/
 
         String NameCompany   = GlobalInfo.getNameCompany10;
