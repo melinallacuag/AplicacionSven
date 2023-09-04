@@ -78,19 +78,14 @@ public class Login extends AppCompatActivity{
 
     private APIService mAPIService;
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-    private NfcAdapter nfcAdapter;
-    private PendingIntent pendingIntent;
-    private IntentFilter[] intentFilters;
-    private String[][] techLists;
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
+    private NFCUtil nfcUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-         mAPIService = GlobalInfo.getAPIService();
+        mAPIService = GlobalInfo.getAPIService();
+        nfcUtil = new NFCUtil(this);
 
         btniniciar      = findViewById(R.id.btnlogin);
         inputUsuario    = findViewById(R.id.usuario);
@@ -98,18 +93,7 @@ public class Login extends AppCompatActivity{
         alertuser       = findViewById(R.id.textusuario);
         alertpassword   = findViewById(R.id.textcontraseña);
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-            nfcAdapter = NfcAdapter.getDefaultAdapter(this);
-            Intent intent = new Intent(this, this.getClass())
-                    .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-            IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-            intentFilters = new IntentFilter[]{tagIntentFilter};
-            techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                    NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                    MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                    Ndef.class.getName()}};
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
+
 
         /*** Boton par configurar la impresión bluetooth.*/
 
@@ -157,27 +141,13 @@ public class Login extends AppCompatActivity{
         });
 
         /** Mostrar el listado de Datos*/
-      /*  getClienteDNI();
-        getClienteRUC();*/
         getTipoPago();
 
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
 
     }
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-    @Override
-    public void onResume() {
-        super.onResume();
-        nfcAdapter.enableForegroundDispatch(this, pendingIntent, intentFilters, techLists);
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        nfcAdapter.disableForegroundDispatch(this);
-    }
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     /** API SERVICE - Usuarios */
     private void findUsers(String id){
@@ -196,36 +166,6 @@ public class Login extends AppCompatActivity{
                     }
 
                     usersList = response.body();
-
-                  /*  for(Users user: usersList) {
-
-                        usuario.setText(user.getUserID());
-                        GlobalInfo.getuserID10 = user.getUserID();
-                        GlobalInfo.getuserName10 = user.getNames();
-                        GlobalInfo.getuserPass10  = user.getPassword();
-                        GlobalInfo.getuserLocked10  = user.getLocked();
-                        GlobalInfo.getuseridentFID10 = user.getIdentFID();
-
-                    }
-
-                    if (GlobalInfo.getuserLocked10 == false) {
-                        Toast.makeText( getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
-                    }else {
-
-                        String getName = usuario.getText().toString();
-                        String getPass = checkpassword(contraseña.getText().toString());
-
-                        if( getName.equals(GlobalInfo.getuserName10)  || getPass.equals(GlobalInfo.getuserPass10)){
-
-                            Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent( getApplicationContext(),Menu.class));
-
-                        }
-                        else {
-                            Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
-                        }
-
-                    }*/
 
                     if (usersList != null && !usersList.isEmpty()) {
 
@@ -662,6 +602,18 @@ public class Login extends AppCompatActivity{
         lResult = String.valueOf(lValor);
 
         return lResult;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcUtil.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcUtil.onPause();
     }
 
 }

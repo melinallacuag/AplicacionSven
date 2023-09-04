@@ -51,10 +51,12 @@ import com.anggastudio.sample.Adapter.LClienteAdapter;
 import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.Adapter.ManguerasAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
+import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
+import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
@@ -91,11 +93,6 @@ import retrofit2.Response;
 public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback{
 
     private static final String AUTOMATICO_MODE_KEY = "automatico_mode_key";
-
-    private NfcAdapter nfcAdapter;
-    private PendingIntent pendingIntent;
-    private IntentFilter[] intentFilters;
-    private String[][] techLists;
 
     boolean mTimerRunning;
     Timer timer;
@@ -143,27 +140,18 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     Double monto;
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-    private NfcAdapter nfcAdapterP;
-    private PendingIntent pendingIntentP;
-    private IntentFilter[] intentFiltersP;
-    private String[][] techListsP;
+    private NfcAdapter nfcAdapter;
+    private PendingIntent pendingIntent;
+    private IntentFilter[] intentFilters;
+    private String[][] techLists;
+
+    private NFCUtil nfcUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nfcAdapterP = NfcAdapter.getDefaultAdapter(requireContext());
-        Intent intent = new Intent(requireContext(), getActivity().getClass())
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntentP = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        intentFiltersP = new IntentFilter[]{tagIntentFilter};
-        techListsP = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                Ndef.class.getName()}};
+        nfcUtil = new NFCUtil(getActivity());
     }
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
@@ -499,8 +487,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.length() == 16) {
                             String nfcCode = s.toString();
-                            String correspondingName = findCorrespondingName(nfcCode);
-                            inputNombre.setText(correspondingName);
+                            findClientePrecio(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
                         }
                     }
 
@@ -879,6 +866,25 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         MifareClassic.class.getName(), MifareUltralight.class.getName(),
                         Ndef.class.getName()}};
 
+
+                inputNFC.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.length() == 16) {
+                            String nfcCode = s.toString();
+                            findClientePrecio(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        // No se necesita hacer nada después de que cambie el texto
+                    }
+                });
 
                 /**
                  * Mostrar Listado de Cliente para Factura y Seleccionar RUC - Raz. Social
@@ -1727,6 +1733,60 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
         });
     }
+
+    /** APO SERVICE - Buscar Cliente por RFID
+     */
+    private String findClientePrecio(String rfid, String companyid) {
+
+        Call<List<ClientePrecio>> call = mAPIService.findDescuentos(rfid, companyid);
+
+        call.enqueue(new Callback<List<ClientePrecio>>() {
+            @Override
+            public void onResponse(Call<List<ClientePrecio>> call, Response<List<ClientePrecio>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getclientePrecioList10 = response.body();
+
+                    if (GlobalInfo.getclientePrecioList10 != null && !GlobalInfo.getclientePrecioList10.isEmpty()) {
+                        ClientePrecio clientePrecio = GlobalInfo.getclientePrecioList10.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10 = clientePrecio.getRfid();
+                        GlobalInfo.getClienteIDPrecio10 = clientePrecio.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10 = clientePrecio.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10 = clientePrecio.getNroPlaca();
+
+                        /** Actualiza los campos de texto con los datos obtenidos */
+                        inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
+                        inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+                        inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ClientePrecio>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return rfid;
+    }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -3153,10 +3213,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     @Override
     public void onResume() {
         super.onResume();
-
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-        nfcAdapterP.enableForegroundDispatch(requireActivity(), pendingIntentP, intentFiltersP, techListsP);
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
+        nfcUtil.onResume();
 
         if (nfcAdapter != null) {
             nfcAdapter.enableReaderMode(getActivity(), this,
@@ -3174,13 +3231,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     @Override
     public void onPause() {
         super.onPause();
+        nfcUtil.onPause();
+
         if (nfcAdapter != null) {
             nfcAdapter.disableReaderMode(getActivity());
         }
-
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-        nfcAdapterP.disableForegroundDispatch(requireActivity());
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     }
 
@@ -3204,20 +3259,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         }
 
         return sb.toString();
-    }
-
-    private String findCorrespondingName(String nfcCode) {
-
-        List<String> nfcCodes = Arrays.asList("EB776CE5500104E0", "13B46CE5500104E0");
-        List<String> names = Arrays.asList("Nombre 1", "Nombre 2");
-
-        int index = nfcCodes.indexOf(nfcCode);
-        if (index != -1) {
-            return names.get(index);
-        }
-
-        // Si no se encuentra un nombre correspondiente, puedes devolver una cadena vacía o un valor predeterminado.
-        return "";
     }
 
 }

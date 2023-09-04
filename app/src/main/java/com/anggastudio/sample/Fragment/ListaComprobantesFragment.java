@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.anggastudio.printama.Printama;
 import com.anggastudio.sample.Adapter.ListaComprobanteAdapter;
 import com.anggastudio.sample.Login;
+import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
@@ -76,37 +77,13 @@ public class ListaComprobantesFragment extends Fragment  {
 
     private APIService mAPIService;
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-    private NfcAdapter nfcAdapter;
-    private PendingIntent pendingIntent;
-    private IntentFilter[] intentFilters;
-    private String[][] techLists;
+    private NFCUtil nfcUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext());
-        Intent intent = new Intent(requireContext(), getActivity().getClass())
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        intentFilters = new IntentFilter[]{tagIntentFilter};
-        techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                Ndef.class.getName()}};
+        nfcUtil = new NFCUtil(getActivity());
     }
-
-    public void onResume() {
-        super.onResume();
-        nfcAdapter.enableForegroundDispatch(requireActivity(), pendingIntent, intentFilters, techLists);
-    }
-
-    public void onPause() {
-        super.onPause();
-        nfcAdapter.disableForegroundDispatch(requireActivity());
-    }
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
@@ -473,16 +450,15 @@ public class ListaComprobantesFragment extends Fragment  {
 
                         if (context != null) {
                             //Bitmap logoRobles = Printama.getBitmapFromVector(context, R.drawable.logoprincipal);
-                            //Bitmap logoRobles = Printama.getBitmapFromVector(context, R.drawable.logoprincipal);
 
-                    /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO ======================*/
+                            /** Logo de la Empresa - Carpeta URL */
                             File file = new File("/storage/emulated/0/appSven/logo.jpg");
                             String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
                             if(!file.exists()){
                                 rutaImagen = "/storage/emulated/0/appSven/logo.png";
                             }
+
                             Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
-                    /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO -FIN ================*/
                             String TipoDNI = "1";
                             String CVarios = "11111111";
 
@@ -927,5 +903,15 @@ public class ListaComprobantesFragment extends Fragment  {
     public void onDestroyView() {
         super.onDestroyView();
         recyclerLComprobante.setAdapter(null);
-    }}
+    }
+    public void onResume() {
+        super.onResume();
+        nfcUtil.onResume();
+    }
+
+    public void onPause() {
+        super.onPause();
+        nfcUtil.onPause();
+    }
+}
 

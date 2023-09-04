@@ -3,6 +3,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Anular;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
+import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.Descuentos;
@@ -230,12 +231,12 @@ public interface APIService {
 
 
     /**
-     * Descuentos
+     * Descuentos (Cliente Precio)
      */
-    @GET("api/descuentos/listado/{id}")
-    Call<List<Descuentos>> findDescuentos(@Path("id") String id);
+    @GET("api/clienteprecio/listado/{rfid}/{companyid}")
+    Call<List<ClientePrecio>> findDescuentos(@Path("rfid") String rfid, @Path("companyid") String companyid);
 
-
+   // Call<List<Descuentos>> findDescuentos(@Path("rfid") String rfid, @Path("companyid") String companyid);
     /**
      * Consultar Venta
      */

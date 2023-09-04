@@ -4,6 +4,7 @@ import static com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient.getCli
 
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
+import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
@@ -50,7 +51,15 @@ public class GlobalInfo {
     public  static List<VContometro> getvContometroList10;
     public  static List<VProducto> getvProductoList10;
     public  static List<VTipoPago> getvTipoPagoList10;
+    public static  List<ClientePrecio>  getclientePrecioList10;
 
+    /**
+     * Cliente precio
+     */
+    public static String getRfIdCPrecio10;
+    public static String getClienteRZPrecio10;
+    public static String getClienteIDPrecio10;
+    public static String getNroPlacaPrecio10;
     /**
      * Datos de la Empresa
      */

@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
+import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
@@ -55,8 +56,6 @@ public class DasboardFragment extends Fragment{
 
     private APIService mAPIService;
 
-    public  static List<SettingTurno> getsettingTurnoList10;
-
     TextView nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
 
     CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
@@ -67,40 +66,12 @@ public class DasboardFragment extends Fragment{
 
     ShapeableImageView img_Logo;
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-    private NfcAdapter nfcAdapter;
-    private PendingIntent pendingIntent;
-    private IntentFilter[] intentFilters;
-    private String[][] techLists;
-
+    private NFCUtil nfcUtil;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext());
-        Intent intent = new Intent(requireContext(), getActivity().getClass())
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        intentFilters = new IntentFilter[]{tagIntentFilter};
-        techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                Ndef.class.getName()}};
+        nfcUtil =  new NFCUtil(getActivity());
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        nfcAdapter.enableForegroundDispatch(requireActivity(), pendingIntent, intentFilters, techLists);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        nfcAdapter.disableForegroundDispatch(requireActivity());
-    }
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +100,7 @@ public class DasboardFragment extends Fragment{
         fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
         turno_grifero.setText("TURNO : " + String.valueOf(GlobalInfo.getterminalTurno10));
 
-    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL ===================== */
+        /** Logo de la Empresa */
         File file = new File("/storage/emulated/0/appSven/logo.jpg");
         String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
         if(!file.exists()){
@@ -137,8 +108,8 @@ public class DasboardFragment extends Fragment{
         }
         Uri logoUri = Uri.parse("file://" + rutaImagen);
         img_Logo.setImageURI(logoUri);
-    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL - FIN =============== */
 
+        /** Datos de la Compania*/
         String DirSucursal = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
 
         DirSucursal = DirSucursal.replace("-","");
@@ -336,110 +307,6 @@ public class DasboardFragment extends Fragment{
                         break;
                     }
 
-
-
-                /*    if ( GlobalInfo.getSettingTurno10.equals(GlobalInfo.getterminalTurno10)) {
-
-                        if (HoraActual >= GlobalInfo.getSettingRango110 && HoraActual <= GlobalInfo.getSettingRango210) {
-
-
-                            findOptranTurno(GlobalInfo.getterminalImei10);
-
-                            modalCambioTurno.show();
-
-                            btnCancelarTurno = modalCambioTurno.findViewById(R.id.btncancelarcambioturno);
-                            btnAceptarTurno = modalCambioTurno.findViewById(R.id.btnagregarcambioturno);
-
-                            btnCancelarTurno.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    modalCambioTurno.dismiss();
-                                }
-                            });
-
-                            btnAceptarTurno.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    modalAlerta.show();
-
-                                    try {
-                                        Intent intent = new Intent(getContext(), Login.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                                        cerrarTurno(GlobalInfo.getterminalID10);
-
-                                        startActivity(intent);
-                                        finalize();
-
-                                        Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
-                                    } catch (Throwable e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            });
-
-
-                        }else{
-                            modalAlertaCTurnoActual.show();
-                            return;
-                        }
-
-
-                    }else if( GlobalInfo.getSettingTurno10.equals(0)){
-
-                        if ((FechaActual == 1 && HoraActual >= 55000 && HoraActual <= 62000) ||
-                                (FechaActual == 1 && HoraActual >= 135000 && HoraActual <= 142000) ||
-                                   (FechaActual == 1 && HoraActual >= 215000 && HoraActual <= 222000) ){
-
-                            findOptranTurno(GlobalInfo.getterminalImei10);
-
-                            modalCambioTurno.show();
-
-                            btnCancelarTurno = modalCambioTurno.findViewById(R.id.btncancelarcambioturno);
-                            btnAceptarTurno = modalCambioTurno.findViewById(R.id.btnagregarcambioturno);
-
-                            btnCancelarTurno.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    modalCambioTurno.dismiss();
-                                }
-                            });
-
-                            btnAceptarTurno.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    modalAlerta.show();
-
-                                    try {
-                                        Intent intent = new Intent(getContext(), Login.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                                        cerrarTurno(GlobalInfo.getterminalID10);
-
-                                        startActivity(intent);
-                                        finalize();
-
-                                        Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
-                                    } catch (Throwable e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            });
-
-
-                        }else{
-                            modalAlertaCTurnoActual.show();
-                            return;
-                        }
-
-                    }
-*/
-
-
                 }
 
             }
@@ -530,49 +397,6 @@ public class DasboardFragment extends Fragment{
 
                             }
                         });
-
-                      /*  if ((FechaActual == 1 && HoraActual >= 0 && HoraActual <= 3000 ) ||
-                                (HoraActual >= GlobalInfo.getSettingRango110 && HoraActual <= GlobalInfo.getSettingRango210)) {
-
-                            findOptranDia(GlobalInfo.getterminalImei10);
-
-                            modalInicioDia.show();
-
-                            btnCancelarInicio = modalInicioDia.findViewById(R.id.btncancelariniciodia);
-                            btnAceptarInicio = modalInicioDia.findViewById(R.id.btnagregariniciodia);
-
-                            btnCancelarInicio.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    modalInicioDia.dismiss();
-                                }
-                            });
-
-                            btnAceptarInicio.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                    modalAlerta.show();
-
-                                    try {
-                                        Intent intent = new Intent(getContext(), Login.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                                        iniciarDia(GlobalInfo.getterminalID10);
-
-                                        startActivity(intent);
-                                        finalize();
-
-                                        Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
-                                    } catch (Throwable e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            });
-                        } else {
-                            modalAlertaDiaActual.show();
-                        }*/
                     }
 
                     break;
@@ -642,17 +466,6 @@ public class DasboardFragment extends Fragment{
                     }
 
                     GlobalInfo.getsettingTurnoList10 = response.body();
-
-                   /* for(SettingTurno settingTurno: GlobalInfo.getsettingTurnoList10) {
-                        if ((settingTurno.getTurno().equals(GlobalInfo.getterminalTurno10))
-                                ) {
-                            GlobalInfo.getSettingCompanyId10 = settingTurno.getCompanyID();
-                            GlobalInfo.getSettingTurno10     = settingTurno.getTurno();
-                            GlobalInfo.getSettingRango110    = settingTurno.getRango1();
-                            GlobalInfo.getSettingRango210    = settingTurno.getRango2();
-                            break;
-                        }
-                    }*/
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
@@ -797,6 +610,18 @@ public class DasboardFragment extends Fragment{
             }
         });
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcUtil.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcUtil.onPause();
     }
 
 }

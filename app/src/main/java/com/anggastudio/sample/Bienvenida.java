@@ -17,10 +17,13 @@ public class Bienvenida extends AppCompatActivity {
     ImageView logo;
     TextView  titulo, slogan;
 
+    NFCUtil nfcUtil;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bienvenida);
+        nfcUtil = new NFCUtil(this);
 
         logoAnim    = AnimationUtils.loadAnimation(this,R.anim.logo_animation);
         tituloAnim  = AnimationUtils.loadAnimation(this,R.anim.titulo_animation);
@@ -41,6 +44,18 @@ public class Bienvenida extends AppCompatActivity {
                 finish();
             }
         },3000);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcUtil.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcUtil.onPause();
     }
 
 

@@ -45,6 +45,7 @@ import com.anggastudio.sample.Adapter.ReporteVendedorAdapter;
 import com.anggastudio.sample.Adapter.VContometroAdapter;
 import com.anggastudio.sample.Adapter.VProductoAdapter;
 import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
+import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
@@ -113,42 +114,15 @@ public class CierreXFragment extends Fragment {
 
     ImageView logoCierreX;
 
-
     Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal;
 
-    /*============================== Manejo pasivo de lecturas NFC ===============================*/
-    private NfcAdapter nfcAdapter;
-    private PendingIntent pendingIntent;
-    private IntentFilter[] intentFilters;
-    private String[][] techLists;
+    private NFCUtil nfcUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        nfcAdapter = NfcAdapter.getDefaultAdapter(requireContext());
-        Intent intent = new Intent(requireContext(), getActivity().getClass())
-                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(requireContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        intentFilters = new IntentFilter[]{tagIntentFilter};
-        techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                Ndef.class.getName()}};
+        nfcUtil = new NFCUtil(getActivity());
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        nfcAdapter.enableForegroundDispatch(requireActivity(), pendingIntent, intentFilters, techLists);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        nfcAdapter.disableForegroundDispatch(requireActivity());
-    }
-    /*============================== Manejo pasivo de lecturas NFC - FIN =========================*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -208,7 +182,7 @@ public class CierreXFragment extends Fragment {
         SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String FechaHoraImpresion    = formatdate.format(calendarprint.getTime());
 
-    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL ===================== */
+        /** Logo de la Empresa*/
         File file = new File("/storage/emulated/0/appSven/logo.jpg");
         String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
         if(!file.exists()){
@@ -216,7 +190,6 @@ public class CierreXFragment extends Fragment {
         }
         Uri logoUri = Uri.parse("file://" + rutaImagen);
         logoCierreX.setImageURI(logoUri);
-    /* ============================ OBTENER LOGO DESDE ALMACENAMIENTO LOCAL - FIN =============== */
 
         /** Datos de Cierre Parcial de Caja (X) */
         textNombreEmpresa.setText(GlobalInfo.getNameCompany10);
@@ -649,17 +622,12 @@ public class CierreXFragment extends Fragment {
 
         //Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
 
-    /* ==================OBTENER LOGO DE FACTURAS DESDE EL ALMACENAMIENTO INTERNO================ */
         File file = new File("/storage/emulated/0/appSven/logo.jpg");
         String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
         if(!file.exists()){
             rutaImagen = "/storage/emulated/0/appSven/logo.png";
         }
-        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
-    /* ==================OBTENER LOGO DE FACTURAS DESDE EL ALMACENAMIENTO INTERNO - FIN ========= */
-
-        /*  View view = getView().findViewById(R.id.contenedorCierreX);*/
-
+        Bitmap logoRobles    = BitmapFactory.decodeFile(rutaImagen);
         String NameCompany   = GlobalInfo.getNameCompany10;
 
         String BranchCompany = GlobalInfo.getBranchCompany10;
@@ -897,16 +865,29 @@ public class CierreXFragment extends Fragment {
             printama.close();
         }, this::showToast);
 
-     /*   Printama.with(getContext()).connect(printama -> {
+     /* View view = getView().findViewById(R.id.contenedorCierreX);
+       Printama.with(getContext()).connect(printama -> {
             printama.printImage(logoRobles, 100);
             printama.printFromView(view);
             new Handler().postDelayed(printama::close, 2000);
-        }, this::showToast);
-*/
+        }, this::showToast); */
+
     }
 
     private void showToast(String message) {
         Toast.makeText(getContext(), "Conectar Bluetooth", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcUtil.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcUtil.onPause();
     }
 
 }
