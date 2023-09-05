@@ -147,6 +147,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     private NFCUtil nfcUtil;
 
+    List<ClientePrecio> clientePrecioList;
+
+    private boolean isBoletaModalOpen = false;
+    private boolean isFacturaModalOpen = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -418,6 +423,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             @Override
             public void onClick(View view) {
 
+                clearFields();
+
                 modalBoleta.show();
 
                 alertPlaca        = modalBoleta.findViewById(R.id.alertPlaca);
@@ -458,18 +465,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                 inputNFC.setKeyListener(null);
 
-                nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
-
-                Intent intent = new Intent(getContext(), getActivity().getClass());
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-                IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-                intentFilters = new IntentFilter[]{tagIntentFilter};
-                techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                        NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                        MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                        Ndef.class.getName()}};
+                insertNFC();
 
                 /**
                  * Final de Detector NFC
@@ -487,7 +483,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.length() == 16) {
                             String nfcCode = s.toString();
-                            findClientePrecio(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+
+                            findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
                         }
                     }
 
@@ -817,6 +814,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             @Override
             public void onClick(View view) {
 
+                clearFields();
+
                 modalFactura.show();
 
                 alertPlaca        = modalFactura.findViewById(R.id.alertPlaca);
@@ -854,17 +853,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                  * **/
                 inputNFC.setKeyListener(null);
 
-                nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
-                Intent intent = new Intent(getContext(), getActivity().getClass());
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-                IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-                intentFilters = new IntentFilter[]{tagIntentFilter};
-                techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                        NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                        MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                        Ndef.class.getName()}};
+                insertNFC();
 
 
                 inputNFC.addTextChangedListener(new TextWatcher() {
@@ -876,7 +865,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         if (s.length() == 16) {
                             String nfcCode = s.toString();
-                            findClientePrecio(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+
+                            findClientePrecioRUC(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+
                         }
                     }
 
@@ -1657,6 +1648,22 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     }
 
+    /** listado */
+    private void  insertNFC(){
+        nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
+
+        Intent intent = new Intent(getContext(), getActivity().getClass());
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        pendingIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+        intentFilters = new IntentFilter[]{tagIntentFilter};
+        techLists = new String[][]{new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                Ndef.class.getName()}};
+    }
+
     /** API SERVICE - Buscar Cliente DNI */
     private  void findClienteDNI(String id){
 
@@ -1734,9 +1741,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         });
     }
 
-    /** APO SERVICE - Buscar Cliente por RFID
-     */
-    private String findClientePrecio(String rfid, String companyid) {
+    /** APO SERVICE - Buscar Cliente por RFID */
+    private String findClientePrecioDNI(String rfid, String companyid) {
 
         Call<List<ClientePrecio>> call = mAPIService.findDescuentos(rfid, companyid);
 
@@ -1751,21 +1757,27 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         return;
                     }
 
-                    GlobalInfo.getclientePrecioList10 = response.body();
+                    clientePrecioList = response.body();
 
-                    if (GlobalInfo.getclientePrecioList10 != null && !GlobalInfo.getclientePrecioList10.isEmpty()) {
-                        ClientePrecio clientePrecio = GlobalInfo.getclientePrecioList10.get(0);
+                    if (clientePrecioList != null && !clientePrecioList.isEmpty()) {
+                        ClientePrecio clientePrecio = clientePrecioList.get(0);
 
-                        GlobalInfo.getRfIdCPrecio10 = clientePrecio.getRfid();
-                        GlobalInfo.getClienteIDPrecio10 = clientePrecio.getClienteID();
-                        GlobalInfo.getClienteRZPrecio10 = clientePrecio.getClienteRZ();
-                        GlobalInfo.getNroPlacaPrecio10 = clientePrecio.getNroPlaca();
+                        GlobalInfo.getRfIdCPrecio10      = clientePrecio.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePrecio.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePrecio.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePrecio.getNroPlaca();
 
-                        /** Actualiza los campos de texto con los datos obtenidos */
-                        inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
-                        inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
-                        inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            if (GlobalInfo.getClienteIDPrecio10.length() == 8){
+                                inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                                inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
+                                inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+                            }else{
+                                Toast.makeText(getContext(), "El NFC esta registrado con un RUC", Toast.LENGTH_SHORT).show();
 
+                                inputPlaca.setText("000-0000");
+                                inputDNI.getText().clear();
+                                inputNombre.getText().clear();
+                            }
 
                     } else {
                         Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
@@ -1774,8 +1786,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 } catch (Exception ex) {
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
-
             }
 
             @Override
@@ -1786,7 +1796,59 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         return rfid;
     }
 
+    private String findClientePrecioRUC(String rfid, String companyid) {
 
+        Call<List<ClientePrecio>> call = mAPIService.findDescuentos(rfid, companyid);
+
+        call.enqueue(new Callback<List<ClientePrecio>>() {
+            @Override
+            public void onResponse(Call<List<ClientePrecio>> call, Response<List<ClientePrecio>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientePrecioList = response.body();
+
+                    if (clientePrecioList != null && !clientePrecioList.isEmpty()) {
+                        ClientePrecio clientePrecio = clientePrecioList.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10      = clientePrecio.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePrecio.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePrecio.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePrecio.getNroPlaca();
+
+                        if(GlobalInfo.getClienteIDPrecio10.length() == 11){
+                            inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputRUC.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
+                        }else{
+                            Toast.makeText(getContext(), "El NFC esta registrado con un DNI", Toast.LENGTH_SHORT).show();
+
+                            inputPlaca.setText("000-0000");
+                            inputRUC.getText().clear();
+                            inputRazSocial.getText().clear();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClientePrecio>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return rfid;
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -2138,15 +2200,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         //Bitmap logoRobles = Printama.getBitmapFromVector(getContext(), R.drawable.logoprincipal);
 
-        /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO ======================*/
+        /** Logo de la Empresa*/
         File file = new File("/storage/emulated/0/appSven/logo.jpg");
         String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
         if(!file.exists()){
             rutaImagen = "/storage/emulated/0/appSven/logo.png";
         }
         Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
-        /* =======================OBTENER LOGO DESDE EL ALMACENAMIENTO INTERNO -FIN ================*/
-
         String TipoDNI = "1";
         String CVarios = "11111111";
 
@@ -3239,6 +3299,31 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     }
 
+    private void clearFields() {
+
+        TextInputEditText inputNFCBoleta    = modalBoleta.findViewById(R.id.input_EtiquetaNFC);
+        TextInputEditText inputPlaca        = modalBoleta.findViewById(R.id.inputPlaca);
+        TextInputEditText inputDNI          = modalBoleta.findViewById(R.id.inputDNI);
+        TextInputEditText inputNombre       = modalBoleta.findViewById(R.id.inputNombre);
+        TextInputEditText inputNFCFactura   = modalFactura.findViewById(R.id.input_EtiquetaNFC);
+        TextInputEditText inputRUC          = modalFactura.findViewById(R.id.inputRUC);
+        TextInputEditText inputRZ           = modalFactura.findViewById(R.id.inputRazSocial);
+
+        if (inputNFCBoleta != null) {
+            inputNFCBoleta.setText("");
+            inputPlaca.setText("000-0000");
+            inputDNI.setText("");
+            inputNombre.setText("");
+        }
+
+        if (inputNFCFactura != null) {
+            inputNFCFactura.setText("");
+            inputPlaca.setText("000-0000");
+            inputRUC.setText("");
+            inputRZ.setText("");
+        }
+    }
+
     @Override
     public void onTagDiscovered(Tag tag) {
         String nfcTag = ByteArrayToHexString(tag.getId());
@@ -3249,6 +3334,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
         });
     }
+
 
     private String ByteArrayToHexString(byte[] byteArray) {
 
