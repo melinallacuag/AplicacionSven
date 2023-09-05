@@ -60,6 +60,11 @@ public class GlobalInfo {
     public static String getClienteRZPrecio10;
     public static String getClienteIDPrecio10;
     public static String getNroPlacaPrecio10;
+    public static String getArticuloIdPrecio10;
+    public static String getTipClientePrecio10;
+    public static String getTipoDescuentoPrecio10;
+    public static Double getMontoDescuentoPrecio10;
+
     /**
      * Datos de la Empresa
      */

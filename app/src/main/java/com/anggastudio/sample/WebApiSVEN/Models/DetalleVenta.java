@@ -19,6 +19,10 @@ public class DetalleVenta {
     private Double montoSoles;
     private Double mtoSaldoCredito;
     private Double ptosDisponible;
+    private String articuloID;
+    private String tipoCliente;
+    private String tipoDescuento;
+    private Double montoDescuento;
 
     public DetalleVenta(String cara, String tipoPago, Double impuesto, String nroPlaca, String tarjetaPuntos) {
         this.cara = cara;
@@ -162,5 +166,37 @@ public class DetalleVenta {
 
     public void setPtosDisponible(Double ptosDisponible) {
         this.ptosDisponible = ptosDisponible;
+    }
+
+    public String getArticuloID() {
+        return articuloID;
+    }
+
+    public void setArticuloID(String articuloID) {
+        this.articuloID = articuloID;
+    }
+
+    public String getTipoCliente() {
+        return tipoCliente;
+    }
+
+    public void setTipoCliente(String tipoCliente) {
+        this.tipoCliente = tipoCliente;
+    }
+
+    public String getTipoDescuento() {
+        return tipoDescuento;
+    }
+
+    public void setTipoDescuento(String tipoDescuento) {
+        this.tipoDescuento = tipoDescuento;
+    }
+
+    public Double getMontoDescuento() {
+        return montoDescuento;
+    }
+
+    public void setMontoDescuento(Double montoDescuento) {
+        this.montoDescuento = montoDescuento;
     }
 }

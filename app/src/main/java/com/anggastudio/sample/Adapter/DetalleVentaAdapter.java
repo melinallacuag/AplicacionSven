@@ -52,6 +52,11 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
         holder.textMtoSoles.setText(String.valueOf(String.format("%.2f",detalleVentaList.get(position).getMontoSoles())));
         holder.textSaldoCredito.setText(String.valueOf(detalleVentaList.get(position).getMtoSaldoCredito()));
         holder.textPtosDisponibles.setText(String.valueOf(detalleVentaList.get(position).getPtosDisponible()));
+        holder.textArticuloID.setText(detalleVentaList.get(position).getArticuloID());
+        holder.textTCiente.setText(detalleVentaList.get(position).getTipoCliente());
+        holder.textTDescuento.setText(detalleVentaList.get(position).getTipoDescuento());
+        holder.textMtoDescuento.setText(String.valueOf(String.format("%.2f",detalleVentaList.get(position).getMontoDescuento())));
+
 
     }
 
@@ -61,6 +66,7 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
     }
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public CardView cardView;
+
         private TextView textLado;
         private TextView textNplaca;
         private TextView textImpuesto;
@@ -78,10 +84,16 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
         private TextView textMtoSoles;
         private TextView textSaldoCredito;
         private TextView textPtosDisponibles;
+        private TextView textArticuloID;
+        private TextView textTCiente;
+        private TextView textTDescuento;
+        private TextView textMtoDescuento;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
+
             cardView             = itemView.findViewById(R.id.carddetalleventa);
+
             textLado             = itemView.findViewById(R.id.textLado);
             textNplaca           = itemView.findViewById(R.id.textNplaca);
             textImpuesto         = itemView.findViewById(R.id.textImpuesto);
@@ -99,6 +111,10 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
             textMtoSoles         = itemView.findViewById(R.id.textMtoSoles);
             textSaldoCredito     = itemView.findViewById(R.id.textSaldoCredito);
             textPtosDisponibles  = itemView.findViewById(R.id.textPtosDisponibles);
+            textArticuloID       = itemView.findViewById(R.id.textArticuloID);
+            textTCiente          = itemView.findViewById(R.id.textTCiente);
+            textTDescuento       = itemView.findViewById(R.id.textTDescuento);
+            textMtoDescuento     = itemView.findViewById(R.id.textMtoDescuento);
         }
     }
 }
