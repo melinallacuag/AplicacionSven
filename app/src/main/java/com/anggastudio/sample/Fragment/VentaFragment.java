@@ -149,9 +149,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     List<ClientePrecio> clientePrecioList;
 
-    private boolean isBoletaModalOpen = false;
-    private boolean isFacturaModalOpen = false;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1817,6 +1814,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     } else {
                         Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
                     }
 
                 } catch (Exception ex) {
@@ -1877,6 +1875,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     } else {
                         Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
                     }
 
                 } catch (Exception ex) {
@@ -2642,13 +2641,17 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         Double mnMontoSoles = 0.00;
                         Double mnMtoSaldoCredito = 0.00;
                         Double mnPtosDisponibles = 0.00;
+                        String mnArticuloID     = "";
+                        String mnTipoCliente    = "";
+                        String mnTipoDescuento  = "";
+                        Double mnMontoDescuento = 0.00;
 
                         String mnTipoVenta = "V";
                         String mnReferencia = "";
 
                         Double mnPtosGanados = 0.00;
 
-                        Double mnMtoDescuentoUnitario = 0.00;
+                      //  Double mnMtoDescuentoUnitario = 0.00;
                         Double mnMtoCanje = 0.00;
 
                         Double mnMtoDescuento0 = 0.00;
@@ -2701,6 +2704,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 mnMontoSoles      = detalleVenta.getMontoSoles();
                                 mnMtoSaldoCredito = detalleVenta.getMtoSaldoCredito();
                                 mnPtosDisponibles = detalleVenta.getPtosDisponible();
+                                mnArticuloID      = detalleVenta.getArticuloID().toString();
+                                mnTipoCliente     = detalleVenta.getTipoCliente().toString();
+                                mnTipoDescuento   = detalleVenta.getTipoDescuento().toString();
+                                mnMontoDescuento  = detalleVenta.getMontoDescuento();
 
                                 break;
                             }
@@ -2773,11 +2780,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                             if (!mnClienteID.equals(GlobalInfo.getsettingClienteID10)) {
 
-                                if (GlobalInfo.getoptranArticuloID10.equals("05") && GlobalInfo.getoptranSoles10 >= 70.00) {
+                                if (GlobalInfo.getoptranArticuloID10.equals("05") && mnArticuloID.equals("05") && GlobalInfo.getoptranSoles10 >= 70.00) {
 
-                                    mnMtoDescuentoUnitario = 0.20;
+                                   //mnMtoDescuentoUnitario = 0.20;
 
-                                    mnMtoDescuento0 = mnMtoDescuentoUnitario * GlobalInfo.getoptranGalones10;
+                                    mnMtoDescuento0 = mnMontoDescuento * GlobalInfo.getoptranGalones10;
                                     mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
                                     mnMtoTotal = GlobalInfo.getoptranSoles10 - mnMtoDescuento1;
 
@@ -2787,11 +2794,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoImpuesto0 = mnMtoTotal - mnMtoSubTotal1;
                                     mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
 
-                                } else if (GlobalInfo.getoptranArticuloID10.equals("92") && GlobalInfo.getoptranSoles10 >= 50.00) {
+                                } else if (GlobalInfo.getoptranArticuloID10.equals("92") && mnArticuloID.equals("92") && GlobalInfo.getoptranSoles10 >= 50.00) {
 
-                                    mnMtoDescuentoUnitario = 0.20;
+                                    //mnMtoDescuentoUnitario = 0.20;
 
-                                    mnMtoDescuento0 = mnMtoDescuentoUnitario * GlobalInfo.getoptranGalones10;
+                                    mnMtoDescuento0 = mnMontoDescuento * GlobalInfo.getoptranGalones10;
                                     mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
                                     mnMtoTotal = GlobalInfo.getoptranSoles10 - mnMtoDescuento1;
 
@@ -2801,7 +2808,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoImpuesto0 = mnMtoTotal - mnMtoSubTotal1;
                                     mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
 
-                                } else if (GlobalInfo.getoptranArticuloID10.equals("93") && GlobalInfo.getoptranSoles10 >= 3000.00) {
+                                } else if (GlobalInfo.getoptranArticuloID10.equals("93") && mnArticuloID.equals("93") && GlobalInfo.getoptranSoles10 >= 3000.00) {
 
                                   /*  if (GlobalInfo.getoptranGalones10 > 200.00) {
                                         mnMtoDescuentoUnitario = 0.25;
@@ -2809,9 +2816,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                         mnMtoDescuentoUnitario = 0.20;
                                     }*/
 
-                                    mnMtoDescuentoUnitario = 0.25;
+                                   // mnMtoDescuentoUnitario = 0.25;
 
-                                    mnMtoDescuento0 = mnMtoDescuentoUnitario * GlobalInfo.getoptranGalones10;
+                                    mnMtoDescuento0 = mnMontoDescuento * GlobalInfo.getoptranGalones10;
                                     mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
                                     mnMtoTotal = GlobalInfo.getoptranSoles10 - mnMtoDescuento1;
 
@@ -2821,11 +2828,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoImpuesto0 = mnMtoTotal - mnMtoSubTotal1;
                                     mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
 
-                                } else if (GlobalInfo.getoptranArticuloID10.equals("07") && GlobalInfo.getoptranSoles10 >= 30.00) {
+                                } else if (GlobalInfo.getoptranArticuloID10.equals("07") && mnArticuloID.equals("07") && GlobalInfo.getoptranSoles10 >= 30.00) {
 
-                                    mnMtoDescuentoUnitario = 0.10;
+                                   // mnMtoDescuentoUnitario = 0.10;
 
-                                    mnMtoDescuento0 = mnMtoDescuentoUnitario * GlobalInfo.getoptranGalones10;
+                                    mnMtoDescuento0 = mnMontoDescuento * GlobalInfo.getoptranGalones10;
                                     mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
                                     mnMtoTotal = GlobalInfo.getoptranSoles10 - mnMtoDescuento1;
 
@@ -2871,6 +2878,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 detalleVenta.setMontoSoles(0.00);
                                 detalleVenta.setMtoSaldoCredito(0.00);
                                 detalleVenta.setPtosDisponible(0.00);
+                                detalleVenta.setArticuloID("");
+                                detalleVenta.setTipoCliente("");
+                                detalleVenta.setTipoDescuento("");
+                                detalleVenta.setMontoDescuento(0.00);
 
                                 recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
 
