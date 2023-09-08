@@ -52,12 +52,7 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
         holder.textMtoSoles.setText(String.valueOf(String.format("%.2f",detalleVentaList.get(position).getMontoSoles())));
         holder.textSaldoCredito.setText(String.valueOf(detalleVentaList.get(position).getMtoSaldoCredito()));
         holder.textPtosDisponibles.setText(String.valueOf(detalleVentaList.get(position).getPtosDisponible()));
-        holder.textArticuloID.setText(detalleVentaList.get(position).getArticuloID());
-        holder.textTCiente.setText(detalleVentaList.get(position).getTipoCliente());
-        holder.textTDescuento.setText(detalleVentaList.get(position).getTipoDescuento());
-        holder.textMtoDescuento.setText(String.valueOf(String.format("%.2f",detalleVentaList.get(position).getMontoDescuento())));
-
-
+        holder.textRfid.setText(detalleVentaList.get(position).getRfid());
     }
 
     @Override
@@ -84,10 +79,7 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
         private TextView textMtoSoles;
         private TextView textSaldoCredito;
         private TextView textPtosDisponibles;
-        private TextView textArticuloID;
-        private TextView textTCiente;
-        private TextView textTDescuento;
-        private TextView textMtoDescuento;
+        private TextView textRfid;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -111,10 +103,7 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
             textMtoSoles         = itemView.findViewById(R.id.textMtoSoles);
             textSaldoCredito     = itemView.findViewById(R.id.textSaldoCredito);
             textPtosDisponibles  = itemView.findViewById(R.id.textPtosDisponibles);
-            textArticuloID       = itemView.findViewById(R.id.textArticuloID);
-            textTCiente          = itemView.findViewById(R.id.textTCiente);
-            textTDescuento       = itemView.findViewById(R.id.textTDescuento);
-            textMtoDescuento     = itemView.findViewById(R.id.textMtoDescuento);
+            textRfid             = itemView.findViewById(R.id.textRfid);
         }
     }
 }

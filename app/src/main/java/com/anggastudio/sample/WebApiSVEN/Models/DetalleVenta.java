@@ -19,10 +19,7 @@ public class DetalleVenta {
     private Double montoSoles;
     private Double mtoSaldoCredito;
     private Double ptosDisponible;
-    private String articuloID;
-    private String tipoCliente;
-    private String tipoDescuento;
-    private Double montoDescuento;
+    private String rfid;
 
     public DetalleVenta(String cara, String tipoPago, Double impuesto, String nroPlaca, String tarjetaPuntos) {
         this.cara = cara;
@@ -168,35 +165,11 @@ public class DetalleVenta {
         this.ptosDisponible = ptosDisponible;
     }
 
-    public String getArticuloID() {
-        return articuloID;
+    public String getRfid() {
+        return rfid;
     }
 
-    public void setArticuloID(String articuloID) {
-        this.articuloID = articuloID;
-    }
-
-    public String getTipoCliente() {
-        return tipoCliente;
-    }
-
-    public void setTipoCliente(String tipoCliente) {
-        this.tipoCliente = tipoCliente;
-    }
-
-    public String getTipoDescuento() {
-        return tipoDescuento;
-    }
-
-    public void setTipoDescuento(String tipoDescuento) {
-        this.tipoDescuento = tipoDescuento;
-    }
-
-    public Double getMontoDescuento() {
-        return montoDescuento;
-    }
-
-    public void setMontoDescuento(Double montoDescuento) {
-        this.montoDescuento = montoDescuento;
+    public void setRfid(String rfid) {
+        this.rfid = rfid;
     }
 }

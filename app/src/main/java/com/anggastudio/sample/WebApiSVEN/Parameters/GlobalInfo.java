@@ -197,6 +197,7 @@ public class GlobalInfo {
     public static Integer getcorrelativoTurno;
     public static String  getcorrelativoSerie;
     public static String  getcorrelativoNumero;
+    public static Double  getcorrelativoMDescuento;
 
     /**
      * Datos de la Cliente Sellecion

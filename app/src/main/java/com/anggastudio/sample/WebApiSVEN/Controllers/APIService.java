@@ -180,8 +180,8 @@ public interface APIService {
     @GET("api/correlativo/listado")
     Call<List<Correlativo>> getCorrelativo();
 
-    @GET("api/correlativo/listado/{id}/{tipo}")
-    Call<List<Correlativo>> findCorrelativo(@Path("id") String id, @Path("tipo") String tipo);
+    @GET("api/correlativo/listado/{imei}/{tipodoc}/{rfid}/{articuloid}")
+    Call<List<Correlativo>> findCorrelativo(@Path("imei") String imei, @Path("tipodoc") String tipodoc, @Path("rfid") String rfid, @Path("articuloid") String articuloid);
 
 
     /**

@@ -449,31 +449,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_extrabold"
                         android:gravity="center"
-                        android:text="Producto"
-                        android:textColor="@color/white"
-                        android:textSize="8sp" />
-                    <TextView
-                        android:layout_width="50sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="T. Cliente"
-                        android:textColor="@color/white"
-                        android:textSize="8sp" />
-                    <TextView
-                        android:layout_width="50sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="T. Desct"
-                        android:textColor="@color/white"
-                        android:textSize="8sp" />
-                    <TextView
-                        android:layout_width="50sp"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_extrabold"
-                        android:gravity="center"
-                        android:text="Mto. Desct"
+                        android:text="NFC"
                         android:textColor="@color/white"
                         android:textSize="8sp" />
                 </LinearLayout>

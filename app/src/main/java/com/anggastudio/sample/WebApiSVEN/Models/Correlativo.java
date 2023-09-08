@@ -8,6 +8,7 @@ public class Correlativo {
     private Integer turno;
     private String  serie;
     private String  numero;
+    private Double  montoDescuento;
 
     public String getTerminalID() {
         return terminalID;
@@ -56,5 +57,9 @@ public class Correlativo {
     public void setNumero(String numero) {
         this.numero = numero;
     }
+
+    public Double getMontoDescuento() { return montoDescuento;  }
+
+    public void setMontoDescuento(Double montoDescuento) { this.montoDescuento = montoDescuento; }
 
 }

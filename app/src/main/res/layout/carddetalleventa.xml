@@ -177,35 +177,8 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/textArticuloID"
-                android:layout_width="50sp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_extrabold"
-                android:gravity="center"
-                android:textColor="@color/blue"
-                android:textSize="8sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/textTCiente"
-                android:layout_width="50sp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_extrabold"
-                android:gravity="center"
-                android:textColor="@color/blue"
-                android:textSize="8sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/textTDescuento"
-                android:layout_width="50sp"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_extrabold"
-                android:gravity="center"
-                android:textColor="@color/blue"
-                android:textSize="8sp"
-                android:textStyle="bold" />
-            <TextView
-                android:id="@+id/textMtoDescuento"
-                android:layout_width="50sp"
+                android:id="@+id/textRfid"
+                android:layout_width="100sp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="center"
