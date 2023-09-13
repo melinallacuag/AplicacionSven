@@ -60,9 +60,10 @@ public class DasboardFragment extends Fragment{
 
     CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
 
-    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir;
+    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir,btn_CancelarI,btn_AceptarI;
 
-    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha,modalAlertaDiaActual,modalAlertaCTurnoActual,modalAlertaRIDiaActual;
+    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha,modalAlertaDiaActual,
+            modalAlertaCTurnoActual,modalAlertaRIDiaActual,modalAlertaIngreso,modalInicioDiaGenerado;
 
     ShapeableImageView img_Logo;
 
@@ -94,7 +95,7 @@ public class DasboardFragment extends Fragment{
         btn_Cambioturno   = view.findViewById(R.id.btnCambioTurno);
         btn_Iniciodia     = view.findViewById(R.id.btnInicioDia);
         btn_Salir         = view.findViewById(R.id.btnSalir);
-        img_Logo           = view.findViewById(R.id.logo_dashboard);
+        img_Logo          = view.findViewById(R.id.logo_dashboard);
 
         nombre_grifero.setText(GlobalInfo.getuserName10);
         fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
@@ -118,22 +119,65 @@ public class DasboardFragment extends Fragment{
         sucursal_empresa.setText(DirSucursal);
         slogan_empresa.setText(GlobalInfo.getSloganCompany10);
 
+        /** Mostrar Alerta - Inicio de Día - Al ingresar a la operación de venta */
+        modalAlertaIngreso = new Dialog(getContext());
+        modalAlertaIngreso.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalAlertaIngreso.setContentView(R.layout.alerta_iniciodia_ingreso);
+        modalAlertaIngreso.setCancelable(true);
+
         /** Ir a la Pantalla - Venta */
         btn_Venta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
-                int fragmentContainerVenta = R.id.fragment_container;
-                VentaFragment ventaFragment = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                    ventaFragment = new VentaFragment();
-                }
+                if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty()){
 
-                fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
-                fragmentTransactionVenta.addToBackStack(null);
-                fragmentTransactionVenta.commit();
+                    FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
+                    int fragmentContainerVenta = R.id.fragment_container;
+                    VentaFragment ventaFragment = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                        ventaFragment = new VentaFragment();
+                    }
+
+                    fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
+                    fragmentTransactionVenta.addToBackStack(null);
+                    fragmentTransactionVenta.commit();
+
+                }else{
+
+                    modalAlertaIngreso.show();
+
+                    btn_CancelarI     = modalAlertaIngreso.findViewById(R.id.btnCancelarIngreso);
+                    btn_AceptarI      = modalAlertaIngreso.findViewById(R.id.btnAceptarIngreso);
+
+                    btn_CancelarI.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            modalAlertaIngreso.dismiss();
+                        }
+                    });
+
+                    btn_AceptarI.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
+                            FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
+                            int fragmentContainerVenta = R.id.fragment_container;
+                            VentaFragment ventaFragment = null;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                                ventaFragment = new VentaFragment();
+                            }
+
+                            fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
+                            fragmentTransactionVenta.addToBackStack(null);
+                            fragmentTransactionVenta.commit();
+
+                            modalAlertaIngreso.dismiss();
+                        }
+                    });
+                }
 
             }
         });
@@ -169,6 +213,12 @@ public class DasboardFragment extends Fragment{
 
         /** Lista de Turno - Filtrado por Turno*/
         getSettingTurno();
+
+        /** Mostrar Modal - Inicio de Día */
+        modalInicioDiaGenerado = new Dialog(getContext());
+        modalInicioDiaGenerado.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalInicioDiaGenerado.setContentView(R.layout.alerta_cdia);
+        modalInicioDiaGenerado.setCancelable(true);
 
         /** Mostrar Alerta Inicio Día- Por fuera de fecha */
         modalAlertaDiaActual = new Dialog(getContext());
@@ -322,86 +372,96 @@ public class DasboardFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
-                for (SettingTurno settingTurno : GlobalInfo.getsettingTurnoList10 ) {
+                    for (SettingTurno settingTurno : GlobalInfo.getsettingTurnoList10 ) {
 
-                    GlobalInfo.getSettingCompanyId10 = settingTurno.getCompanyID();
-                    GlobalInfo.getSettingTurno10     = settingTurno.getTurno();
-                    GlobalInfo.getSettingRango110    = settingTurno.getRango1();
-                    GlobalInfo.getSettingRango210    = settingTurno.getRango2();
+                        GlobalInfo.getSettingCompanyId10 = settingTurno.getCompanyID();
+                        GlobalInfo.getSettingTurno10     = settingTurno.getTurno();
+                        GlobalInfo.getSettingRango110    = settingTurno.getRango1();
+                        GlobalInfo.getSettingRango210    = settingTurno.getRango2();
 
-                    if (GlobalInfo.getSettingTurno10 .equals(0)) {
+                        if (GlobalInfo.getSettingTurno10 .equals(0)) {
 
-                        /** Hora Actual */
-                        Calendar calendarprint = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
-                        SimpleDateFormat formatdate = new SimpleDateFormat("HHmmss");
-                        String FechaHoraImpresion = formatdate.format(calendarprint.getTime());
-                        Integer HoraActual = Integer.valueOf(FechaHoraImpresion);
+                            Calendar calendarprint = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
+                            SimpleDateFormat formatdate = new SimpleDateFormat("HHmmss");
+                            String FechaHoraImpresion = formatdate.format(calendarprint.getTime());
+                            Integer HoraActual = Integer.valueOf(FechaHoraImpresion);
 
-                        /** Fecha Actual */
-                        Calendar calendarfecha      = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
-                        SimpleDateFormat formatfecha  = new SimpleDateFormat("dd");
-                        String FechasImpresion    = formatfecha.format(calendarfecha.getTime());
-                        Integer FechaActual = Integer.valueOf(FechasImpresion);
 
-                        if (FechaActual == 1) {
+                            Calendar calendarfecha      = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
+                            SimpleDateFormat formatfecha  = new SimpleDateFormat("dd");
+                            String FechasImpresion    = formatfecha.format(calendarfecha.getTime());
+                            Integer FechaActual = Integer.valueOf(FechasImpresion);
 
-                            if (HoraActual >= 0 && HoraActual <= 3000) {
-                                findOptranDia(GlobalInfo.getterminalImei10);
+                            if (FechaActual == 1) {
+
+                                if (HoraActual >= 0 && HoraActual <= 3000) {
+                                    findOptranDia(GlobalInfo.getterminalImei10);
+                                } else {
+                                    modalAlertaDiaActual.show();
+                                    return;
+                                }
+
                             } else {
-                                modalAlertaDiaActual.show();
-                                return;
+
+                                if (HoraActual >= GlobalInfo.getSettingRango110 && HoraActual <= GlobalInfo.getSettingRango210) {
+                                    findOptranDia(GlobalInfo.getterminalImei10);
+                                } else {
+                                    modalAlertaDiaActual.show();
+                                    return;
+                                }
+
                             }
 
-                        } else {
+                            if (GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty()){
 
-                            if (HoraActual >= GlobalInfo.getSettingRango110 && HoraActual <= GlobalInfo.getSettingRango210) {
-                                findOptranDia(GlobalInfo.getterminalImei10);
-                            } else {
-                                modalAlertaDiaActual.show();
-                                return;
+                                /**  No puede realizar Inicio de Día. Porque ya esta genero. **/
+                                modalInicioDiaGenerado.show();
+
+                            }else {
+
+                                modalInicioDia.show();
+
+                                btnCancelarInicio = modalInicioDia.findViewById(R.id.btncancelariniciodia);
+                                btnAceptarInicio  = modalInicioDia.findViewById(R.id.btnagregariniciodia);
+
+                                btnCancelarInicio.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        modalInicioDia.dismiss();
+                                    }
+                                });
+
+                                btnAceptarInicio.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        modalAlerta.show();
+
+                                        try {
+                                            Intent intent = new Intent(getContext(), Login.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                                            iniciarDia(GlobalInfo.getterminalID10);
+
+                                            startActivity(intent);
+                                            finalize();
+
+                                            Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
+                                        } catch (Throwable e) {
+                                            e.printStackTrace();
+                                        }
+
+                                    }
+                                });
+
                             }
 
                         }
 
-                        modalInicioDia.show();
-
-                        btnCancelarInicio = modalInicioDia.findViewById(R.id.btncancelariniciodia);
-                        btnAceptarInicio = modalInicioDia.findViewById(R.id.btnagregariniciodia);
-
-                        btnCancelarInicio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                modalInicioDia.dismiss();
-                            }
-                        });
-
-                        btnAceptarInicio.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                                modalAlerta.show();
-
-                                try {
-                                    Intent intent = new Intent(getContext(), Login.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-                                    iniciarDia(GlobalInfo.getterminalID10);
-
-                                    startActivity(intent);
-                                    finalize();
-
-                                    Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
-                                } catch (Throwable e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        });
+                        break;
                     }
-
-                    break;
                 }
-            }
+
         });
 
         /** Mostrar Modal - Salir */
@@ -446,8 +506,38 @@ public class DasboardFragment extends Fragment{
             }
         });
 
+        /** Obtener - Inicio de Día  **/
+        findCDia(GlobalInfo.getterminalID10);
+
         return view;
 
+    }
+
+    /** API SERVICE - Inicio de Día*/
+    private void findCDia(String terminalid){
+        Call<List<CDia>> call = mAPIService.findCDia(terminalid);
+
+        call.enqueue(new Callback<List<CDia>>() {
+            @Override
+            public void onResponse(Call<List<CDia>> call, Response<List<CDia>> response) {
+                try {
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error Dia: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                        GlobalInfo.getCDiaList10 = response.body();
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<CDia>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Dia - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /** API SERVICE - Setting Turno */
@@ -553,8 +643,6 @@ public class DasboardFragment extends Fragment{
                         modalInicioDia.dismiss();
                         return;
                     }
-
-                    modalInicioDia.show();
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();

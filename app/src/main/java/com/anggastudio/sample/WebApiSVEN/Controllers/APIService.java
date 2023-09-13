@@ -219,9 +219,11 @@ public interface APIService {
     /**
      * Incio de Día
      */
-    @POST("api/cdia/iniciar/{id}")
-    Call<CDia> postCDia(@Path("id") String id);
+    @GET("api/cdia/listado/{terminalid}")
+    Call<List<CDia>> findCDia(@Path("terminalid") String terminalid);
 
+    @POST("api/cdia/iniciar/{terminalid}")
+    Call<CDia> postCDia(@Path("terminalid") String terminalid);
 
     /**
      * Cambio de Turno

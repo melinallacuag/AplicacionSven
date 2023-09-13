@@ -173,8 +173,10 @@ public class ListaComprobantesFragment extends Fragment  {
                             btnRImpresion.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
+
                                     Reimpresion(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
                                     modalReimpresion.dismiss();
+
                                 }
                             });
 
@@ -438,6 +440,7 @@ public class ListaComprobantesFragment extends Fragment  {
                         String observacion1      = String.valueOf(reimpresion.getObservacion());
                         String fechaQR1          = String.valueOf(reimpresion.getFechaQR());
                         String nroLado1          = String.valueOf(reimpresion.getNroLado());
+                        Double mtoTotalEfectivo  = Double.valueOf(reimpresion.getMtoTotalEfectivo());
 
                         String Cajero1           = GlobalInfo.getuserName10;
                         String NroComprobante    = serieDocumento1 + "-" + nroDocumento1;
@@ -493,6 +496,10 @@ public class ListaComprobantesFragment extends Fragment  {
                             String MtoCanjeado = String.format("%.2f", montoCanjeado1);
 
                             String MtoDescuento = String.format("%.2f", mtoDescuento1);
+
+                            String MTotalEfectivo = String.format("%.2f",mtoTotalEfectivo);
+
+                            String MtoTotalPagoFF = String.format("%.2f",mtoTotal1 - mtoTotalEfectivo);
 
                             /** Convertir número a letras */
                             Numero_Letras NumLetra = new Numero_Letras();
@@ -624,32 +631,50 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                 switch (tarjetaID1) {
                                                     case 1:
-                                                        printama.printTextlnBold("VISA: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("VISA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 2:
-                                                        printama.printTextlnBold("MASTERCARD: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("MASTERCARD: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 3:
-                                                        printama.printTextlnBold("DINERS: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("DINERS: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 4:
-                                                        printama.printTextlnBold("YAPE: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("YAPE: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 5:
-                                                        printama.printTextlnBold("AMERICAN EXPRES: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("AMERICAN EXPRES: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 6:
-                                                        printama.printTextlnBold("PLIN: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("PLIN: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
@@ -714,32 +739,50 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                 switch (tarjetaID1) {
                                                     case 1:
-                                                        printama.printTextlnBold("VISA: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("VISA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 2:
-                                                        printama.printTextlnBold("MASTERCARD: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("MASTERCARD: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 3:
-                                                        printama.printTextlnBold("DINERS: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("DINERS: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 4:
-                                                        printama.printTextlnBold("YAPE: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("YAPE: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 5:
-                                                        printama.printTextlnBold("AMERICAN EXPRES: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("AMERICAN EXPRES: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
                                                     case 6:
-                                                        printama.printTextlnBold("PLIN: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        if (mtoTotalEfectivo > 0){
+                                                            printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                        }
+                                                        printama.printTextlnBold("PLIN: S/ " + MtoTotalPagoFF, Printama.RIGHT);
                                                         printama.setSmallText();
                                                         printama.printTextln("NRO.OPERACION:" + tarjetaDS1, Printama.LEFT);
                                                         break;
@@ -784,7 +827,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                         printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                         break;
                                     case "99":
-                                        printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+                                        printama.printTextlnBold("TOTAL VENTA: S/  " + MtoTotalFF, Printama.RIGHT);
                                         break;
                                 }
 
