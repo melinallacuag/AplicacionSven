@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Path;
 import android.graphics.drawable.ColorDrawable;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
@@ -21,7 +20,6 @@ import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Build;
 import android.os.Bundle;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
@@ -29,7 +27,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
@@ -44,7 +41,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.anggastudio.printama.Printama;
 import com.anggastudio.sample.Adapter.ClienteCreditoAdapter;
 import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
@@ -56,7 +52,6 @@ import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
-import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
@@ -74,22 +69,18 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
-
 import java.io.File;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
 
 @RequiresApi(api = Build.VERSION_CODES.KITKAT)
 public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback{
@@ -103,7 +94,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta,recyclerLClienteCredito;
 
-    List<ClienteCredito> clienteCreditoList;
     ClienteCreditoAdapter clienteCreditoAdapter;
 
     LadosAdapter ladosAdapter;
@@ -1665,7 +1655,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     }
 
-    /** listado */
+    /** Detectar Etiqueta NFC */
     private void  insertNFC(){
         nfcAdapter = NfcAdapter.getDefaultAdapter(getContext());
 
@@ -1758,7 +1748,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         });
     }
 
-    /** APO SERVICE - Buscar Cliente por RFID */
+    /** APO SERVICE - Buscar Cliente por RFID - DNI/RUC */
     private String findClientePrecioDNI(String rfid, String companyid) {
 
         Call<List<ClientePrecio>> call = mAPIService.findDescuentos(rfid, companyid);
@@ -1787,7 +1777,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         GlobalInfo.getTipClientePrecio10     = clientePrecio.getTipoCliente();
                         GlobalInfo.getTipoDescuentoPrecio10  = clientePrecio.getTipoDescuento();
                         GlobalInfo.getMontoDescuentoPrecio10 = clientePrecio.getMontoDescuento();
-
 
                             if (GlobalInfo.getClienteIDPrecio10.length() == 8){
                                 inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
@@ -2148,7 +2137,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 mnClienteRUC = "";
                                 mnClienteRS = "CLIENTE VARIOS";
                                 mnCliernteDR = "";
-                                mnNroPlaca = "000-0000";
+                                mnNroPlaca = "";
                                 break;
                         }
 
@@ -2350,7 +2339,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                          GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
                                          GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
                                          mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
-                                         mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca, xFechaDocumentoQR,
+                                         mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                         mnKilometraje,mnObservacion,mnTarjND, xFechaDocumentoQR,
                                          mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
 
                         }
@@ -2361,7 +2351,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                      GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
                                      GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
                                      mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
-                                     mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca, xFechaDocumentoQR,
+                                     mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                     mnKilometraje,mnObservacion,mnTarjND, xFechaDocumentoQR,
                                      mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
 
                     }
@@ -2383,7 +2374,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     }
 
-
+    /** API SERVICE - Grabara Venta CA **/
     private void grabarVentaCA(Integer _companyID, String _tipoDocumento, String _serieDocumento, String _nroDocumento, String _terminalID,
                                String _clienteID, String _clienteRUC, String _clienteRZ, String _clienteDR, Integer _turno,
                                String _fechaproceso, String _fechadocumento, String _fechaAtencion,
@@ -2436,18 +2427,15 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     }
 
     /** Impresión del Comprobante */
-
     private void imprimirGR10(String _TipoDocumento, String _NroDocumento, String _FechaDocumento, Integer _Turno,
                               String _Cajero, String _nroLado, String _ArticuloDS, String _ArticuloUMED,
                               Double _Precio, Double _Cantidad, Double _MtoTotal, Double _MtoSubTotal, Double _MtoImpuesto,
                               String _ClienteID, String _ClienteRUC, String _ClienteRZ, String _ClienteDR, String _NroPlaca,
+                              String _Kilometraje, String _Obervacion,String _NTarjND,
                               String _FechaQR, Integer _PagoID, Integer _TarjetaCreditoID, String _OperacionREF,
                               Double _mtoCanjeado, Double _mtoDescuento, Double _mtoSoles){
 
 
-        //Bitmap logoRobles = Printama.getBitmapFromVector(getContext(), R.drawable.logoprincipal);
-
-        /** Logo de la Empresa*/
         File file = new File("/storage/emulated/0/appSven/logo.jpg");
         String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
         if(!file.exists()){
@@ -2512,15 +2500,29 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         Printama.with(getContext()).connect(printama -> {
 
-            printama.printTextln("                 ", Printama.CENTER);
-            printama.printImage(logoRobles, 200);
-            printama.setSmallText();
-            printama.printTextlnBold(NameCompany, Printama.CENTER);
-            printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
-            printama.printTextlnBold(Address2, Printama.CENTER);
-            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-            printama.printTextlnBold(Branch2, Printama.CENTER);
-            printama.printTextlnBold("RUC: " + RUCCompany, Printama.CENTER);
+            switch (_TipoDocumento) {
+                case "01" :
+                case "03" :
+                    printama.printTextln("                 ", Printama.CENTER);
+                    printama.printImage(logoRobles, 200);
+                    printama.setSmallText();
+                    printama.printTextlnBold(NameCompany, Printama.CENTER);
+                    printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
+                    printama.printTextlnBold(Address2, Printama.CENTER);
+                    printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
+                    printama.printTextlnBold(Branch2, Printama.CENTER);
+                    printama.printTextlnBold("RUC: " + RUCCompany, Printama.CENTER);
+                    break;
+                case "98" :
+                case "99" :
+                    printama.printTextln("                 ", Printama.CENTER);
+                    printama.printImage(logoRobles, 200);
+                    printama.setSmallText();
+                    printama.printTextlnBold(NameCompany, Printama.CENTER);
+                    printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
+                    printama.printTextlnBold(Branch2, Printama.CENTER);
+                    break;
+            }
 
             switch (_TipoDocumento) {
                 case "01" :
@@ -2558,6 +2560,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     if (!_ClienteDR.isEmpty()) {
                         printama.printTextln("Dirección    : "+ _ClienteDR, Printama.LEFT);
                     }
+                    if (!_Obervacion.isEmpty()) {
+                        printama.printTextln("Observación  : "+ _Obervacion, Printama.LEFT);
+                    }
 
                     break;
                 case "03" :
@@ -2572,9 +2577,24 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.printTextln("Dirección    : "+ _ClienteDR, Printama.LEFT);
                         }
 
+                        if (!_Obervacion.isEmpty()) {
+                            printama.printTextln("Observación  : "+ _Obervacion, Printama.LEFT);
+                        }
+
                     }
                     break;
                 case "99" :
+                    if (!_Kilometraje.isEmpty()) {
+                        printama.printTextln("Kilometraje  : " + _Kilometraje, Printama.LEFT);
+                    }
+
+                    if (!_Obervacion.isEmpty()) {
+                        printama.printTextln("Observación  : " + _Obervacion, Printama.LEFT);
+                    }
+                        printama.printTextln("RUC/DNI      : " + _ClienteID, Printama.LEFT);
+                        printama.printTextln("Cliente      : " + _ClienteRZ, Printama.LEFT);
+                        printama.printTextln("#Contrato    : " + _NTarjND , Printama.LEFT);
+
                     break;
             }
 
@@ -2817,8 +2837,20 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     break;
                 case "98" :
+                    printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
+                    break;
                 case "99" :
                     printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
+                    printama.setSmallText();
+                    printama.printDoubleDashedLine();
+                    printama.addNewLine(1);
+                    printama.setSmallText();
+                    printama.addNewLine(1);
+                    printama.setSmallText();
+                    printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
+                    printama.printTextlnBold("DNI    :" , Printama.LEFT);
+                    printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
+                    printama.addNewLine(1);
                     break;
             }
 

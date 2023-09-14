@@ -32,6 +32,7 @@ public class Reimpresion {
     private String fechaQR;
     private String nroLado;
     private Double mtoTotalEfectivo;
+    private String nroTarjetaNotaD;
 
     public String getFechaDocumento() {
         return fechaDocumento;
@@ -271,5 +272,13 @@ public class Reimpresion {
 
     public void setMtoTotalEfectivo(Double mtoTotalEfectivo) {
         this.mtoTotalEfectivo = mtoTotalEfectivo;
+    }
+
+    public String getNroTarjetaNotaD() {
+        return nroTarjetaNotaD;
+    }
+
+    public void setNroTarjetaNotaD(String nroTarjetaNotaD) {
+        this.nroTarjetaNotaD = nroTarjetaNotaD;
     }
 }

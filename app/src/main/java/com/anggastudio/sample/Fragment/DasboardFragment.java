@@ -62,8 +62,8 @@ public class DasboardFragment extends Fragment{
 
     Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir,btn_CancelarI,btn_AceptarI;
 
-    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaFecha,modalAlertaDiaActual,
-            modalAlertaCTurnoActual,modalAlertaRIDiaActual,modalAlertaIngreso,modalInicioDiaGenerado;
+    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaDiaActual,
+            modalAlertaCTurnoActual,modalAlertaIngreso,modalInicioDiaGenerado;
 
     ShapeableImageView img_Logo;
 
@@ -205,12 +205,6 @@ public class DasboardFragment extends Fragment{
         modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
         modalAlerta.setCancelable(true);
 
-        /** Mostrar Alerta - Cambio de Inicio*/
-        modalAlertaFecha = new Dialog(getContext());
-        modalAlertaFecha.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        modalAlertaFecha.setContentView(R.layout.alerta_cambioinicio_fecha);
-        modalAlertaFecha.setCancelable(true);
-
         /** Lista de Turno - Filtrado por Turno*/
         getSettingTurno();
 
@@ -231,12 +225,6 @@ public class DasboardFragment extends Fragment{
         modalAlertaCTurnoActual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlertaCTurnoActual.setContentView(R.layout.alerta_cambioturno_fechaactual);
         modalAlertaCTurnoActual.setCancelable(true);
-
-        /** Mostrar Alerta - Realizar Inicio Día */
-        modalAlertaRIDiaActual = new Dialog(getContext());
-        modalAlertaRIDiaActual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        modalAlertaRIDiaActual.setContentView(R.layout.alert_realizar_iniciodia);
-        modalAlertaRIDiaActual.setCancelable(true);
 
         /** Mostrar Modal - Cambio de Turno */
         modalCambioTurno = new Dialog(getContext());

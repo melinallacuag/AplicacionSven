@@ -35,7 +35,7 @@
             android:layout_marginTop="8sp"
             android:fontFamily="@font/nunito_extrabold"
             android:gravity="center_horizontal"
-            android:text="No puedes realizar Cambio de Turno."
+            android:text="No puedes realizar Cambio de Turno. PORQUE ESTA FUERA DE HORA."
             android:textAlignment="center"
             android:textColor="@color/gris"
             android:textSize="20sp"

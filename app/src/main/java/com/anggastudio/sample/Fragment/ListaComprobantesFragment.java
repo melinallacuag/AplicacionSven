@@ -344,26 +344,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
     }
 
-    private void Anular(String tipodoc, String seriedoc, String nrodoc, String anuladoid, String terminalid) {
-
-        Call<Anular> call = mAPIService.postAnular(tipodoc, seriedoc, nrodoc, anuladoid, terminalid);
-
-        call.enqueue(new Callback<Anular>() {
-            @Override
-            public void onResponse(Call<Anular> call, Response<Anular> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Anular> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE Anular", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
+    /** API SERVICE - Anular Comprobante */
     private void Anulars(String tipodoc, String seriedoc, String nrodoc, String anuladoid, String terminalid) {
 
         Call<List<Anular>> call = mAPIService.findAnular(tipodoc, seriedoc, nrodoc, anuladoid, terminalid);
@@ -393,6 +374,7 @@ public class ListaComprobantesFragment extends Fragment  {
         });
     }
 
+    /** API SERVICE - Reimprimir Comprobante */
     private void Reimpresion(String tipodoc, String seriedoc, String nrodoc) {
 
         Call<List<Reimpresion>> call = mAPIService.findReimpresion(tipodoc, seriedoc, nrodoc);
@@ -441,22 +423,17 @@ public class ListaComprobantesFragment extends Fragment  {
                         String fechaQR1          = String.valueOf(reimpresion.getFechaQR());
                         String nroLado1          = String.valueOf(reimpresion.getNroLado());
                         Double mtoTotalEfectivo  = Double.valueOf(reimpresion.getMtoTotalEfectivo());
+                        String nroTarjetaNotaD   = String.valueOf(reimpresion.getNroTarjetaNotaD());
 
                         String Cajero1           = GlobalInfo.getuserName10;
                         String NroComprobante    = serieDocumento1 + "-" + nroDocumento1;
 
-                        /**
-                         * Iniciar impresión del comprobante
-                         */
-
-                        Context context = getContext();
-
-                        if (context != null) {
-                            //Bitmap logoRobles = Printama.getBitmapFromVector(context, R.drawable.logoprincipal);
-
-                            /** Logo de la Empresa - Carpeta URL */
+                            /**
+                             * Iniciar impresión del comprobante
+                             */
                             File file = new File("/storage/emulated/0/appSven/logo.jpg");
                             String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+
                             if(!file.exists()){
                                 rutaImagen = "/storage/emulated/0/appSven/logo.png";
                             }
@@ -520,15 +497,29 @@ public class ListaComprobantesFragment extends Fragment  {
 
                             Printama.with(getContext()).connect(printama -> {
 
-                                printama.printTextln("                 ", Printama.CENTER);
-                                printama.printImage(logoRobles, 200);
-                                printama.setSmallText();
-                                printama.printTextlnBold(NameCompany, Printama.CENTER);
-                                printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
-                                printama.printTextlnBold(Address2, Printama.CENTER);
-                                printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                                printama.printTextlnBold(Branch2, Printama.CENTER);
-                                printama.printTextlnBold("RUC: " + RUCCompany, Printama.CENTER);
+                                switch (tipoDocumento1) {
+                                    case "01" :
+                                    case "03" :
+                                        printama.printTextln("                 ", Printama.CENTER);
+                                        printama.printImage(logoRobles, 200);
+                                        printama.setSmallText();
+                                        printama.printTextlnBold(NameCompany, Printama.CENTER);
+                                        printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
+                                        printama.printTextlnBold(Address2, Printama.CENTER);
+                                        printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                        printama.printTextlnBold("RUC: " + RUCCompany, Printama.CENTER);
+                                        break;
+                                    case "98" :
+                                    case "99" :
+                                        printama.printTextln("                 ", Printama.CENTER);
+                                        printama.printImage(logoRobles, 200);
+                                        printama.setSmallText();
+                                        printama.printTextlnBold(NameCompany, Printama.CENTER);
+                                        printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                        break;
+                                }
 
                                 switch (tipoDocumento1) {
                                     case "01":
@@ -566,6 +557,10 @@ public class ListaComprobantesFragment extends Fragment  {
                                         if (!clienteDR1.isEmpty()) {
                                             printama.printTextln("Dirección    : " + clienteDR1, Printama.LEFT);
                                         }
+
+                                        if (!observacion1.isEmpty()) {
+                                            printama.printTextln("Observación  : " + observacion1, Printama.LEFT);
+                                        }
                                         break;
                                     case "03":
 
@@ -578,9 +573,24 @@ public class ListaComprobantesFragment extends Fragment  {
                                             if (!clienteDR1.isEmpty()) {
                                                 printama.printTextln("Dirección    : " + clienteDR1, Printama.LEFT);
                                             }
+
+                                            if (!observacion1.isEmpty()) {
+                                                printama.printTextln("Observación  : " + observacion1, Printama.LEFT);
+                                            }
                                         }
                                         break;
                                     case "99":
+                                        if (!odometro1.isEmpty()) {
+                                            printama.printTextln("Kilometraje  : " + odometro1, Printama.LEFT);
+                                        }
+
+                                        if (!observacion1.isEmpty()) {
+                                            printama.printTextln("Observación  : " + observacion1, Printama.LEFT);
+                                        }
+
+                                        printama.printTextln("RUC/DNI      : " + clienteID1, Printama.LEFT);
+                                        printama.printTextln("Cliente      : " + clienteRZ1, Printama.LEFT);
+                                        printama.printTextln("#Contrato    : " + nroTarjetaNotaD , Printama.LEFT);
                                         break;
                                 }
 
@@ -827,24 +837,35 @@ public class ListaComprobantesFragment extends Fragment  {
                                         printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                         break;
                                     case "99":
-                                        printama.printTextlnBold("TOTAL VENTA: S/  " + MtoTotalFF, Printama.RIGHT);
+                                        printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                        printama.setSmallText();
+                                        printama.printDoubleDashedLine();
+                                        printama.addNewLine(1);
+                                        printama.setSmallText();
+                                        printama.addNewLine(1);
+                                        printama.setSmallText();
+                                        printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
+                                        printama.printTextlnBold("DNI    :" , Printama.LEFT);
+                                        printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
+                                        printama.addNewLine(1);
                                         break;
                                 }
 
                                 printama.feedPaper();
                                 printama.close();
 
-                            });
-                        }else {
-                            Toast.makeText(context, "No se encontro logo", Toast.LENGTH_SHORT).show();
-                        }
-
+                            }, this::showToast);
                     }
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
+            }
+
+            /** Alerta de Conexión de Bluetooth */
+            private void showToast(String message) {
+                Toast.makeText(getContext(), "Conectar Bluetooth", Toast.LENGTH_SHORT).show();
             }
 
             @Override

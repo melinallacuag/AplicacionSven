@@ -48,13 +48,12 @@ public class GlobalInfo {
     public  static List<TipoPago> gettipopagoList10;
     public  static List<DetalleVenta> getdetalleVentaList10;
     public  static List<SettingTurno> getsettingTurnoList10;
+    public static  List<CDia>   getCDiaList10;
     public  static List<ListaComprobante>  getlistacomprobanteList10;
     public  static List<VContometro> getvContometroList10;
     public  static List<VProducto> getvProductoList10;
     public  static List<VTipoPago> getvTipoPagoList10;
     public static  List<ClientePrecio>  getclientePrecioList10;
-
-    public static  List<CDia>   getCDiaList10;
 
     /**
      * Cliente precio
@@ -226,8 +225,7 @@ public class GlobalInfo {
     public static Double  getvcontomGalones10;
     public static Double  getvcontomPrecio10;
     public static Double  getvcontomSoles10;
-
-    public static Double getvcontomGalones101 = 0.00;
+    public static Double  getvcontomGalones101 = 0.00;
 
 
     /**
@@ -285,10 +283,10 @@ public class GlobalInfo {
      */
 
     //public static final String BASE_URL = "http://4-fact.com:8081/";
-    //public static final String BASE_URL = "http://192.168.1.11:8081/";
-    public static final String BASE_URL = "http://192.168.1.20:8081/";
+    //public static final String BASE_URL = "http://192.168.1.14:8081/";
+    //public static final String BASE_URL = "http://192.168.1.20:8081/";
     //public static final String BASE_URL = "http://192.168.1.227:8081/";
-    //public static final String BASE_URL = "http://192.168.1.245:8081/";
+    public static final String BASE_URL = "http://192.168.1.245:8081/";
 
     public static APIService getAPIService() {
         return getClient(BASE_URL).create(APIService.class);
