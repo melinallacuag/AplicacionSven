@@ -630,9 +630,10 @@ public class CierreXFragment extends Fragment {
         Bitmap logoRobles    = BitmapFactory.decodeFile(rutaImagen);
         String NameCompany   = GlobalInfo.getNameCompany10;
 
-        String BranchCompany = GlobalInfo.getBranchCompany10;
-        String Branch1       = BranchCompany.substring(0,32);
-        String Branch2       = BranchCompany.substring(35,51);
+        String BranchCompany = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
+        String[] partesBranch = BranchCompany.split(" - " , 2);
+        String Branch1 = partesBranch[0];
+        String Branch2 = partesBranch[1];
 
         String FechaHoraIni  = GlobalInfo.getterminalFechaHoraCierre10;
 

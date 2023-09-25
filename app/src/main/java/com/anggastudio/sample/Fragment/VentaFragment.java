@@ -2447,12 +2447,18 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         String NameCompany = GlobalInfo.getNameCompany10;
         String RUCCompany = GlobalInfo.getRucCompany10;
-        String AddressCompany = GlobalInfo.getAddressCompany10;
-        String Address1 = AddressCompany.substring(0,26);
-        String Address2 = AddressCompany.substring(27,50);
-        String BranchCompany = GlobalInfo.getBranchCompany10;
-        String Branch1 = BranchCompany.substring(0,32);
-        String Branch2 = BranchCompany.substring(35,51);
+
+        String AddressCompany = (GlobalInfo.getAddressCompany10 != null) ? GlobalInfo.getAddressCompany10 : "";
+        String[] partesAddress = AddressCompany.split(" - " , 2);
+        String Address1 = partesAddress[0];
+        String Address2 = partesAddress[1];
+
+        String BranchCompany = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
+        String[] partesBranch = BranchCompany.split(" - " , 2);
+        String Branch1 = partesBranch[0];
+        String Branch2 = partesBranch[1];
+
+
 
         switch (_TipoDocumento) {
             case "01" :
