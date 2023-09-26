@@ -107,8 +107,7 @@ public class Login extends AppCompatActivity{
 
         /** Detectar el IMEI*/
         imeii = findViewById(R.id.imei);
-      //  imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
-        imeii.setText("F6036B683498BFDA");
+        imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
 
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
