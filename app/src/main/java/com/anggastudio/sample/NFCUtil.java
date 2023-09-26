@@ -27,26 +27,33 @@ public class NFCUtil {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(activity);
 
-        Intent intent = new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        pendingIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (nfcAdapter != null) {
+            Intent intent = new Intent(activity, activity.getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            pendingIntent = PendingIntent.getActivity(activity, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
-        intentFilters = new IntentFilter[]{tagIntentFilter};
+            IntentFilter tagIntentFilter = new IntentFilter(NfcAdapter.ACTION_TAG_DISCOVERED);
+            intentFilters = new IntentFilter[]{tagIntentFilter};
 
-        techLists = new String[][]{
-                new String[]{NfcA.class.getName(), NfcB.class.getName(),
-                        NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
-                        MifareClassic.class.getName(), MifareUltralight.class.getName(),
-                        Ndef.class.getName()}
-        };
+            techLists = new String[][]{
+                    new String[]{NfcA.class.getName(), NfcB.class.getName(),
+                            NfcF.class.getName(), NfcV.class.getName(), IsoDep.class.getName(),
+                            MifareClassic.class.getName(), MifareUltralight.class.getName(),
+                            Ndef.class.getName()}
+            };
+        }
+
     }
 
     public void onResume() {
-        nfcAdapter.enableForegroundDispatch(activity, pendingIntent, intentFilters, techLists);
+        if (nfcAdapter != null) {
+            nfcAdapter.enableForegroundDispatch(activity, pendingIntent, intentFilters, techLists);
+        }
     }
 
     public void onPause() {
-        nfcAdapter.disableForegroundDispatch(activity);
+        if (nfcAdapter != null) {
+            nfcAdapter.disableForegroundDispatch(activity);
+        }
     }
 
 }

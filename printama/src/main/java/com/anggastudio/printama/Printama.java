@@ -21,6 +21,8 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -116,6 +118,11 @@ public class Printama {
         new Handler().postDelayed(util::finish, 2000);
     }
 
+    public void cutPaper() {
+        byte[] cutPaperCommand = new byte[]{0x1D, 0x56, 0x00};
+        util.printUnicode(cutPaperCommand);
+    }
+
     //----------------------------------------------------------------------------------------------
     // PRINT TEST
     //----------------------------------------------------------------------------------------------
@@ -128,6 +135,7 @@ public class Printama {
             printama.printTextln("------------------", Printama.CENTER);
             printama.feedPaper();
             printama.close();
+            printama.cutPaper();
         });
     }
 

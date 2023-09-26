@@ -505,7 +505,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                     case "01" :
                                     case "03" :
                                         printama.printTextln("                 ", Printama.CENTER);
-                                        printama.printImage(logoRobles, 200);
+                                        printama.printImage(logoRobles, 400);
                                         printama.setSmallText();
                                         printama.printTextlnBold(NameCompany, Printama.CENTER);
                                         printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
@@ -517,7 +517,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                     case "98" :
                                     case "99" :
                                         printama.printTextln("                 ", Printama.CENTER);
-                                        printama.printImage(logoRobles, 200);
+                                        printama.printImage(logoRobles, 400);
                                         printama.setSmallText();
                                         printama.printTextlnBold(NameCompany, Printama.CENTER);
                                         printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
@@ -857,6 +857,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                 printama.feedPaper();
                                 printama.close();
+                                printama.cutPaper();
 
                             }, this::showToast);
                     }

@@ -89,7 +89,7 @@ class PrinterUtil {
         }
     }
 
-    private boolean printUnicode(byte[] data) {
+    boolean printUnicode(byte[] data) {
         try {
             btOutputStream.write(data);
             return true;

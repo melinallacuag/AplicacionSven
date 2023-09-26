@@ -30,8 +30,8 @@
             android:paddingEnd="8sp">
 
             <ImageView
-                android:layout_width="150px"
-                android:layout_height="125px"
+                android:layout_width="150sp"
+                android:layout_height="60sp"
                 android:layout_gravity="center"
                 android:src="@drawable/logoprincipal"
                 android:id="@+id/LogoCierreX"/>
