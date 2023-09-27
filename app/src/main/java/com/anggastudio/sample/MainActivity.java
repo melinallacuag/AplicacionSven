@@ -1,7 +1,9 @@
 package com.anggastudio.sample;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,8 +13,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.anggastudio.printama.Printama;
 import com.google.zxing.BarcodeFormat;
@@ -22,22 +27,20 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.btn_printer_settings).setOnClickListener(v -> showPrinterList());
 
-        getSavedPrinter();
-    }
-
-    private void getSavedPrinter() {
-        BluetoothDevice connectedPrinter = Printama.with(this).getConnectedPrinter();
-        if (connectedPrinter != null) {
-            TextView connectedTo = findViewById(R.id.tv_printer_info);
-            String text = "Connected to : " + connectedPrinter.getName();
-            connectedTo.setText(text);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.BLUETOOTH_CONNECT}, REQUEST_BLUETOOTH_PERMISSION);
+        } else {
+            getSavedPrinter();
         }
+
     }
 
     private void showPrinterList() {
@@ -46,9 +49,35 @@ public class MainActivity extends AppCompatActivity {
             TextView connectedTo = findViewById(R.id.tv_printer_info);
             String text = "Connected to : " + printerName;
             connectedTo.setText(text);
+            if (!printerName.contains("failed")) {
+                findViewById(R.id.btn_printer_test).setVisibility(View.VISIBLE);
+                findViewById(R.id.btn_printer_test).setOnClickListener(v -> testPrinter());
+            }
         });
     }
 
+    private void testPrinter() {
+        Printama.with(this).printTest();
+    }
+
+    private void getSavedPrinter() {
+        BluetoothDevice connectedPrinter = Printama.with(this).getConnectedPrinter();
+        if (connectedPrinter != null) {
+            TextView connectedTo = findViewById(R.id.tv_printer_info);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return;
+            }
+            String text = "Connected to : " + connectedPrinter.getName();
+            connectedTo.setText(text);
+        }
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -67,6 +96,5 @@ public class MainActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
-
 
 }
