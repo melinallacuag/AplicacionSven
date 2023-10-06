@@ -40,7 +40,8 @@ import retrofit2.http.Path;
 public interface APIService {
 
     /**
-     * User
+     * @Users
+     * @Conseguir el identificador "userID" - "05070608"
      */
     @GET("api/users/listado")
     Call<List<Users>> getUsers();
@@ -48,9 +49,9 @@ public interface APIService {
     @GET("api/users/listado/{id}")
     Call<List<Users>> findUsers(@Path("id") String id);
 
-
     /**
-     * Company
+     * @Company
+     * @Conseguir el identificador "companyID"
      */
     @GET("api/company/listado")
     Call<List<Company>> getCompany();
@@ -58,9 +59,9 @@ public interface APIService {
     @GET("api/company/listado/{id}")
     Call<List<Company>> findCompany(@Path("id") Integer id);
 
-
     /**
-     * Terminal
+     * @Terminal
+     * @Conseguir el ifentificador "imei"
      */
     @GET("api/terminal/listado")
     Call<List<Terminal>> getTerminal();
@@ -68,9 +69,9 @@ public interface APIService {
     @GET("api/terminal/listado/{id}")
     Call<List<Terminal>> findTerminal(@Path("id") String id);
 
-
     /**
-     * Lados
+     * @Lados
+     * @Conseguir el identificador "terminalID"
      */
     @GET("api/lados/listado")
     Call<List<Lados>> getLados();
@@ -78,9 +79,9 @@ public interface APIService {
     @GET("api/lados/listado/{id}")
     Call<List<Lados>> findLados(@Path("id") String id);
 
-
     /**
-     * Manguera
+     * @Manguera
+     * @Guardar_ListadoMangueras
      */
     @GET("api/picos/listado")
     Call<List<Mangueras>> getMangueras();
@@ -91,9 +92,8 @@ public interface APIService {
     @POST("api/picos/guardar")
     Call<Mangueras> postMangueras(@Body Mangueras mangueras);
 
-
     /**
-     * Cliente RUC - DNI
+     * @Cliente RUC - DNI
      */
     @GET("api/cliente/listado")
     Call<List<LClientes>> getCliente();
@@ -113,23 +113,20 @@ public interface APIService {
     @GET("api/cliente/listado/RUC/{id}")
     Call<List<LClientes>> findClienteRUC(@Path("id") String id);
 
-
     /**
-     * Detalle de la Venta
+     * @Detalle de la Venta
      */
     @GET("api/detalleventa/listado/{id}")
     Call<List<DetalleVenta>> findDetalleVenta(@Path("id") String id);
 
-
     /**
-     * VentaCA
+     * @VentaCA
      */
     @POST("api/ventaca/guardar")
     Call<VentaCA> postVentaCA(@Body VentaCA ventaCA);
 
-
     /**
-     * Optran
+     * @Optran
      */
     @GET("api/optran/listado/{id}")
     Call<List<Optran>> findOptran(@Path("id") String id);

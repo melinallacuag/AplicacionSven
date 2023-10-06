@@ -80,6 +80,7 @@ import retrofit2.Response;
 public class CierreXFragment extends Fragment {
 
     private APIService mAPIService;
+    private NFCUtil nfcUtil;
 
     TextView TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
@@ -115,8 +116,6 @@ public class CierreXFragment extends Fragment {
     ImageView logoCierreX;
 
     Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal;
-
-    private NFCUtil nfcUtil;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -156,9 +155,9 @@ public class CierreXFragment extends Fragment {
         GranTotal           = view.findViewById(R.id.GranTotal);
         GranVendedorTotal   = view.findViewById(R.id.GranVendedorTotal);
 
-        imprimirCierreX = view.findViewById(R.id.imprimircierrex);
+        imprimirCierreX     = view.findViewById(R.id.imprimircierrex);
 
-        logoCierreX = view.findViewById(R.id.LogoCierreX);
+        logoCierreX         = view.findViewById(R.id.LogoCierreX);
 
         /** Mostrar Alerta - Sino tiene ninguna venta pendiente */
         modalAlerta = new Dialog(getContext());
@@ -182,7 +181,9 @@ public class CierreXFragment extends Fragment {
         SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String FechaHoraImpresion    = formatdate.format(calendarprint.getTime());
 
-        /** Logo de la Empresa*/
+        /**
+         * @MOSTRAR:LogoEmpresa
+         */
         File file = new File("/storage/emulated/0/appSven/logo.jpg");
         String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
         if(!file.exists()){
@@ -616,7 +617,6 @@ public class CierreXFragment extends Fragment {
         });
 
     }
-
 
     private void cierrex() {
 

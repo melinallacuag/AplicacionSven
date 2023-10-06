@@ -36,6 +36,7 @@ public class StrUtil {
                 .replace('Ú', 'U')
                 .replace('Ů', 'U')
                 .replace('Ý', 'Y')
-                .replace('Ž', 'Z');
+                .replace('Ž', 'Z')
+                .replace('’', ' ');
     }
 }

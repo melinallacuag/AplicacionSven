@@ -52,11 +52,12 @@
         </LinearLayout>
 
         <com.google.android.material.imageview.ShapeableImageView
-            android:layout_width="match_parent"
+            android:layout_width="120sp"
             android:layout_height="120sp"
-            android:src="@drawable/logo"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logoprincipal"
             android:id="@+id/logo_dashboard"
-            android:layout_weight="1" />
+            app:shapeAppearanceOverlay="@style/roudperfil" />
 
     </LinearLayout>
 

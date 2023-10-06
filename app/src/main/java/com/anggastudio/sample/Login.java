@@ -1,67 +1,33 @@
 package com.anggastudio.sample;
-
-import static androidx.core.content.ContentProviderCompat.requireContext;
-import static java.security.AccessController.getContext;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.nfc.NfcAdapter;
-import android.nfc.tech.IsoDep;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcA;
-import android.nfc.tech.NfcB;
-import android.nfc.tech.NfcF;
-import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
-import com.anggastudio.sample.Adapter.LadosAdapter;
-import com.anggastudio.sample.Adapter.ListaComprobanteAdapter;
-import com.anggastudio.sample.Adapter.TipoPagoAdapter;
-import com.anggastudio.sample.Adapter.VContometroAdapter;
-import com.anggastudio.sample.Adapter.VProductoAdapter;
-import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
-import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
-import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
-import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
-import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
-import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
-import com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Login extends AppCompatActivity{
+
+    private APIService mAPIService;
+    private NFCUtil nfcUtil;
 
     ImageButton configuracion;
     Button btniniciar;
@@ -73,18 +39,15 @@ public class Login extends AppCompatActivity{
     List<Users> usersList;
     List<Terminal> terminalList;
     List<Company> companyList;
-
     List<Setting> settingList;
-
-    private APIService mAPIService;
-
-    private NFCUtil nfcUtil;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         mAPIService = GlobalInfo.getAPIService();
+
         nfcUtil = new NFCUtil(this);
 
         btniniciar      = findViewById(R.id.btnlogin);
@@ -92,12 +55,12 @@ public class Login extends AppCompatActivity{
         inputContraseña = findViewById(R.id.contraseña);
         alertuser       = findViewById(R.id.textusuario);
         alertpassword   = findViewById(R.id.textcontraseña);
+        configuracion   = findViewById(R.id.btnconfiguracion);
+        imeii           = findViewById(R.id.imei);
 
-
-
-        /*** Boton par configurar la impresión bluetooth.*/
-
-        configuracion = findViewById(R.id.btnconfiguracion);
+        /**
+         *  @CONFIGURAR:ImpresoraBluetooth
+         */
         configuracion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -105,12 +68,15 @@ public class Login extends AppCompatActivity{
             }
         });
 
-        /** Detectar el IMEI*/
-        imeii = findViewById(R.id.imei);
+        /**
+         * @OBTENER:Imei
+         */
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
-
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
+        /**
+         * @INGRESAR:Login
+         */
         btniniciar.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -140,16 +106,21 @@ public class Login extends AppCompatActivity{
             }
         });
 
-        /** Mostrar el listado de Datos*/
+        /**
+         * @LISTADO:SpinnerTipoPago
+         */
         getTipoPago();
 
+        /**
+         * @OBTENER_APISERVICE:Terminal
+         */
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
 
     }
 
-
-
-    /** API SERVICE - Usuarios */
+    /**
+     * @APISERVICE:Users
+     */
     private void findUsers(String id){
 
         Call<List<Users>> call = mAPIService.findUsers(id);
@@ -172,9 +143,9 @@ public class Login extends AppCompatActivity{
                         Users user = usersList.get(0);
 
                         inputUsuario.setText(user.getUserID());
-                        GlobalInfo.getuserID10 = user.getUserID();
-                        GlobalInfo.getuserName10 = user.getNames();
-                        GlobalInfo.getuserPass10 = user.getPassword();
+                        GlobalInfo.getuserID10     = user.getUserID();
+                        GlobalInfo.getuserName10   = user.getNames();
+                        GlobalInfo.getuserPass10   = user.getPassword();
                         GlobalInfo.getuserLocked10 = user.getLocked();
 
                         if (GlobalInfo.getuserLocked10 == false) {
@@ -182,7 +153,7 @@ public class Login extends AppCompatActivity{
                         }else {
 
                             String getName = usuarioUser.trim();
-                            String getPass = checkpassword(contraseñaUser.trim());
+                            String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
 
                             if(getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)){
                                 Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
@@ -210,7 +181,9 @@ public class Login extends AppCompatActivity{
 
     }
 
-    /** API SERVICE - Terminal */
+    /**
+     * @APISERVICE:Terminal
+     */
     private void findTerminal(String id) {
 
         Call<List<Terminal>> call = mAPIService.findTerminal(id);
@@ -275,7 +248,9 @@ public class Login extends AppCompatActivity{
 
     }
 
-    /** API SERVICE - Empresa */
+    /**
+     *  @APISERVICE:Empresa
+     */
     private void findCompany(Integer id){
 
         Call<List<Company>> call = mAPIService.findCompany(id);
@@ -318,7 +293,9 @@ public class Login extends AppCompatActivity{
         });
     }
 
-    /** API SERVICE - Lados */
+    /**
+     * @APISERVICE:Lados
+     */
     private void findLados(String id) {
 
         Call<List<Lados>> call = mAPIService.findLados(id);
@@ -349,7 +326,9 @@ public class Login extends AppCompatActivity{
 
     }
 
-    /** API SERVICE - Setting */
+    /**
+     * @APISERVICE:Setting
+     */
     private void findSetting(Integer id){
 
         Call<List<Setting>> call = mAPIService.findSetting(id);
@@ -400,7 +379,9 @@ public class Login extends AppCompatActivity{
 
     }
 
-    /** API SERVICE - Card Detalle de Ventas */
+    /**
+     * @APISERVICE:DetalleVentas
+     */
     private void findDetalleVenta(String id){
 
         Call<List<DetalleVenta>> call = mAPIService.findDetalleVenta(id);
@@ -429,7 +410,9 @@ public class Login extends AppCompatActivity{
         });
     }
 
-    /**  API SERVICE - Mangueras */
+    /**
+     * @APISERVICE:Mangueras
+     * */
     private void getManguerasByTerminal(String TerminalID){
 
         Call<List<Mangueras>> call = mAPIService.findManguerasByTerminal(TerminalID);
@@ -458,67 +441,9 @@ public class Login extends AppCompatActivity{
         });
     }
 
-    /** Listado de Clientes con DNI */
-    private void getClienteDNI(){
-
-        Call<List<LClientes>> call = mAPIService.getClienteDNI();
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    GlobalInfo.getlclientesList10 = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** Listado de Clientes con DNI */
-    private void getClienteRUC(){
-
-        Call<List<LClientes>> call = mAPIService.getClienteRUC();
-
-        call.enqueue(new Callback<List<LClientes>>() {
-            @Override
-            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
-                try {
-
-                    if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    GlobalInfo.getlclientesList10 = response.body();
-
-
-                }catch (Exception ex){
-                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<LClientes>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    /** Spinner de Tipo de Pago */
+    /**
+     * @APISERVICE:SpinnerTipoPago
+     */
     private void getTipoPago(){
 
         Call<List<TipoPago>> call = mAPIService.getTipoPago();
@@ -547,63 +472,9 @@ public class Login extends AppCompatActivity{
         });
     }
 
-    /** Hash de la Contraseña */
-    private String checkpassword(String clave){
-
-        String lResult = "";
-        String lasc1 = "";
-
-        int lValor = 0;
-        int lTam = 0;
-        int lCar = 0;
-        int lasc2 = 0;
-
-        lTam = clave.length();
-
-        for(int lcont = 1 ; lcont <= lTam; lcont += 1){
-
-            switch (lcont){
-                case 1:
-                    lCar = 1;
-                    lasc1 = clave.substring(0,1);
-                    lasc2 = lasc1.charAt(0);
-                    break;
-                case 2:
-                    lCar = 3;
-                    lasc1 = clave.substring(1,2);
-                    lasc2 = lasc1.charAt(0);
-                    break;
-                case 3:
-                    lCar = 5;
-                    lasc1 = clave.substring(2,3);
-                    lasc2 = lasc1.charAt(0);
-                    break;
-                case 4:
-                    lCar = 7;
-                    lasc1 = clave.substring(3,4);
-                    lasc2 = lasc1.charAt(0);
-                    break;
-                case 5:
-                    lCar = 9;
-                    lasc1 = clave.substring(4,5);
-                    lasc2 = lasc1.charAt(0);
-                    break;
-                case 6:
-                    lCar = 11;
-                    lasc1 = clave.substring(5,6);
-                    lasc2 = lasc1.charAt(0);
-                    break;
-            }
-
-            lValor = lValor + lasc2 * lCar;
-
-        }
-
-        lResult = String.valueOf(lValor);
-
-        return lResult;
-    }
-
+    /**
+     * @METODOS:CicloVida
+     */
     @Override
     public void onResume() {
         super.onResume();

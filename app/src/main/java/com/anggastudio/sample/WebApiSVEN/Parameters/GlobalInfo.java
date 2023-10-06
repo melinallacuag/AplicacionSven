@@ -54,7 +54,6 @@ public class GlobalInfo {
     public  static List<VProducto> getvProductoList10;
     public  static List<VTipoPago> getvTipoPagoList10;
     public static  List<ClientePrecio>  getclientePrecioList10;
-
     /**
      * Cliente precio
      */
@@ -277,6 +276,9 @@ public class GlobalInfo {
     public static Integer  getSettingTurno10;
     public static Integer  getSettingRango110;
     public static Integer  getSettingRango210;
+
+
+    public static String getnfcId10 = String.valueOf(-1);
 
     /**
      * URL - APIService

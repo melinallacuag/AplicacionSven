@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="10sp"
+        android:minWidth="600sp"
+        android:paddingEnd="10sp"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        app:layout_constraintCircleRadius="@dimen/cardview_default_radius"
+        android:backgroundTint="#FFFFFF"
+        android:background="@drawable/cardmodal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/nunito_black"
+            android:text="CLIENTES CON DESCUENTOS"
+            android:textAlignment="center"
+            android:textColor="@color/blue"
+            android:textSize="18sp"/>
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/btnBuscadorClienteRZ"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapCharacters"
+            android:layout_marginTop="5sp"
+            app:queryHint="Buscar Clientes"
+            android:background="@drawable/input_border" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardtransaccion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="3sp"
+            android:backgroundTint="@color/colorPrimaryBtn"
+            app:cardCornerRadius="10dp">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="110sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="NFC"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="50sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="Producto"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="70sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="Cliente ID"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="120sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="Razon Social"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="50sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="T. Cliente"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="80sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:gravity="center"
+                        android:text="Mto Descuento"
+                        android:textColor="@color/white"
+                        android:textSize="8sp" />
+
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="5sp"
+            android:layout_height="300sp"
+            android:orientation="vertical">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerLClienteNFC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnCancelarLCliente"
+                android:layout_width="wrap_content"
+                android:layout_height="50sp"
+                android:text="@string/btn_cancelar"
+                android:fontFamily="@font/nunito_extrabold"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:backgroundTint="@color/colorDanger"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

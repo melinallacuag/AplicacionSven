@@ -1,20 +1,9 @@
 package com.anggastudio.sample.Fragment;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.nfc.NfcAdapter;
-import android.nfc.tech.IsoDep;
-import android.nfc.tech.MifareClassic;
-import android.nfc.tech.MifareUltralight;
-import android.nfc.tech.Ndef;
-import android.nfc.tech.NfcA;
-import android.nfc.tech.NfcB;
-import android.nfc.tech.NfcF;
-import android.nfc.tech.NfcV;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -24,7 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
@@ -33,41 +21,35 @@ import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
-import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
-import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
-import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.imageview.ShapeableImageView;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class DasboardFragment extends Fragment{
 
     private APIService mAPIService;
+    private NFCUtil nfcUtil;
 
     TextView nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
 
     CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
 
-    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir,btn_CancelarI,btn_AceptarI;
+    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir,btn_CancelarIngreso,btn_AceptarIngreso;
 
-    Dialog modalCambioTurno,modalInicioDia,modalAlerta,modalSalir,modalAlertaDiaActual,
+    Dialog modalCambioTurno,modalInicioDia,modalAlertaVentaPendiente,modalSalir,modalAlertaDiaActual,
             modalAlertaCTurnoActual,modalAlertaIngreso,modalInicioDiaGenerado;
 
     ShapeableImageView img_Logo;
 
-    private NFCUtil nfcUtil;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,59 +68,65 @@ public class DasboardFragment extends Fragment{
         fecha_inicio_grifero  = view.findViewById(R.id.fecha_inicio);
         turno_grifero         = view.findViewById(R.id.turno_grifero);
 
-        nombre_empresa    = view.findViewById(R.id.nombre_empresa);
-        sucursal_empresa  = view.findViewById(R.id.sucursal_empresa);
-        slogan_empresa    = view.findViewById(R.id.slogan_empresa);
+        nombre_empresa        = view.findViewById(R.id.nombre_empresa);
+        sucursal_empresa      = view.findViewById(R.id.sucursal_empresa);
+        slogan_empresa        = view.findViewById(R.id.slogan_empresa);
 
-        btn_Venta         = view.findViewById(R.id.btnVenta);
-        btn_Cierrex       = view.findViewById(R.id.btnCierreX);
-        btn_Cambioturno   = view.findViewById(R.id.btnCambioTurno);
-        btn_Iniciodia     = view.findViewById(R.id.btnInicioDia);
-        btn_Salir         = view.findViewById(R.id.btnSalir);
-        img_Logo          = view.findViewById(R.id.logo_dashboard);
+        btn_Venta             = view.findViewById(R.id.btnVenta);
+        btn_Cierrex           = view.findViewById(R.id.btnCierreX);
+        btn_Cambioturno       = view.findViewById(R.id.btnCambioTurno);
+        btn_Iniciodia         = view.findViewById(R.id.btnInicioDia);
+        btn_Salir             = view.findViewById(R.id.btnSalir);
+        img_Logo              = view.findViewById(R.id.logo_dashboard);
 
+        /**
+         * @OBTENER:DatoGerealUserTerminal
+         */
         nombre_grifero.setText(GlobalInfo.getuserName10);
         fecha_inicio_grifero.setText("FECHA : " + GlobalInfo.getterminalFecha10);
-        turno_grifero.setText("TURNO : " + String.valueOf(GlobalInfo.getterminalTurno10));
+        turno_grifero.setText("TURNO : " + GlobalInfo.getterminalTurno10);
 
-        /** Logo de la Empresa */
-        File file = new File("/storage/emulated/0/appSven/logo.jpg");
-        String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+        /**
+         * @MOSTRAR:LogoEmpresa_Dasboard
+         */
+        File file = new File("/storage/emulated/0/appSven/logodasboard.jpg");
+        String rutaImagen="/storage/emulated/0/appSven/logodasboard.jpg";
         if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+            rutaImagen = "/storage/emulated/0/appSven/logodasboard.png";
         }
         Uri logoUri = Uri.parse("file://" + rutaImagen);
         img_Logo.setImageURI(logoUri);
 
-        /** Datos de la Compania*/
+        /**
+         * @OBTENER:DatoGeneralCompania
+         */
         String DirSucursal = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
-
         DirSucursal = DirSucursal.replace("-","");
-
         nombre_empresa.setText(GlobalInfo.getNameCompany10);
         sucursal_empresa.setText(DirSucursal);
         slogan_empresa.setText(GlobalInfo.getSloganCompany10);
 
-        /** Mostrar Alerta - Inicio de Día - Al ingresar a la operación de venta */
+        /**
+         * @MODAL:MostrarAlertaInicioDía_Ingresar
+         */
         modalAlertaIngreso = new Dialog(getContext());
         modalAlertaIngreso.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlertaIngreso.setContentView(R.layout.alerta_iniciodia_ingreso);
         modalAlertaIngreso.setCancelable(true);
 
-        /** Ir a la Pantalla - Venta */
+        /**
+         * @PANTALLA:Venta
+         */
         btn_Venta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty()){
+                if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty() ){
 
                     FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
                     FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
-                    int fragmentContainerVenta = R.id.fragment_container;
-                    VentaFragment ventaFragment = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                        ventaFragment = new VentaFragment();
-                    }
+                    int fragmentContainerVenta  = R.id.fragment_container;
+                    VentaFragment ventaFragment = new VentaFragment();
 
                     fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
                     fragmentTransactionVenta.addToBackStack(null);
@@ -148,27 +136,24 @@ public class DasboardFragment extends Fragment{
 
                     modalAlertaIngreso.show();
 
-                    btn_CancelarI     = modalAlertaIngreso.findViewById(R.id.btnCancelarIngreso);
-                    btn_AceptarI      = modalAlertaIngreso.findViewById(R.id.btnAceptarIngreso);
+                    btn_CancelarIngreso  = modalAlertaIngreso.findViewById(R.id.btnCancelarIngreso);
+                    btn_AceptarIngreso   = modalAlertaIngreso.findViewById(R.id.btnAceptarIngreso);
 
-                    btn_CancelarI.setOnClickListener(new View.OnClickListener() {
+                    btn_CancelarIngreso.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             modalAlertaIngreso.dismiss();
                         }
                     });
 
-                    btn_AceptarI.setOnClickListener(new View.OnClickListener() {
+                    btn_AceptarIngreso.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
 
                             FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
                             FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
-                            int fragmentContainerVenta = R.id.fragment_container;
-                            VentaFragment ventaFragment = null;
-                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                                ventaFragment = new VentaFragment();
-                            }
+                            int fragmentContainerVenta  = R.id.fragment_container;
+                            VentaFragment ventaFragment = new VentaFragment();
 
                             fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
                             fragmentTransactionVenta.addToBackStack(null);
@@ -182,14 +167,16 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        /** Ir a la Pantalla - Cierre X */
+        /**
+         * @PANTALLA:CierreX
+         */
         btn_Cierrex.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 FragmentManager fragmentManagerCierreX = getActivity().getSupportFragmentManager();
                 FragmentTransaction fragmentTransactionCierreX = fragmentManagerCierreX.beginTransaction();
-                int fragmentContainerCierreX = R.id.fragment_container;
+                int fragmentContainerCierreX    = R.id.fragment_container;
                 CierreXFragment cierreXFragment = new CierreXFragment();
 
                 fragmentTransactionCierreX.replace(fragmentContainerCierreX, cierreXFragment);
@@ -199,34 +186,41 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        /** Mostrar Alerta - Si tiene ninguna venta pendiente */
-        modalAlerta = new Dialog(getContext());
-        modalAlerta.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        modalAlerta.setContentView(R.layout.cambioturno_inciodia_alerta);
-        modalAlerta.setCancelable(true);
+        /**
+         * @MODAL:MostrarAlerta_VentaPendiente
+         */
+        modalAlertaVentaPendiente = new Dialog(getContext());
+        modalAlertaVentaPendiente.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalAlertaVentaPendiente.setContentView(R.layout.cambioturno_inciodia_alerta);
+        modalAlertaVentaPendiente.setCancelable(true);
 
-        /** Lista de Turno - Filtrado por Turno*/
-        getSettingTurno();
-
-        /** Mostrar Modal - Inicio de Día */
+        /**
+         * @MODAL:MostrarAlerta_InicioDíaGenerado
+         */
         modalInicioDiaGenerado = new Dialog(getContext());
         modalInicioDiaGenerado.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalInicioDiaGenerado.setContentView(R.layout.alerta_cdia);
         modalInicioDiaGenerado.setCancelable(true);
 
-        /** Mostrar Alerta Inicio Día- Por fuera de fecha */
+        /**
+         * @MODAL:MostrarAlerta_InicioDíaFueraFecha
+         */
         modalAlertaDiaActual = new Dialog(getContext());
         modalAlertaDiaActual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlertaDiaActual.setContentView(R.layout.alerta_iniciodia_fechaactual);
         modalAlertaDiaActual.setCancelable(true);
 
-        /** Mostrar Alerta Cambio Turno- Por fuera de fecha */
+        /**
+         * @MODAL:MostrarAlerta_CambioTurnoFueraFecha
+         */
         modalAlertaCTurnoActual = new Dialog(getContext());
         modalAlertaCTurnoActual.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalAlertaCTurnoActual.setContentView(R.layout.alerta_cambioturno_fechaactual);
         modalAlertaCTurnoActual.setCancelable(true);
 
-        /** Mostrar Modal - Cambio de Turno */
+        /**
+         * @MODAL:Mostrar_GenerarCambioTurno
+         */
         modalCambioTurno = new Dialog(getContext());
         modalCambioTurno.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalCambioTurno.setContentView(R.layout.fragment_cambio_turno);
@@ -324,7 +318,7 @@ public class DasboardFragment extends Fragment{
                             @Override
                             public void onClick(View v) {
 
-                                modalAlerta.show();
+                                modalAlertaVentaPendiente.show();
 
                                 try {
                                     Intent intent = new Intent(getContext(), Login.class);
@@ -350,7 +344,9 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        /** Mostrar Modal - Inicio de Día */
+        /**
+         * @MODAL:Mostrar_GenerarInicioDía
+         */
         modalInicioDia = new Dialog(getContext());
         modalInicioDia.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalInicioDia.setContentView(R.layout.fragment_inicio_dia);
@@ -423,7 +419,7 @@ public class DasboardFragment extends Fragment{
                                     @Override
                                     public void onClick(View v) {
 
-                                        modalAlerta.show();
+                                        modalAlertaVentaPendiente.show();
 
                                         try {
                                             Intent intent = new Intent(getContext(), Login.class);
@@ -452,7 +448,9 @@ public class DasboardFragment extends Fragment{
 
         });
 
-        /** Mostrar Modal - Salir */
+        /**
+         * @MODAL:MostrarModalSalir
+         * */
         modalSalir = new Dialog(getContext());
         modalSalir.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         modalSalir.setContentView(R.layout.fragment_salir);
@@ -494,14 +492,23 @@ public class DasboardFragment extends Fragment{
             }
         });
 
-        /** Obtener - Inicio de Día  **/
+        /**
+         * @OBTENER:CambioDía
+         */
         findCDia(GlobalInfo.getterminalID10);
+
+        /**
+         * @OBTENER:ListadoTurno
+         */
+        getSettingTurno();
 
         return view;
 
     }
 
-    /** API SERVICE - Inicio de Día*/
+    /**
+     * @APISERVICE:InicioDía
+     */
     private void findCDia(String terminalid){
         Call<List<CDia>> call = mAPIService.findCDia(terminalid);
 
@@ -528,7 +535,9 @@ public class DasboardFragment extends Fragment{
         });
     }
 
-    /** API SERVICE - Setting Turno */
+    /**
+     * @APISERVICE:SettingTurno
+     */
     private void getSettingTurno(){
 
         Call<List<SettingTurno>> call = mAPIService.getSettingTurno();
@@ -557,7 +566,9 @@ public class DasboardFragment extends Fragment{
         });
     }
 
-    /** API SERVICE - Optran Cambio de Turno*/
+    /**
+     * @APISERVICE:OptranCambioTurno
+     */
     private void findOptranTurno(String id){
 
         Call<List<Optran>> call = mAPIService.findOptran(id);
@@ -582,7 +593,7 @@ public class DasboardFragment extends Fragment{
                     }
 
                     if (GlobalInfo.getpase10 == true){
-                        modalAlerta.show();
+                        modalAlertaVentaPendiente.show();
                         modalCambioTurno.dismiss();
                         return;
                     }
@@ -602,7 +613,9 @@ public class DasboardFragment extends Fragment{
 
     }
 
-    /** API SERVICE - Optran Inicio de Día */
+    /**
+     * @APISERVICE:OptranInicioDía
+     */
     private void findOptranDia(String id){
 
         Call<List<Optran>> call = mAPIService.findOptran(id);
@@ -627,7 +640,7 @@ public class DasboardFragment extends Fragment{
                     }
 
                     if (GlobalInfo.getpase10 == true){
-                        modalAlerta.show();
+                        modalAlertaVentaPendiente.show();
                         modalInicioDia.dismiss();
                         return;
                     }
@@ -645,7 +658,9 @@ public class DasboardFragment extends Fragment{
 
     }
 
-    /** Cerrar - Turno */
+    /**
+     * @APISERVICE:CerrarTurno
+     */
     private void cerrarTurno(String _terminalID){
 
         Call<CTurno> call = mAPIService.postCTurno(_terminalID);
@@ -666,7 +681,9 @@ public class DasboardFragment extends Fragment{
         });
     }
 
-    /** Inicio - Día */
+    /**
+     * @APISERVICE:InicioDía
+     */
     private void iniciarDia(String _terminalID){
 
         Call<CDia> call = mAPIService.postCDia(_terminalID);
@@ -688,6 +705,9 @@ public class DasboardFragment extends Fragment{
 
     }
 
+    /**
+     * @METODOS:CicloVida
+     */
     @Override
     public void onResume() {
         super.onResume();
