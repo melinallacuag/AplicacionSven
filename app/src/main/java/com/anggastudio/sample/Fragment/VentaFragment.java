@@ -471,6 +471,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnAgregarBoleta  = modalBoleta.findViewById(R.id.btnAgregarBoleta);
                 buscarListNFC     = modalBoleta.findViewById(R.id.buscarListNFC);
 
+                inputDNI.setEnabled(true);
+                inputNombre.setEnabled(true);
+                alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
 
                 /**
                  * @MODAL:LoginDescuentoNFC
@@ -702,10 +706,18 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         findClienteDNI(campoDNI);
 
-                            alertDNI.setErrorEnabled(false);
+                        alertDNI.setErrorEnabled(false);
 
-                            inputNombre.getText().clear();
-                            inputDireccion.getText().clear();
+                        inputNombre.getText().clear();
+                        inputDireccion.getText().clear();
+                        inputNFC.getText().clear();
+
+                        inputDNI.setEnabled(true);
+                        inputNombre.setEnabled(true);
+                        alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+
+
 
                     }
                 });
@@ -719,6 +731,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputPlaca.setText(GlobalInfo.getsettingNroPlaca10);
                         inputDNI.setText(GlobalInfo.getsettingClienteID10);
                         inputNombre.setText(GlobalInfo.getsettingClienteRZ10);
+
+                        inputNFC.getText().clear();
+
+                        inputDNI.setEnabled(true);
+                        inputNombre.setEnabled(true);
+                        alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
                     }
                 });
 
@@ -945,6 +964,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnCancelarFactura = modalFactura.findViewById(R.id.btnCancelarFactura);
                 btnAgregarFactura  = modalFactura.findViewById(R.id.btnAgregarFactura);
                 buscarListNFC      = modalFactura.findViewById(R.id.buscarListNFC);
+
+                inputRUC.setEnabled(true);
+                inputRazSocial.setEnabled(true);
+                alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
 
                 /**
                  * @MODAL:LoginDescuentoNFC
@@ -1179,6 +1203,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         inputRazSocial.getText().clear();
                         inputDireccion.getText().clear();
+                        inputNFC.getText().clear();
+
+                        inputRUC.setEnabled(true);
+                        inputRazSocial.setEnabled(true);
+                        alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
 
                     }
                 });
@@ -2145,6 +2175,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
                                 inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
                                 inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+
+                                inputDNI.setEnabled(false);
+                                inputNombre.setEnabled(false);
+
+                                alertDNI.setBoxBackgroundColorResource(R.color.colornew);
+                                alertNombre.setBoxBackgroundColorResource(R.color.colornew);
+
                             }else{
                                 Toast.makeText(getContext(), "El NFC esta registrado con un RUC", Toast.LENGTH_SHORT).show();
 
@@ -2152,6 +2189,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputPlaca.setText("000-0000");
                                 inputDNI.getText().clear();
                                 inputNombre.getText().clear();
+                                inputDNI.setEnabled(true);
+                                inputNombre.setEnabled(true);
+                                alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                                alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
                             }
 
                     } else {
@@ -2209,6 +2250,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
                             inputRUC.setText(GlobalInfo.getClienteIDPrecio10);
                             inputRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
+
+                            inputRUC.setEnabled(false);
+                            inputRazSocial.setEnabled(false);
+
+                            alertRUC.setBoxBackgroundColorResource(R.color.colornew);
+                            alertRazSocial.setBoxBackgroundColorResource(R.color.colornew);
                         }else{
                             Toast.makeText(getContext(), "El NFC esta registrado con un DNI", Toast.LENGTH_SHORT).show();
 
@@ -2216,6 +2263,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputPlaca.setText("000-0000");
                             inputRUC.getText().clear();
                             inputRazSocial.getText().clear();
+
+                            inputRUC.setEnabled(true);
+                            inputRazSocial.setEnabled(true);
+                            alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
                         }
 
                     } else {

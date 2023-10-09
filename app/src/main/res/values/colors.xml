@@ -32,6 +32,8 @@
 
     <!-- TODO: Color de los Menus -->
     <color name="colorMenu">#001E8A</color>
+    <color name="colornew">#E4E4E4</color>
+    <color name="transparentenew">#00000000</color>
 
 
 </resources>
