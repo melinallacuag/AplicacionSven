@@ -9,6 +9,7 @@ public class Correlativo {
     private String  serie;
     private String  numero;
     private Double  montoDescuento;
+    private String  documentoVenta;
 
     public String getTerminalID() {
         return terminalID;
@@ -62,4 +63,11 @@ public class Correlativo {
 
     public void setMontoDescuento(Double montoDescuento) { this.montoDescuento = montoDescuento; }
 
+    public String getDocumentoVenta() {
+        return documentoVenta;
+    }
+
+    public void setDocumentoVenta(String documentoVenta) {
+        this.documentoVenta = documentoVenta;
+    }
 }

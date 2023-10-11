@@ -2328,7 +2328,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
             insertarDespacho();
 
-            timer.schedule(timerTask,3000,3000);
+            timer.schedule(timerTask, Long.parseLong(GlobalInfo.getsettingtimerAppVenta10), Long.parseLong(GlobalInfo.getsettingtimerAppVenta10));
             mIsTaskScheduled = true;
         }
 
@@ -2623,7 +2623,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                            mnobservacionPag, GlobalInfo.getoptranOperador10,
                                            mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
                                            GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
-                                           GlobalInfo.getoptranGalones10);
+                                           GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
 
                         for (DetalleVenta detalleVenta : GlobalInfo.getdetalleVentaList10) {
 
@@ -2678,9 +2678,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     Integer mnPagoID, Integer mnTarjetaCreditoID, String mnOperacionREF,
                                     String mnobservacionPag, String mnOperador, Double mnImpuesto,
                                     Double mnMontoSoles, Double mnMtoSaldoCredito, String mnRFID,
-                                    Double mnMtoTotal, String mnArticuloID, Double mnCantidad) {
+                                    Double mnMtoTotal, String mnArticuloID, Double mnCantidad, String mnTranID) {
 
-        Call<List<Correlativo>> call = mAPIService.findCorrelativo(imei, mnTipoDocumento, mnRFID, mnArticuloID);
+        Call<List<Correlativo>> call = mAPIService.findCorrelativo(imei, mnTipoDocumento, mnRFID, mnArticuloID, mnTranID);
 
         call.enqueue(new Callback<List<Correlativo>>() {
             @Override
@@ -2701,6 +2701,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         GlobalInfo.getcorrelativoSerie      = String.valueOf(correlativo.getSerie());
                         GlobalInfo.getcorrelativoNumero     = String.valueOf(correlativo.getNumero());
                         GlobalInfo.getcorrelativoMDescuento = correlativo.getMontoDescuento();
+                        GlobalInfo.getcorrelativoDocumentoVenta = correlativo.getDocumentoVenta();
+                    }
+
+                    if(!GlobalInfo.getcorrelativoDocumentoVenta.isEmpty()){
+                        return;
                     }
 
                     /** Consultando datos del DOCUMENTO-SERIE-CORRELATIVO*/
