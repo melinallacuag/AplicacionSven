@@ -706,14 +706,14 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         findClienteDNI(campoDNI);
 
-                        alertDNI.setErrorEnabled(false);
-
+                        inputPlaca.setText("000-0000");
+                        inputNFC.getText().clear();
                         inputNombre.getText().clear();
                         inputDireccion.getText().clear();
-                        inputNFC.getText().clear();
 
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
+                        alertDNI.setErrorEnabled(false);
                         alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                         alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
 
@@ -729,10 +729,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     @Override
                     public void onClick(View view) {
                         inputPlaca.setText(GlobalInfo.getsettingNroPlaca10);
+                        inputNFC.getText().clear();
                         inputDNI.setText(GlobalInfo.getsettingClienteID10);
                         inputNombre.setText(GlobalInfo.getsettingClienteRZ10);
-
-                        inputNFC.getText().clear();
+                        inputDireccion.getText().clear();
 
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
@@ -1201,9 +1201,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         alertRUC.setErrorEnabled(false);
 
+                        inputPlaca.setText("000-0000");
+                        inputNFC.getText().clear();
                         inputRazSocial.getText().clear();
                         inputDireccion.getText().clear();
-                        inputNFC.getText().clear();
 
                         inputRUC.setEnabled(true);
                         inputRazSocial.setEnabled(true);
@@ -2175,6 +2176,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
                                 inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
                                 inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+                                inputDireccion.getText().clear();
 
                                 inputDNI.setEnabled(false);
                                 inputNombre.setEnabled(false);
@@ -2189,6 +2191,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputPlaca.setText("000-0000");
                                 inputDNI.getText().clear();
                                 inputNombre.getText().clear();
+                                inputDireccion.getText().clear();
+
                                 inputDNI.setEnabled(true);
                                 inputNombre.setEnabled(true);
                                 alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
@@ -2198,6 +2202,15 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     } else {
                         Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
                         inputNFC.getText().clear();
+                        inputPlaca.setText("000-0000");
+                        inputDNI.getText().clear();
+                        inputNombre.getText().clear();
+                        inputDireccion.getText().clear();
+
+                        inputDNI.setEnabled(true);
+                        inputNombre.setEnabled(true);
+                        alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
                     }
 
                 } catch (Exception ex) {
@@ -2250,6 +2263,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
                             inputRUC.setText(GlobalInfo.getClienteIDPrecio10);
                             inputRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputDireccion.getText().clear();
 
                             inputRUC.setEnabled(false);
                             inputRazSocial.setEnabled(false);
@@ -2263,6 +2277,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputPlaca.setText("000-0000");
                             inputRUC.getText().clear();
                             inputRazSocial.getText().clear();
+                            inputDireccion.getText().clear();
 
                             inputRUC.setEnabled(true);
                             inputRazSocial.setEnabled(true);
@@ -2273,6 +2288,15 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     } else {
                         Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
                         inputNFC.getText().clear();
+                        inputPlaca.setText("000-0000");
+                        inputRUC.getText().clear();
+                        inputRazSocial.getText().clear();
+                        inputDireccion.getText().clear();
+
+                        inputRUC.setEnabled(true);
+                        inputRazSocial.setEnabled(true);
+                        alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
                     }
 
                 } catch (Exception ex) {
