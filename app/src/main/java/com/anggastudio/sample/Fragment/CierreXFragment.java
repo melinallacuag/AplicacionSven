@@ -786,7 +786,7 @@ public class CierreXFragment extends Fragment {
         /** Imprimir Cierre X**/
         Printama.with(getContext()).connect(printama -> {
             printama.printTextln("                 ", Printama.CENTER);
-            printama.printImage(logoRobles, 400);
+            printama.printImage(logoRobles, 200);
             printama.setSmallText();
             printama.printTextlnBold(NameCompany, Printama.CENTER);
             printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);

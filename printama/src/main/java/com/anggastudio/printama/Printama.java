@@ -210,6 +210,11 @@ public class Printama {
         util.printText("================================================");
     }
 
+    public void printDoubleDashedLines() {
+        util.setAlign(LEFT);
+        util.printText("======================================");
+    }
+
     public void addNewLine() {
         util.addNewLine();
     }
@@ -647,28 +652,28 @@ public class Printama {
         setBold();
         util.setAlign(align);
         printTextln(text);
-        setNormalText();
+        setSmallText();
     }
 
     public void printTextlnBold(String text, int align) {
         setBold();
         util.setAlign(align);
         printTextln(text);
-        setNormalText();
+        setSmallText();
     }
 
     public void printTextlnBold(String text) {
         setBold();
         text = text + "\n";
         util.printText(text);
-        setNormalText();
+        setSmallText();
     }
 
     // Tall
     public void printTextTall(String text) {
         setTall();
         printText(text, LEFT);
-        setNormalText();
+        setSmallText();
     }
 
     /**

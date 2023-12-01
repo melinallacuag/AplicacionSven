@@ -10,6 +10,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.anggastudio.printama.Printama;
+import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
@@ -28,6 +31,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
+    private String tipoPapelSeleccionado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +45,18 @@ public class MainActivity extends AppCompatActivity {
             getSavedPrinter();
         }
 
+        RadioGroup radioGroup = findViewById(R.id.radioFormaPago);
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            RadioButton radioButton = findViewById(checkedId);
+            String tipoPapel = String.valueOf(radioButton.getText());
+            GlobalInfo.getTipoPapel10 = tipoPapel;
+
+        });
+
     }
 
-    private void showPrinterList() {
+
+  private void showPrinterList() {
         Printama.showPrinterList(this, R.color.colorBlue, printerName -> {
             Toast.makeText(this, printerName, Toast.LENGTH_SHORT).show();
             TextView connectedTo = findViewById(R.id.tv_printer_info);
@@ -96,5 +109,6 @@ public class MainActivity extends AppCompatActivity {
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
+
 
 }

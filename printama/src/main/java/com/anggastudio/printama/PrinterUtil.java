@@ -33,9 +33,9 @@ class PrinterUtil {
     private static final byte[] ESC_ALIGN_LEFT = {0x1b, 'a', 0x00};
     private static final byte[] FEED_PAPER_AND_CUT = {0x1D, 0x56, 66, 0x00};
 
-    private static final byte[] SMALL = new byte[]{0x1b, 0x21, 0x00};
+    private static final byte[] SMALL = new byte[]{0x1b, 0x21, 0x01};
     private static final byte[] NORMAL = new byte[]{0x1B, 0x21, 0x11};
-    private static final byte[] BOLD = new byte[]{0x1B, 0x21, 0x08};
+    private static final byte[] BOLD = new byte[]{0x1b, 0x21, 0x09};
     private static final byte[] WIDE = new byte[]{0x1B, 0x21, 0x20};
     private static final byte[] TALL = new byte[]{0x1B, 0x21, 0x10};
     private static final byte[] UNDERLINE = new byte[]{0x1B, 0x21, (byte) 0x80};

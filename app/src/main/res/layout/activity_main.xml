@@ -94,4 +94,39 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tamaño de papel"/>
+
+    <RadioGroup
+        android:id="@+id/radioFormaPago"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/papelsizeone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="80mm"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="@color/gris"
+            android:textSize="14sp" />
+
+        <RadioButton
+            android:id="@+id/papelsizetwo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="58mm"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="@color/gris"
+            android:textSize="14sp" />
+
+    </RadioGroup>
+
 </LinearLayout>
