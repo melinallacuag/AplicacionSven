@@ -3,6 +3,7 @@ package com.anggastudio.sample;
 import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -31,8 +32,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
-    private String tipoPapelSeleccionado;
-
+    private static final String PREF_TIPO_PAPEL = "pref_tipo_papel";
+    RadioGroup radioGroup;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,16 +46,24 @@ public class MainActivity extends AppCompatActivity {
             getSavedPrinter();
         }
 
-        RadioGroup radioGroup = findViewById(R.id.radioFormaPago);
+        radioGroup = findViewById(R.id.radioFormaPago);
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton radioButton = findViewById(checkedId);
-            String tipoPapel = String.valueOf(radioButton.getText());
-            GlobalInfo.getTipoPapel10 = tipoPapel;
+            GlobalInfo.getTipoPapel10 = radioButton.getText().toString();
+
+            saveTipoPapel(GlobalInfo.getTipoPapel10);
 
         });
 
     }
 
+
+    private void saveTipoPapel(String tipoPapel) {
+        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(PREF_TIPO_PAPEL, tipoPapel);
+        editor.apply();
+    }
 
   private void showPrinterList() {
         Printama.showPrinterList(this, R.color.colorBlue, printerName -> {

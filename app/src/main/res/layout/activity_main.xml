@@ -127,6 +127,17 @@
             android:textColor="@color/gris"
             android:textSize="14sp" />
 
+        <RadioButton
+            android:id="@+id/papelsizetres"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="false"
+            android:text="65mm"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="@color/gris"
+            android:textSize="14sp" />
+
     </RadioGroup>
 
 </LinearLayout>

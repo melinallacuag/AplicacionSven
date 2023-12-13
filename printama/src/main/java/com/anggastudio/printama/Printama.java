@@ -212,7 +212,7 @@ public class Printama {
 
     public void printDoubleDashedLines() {
         util.setAlign(LEFT);
-        util.printText("======================================");
+        util.printText("================================");
     }
 
     public void addNewLine() {
@@ -339,6 +339,27 @@ public class Printama {
     }
 
     public void printTextln(String text) {
+        text = text + "\n";
+        util.printText(text);
+    }
+
+    /**
+     *
+     * @param align
+     * @param text
+     */
+
+    public void printTextlnP(int align, String text) {
+        util.setAlign(align);
+        printTextlnP(text);
+    }
+
+    public void printTextlnP(String text, int align) {
+        util.setAlign(align);
+        printTextlnP(text);
+    }
+
+    public void printTextlnP(String text) {
         text = text + "\n";
         util.printText(text);
     }

@@ -175,8 +175,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                 @Override
                                 public void onClick(View v) {
 
-                                    Reimpresion(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
-                                    modalReimpresion.dismiss();
+                                    String tipoPapel = GlobalInfo.getTipoPapel10;
+
+                                    if (tipoPapel != null) {
+                                        Reimpresion(GlobalInfo.getTipoPapel10,GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
+                                        modalReimpresion.dismiss();
+                                    } else {
+                                        Toast.makeText(getContext(), "No se seleccionó ningún tipo de papel", Toast.LENGTH_SHORT).show();
+                                    }
+
 
                                 }
                             });
@@ -376,7 +383,7 @@ public class ListaComprobantesFragment extends Fragment  {
     }
 
     /** API SERVICE - Reimprimir Comprobante */
-    private void Reimpresion(String tipodoc, String seriedoc, String nrodoc) {
+    private void Reimpresion(String tipopapel,String tipodoc, String seriedoc, String nrodoc) {
 
         Call<List<Reimpresion>> call = mAPIService.findReimpresion(tipodoc, seriedoc, nrodoc);
 
@@ -500,13 +507,23 @@ public class ListaComprobantesFragment extends Fragment  {
 
                             String qrSven = qrSVEN.toString();
 
-                            Printama.with(getContext()).connect(printama -> {
+                        int logoSize = (tipopapel.equals("80mm")) ? 200 : (tipopapel.equals("65mm") ? 200 : 400);
+
+                        Printama.with(getContext()).connect(printama -> {
 
                                 switch (tipoDocumento1) {
                                     case "01" :
                                     case "03" :
-                                        printama.printTextln("                 ", Printama.CENTER);
-                                        printama.printImage(logoRobles, 200);
+                                        switch (tipopapel) {
+                                            case "58mm":
+                                            case "80mm":
+                                                printama.printTextln("                 ", Printama.CENTER);
+                                                printama.printImage(logoRobles, logoSize);
+                                                break;
+                                            case "65mm":
+                                                printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                                                break;
+                                        }
                                         printama.setSmallText();
                                         printama.printTextlnBold(NameCompany, Printama.CENTER);
                                         printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
@@ -517,8 +534,16 @@ public class ListaComprobantesFragment extends Fragment  {
                                         break;
                                     case "98" :
                                     case "99" :
-                                        printama.printTextln("                 ", Printama.CENTER);
-                                        printama.printImage(logoRobles, 200);
+                                        switch (tipopapel) {
+                                            case "58mm":
+                                            case "80mm":
+                                                printama.printTextln("                 ", Printama.CENTER);
+                                                printama.printImage(logoRobles, logoSize);
+                                                break;
+                                            case "65mm":
+                                                printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                                                break;
+                                        }
                                         printama.setSmallText();
                                         printama.printTextlnBold(NameCompany, Printama.CENTER);
                                         printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
@@ -543,10 +568,20 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                 printama.printTextlnBold(NroComprobante, Printama.CENTER);
                                 printama.setSmallText();
-                                printama.printDoubleDashedLine();
+                                printSeparatorLine(printama, tipopapel);
                                 printama.addNewLine(1);
                                 printama.setSmallText();
-                                printama.printTextln("Fecha - Hora : " + fechaDocumento1 + "  Turno: " + turno1, Printama.LEFT);
+
+                                switch (tipopapel) {
+                                    case "65mm":
+                                    case "80mm":
+                                        printama.printTextln("Fecha - Hora : " + fechaDocumento1 + "  Turno: " + turno1, Printama.LEFT);
+                                        break;
+                                    case "58mm":
+                                        printama.printTextln("Fecha-Hora : " + fechaDocumento1, Printama.LEFT);
+                                        printama.printTextln("Turno        : " + turno1, Printama.LEFT);
+                                        break;
+                                }
                                 printama.printTextln("Cajero       : " + Cajero1, Printama.LEFT);
                                 printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
 
@@ -600,21 +635,39 @@ public class ListaComprobantesFragment extends Fragment  {
                                 }
 
                                 printama.setSmallText();
-                                printama.printDoubleDashedLine();
+                                printSeparatorLine(printama, tipopapel);
                                 printama.addNewLine(1);
-                                printama.setSmallText();
-                                printama.printTextlnBold("PRODUCTO      " + "U/MED   " + "PRECIO   " + "CANTIDAD  " + "IMPORTE", Printama.RIGHT);
-                                printama.setSmallText();
-                                printama.printTextln(articuloDS1, Printama.LEFT);
+                                switch (tipopapel) {
+                                    case "80mm":
+                                    case "65mm":
+                                        printama.setSmallText();
+                                        printama.printTextlnBold("PRODUCTO      " + "U/MED   " + "PRECIO   " + "CANTIDAD  " + "IMPORTE", Printama.RIGHT);
+                                        printama.setSmallText();
+                                        printama.printTextln(articuloDS1, Printama.LEFT);
 
-                                if (mtoDescuento1 == 0.00) {
-                                    printama.printTextln(uniMed1 + "    " + PrecioFF + "      " + CantidadFF + "     " + MtoTotalFF, Printama.RIGHT);
-                                } else {
-                                    printama.printTextln(uniMed1 + "    " + PrecioFF + "      " + CantidadFF + "     " + MtoCanjeado, Printama.RIGHT);
+                                        if (mtoDescuento1 == 0.00) {
+                                            printama.printTextln(uniMed1+"    " + PrecioFF + "      " + CantidadFF +"     "+ MtoTotalFF,Printama.RIGHT);
+                                        } else {
+                                            printama.printTextln(uniMed1+"    " + PrecioFF + "      " + CantidadFF +"     "+ MtoCanjeado,Printama.RIGHT);
+                                        }
+                                        break;
+
+                                    case "58mm":
+                                        printama.setSmallText();
+                                        printama.printTextlnBold("PROD. " + "U/MED " + "PRE.  " + "CANT.  " + "IMPORTE", Printama.LEFT);
+                                        printama.setSmallText();
+                                        printama.printTextln(articuloDS1,Printama.LEFT);
+
+                                        if (mtoDescuento1 == 0.00) {
+                                            printama.printTextln(uniMed1+" " + PrecioFF + "  " + CantidadFF +"    "+ MtoTotalFF,Printama.RIGHT);
+                                        } else {
+                                            printama.printTextln(uniMed1+" " + PrecioFF + "  " + CantidadFF +"    "+ MtoCanjeado,Printama.RIGHT);
+                                        }
+                                        break;
                                 }
 
                                 printama.setSmallText();
-                                printama.printDoubleDashedLine();
+                                printSeparatorLine(printama, tipopapel);
                                 printama.addNewLine(1);
                                 printama.setSmallText();
 
@@ -631,7 +684,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                         printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
 
                                         printama.setSmallText();
-                                        printama.printDoubleDashedLine();
+                                        printSeparatorLine(printama, tipopapel);
                                         printama.addNewLine(1);
                                         printama.setSmallText();
 
@@ -721,7 +774,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 }
                                             }
                                             if (bitmap != null) {
-                                                printama.printImage(bitmap);
+                                                switch (tipopapel) {
+                                                    case "58mm":
+                                                    case "80mm":
+                                                        printama.printImage(bitmap);
+                                                        break;
+                                                    case "65mm":
+                                                        printama.printImage(Printama.RIGHT,bitmap,200);
+                                                        break;
+                                                }
                                             }
                                         } catch (WriterException e) {
                                             e.printStackTrace();
@@ -739,7 +800,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                         printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
 
                                         printama.setSmallText();
-                                        printama.printDoubleDashedLine();
+                                        printSeparatorLine(printama, tipopapel);
                                         printama.addNewLine(1);
                                         printama.setSmallText();
 
@@ -829,7 +890,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 }
                                             }
                                             if (bitmap != null) {
-                                                printama.printImage(bitmap);
+                                                switch (tipopapel) {
+                                                    case "58mm":
+                                                    case "80mm":
+                                                        printama.printImage(bitmap);
+                                                        break;
+                                                    case "65mm":
+                                                        printama.printImage(Printama.RIGHT,bitmap,200);
+                                                        break;
+                                                }
                                             }
                                         } catch (WriterException e) {
                                             e.printStackTrace();
@@ -844,7 +913,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                     case "99":
                                         printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
                                         printama.setSmallText();
-                                        printama.printDoubleDashedLine();
+                                        printSeparatorLine(printama, tipopapel);
                                         printama.addNewLine(1);
                                         printama.setSmallText();
                                         printama.addNewLine(1);
@@ -867,6 +936,14 @@ public class ListaComprobantesFragment extends Fragment  {
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
 
+            }
+
+            private void printSeparatorLine(Printama printama, String tipopapel) {
+                if ("80mm".equals(tipopapel) || "65mm".equals(tipopapel)) {
+                    printama.printDoubleDashedLine();
+                } else if ("58mm".equals(tipopapel)) {
+                    printama.printDoubleDashedLines();
+                }
             }
 
             /** Alerta de Conexión de Bluetooth */
