@@ -3,12 +3,12 @@ apply plugin: 'com.github.dcendents.android-maven'
 group = 'com.github.anggastudio'
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 31
     buildToolsVersion "29.0.3"
 
     defaultConfig {
         minSdk 16
-        targetSdk 33
+        targetSdk 31
         versionCode 1
         versionName "1.1"
 

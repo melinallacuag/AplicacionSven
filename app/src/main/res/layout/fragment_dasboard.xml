@@ -55,7 +55,6 @@
             android:layout_width="120sp"
             android:layout_height="120sp"
             android:scaleType="centerCrop"
-            android:src="@drawable/logoprincipal"
             android:id="@+id/logo_dashboard"
             app:shapeAppearanceOverlay="@style/roudperfil" />
 
@@ -148,6 +147,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imageee"
                     android:layout_width="80sp"
                     android:layout_height="80sp"
                     android:src="@drawable/icon_salefuel"
@@ -159,7 +159,6 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_black"
                     android:letterSpacing="0.15"
-                    android:text="@string/menu_ventas"
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textSize="18sp"

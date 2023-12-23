@@ -24,7 +24,7 @@ public class GlobalInfo {
     /**
      * Tipo de tamaño papel
      */
-    public  static String getTipoPapel10;
+    public  static String getTipoPapel10 = "80mm";
 
     /**
      * Variable de numero de copias impresión
@@ -138,7 +138,8 @@ public class GlobalInfo {
     public static String  getsettingNroPlaca10;
     public static Double  getsettingDNIMontoMinimo10;
     public static String  getsettingtimerAppVenta10;
-    public static String  getsettingPassAnula10;
+    public static String  getsettingRutaLogo110;
+    public static String  getsettingRutaLogo210;
 
     /**
      * Datos del Cliente RUC-DNI
@@ -285,6 +286,16 @@ public class GlobalInfo {
 
 
     public static String getnfcId10 = String.valueOf(-1);
+
+
+    public static boolean getHabilitarTienda10 = false;
+    public static boolean getHabilitarGrifo10 = true;
+
+    public static boolean getReporteVendedor10 = true;
+    public static boolean getReporteTarjetas10 = true;
+    public static boolean getventasTarjetas10 = true;
+    public static boolean getVentasProductos10 = true;
+    public static boolean getVentasContometros10 = true;
 
     /**|
      * URL - APIService

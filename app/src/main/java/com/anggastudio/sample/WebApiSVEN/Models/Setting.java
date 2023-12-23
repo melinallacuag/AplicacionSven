@@ -19,7 +19,8 @@ public class Setting {
     private String nroplaca;
     private Double dnI_Monto_Minimo;
     private Integer timerAppVenta;
-    private String passAnula;
+    private String rutaLogo1;
+    private String rutaLogo2;
 
     public Integer getCompanyID() {
         return companyID;
@@ -157,11 +158,19 @@ public class Setting {
         this.timerAppVenta = timerAppVenta;
     }
 
-    public String getPassAnula() {
-        return passAnula;
+    public String getRutaLogo1() {
+        return rutaLogo1;
     }
 
-    public void setPassAnula(String passAnula) {
-        this.passAnula = passAnula;
+    public void setRutaLogo1(String rutaLogo1) {
+        this.rutaLogo1 = rutaLogo1;
+    }
+
+    public String getRutaLogo2() {
+        return rutaLogo2;
+    }
+
+    public void setRutaLogo2(String rutaLogo2) {
+        this.rutaLogo2 = rutaLogo2;
     }
 }

@@ -1,18 +1,29 @@
 package com.anggastudio.sample.Fragment;
+import android.Manifest;
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
@@ -36,10 +47,12 @@ import retrofit2.Response;
 
 public class DasboardFragment extends Fragment{
 
+    private static final int TU_CODIGO_DE_SOLICITUD_DE_PERMISO = 123;
+
     private APIService mAPIService;
     private NFCUtil nfcUtil;
 
-    TextView nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
+    TextView ventas,nombre_grifero,fecha_inicio_grifero,turno_grifero,nombre_empresa,sucursal_empresa,slogan_empresa;
 
     CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
 
@@ -49,6 +62,7 @@ public class DasboardFragment extends Fragment{
             modalAlertaCTurnoActual,modalAlertaIngreso,modalInicioDiaGenerado;
 
     ShapeableImageView img_Logo;
+    ImageView imageee;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +93,9 @@ public class DasboardFragment extends Fragment{
         btn_Salir             = view.findViewById(R.id.btnSalir);
         img_Logo              = view.findViewById(R.id.logo_dashboard);
 
+        ventas                  = view.findViewById(R.id.ventas);
+        imageee                 = view.findViewById(R.id.imageee);
+
         /**
          * @OBTENER:DatoGerealUserTerminal
          */
@@ -89,11 +106,13 @@ public class DasboardFragment extends Fragment{
         /**
          * @MOSTRAR:LogoEmpresa_Dasboard
          */
-        File file = new File("/storage/emulated/0/appSven/logodasboard.jpg");
-        String rutaImagen="/storage/emulated/0/appSven/logodasboard.jpg";
+        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
+        File file = new File(rutaImagen);
+
         if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/logodasboard.png";
+            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
         }
+
         Uri logoUri = Uri.parse("file://" + rutaImagen);
         img_Logo.setImageURI(logoUri);
 
@@ -114,6 +133,13 @@ public class DasboardFragment extends Fragment{
         modalAlertaIngreso.setContentView(R.layout.alerta_iniciodia_ingreso);
         modalAlertaIngreso.setCancelable(true);
 
+        if (GlobalInfo.getHabilitarGrifo10) {
+            ventas.setText("Grifo");
+            imageee.setImageResource(R.drawable.icon_salefuel);
+        } else if (GlobalInfo.getHabilitarTienda10) {
+            ventas.setText("Tienda");
+            imageee.setImageResource(R.drawable.iconcaja);
+        }
         /**
          * @PANTALLA:Venta
          */
@@ -121,49 +147,64 @@ public class DasboardFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
-                if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty() ){
+                if(GlobalInfo.getHabilitarGrifo10){
 
-                    FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
-                    FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
-                    int fragmentContainerVenta  = R.id.fragment_container;
-                    VentaFragment ventaFragment = new VentaFragment();
+                    if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty() ){
+                        FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
+                        FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
+                        int fragmentContainerVenta  = R.id.fragment_container;
+                        VentaFragment ventaFragment = new VentaFragment();
 
-                    fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
-                    fragmentTransactionVenta.addToBackStack(null);
-                    fragmentTransactionVenta.commit();
+                        fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
+                        fragmentTransactionVenta.addToBackStack(null);
+                        fragmentTransactionVenta.commit();
 
+                    }else{
+
+                        modalAlertaIngreso.show();
+
+                        btn_CancelarIngreso  = modalAlertaIngreso.findViewById(R.id.btnCancelarIngreso);
+                        btn_AceptarIngreso   = modalAlertaIngreso.findViewById(R.id.btnAceptarIngreso);
+
+                        btn_CancelarIngreso.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                modalAlertaIngreso.dismiss();
+                            }
+                        });
+
+                        btn_AceptarIngreso.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
+                                FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
+                                int fragmentContainerVenta  = R.id.fragment_container;
+                                VentaFragment ventaFragment = new VentaFragment();
+
+                                fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
+                                fragmentTransactionVenta.addToBackStack(null);
+                                fragmentTransactionVenta.commit();
+
+                                modalAlertaIngreso.dismiss();
+                            }
+                        });
+                    }
+
+                }else if(GlobalInfo.getHabilitarTienda10){
+
+                    FragmentManager fragmentManagerCarrito = getActivity().getSupportFragmentManager();
+
+                    FragmentTransaction fragmentTransactionCarrito = fragmentManagerCarrito.beginTransaction();
+
+                    int fragmentContainerCarrito = R.id.fragment_container;
+                    ProductoFragment productosFragment = new ProductoFragment();
+                    fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
+                    fragmentTransactionCarrito.addToBackStack(null);
+                    fragmentTransactionCarrito.commit();
                 }else{
-
-                    modalAlertaIngreso.show();
-
-                    btn_CancelarIngreso  = modalAlertaIngreso.findViewById(R.id.btnCancelarIngreso);
-                    btn_AceptarIngreso   = modalAlertaIngreso.findViewById(R.id.btnAceptarIngreso);
-
-                    btn_CancelarIngreso.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            modalAlertaIngreso.dismiss();
-                        }
-                    });
-
-                    btn_AceptarIngreso.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
-                            FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
-                            int fragmentContainerVenta  = R.id.fragment_container;
-                            VentaFragment ventaFragment = new VentaFragment();
-
-                            fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
-                            fragmentTransactionVenta.addToBackStack(null);
-                            fragmentTransactionVenta.commit();
-
-                            modalAlertaIngreso.dismiss();
-                        }
-                    });
+                    Toast.makeText(getContext(), "No hay opciones disponibles", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 

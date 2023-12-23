@@ -64,6 +64,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
 import com.anggastudio.sample.WebApiSVEN.Models.VentaCA;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.zxing.BarcodeFormat;
@@ -143,6 +144,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     Double monto;
 
+    FloatingActionButton btncarritocompra;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -155,6 +158,31 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         View view = inflater.inflate(R.layout.fragment_venta, container, false);
 
         mAPIService = GlobalInfo.getAPIService();
+
+
+        /*** Carrito de compras***/
+        btncarritocompra = view.findViewById(R.id.btncarritocompra);
+
+            if (GlobalInfo.getHabilitarTienda10 && GlobalInfo.getHabilitarGrifo10) {
+                btncarritocompra.setVisibility(View.VISIBLE);
+            } else {
+                btncarritocompra.setVisibility(View.GONE);
+            }
+
+        btncarritocompra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManagerCarrito = getActivity().getSupportFragmentManager();
+
+                FragmentTransaction fragmentTransactionCarrito = fragmentManagerCarrito.beginTransaction();
+
+                int fragmentContainerCarrito = R.id.fragment_container;
+                ProductoFragment productosFragment = new ProductoFragment();
+                fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
+                fragmentTransactionCarrito.addToBackStack(null);
+                fragmentTransactionCarrito.commit();
+            }
+        });
 
         btnAutomatico         = view.findViewById(R.id.btnAutomatico);
         btnListadoComprobante = view.findViewById(R.id.btnListadoComprobante);
@@ -2948,13 +2976,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                               String _FechaQR, Integer _PagoID, Integer _TarjetaCreditoID, String _OperacionREF,
                               Double _mtoCanjeado, Double _mtoDescuento, Double _mtoSoles){
 
-
-        File file = new File("/storage/emulated/0/appSven/logo.jpg");
-        String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
+        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
+        File file = new File(rutaImagen);
         if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
         }
         Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+
         String TipoDNI = "1";
         String CVarios = "11111111";
 

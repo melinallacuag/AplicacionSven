@@ -439,14 +439,13 @@ public class ListaComprobantesFragment extends Fragment  {
                             /**
                              * Iniciar impresión del comprobante
                              */
-                            File file = new File("/storage/emulated/0/appSven/logo.jpg");
-                            String rutaImagen="/storage/emulated/0/appSven/logo.jpg";
-
+                            String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
+                            File file = new File(rutaImagen);
                             if(!file.exists()){
-                                rutaImagen = "/storage/emulated/0/appSven/logo.png";
+                                rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
                             }
-
                             Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+
                             String TipoDNI = "1";
                             String CVarios = "11111111";
 

@@ -47,16 +47,29 @@ public class MainActivity extends AppCompatActivity {
         }
 
         radioGroup = findViewById(R.id.radioFormaPago);
+
+        String tipoPapelPredeterminado = GlobalInfo.getTipoPapel10;
+        int radioButtonId = -1;
+
+        for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            RadioButton radioButton = (RadioButton) radioGroup.getChildAt(i);
+            if (radioButton.getText().toString().equals(tipoPapelPredeterminado)) {
+                radioButtonId = radioButton.getId();
+                break;
+            }
+        }
+
+        if (radioButtonId != -1) {
+            radioGroup.check(radioButtonId);
+        }
+
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             RadioButton radioButton = findViewById(checkedId);
             GlobalInfo.getTipoPapel10 = radioButton.getText().toString();
-
             saveTipoPapel(GlobalInfo.getTipoPapel10);
-
         });
 
     }
-
 
     private void saveTipoPapel(String tipoPapel) {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);

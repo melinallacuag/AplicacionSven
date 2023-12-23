@@ -363,7 +363,8 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getsettingNroPlaca10        = String.valueOf(setting.getNroplaca());
                         GlobalInfo.getsettingDNIMontoMinimo10  = Double.valueOf(setting.getDnI_Monto_Minimo());
                         GlobalInfo.getsettingtimerAppVenta10   = String.valueOf(setting.getTimerAppVenta());
-                        GlobalInfo.getsettingPassAnula10       = String.valueOf(setting.getPassAnula());
+                        GlobalInfo.getsettingRutaLogo110       = String.valueOf(setting.getRutaLogo1());
+                        GlobalInfo.getsettingRutaLogo210       = String.valueOf(setting.getRutaLogo2());
                     }
 
                 }catch (Exception ex){
