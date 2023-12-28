@@ -210,6 +210,8 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getterminalCompanyID10       = Integer.valueOf(terminal.getCompanyID());
                         GlobalInfo.getterminalAlmacenID10       = Integer.valueOf(terminal.getAlmacenID());
                         GlobalInfo.getterminalFechaHoraCierre10 = String.valueOf(terminal.getFecha_Hora_Cierre());
+                        GlobalInfo.getterminalVentaPlaya10      = terminal.getVenta_Playa();
+                        GlobalInfo.getterminalVentaTienda10     = terminal.getVenta_Tienda();
 
                         /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);

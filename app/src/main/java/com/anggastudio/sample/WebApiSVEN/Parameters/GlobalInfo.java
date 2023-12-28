@@ -288,8 +288,8 @@ public class GlobalInfo {
     public static String getnfcId10 = String.valueOf(-1);
 
 
-    public static boolean getHabilitarTienda10 = false;
-    public static boolean getHabilitarGrifo10 = true;
+    public static boolean getterminalVentaPlaya10;
+    public static boolean getterminalVentaTienda10;
 
     public static boolean getReporteVendedor10 = true;
     public static boolean getReporteTarjetas10 = true;

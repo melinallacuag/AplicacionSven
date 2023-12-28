@@ -133,10 +133,10 @@ public class DasboardFragment extends Fragment{
         modalAlertaIngreso.setContentView(R.layout.alerta_iniciodia_ingreso);
         modalAlertaIngreso.setCancelable(true);
 
-        if (GlobalInfo.getHabilitarGrifo10) {
+        if (GlobalInfo.getterminalVentaPlaya10) {
             ventas.setText("Grifo");
             imageee.setImageResource(R.drawable.icon_salefuel);
-        } else if (GlobalInfo.getHabilitarTienda10) {
+        } else if (GlobalInfo.getterminalVentaTienda10) {
             ventas.setText("Tienda");
             imageee.setImageResource(R.drawable.iconcaja);
         }
@@ -147,7 +147,7 @@ public class DasboardFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
-                if(GlobalInfo.getHabilitarGrifo10){
+                if(GlobalInfo.getterminalVentaPlaya10){
 
                     if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty() ){
                         FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
@@ -191,7 +191,7 @@ public class DasboardFragment extends Fragment{
                         });
                     }
 
-                }else if(GlobalInfo.getHabilitarTienda10){
+                }else if(GlobalInfo.getterminalVentaTienda10){
 
                     FragmentManager fragmentManagerCarrito = getActivity().getSupportFragmentManager();
 
@@ -202,9 +202,8 @@ public class DasboardFragment extends Fragment{
                     fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
                     fragmentTransactionCarrito.addToBackStack(null);
                     fragmentTransactionCarrito.commit();
-                }else{
-                    Toast.makeText(getContext(), "No hay opciones disponibles", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
@@ -215,14 +214,25 @@ public class DasboardFragment extends Fragment{
             @Override
             public void onClick(View view) {
 
-                FragmentManager fragmentManagerCierreX = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransactionCierreX = fragmentManagerCierreX.beginTransaction();
-                int fragmentContainerCierreX    = R.id.fragment_container;
-                CierreXFragment cierreXFragment = new CierreXFragment();
+                if(GlobalInfo.getterminalVentaPlaya10){
+                    FragmentManager fragmentManagerCierreX = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransactionCierreX = fragmentManagerCierreX.beginTransaction();
+                    int fragmentContainerCierreX    = R.id.fragment_container;
+                    CierreXFragment cierreXFragment = new CierreXFragment();
 
-                fragmentTransactionCierreX.replace(fragmentContainerCierreX, cierreXFragment);
-                fragmentTransactionCierreX.addToBackStack(null);
-                fragmentTransactionCierreX.commit();
+                    fragmentTransactionCierreX.replace(fragmentContainerCierreX, cierreXFragment);
+                    fragmentTransactionCierreX.addToBackStack(null);
+                    fragmentTransactionCierreX.commit();
+                }else if(GlobalInfo.getterminalVentaTienda10){
+                    FragmentManager fragmentManagerCierreXTienda = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransactionCierreXTienda = fragmentManagerCierreXTienda.beginTransaction();
+                    int fragmentContainerCierreXTienda    = R.id.fragment_container;
+                    CierreXTiendaFragment cierreXTiendaFragment = new CierreXTiendaFragment();
+
+                    fragmentTransactionCierreXTienda.replace(fragmentContainerCierreXTienda, cierreXTiendaFragment);
+                    fragmentTransactionCierreXTienda.addToBackStack(null);
+                    fragmentTransactionCierreXTienda.commit();
+                }
 
             }
         });

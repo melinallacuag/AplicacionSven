@@ -163,7 +163,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         /*** Carrito de compras***/
         btncarritocompra = view.findViewById(R.id.btncarritocompra);
 
-            if (GlobalInfo.getHabilitarTienda10 && GlobalInfo.getHabilitarGrifo10) {
+            if (GlobalInfo.getterminalVentaTienda10 && GlobalInfo.getterminalVentaPlaya10) {
                 btncarritocompra.setVisibility(View.VISIBLE);
             } else {
                 btncarritocompra.setVisibility(View.GONE);
