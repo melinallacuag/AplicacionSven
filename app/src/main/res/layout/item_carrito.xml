@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginBottom="5dp"
+    android:background="?android:attr/selectableItemBackground">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        app:cardBackgroundColor="#F9F9F9"
+        app:cardCornerRadius="10sp"
+        app:cardElevation="2sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="2dp"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_eliminar"
+                android:layout_width="35dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:backgroundTint="@color/coloCar"
+                android:layout_gravity="center"
+                android:src="@drawable/icon_borrar"
+                android:padding="12dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="5dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tv_nombre_carrito"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/nunito_extrabold"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_weight="1"
+                        tools:text="Nombre del Producto"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textAlignment="textEnd"
+                            android:text="S/. "/>
+                        <TextView
+                            android:id="@+id/tv_precio_carrito"
+                            android:layout_width="70dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textAlignment="textEnd"
+                            tools:text="1000.00"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:textAlignment="textEnd"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="12dp"
+                    android:gravity="end">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end">
+
+                        <ImageButton
+                            android:id="@+id/btn_restar"
+                            android:layout_width="30dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/icon_resta"
+                            android:backgroundTint="@color/colorHumo"
+                            android:scaleType="centerCrop"
+                            android:padding="8dp" />
+
+                        <TextView
+                            android:id="@+id/tv_cantidad"
+                            android:layout_width="30dp"
+                            android:layout_height="match_parent"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textAlignment="center"
+                            android:gravity="center"
+                            tools:text="0"/>
+
+                        <ImageButton
+                            android:id="@+id/btn_sumar"
+                            android:layout_width="30dp"
+                            android:layout_height="35dp"
+                            android:src="@drawable/icon_suma"
+                            android:backgroundTint="@color/coloCar"
+                            android:scaleType="centerCrop"
+                            android:padding="8dp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="20dp"
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/black"
+                        android:gravity="center"
+                        android:text="S/. "/>
+
+                    <TextView
+                        android:id="@+id/tv_totalprecio_carrito"
+                        android:layout_width="60dp"
+                        android:layout_height="match_parent"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"
+                        android:textAlignment="textEnd"
+                        android:gravity="center"
+                        tools:text="1000.00"/>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>

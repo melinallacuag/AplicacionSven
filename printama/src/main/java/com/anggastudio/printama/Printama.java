@@ -21,8 +21,6 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -119,8 +117,9 @@ public class Printama {
     }
 
     public void cutPaper() {
-        byte[] cutPaperCommand = new byte[]{0x1D, 0x56, 0x00};
-        util.printUnicode(cutPaperCommand);
+        printEndPaper();
+       // byte[] cutPaperCommand = new byte[]{0x1D, 0x56, 66, 0x00};
+       // util.printUnicode(cutPaperCommand);
     }
 
     //----------------------------------------------------------------------------------------------
@@ -233,7 +232,6 @@ public class Printama {
 
     /**
      * @deprecated As of release 1.0.0,
-     * replaced by {@link Printama#printImage(Bitmap bitmap, int width, int alignment)} instead
      */
     @Deprecated
     public boolean printImage(int alignment, Bitmap bitmap, int width) {
@@ -1050,7 +1048,9 @@ public class Printama {
         util.setWideTallBold();
     }
 
-
+    public void printEndPaper() {
+        util.printEndPaper();
+    }
     //----------------------------------------------------------------------------------------------
     // INTERFACES
     //----------------------------------------------------------------------------------------------

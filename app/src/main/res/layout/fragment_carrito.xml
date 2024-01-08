@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:paddingStart="10sp"
+        android:paddingEnd="10sp"
+        android:minWidth="600sp"
+        android:background="@drawable/cardmodal"
+        android:backgroundTint="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:text="Lista de Productos"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textAlignment="center"
+            android:fontFamily="@font/nunito_extrabold"
+            android:layout_marginBottom="5dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnSeleccionCliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:backgroundTint="@color/coloCar"
+            android:textColor="@color/black"
+            app:cornerRadius="10sp"
+            android:layout_marginBottom="5dp"
+            android:text="Ingresar Cliente"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btnBoleta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorHumo"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_boleta"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:visibility="gone"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnFactura"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorHumo"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_factura"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:visibility="gone"
+                app:cornerRadius="10sp" />
+
+            <Button
+                android:id="@+id/btnnotadespacho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorHumo"
+                android:fontFamily="@font/nunito_black"
+                android:gravity="center"
+                android:text="@string/ope_NDespacho"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                android:visibility="gone"
+                app:cornerRadius="10sp" />
+        </LinearLayout>
+
+
+
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/recyclerCarrito"
+           android:layout_width="match_parent"
+           android:layout_height="450dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textColor="@color/black"
+                android:gravity="right"
+                android:text="Total Venta S/."/>
+            <TextView
+                android:id="@+id/totalmontoCar"
+                android:layout_width="200sp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:fontFamily="@font/nunito_extrabold"
+                android:gravity="end"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <Button
+                android:id="@+id/btnconfirmarventa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="@color/colorSuccess"
+                android:text="IMPRIMIR VENTA"
+                android:gravity="center"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <ImageButton
+                android:id="@+id/btnvolvercompra"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="5dp"
+                android:scaleType="center"
+                android:background="@drawable/input_border"
+                android:backgroundTint="@color/coloCar"
+                android:src="@drawable/icon_agregarprod" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

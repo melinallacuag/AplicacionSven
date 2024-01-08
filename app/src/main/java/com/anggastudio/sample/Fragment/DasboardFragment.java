@@ -106,7 +106,7 @@ public class DasboardFragment extends Fragment{
         /**
          * @MOSTRAR:LogoEmpresa_Dasboard
          */
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
+        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo110;
         File file = new File(rutaImagen);
 
         if(!file.exists()){
@@ -198,7 +198,7 @@ public class DasboardFragment extends Fragment{
                     FragmentTransaction fragmentTransactionCarrito = fragmentManagerCarrito.beginTransaction();
 
                     int fragmentContainerCarrito = R.id.fragment_container;
-                    ProductoFragment productosFragment = new ProductoFragment();
+                    ProductosFragment productosFragment = new ProductosFragment();
                     fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
                     fragmentTransactionCarrito.addToBackStack(null);
                     fragmentTransactionCarrito.commit();

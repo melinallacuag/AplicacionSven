@@ -72,6 +72,7 @@ public class Login extends AppCompatActivity{
          * @OBTENER:Imei
          */
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
+        imeii.setText("F6036B683498BFDA");
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
         /**
@@ -212,6 +213,14 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getterminalFechaHoraCierre10 = String.valueOf(terminal.getFecha_Hora_Cierre());
                         GlobalInfo.getterminalVentaPlaya10      = terminal.getVenta_Playa();
                         GlobalInfo.getterminalVentaTienda10     = terminal.getVenta_Tienda();
+                        GlobalInfo.getReporteVendedor10         = terminal.getCierreX_RVendedor();
+                        GlobalInfo.getReporteTarjetas10         = terminal.getCierreX_RTarjeta();
+                        GlobalInfo.getVentasTipoPago10          = terminal.getCierreX_VTipoPago();
+                        GlobalInfo.getVentasProductos10         = terminal.getCierreX_VProducto();
+                        GlobalInfo.getVentasContometros10       = terminal.getCierreX_VContometro();
+                        GlobalInfo.getTerminalNameCompany10     = terminal.getNameCompany();
+                        GlobalInfo.getTerminalImageW10          = terminal.getImageW();
+                        GlobalInfo.getTipoPapel10               = terminal.getImpresora();
 
                         /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);
@@ -439,7 +448,7 @@ public class Login extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<List<Mangueras>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Mangueras - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -470,7 +479,7 @@ public class Login extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<List<TipoPago>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tarjetas - RED - WIFI", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tipo de Pago - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
     }

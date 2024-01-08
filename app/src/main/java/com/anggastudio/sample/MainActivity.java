@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_BLUETOOTH_PERMISSION = 1;
     private static final String PREF_TIPO_PAPEL = "pref_tipo_papel";
     RadioGroup radioGroup;
+    TextView textotipopapel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,9 +47,14 @@ public class MainActivity extends AppCompatActivity {
             getSavedPrinter();
         }
 
-        radioGroup = findViewById(R.id.radioFormaPago);
 
-        String tipoPapelPredeterminado = GlobalInfo.getTipoPapel10;
+        radioGroup     = findViewById(R.id.radioFormaPago);
+        textotipopapel = findViewById(R.id.textotipopapel);
+
+        radioGroup.setVisibility(View.GONE);
+        textotipopapel.setVisibility(View.GONE);
+
+       /* String tipoPapelPredeterminado = GlobalInfo.getTipoPapel10;
         int radioButtonId = -1;
 
         for (int i = 0; i < radioGroup.getChildCount(); i++) {
@@ -67,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             RadioButton radioButton = findViewById(checkedId);
             GlobalInfo.getTipoPapel10 = radioButton.getText().toString();
             saveTipoPapel(GlobalInfo.getTipoPapel10);
-        });
+        });*/
 
     }
 
@@ -86,10 +92,60 @@ public class MainActivity extends AppCompatActivity {
             connectedTo.setText(text);
             if (!printerName.contains("failed")) {
                 findViewById(R.id.btn_printer_test).setVisibility(View.VISIBLE);
-                findViewById(R.id.btn_printer_test).setOnClickListener(v -> testPrinter());
+
+                setupButtonClickListener();
             }
         });
     }
+
+    private void setupButtonClickListener() {
+        findViewById(R.id.btn_printer_test).setOnClickListener(v -> {
+            printQrReceipt2();
+        });
+    }
+
+    private void printQrReceipt2() {
+        Bitmap logo = Printama.getBitmapFromVector(this, R.drawable.logo_app);
+        String nota = "Some Text";
+        Printama.with(this).connect(printama -> {
+            printama.printImage(logo, 200);
+            printama.addNewLine();
+            printama.printTextln("Title Text", Printama.CENTER);
+            printama.printTextln("Title Text", Printama.CENTER);
+            printama.printTextln("Title Text", Printama.CENTER);
+            printama.printTextln("Title Text", Printama.CENTER);
+            printama.printTextln("Title Text", Printama.CENTER);
+            printama.printDashedLine();
+            printama.addNewLine();
+            QRCodeWriter writer = new QRCodeWriter();
+            BitMatrix bitMatrix;
+            try {
+                bitMatrix = writer.encode(nota, BarcodeFormat.QR_CODE, 200, 200);
+                int width = bitMatrix.getWidth();
+                int height = bitMatrix.getHeight();
+                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        int color = Color.WHITE;
+                        if (bitMatrix.get(x, y)) color = Color.BLACK;
+                        bitmap.setPixel(x, y, color);
+                    }
+                }
+                if (bitmap != null) {
+                    printama.printImage(bitmap);
+                }
+            } catch (WriterException e) {
+                e.printStackTrace();
+            }
+
+            printama.addNewLine();
+            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
+            printama.feedPaper();
+            printama.cutPaper();
+            printama.close();
+        }, this::showToast);
+    }
+
 
     private void testPrinter() {
         Printama.with(this).printTest();

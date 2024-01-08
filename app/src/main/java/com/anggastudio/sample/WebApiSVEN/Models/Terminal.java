@@ -29,6 +29,14 @@ public class Terminal {
     private String  nDespacho_Serie;
     private String  nDespacho_Numero;
     private String  fecha_Hora_Cierre;
+    private Boolean cierreX_VContometro;
+    private Boolean cierreX_VProducto;
+    private Boolean cierreX_VTipoPago;
+    private Boolean cierreX_RTarjeta;
+    private Boolean cierreX_RVendedor;
+    private Boolean nameCompany;
+    private Integer imageW;
+    private String impresora;
 
     public String getTerminalID() {
         return terminalID;
@@ -246,4 +254,67 @@ public class Terminal {
         this.fecha_Hora_Cierre = fecha_Hora_Cierre;
     }
 
+    public Boolean getCierreX_VContometro() {
+        return cierreX_VContometro;
+    }
+
+    public void setCierreX_VContometro(Boolean cierreX_VContometro) {
+        this.cierreX_VContometro = cierreX_VContometro;
+    }
+
+    public Boolean getCierreX_VProducto() {
+        return cierreX_VProducto;
+    }
+
+    public void setCierreX_VProducto(Boolean cierreX_VProducto) {
+        this.cierreX_VProducto = cierreX_VProducto;
+    }
+
+    public Boolean getCierreX_VTipoPago() {
+        return cierreX_VTipoPago;
+    }
+
+    public void setCierreX_VTipoPago(Boolean cierreX_VTipoPago) {
+        this.cierreX_VTipoPago = cierreX_VTipoPago;
+    }
+
+    public Boolean getCierreX_RTarjeta() {
+        return cierreX_RTarjeta;
+    }
+
+    public void setCierreX_RTarjeta(Boolean cierreX_RTarjeta) {
+        this.cierreX_RTarjeta = cierreX_RTarjeta;
+    }
+
+    public Boolean getCierreX_RVendedor() {
+        return cierreX_RVendedor;
+    }
+
+    public void setCierreX_RVendedor(Boolean cierreX_RVendedor) {
+        this.cierreX_RVendedor = cierreX_RVendedor;
+    }
+
+    public Boolean getNameCompany() {
+        return nameCompany;
+    }
+
+    public void setNameCompany(Boolean nameCompany) {
+        this.nameCompany = nameCompany;
+    }
+
+    public Integer getImageW() {
+        return imageW;
+    }
+
+    public void setImageW(Integer imageW) {
+        this.imageW = imageW;
+    }
+
+    public String getImpresora() {
+        return impresora;
+    }
+
+    public void setImpresora(String impresora) {
+        this.impresora = impresora;
+    }
 }

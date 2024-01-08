@@ -506,7 +506,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                             String qrSven = qrSVEN.toString();
 
-                        int logoSize = (tipopapel.equals("80mm")) ? 200 : (tipopapel.equals("65mm") ? 200 : 400);
+                        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
                         Printama.with(getContext()).connect(printama -> {
 
@@ -516,15 +516,19 @@ public class ListaComprobantesFragment extends Fragment  {
                                         switch (tipopapel) {
                                             case "58mm":
                                             case "80mm":
-                                                printama.printTextln("                 ", Printama.CENTER);
-                                                printama.printImage(logoRobles, logoSize);
+                                                printama.addNewLine();
+                                                printama.printImage( logoRobles,logoSize);
                                                 break;
                                             case "65mm":
-                                                printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                                                printama.printImage(logoRobles, logoSize,Printama.RIGHT);
                                                 break;
                                         }
                                         printama.setSmallText();
-                                        printama.printTextlnBold(NameCompany, Printama.CENTER);
+                                        if(GlobalInfo.getTerminalNameCompany10){
+                                            printama.printTextlnBold(NameCompany, Printama.CENTER);
+                                        }else {
+                                            printama.printTextlnBold(" ");
+                                        }
                                         printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
                                         printama.printTextlnBold(Address2, Printama.CENTER);
                                         printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
@@ -536,15 +540,19 @@ public class ListaComprobantesFragment extends Fragment  {
                                         switch (tipopapel) {
                                             case "58mm":
                                             case "80mm":
-                                                printama.printTextln("                 ", Printama.CENTER);
+                                                printama.addNewLine();
                                                 printama.printImage(logoRobles, logoSize);
                                                 break;
                                             case "65mm":
-                                                printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                                                printama.printImage(Printama.LEFT,logoRobles, logoSize);
                                                 break;
                                         }
                                         printama.setSmallText();
-                                        printama.printTextlnBold(NameCompany, Printama.CENTER);
+                                        if(GlobalInfo.getTerminalNameCompany10){
+                                            printama.printTextlnBold(NameCompany, Printama.CENTER);
+                                        }else {
+                                            printama.printTextlnBold(" ");
+                                        }
                                         printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
                                         printama.printTextlnBold(Branch2, Printama.CENTER);
                                         break;
@@ -640,7 +648,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                     case "80mm":
                                     case "65mm":
                                         printama.setSmallText();
-                                        printama.printTextlnBold("PRODUCTO      " + "U/MED   " + "PRECIO   " + "CANTIDAD  " + "IMPORTE", Printama.RIGHT);
+                                        printama.printTextlnBold("PRODUCTO     " + "U/MED   " + "PRECIO   " + "CANTIDAD  " + "IMPORTE", Printama.RIGHT);
                                         printama.setSmallText();
                                         printama.printTextln(articuloDS1, Printama.LEFT);
 

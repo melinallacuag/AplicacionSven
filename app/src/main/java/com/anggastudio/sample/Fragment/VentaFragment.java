@@ -177,7 +177,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 FragmentTransaction fragmentTransactionCarrito = fragmentManagerCarrito.beginTransaction();
 
                 int fragmentContainerCarrito = R.id.fragment_container;
-                ProductoFragment productosFragment = new ProductoFragment();
+                ProductosFragment productosFragment = new ProductosFragment();
                 fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
                 fragmentTransactionCarrito.addToBackStack(null);
                 fragmentTransactionCarrito.commit();
@@ -351,7 +351,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnAgregarSoles.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         String MontoSoles = inputMontoSoles.getText().toString();
 
                         if (MontoSoles.isEmpty()) {
@@ -359,23 +358,42 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             return;
                         }
 
+                        boolean isDecimal = MontoSoles.contains(".");
+
                         Double DoubleMontoSoles = Double.parseDouble(MontoSoles);
 
-                        Integer NumIntSoles = Integer.parseInt(MontoSoles);
+                        try {
 
-                        if(NumIntSoles < 5 || NumIntSoles > 9999){
-                            alertSoles.setError("El valor debe ser mayor a 5 y menor que 9999");
-                            return;
+                            if(GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
+
+                                if (isDecimal) {
+
+                                    if (DoubleMontoSoles < 5 || DoubleMontoSoles > 9999) {
+                                        alertSoles.setError("El valor debe ser mayor a 5 y menor que 9999");
+                                        return;
+                                    }
+                                }
+
+                            } else {
+                                int NumIntSoles = Integer.parseInt(MontoSoles);
+
+                                if (NumIntSoles < 5 || NumIntSoles > 9999) {
+                                    alertSoles.setError("El valor debe ser mayor a 5 y menor que 9999");
+                                    return;
+                                }
+                            }
+
+                            alertSoles.setErrorEnabled(false);
+
+                            guardar_montoSoles(GlobalInfo.getManguera10, Double.parseDouble(MontoSoles));
+
+                            Toast.makeText(getContext(), "SE AGREGO CORRECTAMENTE", Toast.LENGTH_SHORT).show();
+                            modalSoles.dismiss();
+                            inputMontoSoles.getText().clear();
+
+                        } catch (NumberFormatException e) {
+                            alertSoles.setError("El valor ingresado no es válido");
                         }
-
-                        alertSoles.setErrorEnabled(false);
-
-                        guardar_montoSoles(GlobalInfo.getManguera10,DoubleMontoSoles);
-
-                        Toast.makeText(getContext(), "SE AGREGO CORRECTAMENTE", Toast.LENGTH_SHORT).show();
-                        modalSoles.dismiss();
-
-                        inputMontoSoles.getText().clear();
 
                     }
                 });
@@ -1888,7 +1906,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             public int onItemClick(Mangueras item) {
 
                 /** Boton Activados */
-                btnLibre.setEnabled(true);
+
+                if (GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
+                    btnLibre.setEnabled(false);
+                } else {
+                    btnLibre.setEnabled(true);
+                }
                 btnSoles.setEnabled(true);
                 btnGalones.setEnabled(true);
                 btnBoleta.setEnabled(true);
@@ -2477,7 +2500,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
             @Override
             public void onFailure(Call<Mangueras> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error de conexión APICORE Soles", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -2503,7 +2526,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
             @Override
             public void onFailure(Call<Mangueras> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error de conexión APICORE Galones", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -2852,45 +2875,51 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     /** IMPRESION DEL COMPROBANTE **/
 
+
                     if (mnPagoID == 2) {
 
-                        for(int i = 0; i <= 1 ; i += 1){
+                        /** @IMPRESION01 */
+                        imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
 
-                            String tipoPapel = GlobalInfo.getTipoPapel10;
 
-                            if (tipoPapel != null) {
-                                imprimirGR10(GlobalInfo.getTipoPapel10,mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                        Double finalMnMtoPagar1 = mnMtoPagar;
+                        Double finalMnMtoSubTotal1 = mnMtoSubTotal1;
+                        Double finalMnMtoImpuesto1 = mnMtoImpuesto1;
+                        Double finalMnMtoCanje1 = mnMtoCanje;
+                        Double finalMnMtoDescuento1 = mnMtoDescuento1;
+
+                        Timer timerS = new Timer();
+                        /** @IMPRESION02 */
+                        timerS.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
                                         GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
                                         GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
-                                        mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                        finalMnMtoPagar1, finalMnMtoSubTotal1, finalMnMtoImpuesto1,
                                         mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
-                                        mnKilometraje,mnObservacion,mnTarjND, xFechaDocumentoQR,
-                                        mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+                                        mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                        mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles);
 
-                            } else {
-                                Toast.makeText(getContext(), "No se seleccionó ningún tipo de papel", Toast.LENGTH_SHORT).show();
+                                timerS.cancel();
                             }
-
-
-                        }
+                        }, 3000);
 
                     } else {
 
-                        String tipoPapel = GlobalInfo.getTipoPapel10;
-
-                        if (tipoPapel != null) {
-                            imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
-                                    GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
-                                    GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
-                                    mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
-                                    mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
-                                    mnKilometraje,mnObservacion,mnTarjND, xFechaDocumentoQR,
-                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
-
-                        } else {
-                            Toast.makeText(getContext(), "No se seleccionó ningún tipo de papel", Toast.LENGTH_SHORT).show();
-                        }
-
+                        imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
 
                     }
 
@@ -2959,7 +2988,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
             @Override
             public void onFailure(Call<VentaCA> call, Throwable t) {
-                Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Error de conexión APICORE Grabar Venta", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -3043,9 +3072,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         qrSVEN.append(TipoDNI+ "|".toString());
         qrSVEN.append(_ClienteID+ "|".toString());
 
-        String qrSven = qrSVEN.toString();
+        String QRGenerado = qrSVEN.toString();
 
-        int logoSize = (tipopapel.equals("80mm")) ? 200 : (tipopapel.equals("65mm") ? 200 : 400);
+        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
         Printama.with(getContext()).connect(printama -> {
 
@@ -3055,7 +3084,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     switch (tipopapel) {
                         case "58mm":
                         case "80mm":
-                            printama.printTextln("                 ", Printama.CENTER);
+                            printama.addNewLine();
                             printama.printImage(logoRobles, logoSize);
                             break;
                         case "65mm":
@@ -3063,7 +3092,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             break;
                     }
                     printama.setSmallText();
-                    printama.printTextlnBold(NameCompany, Printama.CENTER);
+                    if(GlobalInfo.getTerminalNameCompany10){
+                        printama.printTextlnBold(NameCompany, Printama.CENTER);
+                    }else {
+                        printama.printTextlnBold(" ");
+                    }
                     printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
                     printama.printTextlnBold(Address2, Printama.CENTER);
                     printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
@@ -3075,7 +3108,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     switch (tipopapel) {
                         case "58mm":
                         case "80mm":
-                            printama.printTextln("                 ", Printama.CENTER);
+                            printama.addNewLine();
                             printama.printImage(logoRobles, logoSize);
                             break;
                         case "65mm":
@@ -3083,7 +3116,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             break;
                     }
                     printama.setSmallText();
-                    printama.printTextlnBold(NameCompany, Printama.CENTER);
+                    if(GlobalInfo.getTerminalNameCompany10){
+                        printama.printTextlnBold(NameCompany, Printama.CENTER);
+                    }else {
+                        printama.printTextlnBold(" ");
+                    }
                     printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
                     printama.printTextlnBold(Branch2, Printama.CENTER);
                     break;
@@ -3179,7 +3216,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 case "80mm":
                 case "65mm":
                     printama.setSmallText();
-                    printama.printTextlnBold("PRODUCTO      " + "U/MED   " + "PRECIO   " + "CANTIDAD  " + "IMPORTE", Printama.RIGHT);
+                    printama.printTextlnBold("PRODUCTO     " + "U/MED   " + "PRECIO   " + "CANTIDAD  " + "IMPORTE", Printama.RIGHT);
                     printama.setSmallText();
                     printama.printTextln(_ArticuloDS,Printama.LEFT);
 
@@ -3295,11 +3332,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     printama.setSmallText();
                     printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
+                    printama.setSmallText();
                     printama.printTextln("                 ", Printama.CENTER);
                     QRCodeWriter writer = new QRCodeWriter();
                     BitMatrix bitMatrix;
                     try {
-                        bitMatrix = writer.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
+                        bitMatrix = writer.encode(QRGenerado, BarcodeFormat.QR_CODE, 200, 200);
                         int width = bitMatrix.getWidth();
                         int height = bitMatrix.getHeight();
                         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -3416,7 +3454,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     QRCodeWriter writerB = new QRCodeWriter();
                     BitMatrix bitMatrixB;
                     try {
-                        bitMatrixB = writerB.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
+                        bitMatrixB = writerB.encode(QRGenerado, BarcodeFormat.QR_CODE, 200, 200);
                         int width = bitMatrixB.getWidth();
                         int height = bitMatrixB.getHeight();
                         Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
@@ -3465,8 +3503,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
 
             printama.feedPaper();
-            printama.close();
             printama.cutPaper();
+            printama.close();
 
         }, this::showToast);
 

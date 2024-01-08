@@ -158,7 +158,12 @@ public class CierreXTiendaFragment extends Fragment {
         logoCierreX.setImageURI(logoUri);
 
         /** Datos de Cierre Parcial de Caja (X) */
-        textNombreEmpresa.setText(GlobalInfo.getNameCompany10);
+        if(GlobalInfo.getTerminalNameCompany10){
+            textNombreEmpresa.setText(GlobalInfo.getNameCompany10);
+        }else {
+            textNombreEmpresa.setVisibility(View.GONE);
+        }
+        textNombreEmpresa.setVisibility(View.GONE);
         textSucural.setText("SUCURSAL: " + GlobalInfo.getBranchCompany10);
         FechaHoraIni.setText(GlobalInfo.getterminalFechaHoraCierre10);
         FechaHoraFin.setText(FechaHoraImpresion);
@@ -539,7 +544,7 @@ public class CierreXTiendaFragment extends Fragment {
             switch (tipopapel) {
                 case "65mm":
                 case "80mm":
-                    String line = String.format(Locale.getDefault(), "%-11s %-10s %12s %12s", producto, volumen, soles, descuentos);
+                    String line = String.format(Locale.getDefault(), "%-10s %-10s %12s %12s", producto, volumen, soles, descuentos);
                     VProductoBuilder.append(line).append("\n");
                     break;
                 case "58mm":
@@ -605,7 +610,7 @@ public class CierreXTiendaFragment extends Fragment {
         switch (tipopapel) {
             case "65mm":
             case "80mm":
-                String lines = String.format(Locale.getDefault(), "%-11s %10s %12s %12s", TotalVolumenProC, TSProductosTotalGLL,TSProductosTotalSoles,TSProductosTotalDesc);
+                String lines = String.format(Locale.getDefault(), "%-10s %10s %12s %12s", TotalVolumenProC, TSProductosTotalGLL,TSProductosTotalSoles,TSProductosTotalDesc);
                 TotalVolumenPro.append(lines);
                 break;
             case "58mm":
@@ -641,7 +646,7 @@ public class CierreXTiendaFragment extends Fragment {
         switch (tipopapel) {
             case "65mm":
             case "80mm":
-                String linees = String.format(Locale.getDefault(), "%-36s  %10s", DescuentosTotalC, TSProductosTotalDescs);
+                String linees = String.format(Locale.getDefault(), "%-35s  %10s", DescuentosTotalC, TSProductosTotalDescs);
                 DescuentosTotal.append(linees);
                 break;
             case "58mm":
@@ -688,23 +693,26 @@ public class CierreXTiendaFragment extends Fragment {
                 break;
         }
 
-
-        int logoSize = (tipopapel.equals("80mm")) ? 200 : (tipopapel.equals("65mm") ? 200 : 400);
+        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
         /** Imprimir Cierre X**/
         Printama.with(getContext()).connect(printama -> {
             switch (tipopapel) {
                 case "58mm":
                 case "80mm":
-                    printama.printTextln("                 ", Printama.CENTER);
+                    printama.addNewLine();
                     printama.printImage(logoRobles, logoSize);
                     break;
                 case "65mm":
-                    printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                    printama.printImage(Printama.CENTER,logoRobles, logoSize);
                     break;
             }
             printama.setSmallText();
-            printama.printTextlnBold(NameCompany, Printama.CENTER);
+            if(GlobalInfo.getTerminalNameCompany10){
+                printama.printTextlnBold(NameCompany, Printama.CENTER);
+            }else {
+                printama.printTextlnBold(" ");
+            }
             printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
             printama.printTextlnBold(Branch2, Printama.CENTER);
             printama.setSmallText();
@@ -742,7 +750,7 @@ public class CierreXTiendaFragment extends Fragment {
                 switch (tipopapel) {
                     case "65mm":
                     case "80mm":
-                        printama.printTextlnBold("PRODUCTO       "+"VOLUMEN        "+"SOLES   "+" DESCUENTO",Printama.RIGHT);
+                        printama.printTextlnBold("PRODUCTO      "+"VOLUMEN        "+"SOLES   "+" DESCUENTO",Printama.RIGHT);
                         printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "    " + "---------" + "    " + "---------", Printama.RIGHT);
                         printama.printTextlnBold(TotalVolumenPro.toString(),Printama.RIGHT);
                         break;
@@ -754,7 +762,7 @@ public class CierreXTiendaFragment extends Fragment {
                 }
             }
 
-            if(GlobalInfo.getventasTarjetas10) {
+            if(GlobalInfo.getVentasTipoPago10) {
                 printama.setSmallText();
                 printSeparatorLine(printama, tipopapel);
                 printama.addNewLine(1);
@@ -765,14 +773,14 @@ public class CierreXTiendaFragment extends Fragment {
                     case "65mm":
                     case "80mm":
                         printama.printTextlnBold( VTipoPagoBuilder.toString(), Printama.RIGHT);
-                        printama.printTextlnBold("Transferencia Gratuito                    "+"  0.00",Printama.RIGHT);
-                        printama.printTextlnBold("Promociones                               "+"  0.00",Printama.RIGHT);
+                        printama.printTextlnBold("Transferencia Gratuito                   "+"  0.00",Printama.RIGHT);
+                        printama.printTextlnBold("Promociones                              "+"  0.00",Printama.RIGHT);
                         printama.printTextlnBold("---------",Printama.RIGHT);
                         printama.printTextlnBold(MontoNetoTotal.toString(),Printama.RIGHT);
                         printama.addNewLine(1);
                         printama.setSmallText();
                         printama.printTextlnBold(DescuentosTotal.toString(),Printama.RIGHT);
-                        printama.printTextlnBold("Total Incremento                          "+"  0.00",Printama.RIGHT);
+                        printama.printTextlnBold("Total Incremento                         "+"  0.00",Printama.RIGHT);
                         printama.printTextlnBold("---------",Printama.RIGHT);
                         printama.printTextlnBold(MontoBrutoTotal.toString(),Printama.RIGHT);
                         break;

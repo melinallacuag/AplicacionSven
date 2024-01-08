@@ -34,6 +34,7 @@
     <color name="colorMenu">#001E8A</color>
     <color name="colornew">#E4E4E4</color>
     <color name="transparentenew">#00000000</color>
-
+    <color name="coloCar">#FFC107</color>
+    <color name="coloCar2">#F3CE5E</color>
 
 </resources>
