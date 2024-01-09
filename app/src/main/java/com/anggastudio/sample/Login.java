@@ -72,7 +72,6 @@ public class Login extends AppCompatActivity{
          * @OBTENER:Imei
          */
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
-        imeii.setText("F6036B683498BFDA");
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
         /**
