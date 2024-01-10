@@ -872,8 +872,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     if (campoOperacion.isEmpty()) {
                                         alertOperacion.setError("* El campo Nro Operación es obligatorio");
                                         return;
-                                    } else if (campoOperacion.length() < 4) {
-                                        alertOperacion.setError("* El  Nro Operación debe tener 4 dígitos");
+                                    } else if (campoOperacion.length() < 8) {
+                                        alertOperacion.setError("* El  Nro Operación debe tener 8 dígitos");
                                         return;
                                     } else if (campoPEfectivo.isEmpty()) {
                                         alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
@@ -1347,9 +1347,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                                         alertOperacion.setError("* El campo Nro Operación es obligatorio");
                                         return;
-                                    } else if (campoOperacion.length() < 4) {
+                                    } else if (campoOperacion.length() < 8) {
 
-                                        alertOperacion.setError("* El  Nro Operación debe tener 4 dígitos");
+                                        alertOperacion.setError("* El  Nro Operación debe tener 8 dígitos");
                                         return;
                                     } else if (campoPEfectivo.isEmpty()) {
 

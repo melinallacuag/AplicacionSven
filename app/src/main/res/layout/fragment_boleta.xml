@@ -333,7 +333,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
                     android:inputType="number"
-                    android:maxLength="4"
+                    android:maxLength="8"
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
