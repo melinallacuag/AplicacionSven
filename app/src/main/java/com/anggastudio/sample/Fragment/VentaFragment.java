@@ -26,6 +26,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -327,13 +328,18 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnSoles.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 modalSoles.show();
 
                 btnCancelarSoles      = modalSoles.findViewById(R.id.btnCancelarSoles);
                 btnAgregarSoles       = modalSoles.findViewById(R.id.btnAgregarSoles);
                 inputMontoSoles       = modalSoles.findViewById(R.id.inputMontoSoles);
                 alertSoles            = modalSoles.findViewById(R.id.alertSoles);
+
+                if(GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
+                    inputMontoSoles.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                }else{
+                    inputMontoSoles.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
 
                 btnCancelarSoles.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -358,42 +364,48 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             return;
                         }
 
-                        boolean isDecimal = MontoSoles.contains(".");
+                        boolean isDecimal  = MontoSoles.contains(".");
 
-                        Double DoubleMontoSoles = Double.parseDouble(MontoSoles);
+                        if(GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
 
-                        try {
+                            if (isDecimal) {
 
-                            if(GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
+                                Double DoubleMontoSoles = Double.parseDouble(MontoSoles);
 
-                                if (isDecimal) {
-
-                                    if (DoubleMontoSoles < 5 || DoubleMontoSoles > 9999) {
-                                        alertSoles.setError("El valor debe ser mayor a 5 y menor que 9999");
-                                        return;
-                                    }
+                                if (DoubleMontoSoles < 2.0 || DoubleMontoSoles > 9999.0) {
+                                    alertSoles.setError("El valor debe ser mayor a 2.0 y menor que 9999");
+                                    return;
                                 }
 
                             } else {
+
                                 int NumIntSoles = Integer.parseInt(MontoSoles);
 
-                                if (NumIntSoles < 5 || NumIntSoles > 9999) {
-                                    alertSoles.setError("El valor debe ser mayor a 5 y menor que 9999");
+                                if (NumIntSoles < 2 || NumIntSoles > 9999) {
+                                    alertSoles.setError("El valor debe ser mayor a 2 y menor que 9999");
                                     return;
                                 }
+
                             }
 
-                            alertSoles.setErrorEnabled(false);
+                        }else {
 
-                            guardar_montoSoles(GlobalInfo.getManguera10, Double.parseDouble(MontoSoles));
+                            int NumIntSoles = Integer.parseInt(MontoSoles);
 
-                            Toast.makeText(getContext(), "SE AGREGO CORRECTAMENTE", Toast.LENGTH_SHORT).show();
-                            modalSoles.dismiss();
-                            inputMontoSoles.getText().clear();
+                            if (NumIntSoles < 5 || NumIntSoles > 9999) {
+                                alertSoles.setError("El valor debe ser mayors a 5 y menor que 9999");
+                                return;
+                            }
 
-                        } catch (NumberFormatException e) {
-                            alertSoles.setError("El valor ingresado no es válido");
                         }
+
+                        alertSoles.setErrorEnabled(false);
+
+                        guardar_montoSoles(GlobalInfo.getManguera10, Double.parseDouble(MontoSoles));
+
+                        Toast.makeText(getContext(), "SE AGREGO CORRECTAMENTE", Toast.LENGTH_SHORT).show();
+                        modalSoles.dismiss();
+                        inputMontoSoles.getText().clear();
 
                     }
                 });

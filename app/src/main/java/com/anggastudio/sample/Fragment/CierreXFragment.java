@@ -1028,6 +1028,8 @@ public class CierreXFragment extends Fragment {
 
                     }
 
+                    break;
+
                 case "80mm":
 
                     printama.addNewLine();
