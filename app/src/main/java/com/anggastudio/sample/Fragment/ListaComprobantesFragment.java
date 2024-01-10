@@ -1387,7 +1387,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                         case "01" :
                                         case "03" :
 
-                                            printama.printImage(logoRobles, logoSize,Printama.RIGHT);
+                                            printama.printImage(Printama.RIGHT,logoRobles, logoSize);
 
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
