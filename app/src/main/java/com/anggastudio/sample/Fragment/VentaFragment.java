@@ -872,8 +872,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     if (campoOperacion.isEmpty()) {
                                         alertOperacion.setError("* El campo Nro Operación es obligatorio");
                                         return;
-                                    } else if (campoOperacion.length() < 8) {
-                                        alertOperacion.setError("* El  Nro Operación debe tener 8 dígitos");
+                                    } else if (campoOperacion.length() < 4) {
+                                        alertOperacion.setError("* El  Nro Operación debe tener mayor a 4 dígitos");
                                         return;
                                     } else if (campoPEfectivo.isEmpty()) {
                                         alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
@@ -1337,9 +1337,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                                     alertRazSocial.setError("* La Razon Social es obligatorio");
                                     return;
-                                }  else if (campoRazSocial.length() < 4 ) {
+                                }  else if (campoRazSocial.length() < 11 ) {
 
-                                    alertRazSocial.setError("* La Razon Social debe tener mínino 4 dígitos");
+                                    alertRazSocial.setError("* La Razon Social debe tener mínino 11 dígitos");
                                     return;
                                 }else if (checkedRadioButtonId == radioTarjeta.getId()) {
 
@@ -1347,9 +1347,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                                         alertOperacion.setError("* El campo Nro Operación es obligatorio");
                                         return;
-                                    } else if (campoOperacion.length() < 8) {
+                                    } else if (campoOperacion.length() < 4) {
 
-                                        alertOperacion.setError("* El  Nro Operación debe tener 8 dígitos");
+                                        alertOperacion.setError("* El  Nro Operación debe tener mayor a 4 dígitos");
                                         return;
                                     } else if (campoPEfectivo.isEmpty()) {
 
@@ -2642,6 +2642,22 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         String mnobservacionPag = "CONTADO";
                         String mnTipoDocumento = "";
 
+                        /** 11-01-2024**/
+                        /** 3.- MONTOS MENORES A 0.10 QUE SE GENERE NOTA DE DESPACHO **/
+
+                        if (GlobalInfo.getoptranSoles10 < GlobalInfo.getsettingFuelMontoMinimo10) {
+                            mnTipoPago = "C";
+                            mnClienteID = "11111111";
+                            mnClienteRUC = "";
+                            mnClienteRS = "CLIENTE VARIOS";
+                            mnCliernteDR = "";
+                            mnNroPlaca = "000-0000";
+                            mnTarjND = "70100";
+                            mnTarjetaCredito = "0";
+                            mnOperacionREF = "";
+                            mnMontoSoles = 0.00;
+                        }
+
                         switch (mnTipoPago) {
                             case "E" :
                                 if (mnClienteRUC.length() == 11) {
@@ -2696,6 +2712,19 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             mnClienteRS = "CLIENTE VARIOS";
                             mnCliernteDR = "";
                             mnNroPlaca = "000-0000";
+                        }
+
+                        /** 4.- VALIDAR BOLETA MAYORES A 700 SOLES **/
+
+                        if (mnClienteID.equals(GlobalInfo.getsettingClienteID10)  && GlobalInfo.getoptranSoles10 >= GlobalInfo.getsettingDNIMontoMinimo10 && mnTipoDocumento.equals("03")) {
+                            Toast.makeText(getContext(), "Por montos mayores a 700.00 soles debe ingresar el DNI del cliente", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        /**11-01-2024**/
+                        /** 1.- NOTAS DE DESPACHO A CLIENTES VARIOS ====> DEBE SER CONTADO **/
+                        if (mnClienteID.equals(GlobalInfo.getsettingClienteID10)  && mnTipoDocumento.equals("99")) {
+                            mnobservacionPag = "CONTADO";
                         }
 
                         /** Generamos correlativo para grabar **/
@@ -2887,51 +2916,63 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     /** IMPRESION DEL COMPROBANTE **/
 
+                    /** 11-01-2024**/
+                    /** 2.- PARAMETRO PARA IMPRIMIR COMPROBANTES A CLIENTES VARIOS (TRUE O FALSE) **/
 
-                    if (mnPagoID == 2) {
+                    boolean flagprinter = true;
 
-                        /** @IMPRESION01 */
-                        imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
-                                GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
-                                GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
-                                mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
-                                mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
-                                mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+                    if (mnClienteID.equals(GlobalInfo.getsettingClienteID10) && GlobalInfo.getterminalCvariosPrinter10 == false) {
+                        flagprinter = false;
+                    }
+
+                    if (flagprinter == true) {
+
+                        if (mnPagoID == 2) {
+
+                            /** @IMPRESION01 */
+                            imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                    GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                    GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                    mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                    mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                    mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
 
 
-                        Double finalMnMtoPagar1 = mnMtoPagar;
-                        Double finalMnMtoSubTotal1 = mnMtoSubTotal1;
-                        Double finalMnMtoImpuesto1 = mnMtoImpuesto1;
-                        Double finalMnMtoCanje1 = mnMtoCanje;
-                        Double finalMnMtoDescuento1 = mnMtoDescuento1;
+                            Double finalMnMtoPagar1 = mnMtoPagar;
+                            Double finalMnMtoSubTotal1 = mnMtoSubTotal1;
+                            Double finalMnMtoImpuesto1 = mnMtoImpuesto1;
+                            Double finalMnMtoCanje1 = mnMtoCanje;
+                            Double finalMnMtoDescuento1 = mnMtoDescuento1;
 
-                        Timer timerS = new Timer();
-                        /** @IMPRESION02 */
-                        timerS.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
-                                        GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
-                                        GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
-                                        finalMnMtoPagar1, finalMnMtoSubTotal1, finalMnMtoImpuesto1,
-                                        mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
-                                        mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                        mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles);
+                            Timer timerS = new Timer();
+                            /** @IMPRESION02 */
+                            timerS.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                            GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                            GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                            finalMnMtoPagar1, finalMnMtoSubTotal1, finalMnMtoImpuesto1,
+                                            mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                            mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles);
 
-                                timerS.cancel();
-                            }
-                        }, 3000);
+                                    timerS.cancel();
+                                }
+                            }, 3000);
 
-                    } else {
+                        } else {
 
-                        imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
-                                GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
-                                GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
-                                mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
-                                mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
-                                mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+                            imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                    GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                    GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                    mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                    mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                    mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+
+                        }
 
                     }
 
