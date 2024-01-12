@@ -715,74 +715,84 @@ public class DasboardFragment extends Fragment{
                                 if (HoraActual >= 0 && HoraActual <= 3000) {
                                     findOptranDia(GlobalInfo.getterminalImei10);
                                 } else {
-                                    findOptranDiaFE(GlobalInfo.getterminalImei10);
 
-                                    modalAlertaDiaActual.show();
+                                    if (GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty()){
 
-                                    btnIngresarIDFEntrada = modalAlertaDiaActual.findViewById(R.id.btnIngresarIDFEntrada);
+                                        /**  No puede realizar Inicio de Día. Porque ya esta genero. **/
+                                        modalInicioDiaGenerado.show();
 
-                                    modalForzarEntrada = new Dialog(getContext());
-                                    modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                    modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
-                                    modalForzarEntrada.setCancelable(false);
+                                    }else {
 
-                                    btnIngresarIDFEntrada.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                                        findOptranDiaFE(GlobalInfo.getterminalImei10);
 
-                                            if (!modalForzarEntrada.isShowing()) {
-                                                modalForzarEntrada.show();
-                                            }
+                                        modalAlertaDiaActual.show();
 
-                                            btnCancelarIDFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
-                                            btnAceptarCIDEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
-                                            usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
-                                            contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
-                                            alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
-                                            alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+                                        btnIngresarIDFEntrada = modalAlertaDiaActual.findViewById(R.id.btnIngresarIDFEntrada);
 
-                                            btnCancelarIDFEntrada.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
+                                        modalForzarEntrada = new Dialog(getContext());
+                                        modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                        modalForzarEntrada.setCancelable(false);
 
-                                                    modalForzarEntrada.dismiss();
+                                        btnIngresarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 
-                                                    usuario.getText().clear();
-                                                    contraseña.getText().clear();
-
-                                                    alertuser.setErrorEnabled(false);
-                                                    alertpassword.setErrorEnabled(false);
-
+                                                if (!modalForzarEntrada.isShowing()) {
+                                                    modalForzarEntrada.show();
                                                 }
-                                            });
 
-                                            btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
+                                                btnCancelarIDFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                                btnAceptarCIDEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                                usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                                contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                                alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                                alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
 
-                                                    usuarioUser = usuario.getText().toString();
-                                                    contraseñaUser = contraseña.getText().toString();
+                                                btnCancelarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
 
-                                                    if (usuarioUser.isEmpty()) {
-                                                        alertuser.setError("El campo usuario es obligatorio");
-                                                        return;
-                                                    } else if (contraseñaUser.isEmpty()) {
-                                                        alertpassword.setError("El campo contraseña es obligatorio");
-                                                        return;
+                                                        modalForzarEntrada.dismiss();
+
+                                                        usuario.getText().clear();
+                                                        contraseña.getText().clear();
+
+                                                        alertuser.setErrorEnabled(false);
+                                                        alertpassword.setErrorEnabled(false);
+
                                                     }
+                                                });
 
-                                                    findUsersID(usuarioUser);
+                                                btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
 
-                                                    alertuser.setErrorEnabled(false);
-                                                    alertpassword.setErrorEnabled(false);
+                                                        usuarioUser = usuario.getText().toString();
+                                                        contraseñaUser = contraseña.getText().toString();
 
-                                                }
-                                            });
+                                                        if (usuarioUser.isEmpty()) {
+                                                            alertuser.setError("El campo usuario es obligatorio");
+                                                            return;
+                                                        } else if (contraseñaUser.isEmpty()) {
+                                                            alertpassword.setError("El campo contraseña es obligatorio");
+                                                            return;
+                                                        }
 
-                                        }
-                                    });
+                                                        findUsersID(usuarioUser);
 
-                                    return;
+                                                        alertuser.setErrorEnabled(false);
+                                                        alertpassword.setErrorEnabled(false);
+
+                                                    }
+                                                });
+
+                                            }
+                                        });
+
+                                        return;
+                                    }
+
                                 }
 
                             } else {
@@ -791,74 +801,83 @@ public class DasboardFragment extends Fragment{
                                     findOptranDia(GlobalInfo.getterminalImei10);
                                 } else {
 
-                                    findOptranDiaFE(GlobalInfo.getterminalImei10);
+                                    if (GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty()){
 
-                                    modalAlertaDiaActual.show();
+                                        /**  No puede realizar Inicio de Día. Porque ya esta genero. **/
+                                        modalInicioDiaGenerado.show();
 
-                                    btnIngresarIDFEntrada = modalAlertaDiaActual.findViewById(R.id.btnIngresarIDFEntrada);
+                                    }else {
 
-                                    modalForzarEntrada = new Dialog(getContext());
-                                    modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                    modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
-                                    modalForzarEntrada.setCancelable(false);
+                                        findOptranDiaFE(GlobalInfo.getterminalImei10);
 
-                                    btnIngresarIDFEntrada.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
+                                        modalAlertaDiaActual.show();
 
-                                            if (!modalForzarEntrada.isShowing()) {
-                                                modalForzarEntrada.show();
-                                            }
+                                        btnIngresarIDFEntrada = modalAlertaDiaActual.findViewById(R.id.btnIngresarIDFEntrada);
 
-                                            btnCancelarIDFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
-                                            btnAceptarCIDEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
-                                            usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
-                                            contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
-                                            alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
-                                            alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+                                        modalForzarEntrada = new Dialog(getContext());
+                                        modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                        modalForzarEntrada.setCancelable(false);
 
-                                            btnCancelarIDFEntrada.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
+                                        btnIngresarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
 
-                                                    modalForzarEntrada.dismiss();
-
-                                                    usuario.getText().clear();
-                                                    contraseña.getText().clear();
-
-                                                    alertuser.setErrorEnabled(false);
-                                                    alertpassword.setErrorEnabled(false);
-
+                                                if (!modalForzarEntrada.isShowing()) {
+                                                    modalForzarEntrada.show();
                                                 }
-                                            });
 
-                                            btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View view) {
+                                                btnCancelarIDFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                                btnAceptarCIDEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                                usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                                contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                                alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                                alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
 
-                                                    usuarioUser = usuario.getText().toString();
-                                                    contraseñaUser = contraseña.getText().toString();
+                                                btnCancelarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
 
-                                                    if (usuarioUser.isEmpty()) {
-                                                        alertuser.setError("El campo usuario es obligatorio");
-                                                        return;
-                                                    } else if (contraseñaUser.isEmpty()) {
-                                                        alertpassword.setError("El campo contraseña es obligatorio");
-                                                        return;
+                                                        modalForzarEntrada.dismiss();
+
+                                                        usuario.getText().clear();
+                                                        contraseña.getText().clear();
+
+                                                        alertuser.setErrorEnabled(false);
+                                                        alertpassword.setErrorEnabled(false);
+
                                                     }
+                                                });
 
-                                                    findUsersID(usuarioUser);
+                                                btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
 
-                                                    alertuser.setErrorEnabled(false);
-                                                    alertpassword.setErrorEnabled(false);
+                                                        usuarioUser = usuario.getText().toString();
+                                                        contraseñaUser = contraseña.getText().toString();
 
-                                                }
-                                            });
+                                                        if (usuarioUser.isEmpty()) {
+                                                            alertuser.setError("El campo usuario es obligatorio");
+                                                            return;
+                                                        } else if (contraseñaUser.isEmpty()) {
+                                                            alertpassword.setError("El campo contraseña es obligatorio");
+                                                            return;
+                                                        }
 
-                                        }
-                                    });
+                                                        findUsersID(usuarioUser);
 
-                                    return;
+                                                        alertuser.setErrorEnabled(false);
+                                                        alertpassword.setErrorEnabled(false);
+
+                                                    }
+                                                });
+
+                                            }
+                                        });
+
+                                        return;
+                                    }
+
                                 }
 
                             }
