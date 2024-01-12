@@ -220,6 +220,7 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getTerminalNameCompany10     = terminal.getNameCompany();
                         GlobalInfo.getTerminalImageW10          = terminal.getImageW();
                         GlobalInfo.getTipoPapel10               = terminal.getImpresora();
+                        GlobalInfo.getterminalCvariosPrinter10  = terminal.getcVarios_Printer();
 
                         /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);

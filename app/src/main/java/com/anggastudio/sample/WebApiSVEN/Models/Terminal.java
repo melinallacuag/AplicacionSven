@@ -36,7 +36,8 @@ public class Terminal {
     private Boolean cierreX_RVendedor;
     private Boolean nameCompany;
     private Integer imageW;
-    private String impresora;
+    private String  impresora;
+    private Boolean cVarios_Printer;
 
     public String getTerminalID() {
         return terminalID;
@@ -316,5 +317,13 @@ public class Terminal {
 
     public void setImpresora(String impresora) {
         this.impresora = impresora;
+    }
+
+    public Boolean getcVarios_Printer() {
+        return cVarios_Printer;
+    }
+
+    public void setcVarios_Printer(Boolean cVarios_Printer) {
+        this.cVarios_Printer = cVarios_Printer;
     }
 }

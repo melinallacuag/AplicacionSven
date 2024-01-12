@@ -27,15 +27,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
+import com.anggastudio.sample.Menu;
 import com.anggastudio.sample.NFCUtil;
+import com.anggastudio.sample.PasswordChecker;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
+import com.anggastudio.sample.WebApiSVEN.Models.Users;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,13 +62,20 @@ public class DasboardFragment extends Fragment{
 
     CardView btn_Venta,btn_Cierrex,btn_Cambioturno,btn_Iniciodia,btn_Salir;
 
-    Button btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir,btn_CancelarIngreso,btn_AceptarIngreso;
+    Button btnCancelarIDFEntrada,btnAceptarCIDEntrada,btnCancelarCTFEntrada,btnAceptarCTFEntrada,btnIngresarCTFEntrada,btnIngresarIDFEntrada,btnCancelarTurno,btnCancelarInicio,btnAceptarTurno,btnAceptarInicio,btncancelarsalida,btnsalir,btn_CancelarIngreso,btn_AceptarIngreso;
 
-    Dialog modalCambioTurno,modalInicioDia,modalAlertaVentaPendiente,modalSalir,modalAlertaDiaActual,
+    Dialog modalForzarEntrada,modalCambioTurno,modalInicioDia,modalAlertaVentaPendiente,modalSalir,modalAlertaDiaActual,
             modalAlertaCTurnoActual,modalAlertaIngreso,modalInicioDiaGenerado;
 
     ShapeableImageView img_Logo;
     ImageView imageee;
+
+    TextInputEditText usuario, contraseña;
+    TextInputLayout alertuser,alertpassword;
+
+    String usuarioUser,contraseñaUser;
+
+    List<Users> usersCTList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -309,7 +322,75 @@ public class DasboardFragment extends Fragment{
                                 findOptranTurno(GlobalInfo.getterminalImei10);
                                 xPase = true;
                             } else {
+                                findOptranTurnoFE(GlobalInfo.getterminalImei10);
+                                xPase = true;
+
                                 modalAlertaCTurnoActual.show();
+
+                                btnIngresarCTFEntrada = modalAlertaCTurnoActual.findViewById(R.id.btnIngresarCTFEntrada);
+
+                                modalForzarEntrada = new Dialog(getContext());
+                                modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                modalForzarEntrada.setCancelable(false);
+
+                                btnIngresarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        if (!modalForzarEntrada.isShowing()) {
+                                            modalForzarEntrada.show();
+                                        }
+
+                                        btnCancelarCTFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                        btnAceptarCTFEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                        usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                        contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                        alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                        alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                                        btnCancelarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                modalForzarEntrada.dismiss();
+
+                                                usuario.getText().clear();
+                                                contraseña.getText().clear();
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+                                        btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                usuarioUser    = usuario.getText().toString();
+                                                contraseñaUser = contraseña.getText().toString();
+
+                                                if (usuarioUser.isEmpty()) {
+                                                    alertuser.setError("El campo usuario es obligatorio");
+                                                    return;
+                                                } else if (contraseñaUser.isEmpty()) {
+                                                    alertpassword.setError("El campo contraseña es obligatorio");
+                                                    return;
+                                                }
+
+                                                findUsersCT(usuarioUser);
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+
+                                    }
+                                });
+
                                 return;
                             }
 
@@ -319,7 +400,75 @@ public class DasboardFragment extends Fragment{
                                 findOptranTurno(GlobalInfo.getterminalImei10);
                                 xPase = true;
                             } else {
+                                findOptranTurnoFE(GlobalInfo.getterminalImei10);
+                                xPase = true;
+
                                 modalAlertaCTurnoActual.show();
+
+                                btnIngresarCTFEntrada = modalAlertaCTurnoActual.findViewById(R.id.btnIngresarCTFEntrada);
+
+                                modalForzarEntrada = new Dialog(getContext());
+                                modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                modalForzarEntrada.setCancelable(false);
+
+                                btnIngresarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        if (!modalForzarEntrada.isShowing()) {
+                                            modalForzarEntrada.show();
+                                        }
+
+                                        btnCancelarCTFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                        btnAceptarCTFEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                        usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                        contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                        alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                        alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                                        btnCancelarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                modalForzarEntrada.dismiss();
+
+                                                usuario.getText().clear();
+                                                contraseña.getText().clear();
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+                                        btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                usuarioUser    = usuario.getText().toString();
+                                                contraseñaUser = contraseña.getText().toString();
+
+                                                if (usuarioUser.isEmpty()) {
+                                                    alertuser.setError("El campo usuario es obligatorio");
+                                                    return;
+                                                } else if (contraseñaUser.isEmpty()) {
+                                                    alertpassword.setError("El campo contraseña es obligatorio");
+                                                    return;
+                                                }
+
+                                                findUsersCT(usuarioUser);
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+
+                                    }
+                                });
+
                                 return;
                             }
 
@@ -329,8 +478,74 @@ public class DasboardFragment extends Fragment{
                                 findOptranTurno(GlobalInfo.getterminalImei10);
                                 xPase = true;
                             } else {
+                                findOptranTurnoFE(GlobalInfo.getterminalImei10);
+                                xPase = true;
+
                                 modalAlertaCTurnoActual.show();
-                                return;
+
+                                btnIngresarCTFEntrada = modalAlertaCTurnoActual.findViewById(R.id.btnIngresarCTFEntrada);
+
+                                modalForzarEntrada = new Dialog(getContext());
+                                modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                modalForzarEntrada.setCancelable(false);
+
+                                btnIngresarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        if (!modalForzarEntrada.isShowing()) {
+                                            modalForzarEntrada.show();
+                                        }
+
+                                        btnCancelarCTFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                        btnAceptarCTFEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                        usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                        contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                        alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                        alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                                        btnCancelarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                modalForzarEntrada.dismiss();
+
+                                                usuario.getText().clear();
+                                                contraseña.getText().clear();
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+                                        btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                usuarioUser    = usuario.getText().toString();
+                                                contraseñaUser = contraseña.getText().toString();
+
+                                                if (usuarioUser.isEmpty()) {
+                                                    alertuser.setError("El campo usuario es obligatorio");
+                                                    return;
+                                                } else if (contraseñaUser.isEmpty()) {
+                                                    alertpassword.setError("El campo contraseña es obligatorio");
+                                                    return;
+                                                }
+
+                                                findUsersCT(usuarioUser);
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+
+                                    }
+                                });
                             }
 
                         }
@@ -343,7 +558,75 @@ public class DasboardFragment extends Fragment{
                                 findOptranTurno(GlobalInfo.getterminalImei10);
                                 xPase = true;
                             } else {
+                                findOptranTurnoFE(GlobalInfo.getterminalImei10);
+                                xPase = true;
+
                                 modalAlertaCTurnoActual.show();
+
+                                btnIngresarCTFEntrada = modalAlertaCTurnoActual.findViewById(R.id.btnIngresarCTFEntrada);
+
+                                modalForzarEntrada = new Dialog(getContext());
+                                modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                modalForzarEntrada.setCancelable(false);
+
+                                btnIngresarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                        if (!modalForzarEntrada.isShowing()) {
+                                            modalForzarEntrada.show();
+                                        }
+
+                                        btnCancelarCTFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                        btnAceptarCTFEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                        usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                        contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                        alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                        alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                                        btnCancelarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                modalForzarEntrada.dismiss();
+
+                                                usuario.getText().clear();
+                                                contraseña.getText().clear();
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+                                        btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+
+                                                usuarioUser = usuario.getText().toString();
+                                                contraseñaUser = contraseña.getText().toString();
+
+                                                if (usuarioUser.isEmpty()) {
+                                                    alertuser.setError("El campo usuario es obligatorio");
+                                                    return;
+                                                } else if (contraseñaUser.isEmpty()) {
+                                                    alertpassword.setError("El campo contraseña es obligatorio");
+                                                    return;
+                                                }
+
+                                                findUsersCT(usuarioUser);
+
+                                                alertuser.setErrorEnabled(false);
+                                                alertpassword.setErrorEnabled(false);
+
+                                            }
+                                        });
+
+
+                                    }
+                                });
+
                                 return;
                             }
 
@@ -432,7 +715,73 @@ public class DasboardFragment extends Fragment{
                                 if (HoraActual >= 0 && HoraActual <= 3000) {
                                     findOptranDia(GlobalInfo.getterminalImei10);
                                 } else {
+                                    findOptranDiaFE(GlobalInfo.getterminalImei10);
+
                                     modalAlertaDiaActual.show();
+
+                                    btnIngresarIDFEntrada = modalAlertaDiaActual.findViewById(R.id.btnIngresarIDFEntrada);
+
+                                    modalForzarEntrada = new Dialog(getContext());
+                                    modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                    modalForzarEntrada.setCancelable(false);
+
+                                    btnIngresarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            if (!modalForzarEntrada.isShowing()) {
+                                                modalForzarEntrada.show();
+                                            }
+
+                                            btnCancelarIDFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                            btnAceptarCIDEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                            usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                            contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                            alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                            alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                                            btnCancelarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    modalForzarEntrada.dismiss();
+
+                                                    usuario.getText().clear();
+                                                    contraseña.getText().clear();
+
+                                                    alertuser.setErrorEnabled(false);
+                                                    alertpassword.setErrorEnabled(false);
+
+                                                }
+                                            });
+
+                                            btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    usuarioUser = usuario.getText().toString();
+                                                    contraseñaUser = contraseña.getText().toString();
+
+                                                    if (usuarioUser.isEmpty()) {
+                                                        alertuser.setError("El campo usuario es obligatorio");
+                                                        return;
+                                                    } else if (contraseñaUser.isEmpty()) {
+                                                        alertpassword.setError("El campo contraseña es obligatorio");
+                                                        return;
+                                                    }
+
+                                                    findUsersID(usuarioUser);
+
+                                                    alertuser.setErrorEnabled(false);
+                                                    alertpassword.setErrorEnabled(false);
+
+                                                }
+                                            });
+
+                                        }
+                                    });
+
                                     return;
                                 }
 
@@ -441,7 +790,74 @@ public class DasboardFragment extends Fragment{
                                 if (HoraActual >= GlobalInfo.getSettingRango110 && HoraActual <= GlobalInfo.getSettingRango210) {
                                     findOptranDia(GlobalInfo.getterminalImei10);
                                 } else {
+
+                                    findOptranDiaFE(GlobalInfo.getterminalImei10);
+
                                     modalAlertaDiaActual.show();
+
+                                    btnIngresarIDFEntrada = modalAlertaDiaActual.findViewById(R.id.btnIngresarIDFEntrada);
+
+                                    modalForzarEntrada = new Dialog(getContext());
+                                    modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+                                    modalForzarEntrada.setCancelable(false);
+
+                                    btnIngresarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+
+                                            if (!modalForzarEntrada.isShowing()) {
+                                                modalForzarEntrada.show();
+                                            }
+
+                                            btnCancelarIDFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                                            btnAceptarCIDEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                                            usuario               = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                                            contraseña            = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                                            alertuser             = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                                            alertpassword         = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                                            btnCancelarIDFEntrada.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    modalForzarEntrada.dismiss();
+
+                                                    usuario.getText().clear();
+                                                    contraseña.getText().clear();
+
+                                                    alertuser.setErrorEnabled(false);
+                                                    alertpassword.setErrorEnabled(false);
+
+                                                }
+                                            });
+
+                                            btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    usuarioUser = usuario.getText().toString();
+                                                    contraseñaUser = contraseña.getText().toString();
+
+                                                    if (usuarioUser.isEmpty()) {
+                                                        alertuser.setError("El campo usuario es obligatorio");
+                                                        return;
+                                                    } else if (contraseñaUser.isEmpty()) {
+                                                        alertpassword.setError("El campo contraseña es obligatorio");
+                                                        return;
+                                                    }
+
+                                                    findUsersID(usuarioUser);
+
+                                                    alertuser.setErrorEnabled(false);
+                                                    alertpassword.setErrorEnabled(false);
+
+                                                }
+                                            });
+
+                                        }
+                                    });
+
                                     return;
                                 }
 
@@ -751,6 +1167,245 @@ public class DasboardFragment extends Fragment{
             @Override
             public void onFailure(Call<CDia> call, Throwable t) {
                 Toast.makeText(getContext(), "Error de conexión APICORE", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /** API SERVICE - Usuarios Cambio Turno */
+    private void findUsersCT(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    usersCTList = response.body();
+
+                    for (Users user : usersCTList) {
+
+                        GlobalInfo.getuserIDFE10 = user.getUserID();
+                        GlobalInfo.getuserNameFE10 = user.getNames();
+                        GlobalInfo.getuserPassFE10 = user.getPassword();
+                        GlobalInfo.getuserCancelFE10 = user.getCancel();
+
+                    }
+
+                    if (GlobalInfo.getuserCancelFE10 == true) {
+
+                        String getName = usuarioUser.trim();
+                        String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
+
+                        if (getName.equals(GlobalInfo.getuserIDFE10) && getPass.equals(GlobalInfo.getuserPassFE10)) {
+
+                            try {
+                                Intent intent = new Intent(getContext(), Login.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                                cerrarTurno(GlobalInfo.getterminalID10);
+
+                                startActivity(intent);
+                                finalize();
+
+                                Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            modalForzarEntrada.dismiss();
+
+                        } else {
+                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                    modalAlertaCTurnoActual.dismiss();
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /** API SERVICE - Usuarios Inicio Dia */
+    private void findUsersID(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+
+                    usersCTList = response.body();
+
+                    for (Users user : usersCTList) {
+
+                        GlobalInfo.getuserIDFE10 = user.getUserID();
+                        GlobalInfo.getuserNameFE10 = user.getNames();
+                        GlobalInfo.getuserPassFE10 = user.getPassword();
+                        GlobalInfo.getuserCancelFE10 = user.getCancel();
+
+                    }
+
+                    if (GlobalInfo.getuserCancelFE10 == true) {
+
+                        String getName = usuarioUser.trim();
+                        String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
+
+                        if (getName.equals(GlobalInfo.getuserIDFE10) && getPass.equals(GlobalInfo.getuserPassFE10)) {
+
+                            try {
+                                Intent intent = new Intent(getContext(), Login.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                                iniciarDia(GlobalInfo.getterminalID10);
+
+                                startActivity(intent);
+                                finalize();
+
+                                Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            modalForzarEntrada.dismiss();
+
+                        } else {
+                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                    modalAlertaDiaActual.dismiss();
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
+     * @APISERVICE:OptranCambioTurnoFE
+     */
+    private void findOptranTurnoFE(String id){
+
+        Call<List<Optran>> call = mAPIService.findOptran(id);
+
+        call.enqueue(new Callback<List<Optran>>() {
+            @Override
+            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Optran> optranList = response.body();
+
+                    GlobalInfo.getpase10 = false;
+
+                    for(Optran optran: optranList) {
+                        GlobalInfo.getpase10 = true;
+                    }
+
+                    if (GlobalInfo.getpase10 == true){
+                        modalAlertaVentaPendiente.show();
+                        modalAlertaCTurnoActual.dismiss();
+                        return;
+                    }
+
+                    modalAlertaCTurnoActual.show();
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Optran>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
+     * @APISERVICE:OptranInicioDíaFE
+     */
+    private void findOptranDiaFE(String id){
+
+        Call<List<Optran>> call = mAPIService.findOptran(id);
+
+        call.enqueue(new Callback<List<Optran>>() {
+            @Override
+            public void onResponse(Call<List<Optran>> call, Response<List<Optran>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Optran> optranList = response.body();
+
+                    GlobalInfo.getpase10 = false;
+
+                    for(Optran optran: optranList) {
+                        GlobalInfo.getpase10 = true;
+                    }
+
+                    if (GlobalInfo.getpase10 == true){
+                        modalAlertaVentaPendiente.show();
+                        modalAlertaDiaActual.dismiss();
+                        return;
+                    }
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Optran>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -317,10 +317,10 @@ public class ListaComprobantesFragment extends Fragment  {
 
                         FragmentManager fragmentManager = getFragmentManager();
 
-                        String getName = usuario.getText().toString();
-                        String getPass = PasswordChecker.checkpassword(contraseña.getText().toString());
+                        String getName = usuarioUser.trim();
+                        String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
 
-                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
+                        if (getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)) {
 
                             Anulars(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10,GlobalInfo.getterminalID10);
 
