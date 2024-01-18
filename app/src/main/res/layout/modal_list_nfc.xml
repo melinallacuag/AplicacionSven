@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:inputType="textCapCharacters"
             android:layout_marginTop="5sp"
-            app:queryHint="Buscar Clientes"
+            app:queryHint="Buscar por Clientes Afiliado"
             android:background="@drawable/input_border" />
 
         <androidx.cardview.widget.CardView

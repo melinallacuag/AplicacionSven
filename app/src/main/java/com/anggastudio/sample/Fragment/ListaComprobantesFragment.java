@@ -95,6 +95,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
         BuscarRazonSocial   = view.findViewById(R.id.BuscarRazonSocial);
 
+        BuscarRazonSocial.setIconifiedByDefault(false);
+
         /** Listado de Comprobantes  */
         recyclerLComprobante = view.findViewById(R.id.recyclerListaComprobante);
         recyclerLComprobante.setLayoutManager(new LinearLayoutManager(getContext()));

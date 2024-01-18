@@ -32,13 +32,13 @@
             android:gravity="center_horizontal" />
 
         <androidx.appcompat.widget.SearchView
-            android:id="@+id/BuscarRazonSocial"
+                android:id="@+id/BuscarRazonSocial"
             android:layout_width="match_parent"
-            android:layout_height="45sp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="5sp"
-            app:queryHint="Buscar Clientes"
             android:background="@drawable/input_border"
-            android:inputType="textCapCharacters" />
+            android:inputType="textCapCharacters"
+            app:queryHint="Buscar por Razón Social" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardtransaccion"
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_extrabold"
                     android:gravity="center"
-                    android:text="Razon Social"
+                    android:text="Razón Social"
                     android:textColor="@color/white"
                     android:textSize="8sp" />
 
