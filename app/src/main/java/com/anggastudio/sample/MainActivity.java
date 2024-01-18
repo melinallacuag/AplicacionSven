@@ -35,10 +35,12 @@ public class MainActivity extends AppCompatActivity {
     private static final String PREF_TIPO_PAPEL = "pref_tipo_papel";
     RadioGroup radioGroup;
     TextView textotipopapel;
+    NFCUtil nfcUtil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        nfcUtil = new NFCUtil(this);
         findViewById(R.id.btn_printer_settings).setOnClickListener(v -> showPrinterList());
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
@@ -186,6 +188,18 @@ public class MainActivity extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        nfcUtil.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        nfcUtil.onPause();
     }
 
 
