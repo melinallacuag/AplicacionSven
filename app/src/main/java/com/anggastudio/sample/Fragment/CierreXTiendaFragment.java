@@ -175,6 +175,7 @@ public class CierreXTiendaFragment extends Fragment {
         RProductosTotalGLL   = 0.00;
         RProductosTotalSoles = 0.00;
         RProductosTotalDesc  = 0.00;
+        RProductosTotalIncremento = 0.00;
         RPagosTotalSoles     = 0.00;
         RTarjetasTotal       = 0.00;
         RVendedorTotal       = 0.00;
