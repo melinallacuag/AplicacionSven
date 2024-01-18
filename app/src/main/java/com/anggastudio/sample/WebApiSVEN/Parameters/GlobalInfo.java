@@ -33,12 +33,13 @@ public class GlobalInfo {
     public static String getTSProductosTotalGLL10;
     public static String getTSProductosTotalSoles10;
     public static String getTSProductosTotalDesc10;
+    public static String getTSProductosTotalIncremento10;
     public static String getTotalPagosSoles10;
     public static String getTotalRTarjetasSoles10;
     public static String getMontoBruto10;
 
     /**
-     * Datos Recycler
+     * Datos lista de Clases
      */
     public  static List<Lados> getladosList10;
     public  static List<Mangueras> getmanguerasList10;
@@ -219,6 +220,7 @@ public class GlobalInfo {
     public static String  getcorrelativoNumero;
     public static Double  getcorrelativoMDescuento;
     public static String  getcorrelativoDocumentoVenta;
+    public static String  getcorrelativoTipoDesc;
 
     /**
      * Datos de la Cliente Sellecion
@@ -252,7 +254,6 @@ public class GlobalInfo {
      */
 
     public static Boolean getDescuentoPase = false;
-
     public static String  getdescuentoClienteID10;
     public static String  getdescuentoTipoID10;
     public static String  getdescuentoArticuloID10;
@@ -293,6 +294,7 @@ public class GlobalInfo {
     public static Integer  getSettingRango110;
     public static Integer  getSettingRango210;
 
+    //
     public static String getnfcId10 = String.valueOf(-1);
 
     /**|
@@ -306,6 +308,7 @@ public class GlobalInfo {
     public static final String BASE_URL = "http://192.168.1.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
     //public static final String BASE_URL = "http://192.168.18.33:8081/";
+    // public static final String BASE_URL = "http://192.168.1.19:8081/";
 
     public static APIService getAPIService() {
         return getClient(BASE_URL).create(APIService.class);

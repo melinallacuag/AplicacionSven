@@ -2731,15 +2731,32 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         GlobalInfo.getcorrelativoMDescuento = 0.00;
 
-                        findCorrelativoCPE(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
-                                           mnClienteRUC, mnClienteRS, mnCliernteDR,
-                                           mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
-                                           mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
-                                           mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
-                                           mnobservacionPag, GlobalInfo.getoptranOperador10,
-                                           mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
-                                           GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
-                                           GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+                        if (mnRFID.equals("1")) {
+
+                            findCorrelativoSINRFID(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
+                                                   mnClienteRUC, mnClienteRS, mnCliernteDR,
+                                                   mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
+                                                   mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
+                                                   mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
+                                                   mnobservacionPag, GlobalInfo.getoptranOperador10,
+                                                   mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
+                                                   GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
+                                                   GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+
+
+                        } else {
+
+                            findCorrelativoCPE(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
+                                               mnClienteRUC, mnClienteRS, mnCliernteDR,
+                                               mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
+                                               mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
+                                               mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
+                                               mnobservacionPag, GlobalInfo.getoptranOperador10,
+                                               mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
+                                               GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
+                                               GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+
+                        }
 
                         for (DetalleVenta detalleVenta : GlobalInfo.getdetalleVentaList10) {
 
@@ -2786,6 +2803,239 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     }
 
     /**
+     * @APISERVICE:GenerarCorrelativoComprobante Sin RFID
+     */
+    private void findCorrelativoSINRFID(String imei, String mnTipoDocumento, String mnClienteID, String mnClienteRUC, String mnClienteRS, String mnCliernteDR,
+                                        String mnNroPlaca, String mnKilometraje, String mnTipoVenta, String mnObservacion,
+                                        String mnTarjND, String mnTarjetaPuntos, Double mnPtosDisponibles,
+                                        Integer mnPagoID, Integer mnTarjetaCreditoID, String mnOperacionREF,
+                                        String mnobservacionPag, String mnOperador, Double mnImpuesto,
+                                        Double mnMontoSoles, Double mnMtoSaldoCredito, String mnRFID,
+                                        Double mnMtoTotal, String mnArticuloID, Double mnCantidad, String mnTranID) {
+
+        Call<List<Correlativo>> call = mAPIService.findCorrelativosinrfid(imei, mnTipoDocumento, mnClienteID, mnArticuloID, mnTranID);
+
+        call.enqueue(new Callback<List<Correlativo>>() {
+            @Override
+            public void onResponse(Call<List<Correlativo>> call, Response<List<Correlativo>> response) {
+
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error Correlativo: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    List<Correlativo> correlativoList = response.body();
+
+                    for(Correlativo correlativo: correlativoList) {
+                        GlobalInfo.getcorrelativoFecha      = String.valueOf(correlativo.getFechaProceso());
+                        GlobalInfo.getcorrelativoSerie      = String.valueOf(correlativo.getSerie());
+                        GlobalInfo.getcorrelativoNumero     = String.valueOf(correlativo.getNumero());
+                        GlobalInfo.getcorrelativoMDescuento = correlativo.getMontoDescuento();
+                        GlobalInfo.getcorrelativoDocumentoVenta = correlativo.getDocumentoVenta();
+                        GlobalInfo.getcorrelativoTipoDesc       = correlativo.getTipoDescuento();
+                    }
+
+                    if(!GlobalInfo.getcorrelativoDocumentoVenta.isEmpty()){
+                        return;
+                    }
+
+                    /** Consultando datos del DOCUMENTO-SERIE-CORRELATIVO*/
+
+                    String GRFecProceso = GlobalInfo.getcorrelativoFecha;
+                    String GRNumeroSerie = GlobalInfo.getcorrelativoSerie;
+                    String GRNumeroDocumento = GlobalInfo.getcorrelativoNumero;
+
+                    String NroComprobante = GlobalInfo.getcorrelativoSerie + "-" + GlobalInfo.getcorrelativoNumero;
+
+                    /** Fecha de Impresión */
+                    Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
+                    SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                    String xFechaHoraImpresion   = formatdate.format(calendarprint.getTime());
+                    String xFechaDocumento       = xFechaHoraImpresion.substring(6,10) + xFechaHoraImpresion.substring(3,5) + xFechaHoraImpresion.substring(0,2) + " " + xFechaHoraImpresion.substring(11,19);
+                    String xFechaDocumentoQR     = xFechaHoraImpresion.substring(6,10) + "-" + xFechaHoraImpresion.substring(3,5) + "-" + xFechaHoraImpresion.substring(0,2);
+
+                    /** FIN Consultando datos del DOCUMENTO-SERIE-CORRELATIVO*/
+
+                    /** Calculando los totales **/
+
+                    Double mnPrecioOrig = 0.00;
+                    Double mnMtoPagar = 0.00;
+                    Double mnMtoCanje = 0.00;
+                    Double mnmtoPagoUSD = 0.00;
+                    Double mnPtosGanados = 0.00;
+
+                    Double mnMtoDescuento0 = 0.00;
+                    Double mnMtoDescuento1 = 0.00;
+                    String mnMtoDescuento2 = "";
+
+                    Double mnMtoIncremento0 = 0.00;
+                    Double mnMtoIncremento1 = 0.00;
+                    String mnMtoIncremento2 = "";
+
+                    Double mnMtoSubTotal0 = 0.00;
+                    Double mnMtoSubTotal1 = 0.00;
+                    String mnMtoSubTotal2 = "";
+
+                    Double mnMtoImpuesto0 = 0.00;
+                    Double mnMtoImpuesto1 = 0.00;
+                    String mnMtoImpuesto2 = "";
+
+                    Integer mnItem = 1;
+                    Double mnFise = 0.00;
+                    String mnobservacionDet = "";
+                    String mnReferencia = "";
+
+                    mnPrecioOrig = GlobalInfo.getoptranPrecio10;
+
+                    mnMtoCanje = mnMtoTotal;
+                    mnMtoPagar = mnMtoTotal;
+
+                    mnMtoSubTotal0 = mnMtoTotal / 1.18;
+                    mnMtoSubTotal1 = Math.round(mnMtoSubTotal0*100.0)/100.0;
+
+                    mnMtoImpuesto0 = mnMtoTotal - mnMtoSubTotal1;
+                    mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
+
+                    Double mnMtoDescuentoUnitario = GlobalInfo.getcorrelativoMDescuento;
+
+                    if (mnMtoDescuentoUnitario != 0 && mnCantidad >= 1) {
+
+                        /* MONTO DESCUENTO POR GALON (DES) */
+                        if (GlobalInfo.getcorrelativoTipoDesc.equals("DES")) {
+                            mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
+                            mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                            mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
+                        } else {
+                            /* PRECIO FIJO POR GALON (PRE) */
+
+                            if (mnMtoDescuentoUnitario > mnPrecioOrig) {
+                                /* PRECIO CON INCREMENTO */
+                                GlobalInfo.getoptranPrecio10 = mnMtoDescuentoUnitario;
+                                mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
+                                mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                                mnMtoPagar = mnMtoDescuento1;
+                                mnMtoDescuento1 = 0.00;
+
+                                mnMtoIncremento0 = mnMtoPagar - mnMtoTotal;
+                                mnMtoIncremento1 = Math.round(mnMtoIncremento0*100.0)/100.0;
+
+                            } else if (mnMtoDescuentoUnitario < mnPrecioOrig) {
+                                /* PRECIO CON DESCUENTO */
+                                mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
+                                mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                                mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
+                            }
+
+                        }
+
+                        mnMtoSubTotal0 = mnMtoPagar / 1.18;
+                        mnMtoSubTotal1 = Math.round(mnMtoSubTotal0*100.0)/100.0;
+                        mnMtoImpuesto0 = mnMtoPagar - mnMtoSubTotal1;
+                        mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
+
+                    }
+
+                    /** FIN Calculando los totales **/
+
+                    /** GRABAR VENTA EN BASE DE DATOS **/
+
+                    grabarVentaCA(GlobalInfo.getterminalCompanyID10, mnTipoDocumento, GRNumeroSerie, GRNumeroDocumento,
+                            GlobalInfo.getterminalID10, mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR,
+                            GlobalInfo.getterminalTurno10, GlobalInfo.getcorrelativoFecha, xFechaDocumento,
+                            GlobalInfo.getoptranFechaTran10,
+                            mnMtoDescuento1, mnMtoSubTotal1, mnMtoImpuesto1, mnMtoPagar,
+                            mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion, mnReferencia,
+                            mnTarjND, mnTarjetaPuntos, mnPtosGanados, mnPtosDisponibles,
+                            mnMtoCanje, GlobalInfo.getuserID10,
+                            mnItem, mnArticuloID, GlobalInfo.getoptranProductoDs10, GlobalInfo.getoptranUniMed10, GlobalInfo.getterminalAlmacenID10,
+                            GlobalInfo.getsettingImpuestoID110, GlobalInfo.getsettingImpuestoValor110, GlobalInfo.getoptranPrecio10, mnPrecioOrig, mnCantidad,
+                            mnFise, GlobalInfo.getoptranTranID10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranManguera10,
+                            mnobservacionDet,
+                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoPagar, mnMontoSoles, mnobservacionPag,
+                            mnOperador, mnMtoIncremento1);
+
+                    /** FIN GRABAR VENTA EN BASE DE DATOS **/
+
+                    /** IMPRESION DEL COMPROBANTE **/
+
+                    /** 11-01-2024**/
+                    /** 2.- PARAMETRO PARA IMPRIMIR COMPROBANTES A CLIENTES VARIOS (TRUE O FALSE) **/
+
+                    boolean flagprinter = true;
+
+                    if (mnClienteID.equals(GlobalInfo.getsettingClienteID10) && GlobalInfo.getterminalCvariosPrinter10 == false) {
+                        flagprinter = false;
+                    }
+
+                    if (flagprinter == true) {
+
+                        if (mnPagoID == 2) {
+
+                            /** @IMPRESION01 */
+                            imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                    GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                    GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                    mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                    mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                    mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+
+
+                            Double finalMnMtoPagar1 = mnMtoPagar;
+                            Double finalMnMtoSubTotal1 = mnMtoSubTotal1;
+                            Double finalMnMtoImpuesto1 = mnMtoImpuesto1;
+                            Double finalMnMtoCanje1 = mnMtoCanje;
+                            Double finalMnMtoDescuento1 = mnMtoDescuento1;
+
+                            Timer timerS = new Timer();
+                            /** @IMPRESION02 */
+                            timerS.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                            GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                            GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                            finalMnMtoPagar1, finalMnMtoSubTotal1, finalMnMtoImpuesto1,
+                                            mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                            mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles);
+
+                                    timerS.cancel();
+                                }
+                            }, 3000);
+
+                        } else {
+
+                            imprimirGR10(GlobalInfo.getTipoPapel10, mnTipoDocumento, NroComprobante, xFechaHoraImpresion, GlobalInfo.getterminalTurno10,
+                                    GlobalInfo.getuserName10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranProductoDs10,
+                                    GlobalInfo.getoptranUniMed10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                    mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
+                                    mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
+                                    mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+
+                        }
+
+                    }
+
+                    /** FIN IMPRESION DEL COMPROBANTE*/
+
+                }catch (Exception ex){
+                    Toast.makeText(getActivity(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Correlativo>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Correlativo - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
      * @APISERVICE:GenerarCorrelativoComprobante
      */
     private void findCorrelativoCPE(String imei, String mnTipoDocumento, String mnClienteID, String mnClienteRUC, String mnClienteRS, String mnCliernteDR,
@@ -2812,12 +3062,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     List<Correlativo> correlativoList = response.body();
 
                     for(Correlativo correlativo: correlativoList) {
-
                         GlobalInfo.getcorrelativoFecha      = String.valueOf(correlativo.getFechaProceso());
                         GlobalInfo.getcorrelativoSerie      = String.valueOf(correlativo.getSerie());
                         GlobalInfo.getcorrelativoNumero     = String.valueOf(correlativo.getNumero());
                         GlobalInfo.getcorrelativoMDescuento = correlativo.getMontoDescuento();
                         GlobalInfo.getcorrelativoDocumentoVenta = correlativo.getDocumentoVenta();
+                        GlobalInfo.getcorrelativoTipoDesc       = correlativo.getTipoDescuento();
                     }
 
                     if(!GlobalInfo.getcorrelativoDocumentoVenta.isEmpty()){
@@ -2843,6 +3093,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     /** Calculando los totales **/
 
+                    Double mnPrecioOrig = 0.00;
                     Double mnMtoPagar = 0.00;
                     Double mnMtoCanje = 0.00;
                     Double mnmtoPagoUSD = 0.00;
@@ -2851,6 +3102,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     Double mnMtoDescuento0 = 0.00;
                     Double mnMtoDescuento1 = 0.00;
                     String mnMtoDescuento2 = "";
+
+                    Double mnMtoIncremento0 = 0.00;
+                    Double mnMtoIncremento1 = 0.00;
+                    String mnMtoIncremento2 = "";
 
                     Double mnMtoSubTotal0 = 0.00;
                     Double mnMtoSubTotal1 = 0.00;
@@ -2865,7 +3120,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     String mnobservacionDet = "";
                     String mnReferencia = "";
 
-                    /**mnMtoTotal = GlobalInfo.getoptranSoles10;**/
+                    mnPrecioOrig = GlobalInfo.getoptranPrecio10;
 
                     mnMtoCanje = mnMtoTotal;
                     mnMtoPagar = mnMtoTotal;
@@ -2880,14 +3135,36 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     if (mnMtoDescuentoUnitario != 0 && mnCantidad >= 1) {
 
-                        mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
-                        mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                        /* MONTO DESCUENTO POR GALON (DES) */
+                        if (GlobalInfo.getcorrelativoTipoDesc.equals("DES")) {
+                            mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
+                            mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                            mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
+                        } else {
+                            /* PRECIO FIJO POR GALON (PRE) */
 
-                        mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
+                            if (mnMtoDescuentoUnitario > mnPrecioOrig) {
+                                /* PRECIO CON INCREMENTO */
+                                GlobalInfo.getoptranPrecio10 = mnMtoDescuentoUnitario;
+                                mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
+                                mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                                mnMtoPagar = mnMtoDescuento1;
+                                mnMtoDescuento1 = 0.00;
+
+                                mnMtoIncremento0 = mnMtoPagar - mnMtoTotal;
+                                mnMtoIncremento1 = Math.round(mnMtoIncremento0*100.0)/100.0;
+
+                            } else if (mnMtoDescuentoUnitario < mnPrecioOrig) {
+                                /* PRECIO CON DESCUENTO */
+                                mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
+                                mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
+                                mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
+                            }
+
+                        }
 
                         mnMtoSubTotal0 = mnMtoPagar / 1.18;
                         mnMtoSubTotal1 = Math.round(mnMtoSubTotal0*100.0)/100.0;
-
                         mnMtoImpuesto0 = mnMtoPagar - mnMtoSubTotal1;
                         mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
 
@@ -2906,11 +3183,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                   mnTarjND, mnTarjetaPuntos, mnPtosGanados, mnPtosDisponibles,
                                   mnMtoCanje, GlobalInfo.getuserID10,
                                   mnItem, mnArticuloID, GlobalInfo.getoptranProductoDs10, GlobalInfo.getoptranUniMed10, GlobalInfo.getterminalAlmacenID10,
-                                  GlobalInfo.getsettingImpuestoID110, GlobalInfo.getsettingImpuestoValor110, GlobalInfo.getoptranPrecio10, GlobalInfo.getoptranPrecio10, mnCantidad,
+                                  GlobalInfo.getsettingImpuestoID110, GlobalInfo.getsettingImpuestoValor110, GlobalInfo.getoptranPrecio10, mnPrecioOrig, mnCantidad,
                                   mnFise, GlobalInfo.getoptranTranID10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranManguera10,
                                   mnobservacionDet,
                                   mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoPagar, mnMontoSoles, mnobservacionPag,
-                                  mnOperador);
+                                  mnOperador, mnMtoIncremento1);
 
                     /** FIN GRABAR VENTA EN BASE DE DATOS **/
 
@@ -3008,7 +3285,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                Double _fise, Integer _tranID, String _nroLado, String _manguera,
                                String _observacionDet,
                                Integer _pagoID, Integer _tarjetaID, String _TarjetaDS, Double _mtoPagoPEN, Double _mtoPagoUSD,
-                               String _observacionPag, String _Operador
+                               String _observacionPag, String _Operador, Double _mtoIncremento
     ){
 
         String xtranID = _tranID.toString();
@@ -3025,7 +3302,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 _fise, xtranID, _nroLado, _manguera,
                 _observacionDet,
                 _pagoID, _tarjetaID, _TarjetaDS, _mtoPagoPEN, _mtoPagoUSD,
-                _observacionPag);
+                _observacionPag, _mtoIncremento);
 
         Call<VentaCA> call = mAPIService.postVentaCA(ventaCA);
 

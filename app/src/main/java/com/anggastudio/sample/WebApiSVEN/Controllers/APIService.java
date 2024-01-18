@@ -180,6 +180,8 @@ public interface APIService {
     @GET("api/correlativo/listado/{imei}/{tipodoc}/{rfid}/{articuloid}/{tranId}")
     Call<List<Correlativo>> findCorrelativo(@Path("imei") String imei, @Path("tipodoc") String tipodoc, @Path("rfid") String rfid, @Path("articuloid") String articuloid, @Path("tranId") String tranId);
 
+    @GET("api/correlativo/listadosinrfid/{imei}/{tipodoc}/{clienteid}/{articuloid}/{tranId}")
+    Call<List<Correlativo>> findCorrelativosinrfid(@Path("imei") String imei, @Path("tipodoc") String tipodoc, @Path("clienteid") String clienteid, @Path("articuloid") String articuloid, @Path("tranId") String tranId);
 
     /**
      * Venta por Contometro

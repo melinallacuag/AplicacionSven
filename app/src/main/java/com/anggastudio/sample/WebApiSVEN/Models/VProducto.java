@@ -7,12 +7,14 @@ public class VProducto {
     private Double cantidad;
     private Double soles;
     private Double descuento;
+    private Double incremento;
 
-    public VProducto(String articuloDS, Double cantidad, Double soles, Double descuento) {
+    public VProducto(String articuloDS, Double cantidad, Double soles, Double descuento,Double incremento) {
         this.articuloDS = articuloDS;
         this.cantidad = cantidad;
         this.soles = soles;
         this.descuento = descuento;
+        this.incremento = incremento;
     }
 
     public String getArticuloID() {
@@ -53,5 +55,13 @@ public class VProducto {
 
     public void setDescuento(Double descuento) {
         this.descuento = descuento;
+    }
+
+    public Double getIncremento() {
+        return incremento;
+    }
+
+    public void setIncremento(Double incremento) {
+        this.incremento = incremento;
     }
 }

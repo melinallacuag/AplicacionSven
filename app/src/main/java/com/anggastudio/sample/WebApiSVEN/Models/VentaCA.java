@@ -52,8 +52,9 @@ public class VentaCA {
     private Double  mtoPagoPEN;
     private Double  mtoPagoUSD;
     private String  observacionPag;
+    private Double  mtoIncremento;
 
-    public VentaCA(Integer companyID, String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, Integer turno, String fechaProceso, String fechaDocumento, String fechaAtencion, Double mtoDescuento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String odometro, String tipoVenta, String observacion, String referencia, String nroTarjetaNotaD, String nroTarjetaPuntos, Double puntosGanados, Double puntosDisponibles, Double montoCanjeado, String userID, String identFID, Integer nroItem, String articuloID, String articuloDS, String uniMed, Integer almacenID, Integer impuestoID, Integer impuestoValor, Double precio1, Double precio2, Double cantidad, Double fise, String tranID, String nroLado, String manguera, String observacionDet, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag) {
+    public VentaCA(Integer companyID, String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, Integer turno, String fechaProceso, String fechaDocumento, String fechaAtencion, Double mtoDescuento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String odometro, String tipoVenta, String observacion, String referencia, String nroTarjetaNotaD, String nroTarjetaPuntos, Double puntosGanados, Double puntosDisponibles, Double montoCanjeado, String userID, String identFID, Integer nroItem, String articuloID, String articuloDS, String uniMed, Integer almacenID, Integer impuestoID, Integer impuestoValor, Double precio1, Double precio2, Double cantidad, Double fise, String tranID, String nroLado, String manguera, String observacionDet, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag,Double  mtoIncremento) {
         this.companyID = companyID;
         this.tipoDocumento = tipoDocumento;
         this.serieDocumento = serieDocumento;
@@ -104,6 +105,7 @@ public class VentaCA {
         this.mtoPagoPEN = mtoPagoPEN;
         this.mtoPagoUSD = mtoPagoUSD;
         this.observacionPag = observacionPag;
+        this.mtoIncremento = mtoIncremento;
     }
 
     public Integer getCompanyID() {
@@ -504,5 +506,13 @@ public class VentaCA {
 
     public void setObservacionPag(String observacionPag) {
         this.observacionPag = observacionPag;
+    }
+
+    public Double getMtoIncremento() {
+        return mtoIncremento;
+    }
+
+    public void setMtoIncremento(Double mtoIncremento) {
+        this.mtoIncremento = mtoIncremento;
     }
 }

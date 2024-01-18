@@ -9,6 +9,7 @@ public class LClientes {
     private Boolean consulta_Sunat;
     private Double dias_Credito;
     private String tipo_Cliente;
+    private String fecha_Nacimiento;
 
     public LClientes(String clienteID, String clienteRUC, String clienteRZ, String clienteDR) {
         this.clienteID = clienteID;
@@ -72,4 +73,13 @@ public class LClientes {
     public void setTipo_Cliente(String tipo_Cliente) {
         this.tipo_Cliente = tipo_Cliente;
     }
+
+    public String getFecha_Nacimiento() {
+        return fecha_Nacimiento;
+    }
+
+    public void setFecha_Nacimiento(String fecha_Nacimiento) {
+        this.fecha_Nacimiento = fecha_Nacimiento;
+    }
+
 }
