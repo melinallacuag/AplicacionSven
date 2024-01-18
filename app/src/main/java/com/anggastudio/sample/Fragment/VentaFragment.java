@@ -2928,6 +2928,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                             } else if (mnMtoDescuentoUnitario < mnPrecioOrig) {
                                 /* PRECIO CON DESCUENTO */
+                                mnMtoDescuentoUnitario = mnPrecioOrig - mnMtoDescuentoUnitario;
                                 mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
                                 mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
                                 mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
@@ -3161,6 +3162,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                             } else if (mnMtoDescuentoUnitario < mnPrecioOrig) {
                                 /* PRECIO CON DESCUENTO */
+                                mnMtoDescuentoUnitario = mnPrecioOrig - mnMtoDescuentoUnitario;
                                 mnMtoDescuento0 = mnMtoDescuentoUnitario * mnCantidad;
                                 mnMtoDescuento1 = Math.round(mnMtoDescuento0*100.0)/100.0;
                                 mnMtoPagar = mnMtoTotal - mnMtoDescuento1;
