@@ -25,6 +25,7 @@
         android:roundIcon="@drawable/logo_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:hardwareAccelerated="true"
         android:usesCleartextTraffic="true">
         <activity
             android:name=".Bienvenida"
@@ -61,6 +62,13 @@
                 android:value="" />
         </activity>
         <activity android:name=".MainActivity" />
+
+        <activity
+            android:name="com.anggastudio.sample.CaptureActivityPortrait"
+            android:screenOrientation="fullSensor"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            />
     </application>
 
 </manifest>
