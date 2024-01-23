@@ -520,10 +520,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         case "01" :
                                         case "03" :
-
-                                            printama.addNewLine();
+                                            printama.printTextln("                 ", Printama.CENTER);
                                             printama.printImage( logoRobles,logoSize);
-
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
                                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -540,10 +538,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         case "98" :
                                         case "99" :
-
-                                            printama.addNewLine();
+                                            printama.printTextln("                 ", Printama.CENTER);
                                             printama.printImage(logoRobles, logoSize);
-
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
                                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -954,10 +950,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         case "01" :
                                         case "03" :
-
-                                            printama.addNewLine();
+                                            printama.printTextln("                 ", Printama.CENTER);
                                             printama.printImage( logoRobles,logoSize);
-
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
                                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -974,10 +968,8 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         case "98" :
                                         case "99" :
-
-                                            printama.addNewLine();
+                                            printama.printTextln("                 ", Printama.CENTER);
                                             printama.printImage(logoRobles, logoSize);
-
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
                                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1388,9 +1380,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         case "01" :
                                         case "03" :
-
                                             printama.printImage(Printama.RIGHT,logoRobles, logoSize);
-
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
                                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1407,9 +1397,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                         case "98" :
                                         case "99" :
-
                                             printama.printImage(Printama.RIGHT,logoRobles, logoSize);
-
                                             printama.setSmallText();
                                             if(GlobalInfo.getTerminalNameCompany10){
                                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1817,8 +1805,8 @@ public class ListaComprobantesFragment extends Fragment  {
                             }
 
                             printama.feedPaper();
-                            printama.close();
                             printama.cutPaper();
+                            printama.close();
 
                         }, this::showToast);
 
