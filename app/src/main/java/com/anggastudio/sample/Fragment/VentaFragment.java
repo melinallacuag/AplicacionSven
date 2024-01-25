@@ -160,32 +160,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         mAPIService = GlobalInfo.getAPIService();
 
-
-        /*** Carrito de compras***/
-        btncarritocompra = view.findViewById(R.id.btncarritocompra);
-
-            if (GlobalInfo.getterminalVentaTienda10 && GlobalInfo.getterminalVentaPlaya10) {
-                btncarritocompra.setVisibility(View.VISIBLE);
-            } else {
-                btncarritocompra.setVisibility(View.GONE);
-            }
-
-        btncarritocompra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManagerCarrito = getActivity().getSupportFragmentManager();
-
-                FragmentTransaction fragmentTransactionCarrito = fragmentManagerCarrito.beginTransaction();
-
-                int fragmentContainerCarrito = R.id.fragment_container;
-                ProductosFragment productosFragment = new ProductosFragment();
-                fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
-                fragmentTransactionCarrito.addToBackStack(null);
-                fragmentTransactionCarrito.commit();
-            }
-        });
-
         btnAutomatico         = view.findViewById(R.id.btnAutomatico);
+        btncarritocompra      = view.findViewById(R.id.btncarritocompra);
         btnListadoComprobante = view.findViewById(R.id.btnListadoComprobante);
         btnLibre              = view.findViewById(R.id.btnLibre);
         btnSoles              = view.findViewById(R.id.btnSoles);
@@ -206,6 +182,31 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnFactura.setEnabled(false);
         btnNotaDespacho.setEnabled(false);
         btnSerafin.setEnabled(false);
+
+        /**
+         * @VISTA:CarritoCompra
+         */
+        if (GlobalInfo.getterminalVentaTienda10 && GlobalInfo.getterminalVentaPlaya10) {
+            btncarritocompra.setVisibility(View.VISIBLE);
+        } else {
+            btncarritocompra.setVisibility(View.GONE);
+        }
+
+        btncarritocompra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                FragmentManager fragmentManagerArticulo = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransactionArticulo = fragmentManagerArticulo.beginTransaction();
+
+                int fragmentContainerArticulo = R.id.fragment_container;
+                ArticuloFragment articuloFragment = new ArticuloFragment();
+                fragmentTransactionArticulo.replace(fragmentContainerArticulo, articuloFragment);
+                fragmentTransactionArticulo.addToBackStack(null);
+                fragmentTransactionArticulo.commit();
+
+            }
+        });
 
         /**
          * @OBTENER:DatosTerminal_IDTurno
@@ -2429,6 +2430,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnAutomatico.setBackgroundColor(Color.parseColor("#001E8A"));
 
         btnListadoComprobante.setEnabled(false);
+        btncarritocompra.setEnabled(false);
 
     }
 
@@ -2466,6 +2468,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnAutomatico.setBackgroundColor(Color.parseColor("#dc3545"));
 
         btnListadoComprobante.setEnabled(true);
+        btncarritocompra.setEnabled(true);
 
     }
 

@@ -1,24 +1,14 @@
 package com.anggastudio.sample.Fragment;
-import android.Manifest;
 import android.app.Dialog;
-import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.sample.Login;
-import com.anggastudio.sample.Menu;
 import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.PasswordChecker;
 import com.anggastudio.sample.R;
@@ -41,7 +30,6 @@ import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,8 +40,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DasboardFragment extends Fragment{
-
-    private static final int TU_CODIGO_DE_SOLICITUD_DE_PERMISO = 123;
 
     private APIService mAPIService;
     private NFCUtil nfcUtil;
@@ -68,9 +54,11 @@ public class DasboardFragment extends Fragment{
             modalAlertaCTurnoActual,modalAlertaIngreso,modalInicioDiaGenerado;
 
     ShapeableImageView img_Logo;
+
     ImageView imageee;
 
     TextInputEditText usuario, contraseña;
+
     TextInputLayout alertuser,alertpassword;
 
     String usuarioUser,contraseñaUser;
@@ -163,11 +151,12 @@ public class DasboardFragment extends Fragment{
                 if(GlobalInfo.getterminalVentaPlaya10){
 
                     if ( GlobalInfo.getCDiaList10 != null && !GlobalInfo.getCDiaList10.isEmpty() ){
+
                         FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
                         FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
+
                         int fragmentContainerVenta  = R.id.fragment_container;
                         VentaFragment ventaFragment = new VentaFragment();
-
                         fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
                         fragmentTransactionVenta.addToBackStack(null);
                         fragmentTransactionVenta.commit();
@@ -192,31 +181,31 @@ public class DasboardFragment extends Fragment{
 
                                 FragmentManager fragmentManagerVenta = getActivity().getSupportFragmentManager();
                                 FragmentTransaction fragmentTransactionVenta = fragmentManagerVenta.beginTransaction();
+
                                 int fragmentContainerVenta  = R.id.fragment_container;
                                 VentaFragment ventaFragment = new VentaFragment();
-
                                 fragmentTransactionVenta.replace(fragmentContainerVenta, ventaFragment);
                                 fragmentTransactionVenta.addToBackStack(null);
                                 fragmentTransactionVenta.commit();
 
                                 modalAlertaIngreso.dismiss();
+
                             }
                         });
                     }
 
                 }else if(GlobalInfo.getterminalVentaTienda10){
 
-                    FragmentManager fragmentManagerCarrito = getActivity().getSupportFragmentManager();
+                    FragmentManager fragmentManagerArticulo = getActivity().getSupportFragmentManager();
+                    FragmentTransaction fragmentTransactionArticulo = fragmentManagerArticulo.beginTransaction();
 
-                    FragmentTransaction fragmentTransactionCarrito = fragmentManagerCarrito.beginTransaction();
+                    int fragmentContainerArticulo = R.id.fragment_container;
+                    ArticuloFragment articuloFragment = new ArticuloFragment();
+                    fragmentTransactionArticulo.replace(fragmentContainerArticulo, articuloFragment);
+                    fragmentTransactionArticulo.addToBackStack(null);
+                    fragmentTransactionArticulo.commit();
 
-                    int fragmentContainerCarrito = R.id.fragment_container;
-                    ProductosFragment productosFragment = new ProductosFragment();
-                    fragmentTransactionCarrito.replace(fragmentContainerCarrito, productosFragment);
-                    fragmentTransactionCarrito.addToBackStack(null);
-                    fragmentTransactionCarrito.commit();
                 }
-
             }
         });
 
