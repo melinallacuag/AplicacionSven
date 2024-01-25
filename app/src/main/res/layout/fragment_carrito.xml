@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -25,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="Lista de Productos"
+            android:text="Carrito de Compras"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textAlignment="center"
@@ -33,16 +32,38 @@
             android:layout_marginBottom="5dp"
             android:textStyle="bold" />
 
-        <Button
+        <LinearLayout
             android:id="@+id/btnSeleccionCliente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
             android:backgroundTint="@color/coloCar"
-            android:textColor="@color/black"
-            app:cornerRadius="10sp"
-            android:layout_marginBottom="5dp"
-            android:text="Ingresar Cliente"/>
+            android:background="@drawable/input_border"
+            android:gravity="center"
+            android:layout_marginBottom="8sp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            app:cornerRadius="10sp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ingresar Cliente"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textAllCaps="true"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="30dp"
+                android:src="@drawable/icons_peoples"
+                android:layout_marginStart="20sp"
+                app:tint="@color/white" />
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,6 +125,17 @@
            android:layout_width="match_parent"
            android:layout_height="450dp"/>
 
+        <TextView
+            android:id="@+id/nombreCliente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/nunito_extrabold"
+            android:textColor="@color/black"
+            android:layout_gravity="start"
+            android:textStyle="bold"
+            android:text="Melina Anali Llacua Guere"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -115,13 +147,18 @@
                 android:fontFamily="@font/nunito_extrabold"
                 android:textColor="@color/black"
                 android:gravity="right"
+                android:textSize="14sp"
+                android:textStyle="bold"
                 android:text="Total Venta S/."/>
             <TextView
                 android:id="@+id/totalmontoCar"
-                android:layout_width="200sp"
+                android:layout_width="150sp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="14sp"
+                android:layout_marginEnd="10sp"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="end"/>
         </LinearLayout>
@@ -130,30 +167,71 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center">
-            <Button
+
+            <LinearLayout
                 android:id="@+id/btnconfirmarventa"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="5sp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorSuccess"
-                android:text="IMPRIMIR VENTA"
-                android:gravity="center"
-                android:fontFamily="@font/nunito_extrabold"
-                android:textAllCaps="true"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:cornerRadius="10sp" />
-
-            <ImageButton
-                android:id="@+id/btnvolvercompra"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginStart="5dp"
-                android:scaleType="center"
                 android:background="@drawable/input_border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                app:cornerRadius="10sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CONFIRMAR VENTA"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="10sp"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icons_confirmar"
+                    android:layout_marginStart="10sp"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnvolvercompra"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
                 android:backgroundTint="@color/coloCar"
-                android:src="@drawable/icon_agregarprod" />
+                android:background="@drawable/input_border"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:padding="5dp"
+                app:cornerRadius="10sp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seguir Comprando"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:textAllCaps="true"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="10sp"/>
+
+                <ImageView
+                    android:layout_width="25dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/icon_agregarprod"
+                    android:layout_marginStart="10sp"
+                    app:tint="@color/white" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
