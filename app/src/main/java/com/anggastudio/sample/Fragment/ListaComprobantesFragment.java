@@ -18,6 +18,7 @@ import android.nfc.tech.NfcB;
 import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -441,11 +442,15 @@ public class ListaComprobantesFragment extends Fragment  {
                             /**
                              * Iniciar impresión del comprobante
                              */
-                            String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
-                            File file = new File(rutaImagen);
-                            if(!file.exists()){
-                                rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
+
+                            String rutaImagen = "/storage/emulated/0/appSven/";
+
+                            if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
+                                rutaImagen += GlobalInfo.getsettingRutaLogo210;
+                            } else {
+                                rutaImagen += "sinlogo.jpg";
                             }
+
                             Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
 
                             String TipoDNI = "1";

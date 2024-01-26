@@ -10,6 +10,7 @@ public class Articulo {
     private String monedaID;
     private Double precio_Venta;
     private Double stock_Actual;
+    private Double salidas;
     private String imagen_Ruta;
     private Boolean generar_Vale;
     private Boolean usar_Decimales;
@@ -80,6 +81,14 @@ public class Articulo {
 
     public void setStock_Actual(Double stock_Actual) {
         this.stock_Actual = stock_Actual;
+    }
+
+    public Double getSalidas() {
+        return salidas;
+    }
+
+    public void setSalidas(Double salidas) {
+        this.salidas = salidas;
     }
 
     public String getImagen_Ruta() {
