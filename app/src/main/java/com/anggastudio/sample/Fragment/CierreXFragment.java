@@ -29,6 +29,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -184,14 +185,16 @@ public class CierreXFragment extends Fragment {
         /**
          * @MOSTRAR:LogoEmpresa
          */
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
-        File file = new File(rutaImagen);
+        String rutaImagen = "/storage/emulated/0/appSven/";
 
-        if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+        if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
+            rutaImagen += GlobalInfo.getsettingRutaLogo210;
+        } else {
+            rutaImagen += "sinlogo.jpg";
         }
-        Uri logoUri = Uri.parse("file://" + rutaImagen);
-        logoCierreX.setImageURI(logoUri);
+
+        Uri imagenProd = Uri.parse("file://" + rutaImagen);
+        logoCierreX.setImageURI(imagenProd);
 
         /** Datos de Cierre Parcial de Caja (X) */
 
@@ -641,11 +644,14 @@ public class CierreXFragment extends Fragment {
 
         //Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
 
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
-        File file = new File(rutaImagen);
-        if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
+        String rutaImagen = "/storage/emulated/0/appSven/";
+
+        if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
+            rutaImagen += GlobalInfo.getsettingRutaLogo210;
+        } else {
+            rutaImagen += "sinlogo.jpg";
         }
+
         Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
 
         String NameCompany   = GlobalInfo.getNameCompany10;

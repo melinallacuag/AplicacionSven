@@ -9,6 +9,8 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,15 +109,16 @@ public class DasboardFragment extends Fragment{
         /**
          * @MOSTRAR:LogoEmpresa_Dasboard
          */
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo110;
-        File file = new File(rutaImagen);
+        String rutaImagen = "/storage/emulated/0/appSven/";
 
-        if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
+        if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo110)) {
+            rutaImagen += GlobalInfo.getsettingRutaLogo110;
+        } else {
+            rutaImagen += "sinlogo.jpg";
         }
 
-        Uri logoUri = Uri.parse("file://" + rutaImagen);
-        img_Logo.setImageURI(logoUri);
+        Uri imagenProd = Uri.parse("file://" + rutaImagen);
+        img_Logo.setImageURI(imagenProd);
 
         /**
          * @OBTENER:DatoGeneralCompania

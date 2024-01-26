@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -3345,12 +3346,22 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                               String _FechaQR, Integer _PagoID, Integer _TarjetaCreditoID, String _OperacionREF,
                               Double _mtoCanjeado, Double _mtoDescuento, Double _mtoSoles){
 
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
+        String rutaImagen = "/storage/emulated/0/appSven/";
+
+        if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
+            rutaImagen += GlobalInfo.getsettingRutaLogo210;
+        } else {
+            rutaImagen += "sinlogo.jpg";
+        }
+
+        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+
+       /* String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
         File file = new File(rutaImagen);
         if(!file.exists()){
             rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
         }
-        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
+        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);*/
 
         String TipoDNI = "1";
         String CVarios = "11111111";

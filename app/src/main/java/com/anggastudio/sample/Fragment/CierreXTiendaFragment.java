@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,14 +149,16 @@ public class CierreXTiendaFragment extends Fragment {
         /**
          * @MOSTRAR:LogoEmpresa
          */
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
-        File file = new File(rutaImagen);
+        String rutaImagen = "/storage/emulated/0/appSven/";
 
-        if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/logo.png";
+        if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
+            rutaImagen += GlobalInfo.getsettingRutaLogo210;
+        } else {
+            rutaImagen += "sinlogo.jpg";
         }
-        Uri logoUri = Uri.parse("file://" + rutaImagen);
-        logoCierreX.setImageURI(logoUri);
+
+        Uri imagenProd = Uri.parse("file://" + rutaImagen);
+        logoCierreX.setImageURI(imagenProd);
 
         /** Datos de Cierre Parcial de Caja (X) */
         if(GlobalInfo.getTerminalNameCompany10){
