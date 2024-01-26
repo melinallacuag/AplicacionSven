@@ -1,5 +1,6 @@
 package com.anggastudio.sample.WebApiSVEN.Controllers;
 import com.anggastudio.sample.WebApiSVEN.Models.Anular;
+import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
@@ -8,6 +9,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.Descuentos;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
+import com.anggastudio.sample.WebApiSVEN.Models.Familia;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
@@ -36,6 +38,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface APIService {
 
@@ -294,5 +297,17 @@ public interface APIService {
      */
     @GET("api/settingturno/listado")
     Call<List<SettingTurno>> getSettingTurno();
+
+    /**
+     * Familia
+     */
+    @GET("api/familia/listado")
+    Call<List<Familia>> getFamilia();
+
+    /**
+     * Articulo
+     */
+    @GET("api/articulo/listado")
+    Call<List<Articulo>> getArticulo();
 
 }

@@ -2,6 +2,7 @@ package com.anggastudio.sample.Adapter;
 
 import android.graphics.Color;
 import android.net.Uri;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,65 +14,62 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.R;
-import com.anggastudio.sample.WebApiSVEN.Models.Productos;
+import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.ViewHolder> {
+public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.ViewHolder>{
 
-    final OnItemClickListener listener;
-    List<Productos> productosList;
+    final ArticuloAdapter.OnItemClickListener listener;
+    List<Articulo> articuloList;
 
-
-    /** @BUSCADOR:Productos **/
-    ArrayList<Productos> listaOriginal;
+    ArrayList<Articulo> listaOriginal;
 
     /** @LISTADO:TodoProductos  **/
-    public void setProductos(List<Productos> productosFiltrados) {
-        this.productosList = productosFiltrados;
+    public void setProductos(List<Articulo> productosFiltrados) {
+        this.articuloList = productosFiltrados;
     }
 
     /** @SELECCIONAR:ProductosAgregados **/
     public interface  OnItemClickListener{
-        int onItemClick(Productos item, boolean isSelected);
+        int onItemClick(Articulo item, boolean isSelected);
     }
 
-    public ProductosAdapter(List<Productos> productosList, OnItemClickListener listener){
-        this.productosList = productosList;
+    public ArticuloAdapter(List<Articulo> articuloList, ArticuloAdapter.OnItemClickListener listener){
+        this.articuloList = articuloList;
         this.listener      = listener;
 
         /** @BUSCADOR:Productos **/
         listaOriginal = new ArrayList<>();
-        listaOriginal.addAll(productosList);
+        listaOriginal.addAll(articuloList);
     }
 
     /** @SELECCIONAR:DeseleccionarProducto **/
-    private OnDeseleccionarProductoListener deselectionListener;
+    private ArticuloAdapter.OnDeseleccionarProductoListener deselectionListener;
 
-    public void setOnDeseleccionarProductoListener(OnDeseleccionarProductoListener listener) {
+    public void setOnDeseleccionarArticuloListener(ArticuloAdapter.OnDeseleccionarProductoListener listener) {
         this.deselectionListener = listener;
     }
 
     public interface OnDeseleccionarProductoListener {
-        void onDeseleccionarProducto(Productos item);
+        void onDeseleccionarProducto(Articulo item);
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ArticuloAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_producto,parent,false);
-        return new ViewHolder(view);
+        return new ArticuloAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Productos productos = productosList.get(position);
+    public void onBindViewHolder(@NonNull ArticuloAdapter.ViewHolder holder, int position) {
+        Articulo articulo = articuloList.get(position);
 
         /** Longitud del nombre del producto **/
-        String nombreProducto = productos.getNombre();
+        String nombreProducto = articulo.getArticuloDS1();
         int maxCaracteres = 28;
 
         if (nombreProducto.length() > maxCaracteres) {
@@ -79,31 +77,30 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
         }
         holder.nommbreProducto.setText(nombreProducto);
 
-        holder.precioProducto.setText(String.valueOf(String.format("%.2f",productos.getPrecio())));
-        holder.cantidadProducto.setText(String.valueOf(productos.getCantidad()) + " disponible");
+        holder.precioProducto.setText(String.valueOf(String.format("%.2f",articulo.getPrecio_Venta())));
+        holder.cantidadProducto.setText(String.valueOf(articulo.getStock_Actual()) + " disponible");
 
         /** Imagen de PRODUCTOS */
-            String nombreImagen = productos.getImagen();
+        String rutaImagen = "/storage/emulated/0/appSven/";
 
-        File file = new File("/storage/emulated/0/appSven/" + nombreImagen);
-        String rutaImagen="/storage/emulated/0/appSven/" + nombreImagen;
-
-        if (!file.exists()) {
-            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
+        if (!TextUtils.isEmpty(articulo.getImagen_Ruta())) {
+            rutaImagen += articulo.getImagen_Ruta();
+        } else {
+            rutaImagen += "sinarticulo.jpg";
         }
 
         Uri imagenProd = Uri.parse("file://" + rutaImagen);
         holder.imageProducto.setImageURI(imagenProd);
 
         /** @STOCK:EstadoProducto **/
-        if (productos.getCantidad() > 0) {
+        if (articulo.getStock_Actual() > 0) {
             holder.cantidadProducto.setTextColor(Color.parseColor("#061240"));
         } else {
             holder.cantidadProducto.setTextColor(Color.RED);
         }
 
         /** @SELECCIONAR:EstadoProdcuto **/
-        boolean isSelected = !productos.isSeleccionado();
+        boolean isSelected = !articulo.isSeleccionado();
         if(isSelected){
             holder.card_Productos.setCardBackgroundColor(Color.parseColor("#FFFFFF"));
         }else{
@@ -114,11 +111,11 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
             @Override
             public void onClick(View  item) {
                 /** @SELECCIONAR:Estado **/
-                if (productos.getCantidad() > 0) {
-                    listener.onItemClick(productos, isSelected);
-                    productos.setSeleccionado(isSelected);
+                if (articulo.getStock_Actual() > 0) {
+                    listener.onItemClick(articulo, isSelected);
+                    articulo.setSeleccionado(isSelected);
                     if (!isSelected && deselectionListener != null) {
-                        deselectionListener.onDeseleccionarProducto(productos);
+                        deselectionListener.onDeseleccionarProducto(articulo);
                     }
                     notifyItemChanged(position);
                 }
@@ -128,42 +125,42 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
 
     @Override
     public int getItemCount() {
-        return productosList.size();
+        return articuloList.size();
     }
 
     public void filtrado(final String txtBuscar, boolean buscarPorCodigoDeBarras) {
 
-        productosList.clear();
+        articuloList.clear();
 
         if (txtBuscar.isEmpty()) {
-            productosList.addAll(listaOriginal);
+            articuloList.addAll(listaOriginal);
         } else {
             String txtBuscarLowerCase = txtBuscar.toLowerCase();
 
             if (buscarPorCodigoDeBarras) {
                 // Filtrar por código de barras
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    List<Productos> filteredList = listaOriginal.stream()
-                            .filter(i -> i.getCodigo().toLowerCase().contains(txtBuscarLowerCase))
+                    List<Articulo> filteredList = listaOriginal.stream()
+                            .filter(i -> i.getArticuloID().toLowerCase().contains(txtBuscarLowerCase))
                             .collect(Collectors.toList());
-                    productosList.addAll(filteredList);
+                    articuloList.addAll(filteredList);
                 } else {
-                    for (Productos c : listaOriginal) {
-                        if (c.getCodigo().toLowerCase().contains(txtBuscar.toLowerCase())) {
-                            productosList.add(c);
+                    for (Articulo c : listaOriginal) {
+                        if (c.getArticuloID().toLowerCase().contains(txtBuscar.toLowerCase())) {
+                            articuloList.add(c);
                         }
                     }
                 }
             } else {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                    List<Productos> filteredList = listaOriginal.stream()
-                            .filter(i -> i.getNombre().toLowerCase().contains(txtBuscarLowerCase))
+                    List<Articulo> filteredList = listaOriginal.stream()
+                            .filter(i -> i.getArticuloDS1().toLowerCase().contains(txtBuscarLowerCase))
                             .collect(Collectors.toList());
-                    productosList.addAll(filteredList);
+                    articuloList.addAll(filteredList);
                 } else {
-                    for (Productos c : listaOriginal) {
-                        if (c.getNombre().toLowerCase().contains(txtBuscar.toLowerCase())) {
-                            productosList.add(c);
+                    for (Articulo c : listaOriginal) {
+                        if (c.getArticuloDS1().toLowerCase().contains(txtBuscar.toLowerCase())) {
+                            articuloList.add(c);
                         }
                     }
                 }
@@ -174,21 +171,6 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.View
         notifyDataSetChanged();
     }
 
-    public void filtrarMuyVendidos(boolean soloMuyVendidos) {
-        List<Productos> productosFiltrados = new ArrayList<>();
-
-        for (Productos producto : listaOriginal) {
-            if (soloMuyVendidos && producto.getProdVendido()) {
-                productosFiltrados.add(producto);
-            } else if (!soloMuyVendidos) {
-                productosFiltrados.add(producto);
-            }
-        }
-
-        productosList.clear();
-        productosList.addAll(productosFiltrados);
-        notifyDataSetChanged();
-    }
     public static class ViewHolder extends RecyclerView.ViewHolder{
 
         public CardView card_Productos;

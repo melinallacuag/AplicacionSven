@@ -1,38 +1,34 @@
 package com.anggastudio.sample.Adapter;
-
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.anggastudio.sample.R;
-import com.anggastudio.sample.WebApiSVEN.Models.ProCategorias;
+import com.anggastudio.sample.WebApiSVEN.Models.Familia;
 
 import java.util.List;
 
-public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.ViewHolder>{
+public class FamiliaAdapter extends RecyclerView.Adapter<FamiliaAdapter.ViewHolder>{
 
-    final OnItemClickListener listener;
-    private List<ProCategorias> proCategoriasList;
+    final FamiliaAdapter.OnItemClickListener listener;
+    private List<Familia> familiaList;
 
     private boolean isTodoSelected = false;
     private int selectedItem;
 
     public interface  OnItemClickListener{
-        int onItemClick(ProCategorias item);
+        int onItemClick(Familia item);
     }
 
-    public CategoriaAdapter(List<ProCategorias> proCategoriasList, OnItemClickListener listener){
-        this.proCategoriasList = proCategoriasList;
-        this.listener   = listener;
-        selectedItem    = -1;
+    public FamiliaAdapter(List<Familia> familiaList, FamiliaAdapter.OnItemClickListener listener){
+        this.familiaList = familiaList;
+        this.listener    = listener;
+        selectedItem     = -1;
     }
 
-    /** @OBTENER:EstadoSeleccion **/
     public void setTodoSelected(boolean selected) {
         isTodoSelected = selected;
         notifyDataSetChanged();
@@ -40,16 +36,16 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FamiliaAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_categoria,parent,false);
-        return new ViewHolder(view);
+        return new FamiliaAdapter.ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ProCategorias proCategorias = proCategoriasList.get(position);
+    public void onBindViewHolder(@NonNull FamiliaAdapter.ViewHolder holder, int position) {
+        Familia familia = familiaList.get(position);
 
-        holder.btncategorias.setText(proCategorias.getNomcategoria());
+        holder.btncategorias.setText(familia.getFamiliaDS());
 
         /** @SELECCIONAR:EstadoCategoria **/
         if (selectedItem == position  && !isTodoSelected) {
@@ -70,14 +66,14 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
                 selectedItem = position;
                 notifyItemChanged(previousItem);
                 notifyItemChanged(position);
-                listener.onItemClick(proCategorias);
+                listener.onItemClick(familia);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return proCategoriasList.size();
+        return familiaList != null ? familiaList.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
@@ -85,11 +81,10 @@ public class CategoriaAdapter extends RecyclerView.Adapter<CategoriaAdapter.View
         public Button btncategorias;
 
         public ViewHolder(@NonNull View itemView){
-
             super(itemView);
             btncategorias  = itemView.findViewById(R.id.btncategorias);
-
         }
 
     }
+
 }

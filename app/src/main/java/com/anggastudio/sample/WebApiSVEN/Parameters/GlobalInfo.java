@@ -7,6 +7,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
+import com.anggastudio.sample.WebApiSVEN.Models.Familia;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
@@ -54,6 +55,7 @@ public class GlobalInfo {
     public  static List<VProducto> getvProductoList10;
     public  static List<VTipoPago> getvTipoPagoList10;
     public static  List<ClientePrecio>  getclientePrecioList10;
+    public static  List<Familia>  getfamiliaList10;
     /**
      * Cliente precio
      */
@@ -305,9 +307,9 @@ public class GlobalInfo {
     //public static final String BASE_URL = "http://192.168.1.14:8081/";
     //public static final String BASE_URL = "http://192.168.1.20:8081/";
     //public static final String BASE_URL = "http://192.168.1.227:8081/";
-    //public static final String BASE_URL = "http://192.168.1.245:8081/";
+    public static final String BASE_URL = "http://192.168.1.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
-    public static final String BASE_URL = "http://192.168.18.33:8081/";
+    //public static final String BASE_URL = "http://192.168.18.33:8081/";
     // public static final String BASE_URL = "http://192.168.1.19:8081/";
 
     public static APIService getAPIService() {
