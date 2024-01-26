@@ -58,9 +58,10 @@
                         android:fontFamily="@font/nunito_extrabold"
                         android:textAlignment="textStart"
                         android:text="S/."
+                        android:textStyle="bold"
                         android:layout_marginEnd="5dp"
                         android:textColor="@color/black"
-                        android:textSize="12sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/precioProducto"
@@ -68,10 +69,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="start"
+                        android:textStyle="bold"
                         android:fontFamily="@font/nunito_extrabold"
                         android:textAlignment="textStart"
                         android:textColor="@color/black"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
                 <TextView
@@ -79,6 +81,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textAlignment="textStart"
+                    android:textStyle="bold"
+                    android:layout_marginTop="5sp"
                     android:fontFamily="@font/nunito_extrabold"
                     android:textColor="@color/black"
                     android:textSize="12sp" />

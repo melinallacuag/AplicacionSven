@@ -99,7 +99,7 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.ViewHo
 
         /** @STOCK:EstadoProducto **/
         if (articulo.getStock_Actual() > 0) {
-            holder.cantidadProducto.setTextColor(Color.parseColor("#061240"));
+            holder.cantidadProducto.setTextColor(Color.parseColor("#012765"));
         } else {
             holder.cantidadProducto.setTextColor(Color.RED);
         }
