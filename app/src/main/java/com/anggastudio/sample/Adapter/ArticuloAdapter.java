@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -85,6 +86,10 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.ViewHo
 
         if (!TextUtils.isEmpty(articulo.getImagen_Ruta())) {
             rutaImagen += articulo.getImagen_Ruta();
+            File file = new File(rutaImagen);
+            if (!file.exists()) {
+                rutaImagen = "/storage/emulated/0/appSven/sinarticulo.jpg";
+            }
         } else {
             rutaImagen += "sinarticulo.jpg";
         }

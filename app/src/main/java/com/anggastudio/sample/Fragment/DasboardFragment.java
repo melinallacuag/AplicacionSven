@@ -113,6 +113,10 @@ public class DasboardFragment extends Fragment{
 
         if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo110)) {
             rutaImagen += GlobalInfo.getsettingRutaLogo110;
+            File file = new File(rutaImagen);
+            if (!file.exists()) {
+                rutaImagen = "/storage/emulated/0/appSven/sinlogo.jpg";
+            }
         } else {
             rutaImagen += "sinlogo.jpg";
         }

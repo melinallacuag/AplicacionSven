@@ -153,6 +153,10 @@ public class CierreXTiendaFragment extends Fragment {
 
         if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
             rutaImagen += GlobalInfo.getsettingRutaLogo210;
+            File file = new File(rutaImagen);
+            if (!file.exists()) {
+                rutaImagen = "/storage/emulated/0/appSven/sinlogo.jpg";
+            }
         } else {
             rutaImagen += "sinlogo.jpg";
         }
@@ -508,10 +512,16 @@ public class CierreXTiendaFragment extends Fragment {
 
         //Bitmap logoRobles = BitmapFactory.decodeResource(getResources(), R.drawable.logoprincipal);
 
-        String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
-        File file = new File(rutaImagen);
-        if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
+        String rutaImagen = "/storage/emulated/0/appSven/";
+
+        if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
+            rutaImagen += GlobalInfo.getsettingRutaLogo210;
+            File file = new File(rutaImagen);
+            if (!file.exists()) {
+                rutaImagen = "/storage/emulated/0/appSven/sinlogo.jpg";
+            }
+        } else {
+            rutaImagen += "sinlogo.jpg";
         }
         Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
 

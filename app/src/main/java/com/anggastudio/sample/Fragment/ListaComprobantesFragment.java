@@ -447,6 +447,10 @@ public class ListaComprobantesFragment extends Fragment  {
 
                             if (!TextUtils.isEmpty(GlobalInfo.getsettingRutaLogo210)) {
                                 rutaImagen += GlobalInfo.getsettingRutaLogo210;
+                                File file = new File(rutaImagen);
+                                if (!file.exists()) {
+                                    rutaImagen = "/storage/emulated/0/appSven/sinlogo.jpg";
+                                }
                             } else {
                                 rutaImagen += "sinlogo.jpg";
                             }
