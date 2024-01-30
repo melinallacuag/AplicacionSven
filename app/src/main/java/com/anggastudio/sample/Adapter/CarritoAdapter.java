@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
+import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -100,12 +101,14 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
        }
 
         /** Calcular Total Precio **/
-        double totalPrecio = calcularTotal();
-        actualizarTotalEnInterfaz(totalPrecio);
+       // double totalPrecio = calcularTotal();
+       // actualizarTotalEnInterfaz(totalPrecio);
+        GlobalInfo.getMarketMontoTotal = calcularTotal();
+        actualizarTotalEnInterfaz(GlobalInfo.getMarketMontoTotal);
 
         /** Actualizar Precios **/
-        double nuevoPrecio = nuevosPrecios.containsKey(idArticulo) ? nuevosPrecios.get(idArticulo) : articulo.getPrecio_Venta();
-        tvCantidadTotal.setText(String.format("%.2f", nuevoPrecio));
+        GlobalInfo.getMarketPrecio = nuevosPrecios.containsKey(idArticulo) ? nuevosPrecios.get(idArticulo) : articulo.getPrecio_Venta();
+        tvCantidadTotal.setText(String.format("%.2f", GlobalInfo.getMarketPrecio));
 
         /**
          * @SUMAR_CANTIDAD
@@ -137,8 +140,8 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
                                 tvCantidadTotal.setText(String.valueOf(String.format("%.2f", articulo.getPrecio_Venta() * nuevaCantidad)));
 
                                 /** Calcular Total Precio **/
-                                double totalPrecio = calcularTotal();
-                                actualizarTotalEnInterfaz(totalPrecio);
+                                GlobalInfo.getMarketMontoTotal = calcularTotal();
+                                actualizarTotalEnInterfaz(GlobalInfo.getMarketMontoTotal);
 
                                 /** Activar Boton Restar **/
                                 if (nuevaCantidad > 1) {
@@ -185,8 +188,8 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
                                 tvCantidadTotal.setText(String.valueOf(String.format("%.2f", articulo.getPrecio_Venta() * nuevaCantidad)));
 
                                 /** Calcular Total Precio **/
-                                double totalPrecio = calcularTotal();
-                                actualizarTotalEnInterfaz(totalPrecio);
+                                GlobalInfo.getMarketMontoTotal = calcularTotal();
+                                actualizarTotalEnInterfaz(GlobalInfo.getMarketMontoTotal);
 
                                 /** Desactivar Boton Restar **/
                                 if (nuevaCantidad  == 1) {
@@ -221,8 +224,8 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
                     articuloEliminado.setSeleccionado(false);
 
                     /** Calcular Total Precio **/
-                    double totalPrecio = calcularTotal();
-                    actualizarTotalEnInterfaz(totalPrecio);
+                    GlobalInfo.getMarketMontoTotal = calcularTotal();
+                    actualizarTotalEnInterfaz(GlobalInfo.getMarketMontoTotal);
 
                     /** Actualizar Total Precio **/
                     String idProducto = articuloEliminado.getArticuloID();
@@ -245,6 +248,8 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
                         layoutParams.bottomMargin = 0;
                         linearLayoutRecyclerArticulo.setLayoutParams(layoutParams);
 
+                        limpiarDatos();
+
                     }
 
                 }
@@ -252,6 +257,17 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
             }
         });
 
+    }
+
+    private void limpiarDatos(){
+        GlobalInfo.getMarketFormaPago    = "E";
+        GlobalInfo.getMarketPlaca        = "000-000";
+        GlobalInfo.getMarketClienteID    = "11111111";
+        GlobalInfo.getMarketClienteRZ    = "CLIENTE VARIOS";
+        GlobalInfo.getMarketClienteDR    = "";
+        GlobalInfo.getMarketTarjetaCredito  = "";
+        GlobalInfo.getMarketOperacion    = "";
+        GlobalInfo.getMarketPEfectivo    = "0.00";
     }
 
     @Override
@@ -271,15 +287,15 @@ public class CarritoAdapter extends RecyclerView.Adapter<CarritoAdapter.CarritoV
     }
 
     private double calcularTotal() {
-        double totalPrecio = 0.0;
+        GlobalInfo.getMarketMontoTotal = 0.0;
         for (Articulo articulo : articuloEnCarrito) {
             String idArticulo = articulo.getArticuloID();
             if (cantidadesSeleccionadas.containsKey(idArticulo)) {
                 Integer nuevaCantidad = cantidadesSeleccionadas.get(idArticulo);
-                totalPrecio += articulo.getPrecio_Venta() * nuevaCantidad;
+                GlobalInfo.getMarketMontoTotal += articulo.getPrecio_Venta() * nuevaCantidad;
             }
         }
-        return totalPrecio;
+        return GlobalInfo.getMarketMontoTotal ;
     }
 
     private void actualizarTotalEnInterfaz(double total) {
