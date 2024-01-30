@@ -19,7 +19,6 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="center"
@@ -33,6 +32,7 @@
                 android:id="@+id/btnscanear"
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
+                android:visibility="gone"
                 android:backgroundTint="@color/coloCar"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_barrascanner"
@@ -59,7 +59,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/input_border"
                     android:inputType="textCapCharacters"
-                    app:queryHint="Buscar por nombre o código" />
+                    app:queryHint="Buscar por nombre" />
 
                 <ImageButton
                     android:id="@+id/btnfiltrar"

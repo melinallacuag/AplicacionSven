@@ -82,6 +82,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="10sp"
+                android:textStyle="bold"
                 android:visibility="gone"
                 app:cornerRadius="10sp" />
 
@@ -98,6 +99,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="10sp"
+                android:textStyle="bold"
                 android:visibility="gone"
                 app:cornerRadius="10sp" />
 
@@ -114,6 +116,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="10sp"
+                android:textStyle="bold"
                 android:visibility="gone"
                 app:cornerRadius="10sp" />
         </LinearLayout>
@@ -125,16 +128,42 @@
            android:layout_width="match_parent"
            android:layout_height="450dp"/>
 
-        <TextView
-            android:id="@+id/nombreCliente"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:fontFamily="@font/nunito_extrabold"
-            android:textColor="@color/black"
-            android:layout_gravity="start"
-            android:textStyle="bold"
-            android:text="Melina Anali Llacua Guere"/>
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/icons_agregarperson"
+                android:layout_marginStart="5sp"
+                app:tint="@color/black" />
+
+            <TextView
+                android:id="@+id/textCliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textColor="@color/black"
+                android:layout_marginStart="5sp"
+                android:textStyle="bold"
+                android:text="Agregar un cliente a la venta."/>
+
+            <TextView
+                android:id="@+id/nombreCliente"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textColor="@color/black"
+                android:layout_marginStart="10sp"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

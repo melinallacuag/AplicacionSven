@@ -2,6 +2,8 @@ package com.anggastudio.sample.WebApiSVEN.Parameters;
 
 import static com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient.getClient;
 
+import android.widget.TextView;
+
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
@@ -299,6 +301,20 @@ public class GlobalInfo {
     //
     public static String getnfcId10 = String.valueOf(-1);
 
+
+    /**
+     * Market Comprobantes
+     */
+    public static String  getMarketFormaPago = "E";
+    public static String  getMarketPlaca     = "000-000";
+    public static String  getMarketClienteID = "11111111";
+    public static String  getMarketClienteRZ = "CLIENTE VARIOS";
+    public static String  getMarketClienteDR = "";
+    public static String  getMarketTarjetaCredito = "";
+    public static String  getMarketOperacion = "";
+    public static String  getMarketPEfectivo = "0.00";
+    public static Double getMarketMontoTotal;
+    public static Double getMarketPrecio;
     /**|
      * URL - APIService
      */

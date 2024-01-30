@@ -7,7 +7,6 @@ import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
-import com.anggastudio.sample.WebApiSVEN.Models.Descuentos;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Familia;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
@@ -30,6 +29,8 @@ import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.VentaCA;
+import com.anggastudio.sample.WebApiSVEN.Models.VentaMarketCA;
+import com.anggastudio.sample.WebApiSVEN.Models.VentaMarketDA;
 
 import java.util.List;
 
@@ -38,7 +39,6 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 public interface APIService {
 
@@ -309,5 +309,23 @@ public interface APIService {
      */
     @GET("api/articulo/listado")
     Call<List<Articulo>> getArticulo();
+
+    /**
+     * @VentaMarketDA
+     */
+    @POST("api/ventamarketda/listado")
+    Call<VentaMarketDA> postVentaMarketDA(@Body VentaMarketDA ventaMarketDA);
+
+    @GET("api/ventamarketda/listado/{tipodoc}/{seriedoc}/{nrodoc}/{nroItem}/{articuloID}/{articuloDS}/{uniMed}/{terminalID}/{fechaDocumento}/{precio1}/{cantidad}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}")
+        Call<List<VentaMarketDA>> getMarketDA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("nroItem") Integer nroItem, @Path("articuloID") String articuloID, @Path("articuloDS") String articuloDS, @Path("uniMed") String uniMed, @Path("terminalID") String terminalID, @Path("fechaDocumento") String fechaDocumento, @Path("precio1") Double precio1, @Path("cantidad") Double cantidad, @Path("mtoSubTotal") Double mtoSubTotal, @Path("mtoImpuesto") Double mtoImpuesto, @Path("mtoTotal") Double mtoTotal);
+
+    /**
+     * @VentaMarketCA
+     */
+    @POST("api/ventamarketca/listado")
+    Call<VentaMarketCA> postVentaMarketCA(@Body VentaMarketCA ventaMarketCA);
+
+    @GET("api/ventamarketca/listado/{tipodoc}/{seriedoc}/{nrodoc}/{terminalID}/{clienteID}/{clienteRUC}/{clienteRZ}/{clienteDR}/{fechaDocumento}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}/{nroPlaca}/{userID}/{pagoID}/{tarjetaID}/{tarjetaDS}/{mtoPagoPEN}/{mtoPagoUSD}/{observacionPag}")
+    Call<List<VentaMarketCA>> getMarketCA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("terminalID") String terminalID,@Path("clienteID") String clienteID, @Path("clienteRUC") String clienteRUC, @Path("clienteRZ") String clienteRZ, @Path("clienteDR") String clienteDR, @Path("fechaDocumento") String fechaDocumento,@Path("mtoSubTotal") Double mtoSubTotal,@Path("mtoImpuesto") Double mtoImpuesto,@Path("mtoTotal") Double mtoTotal, @Path("nroPlaca") String nroPlaca, @Path("userID") String userID, @Path("pagoID") Integer pagoID, @Path("tarjetaID") Integer tarjetaID,@Path("tarjetaDS") String tarjetaDS,@Path("mtoPagoPEN") Double mtoPagoPEN,@Path("mtoPagoUSD") Double mtoPagoUSD,@Path("observacionPag") String observacionPag);
 
 }
