@@ -590,7 +590,9 @@ public class ListaComprobantesFragment extends Fragment  {
                                     printama.printTextln("Fecha-Hora : " + fechaDocumento1, Printama.LEFT);
                                     printama.printTextln("Turno        : " + turno1, Printama.LEFT);
                                     printama.printTextln("Cajero       : " + Cajero1, Printama.LEFT);
-                                    printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
+                                    if (!nroLado1.isEmpty() && !nroLado1.equals("99")) {
+                                        printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
+                                    }
                                     if (!nroPlaca1.isEmpty()) {
                                         printama.printTextln("Nro. PLaca   : " + nroPlaca1, Printama.LEFT);
                                     }
@@ -1019,7 +1021,11 @@ public class ListaComprobantesFragment extends Fragment  {
                                     printama.setSmallText();
                                     printama.printTextln("Fecha - Hora : " + fechaDocumento1 + "  Turno: " + turno1, Printama.LEFT);
                                     printama.printTextln("Cajero       : " + Cajero1, Printama.LEFT);
-                                    printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
+
+                                    if (!nroLado1.isEmpty() && !nroLado1.equals("99")) {
+                                        printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
+                                    }
+
                                     if (!nroPlaca1.isEmpty()) {
                                         printama.printTextln("Nro. PLaca   : " + nroPlaca1, Printama.LEFT);
                                     }
@@ -1447,7 +1453,9 @@ public class ListaComprobantesFragment extends Fragment  {
                                     printama.setSmallText();
                                     printama.printTextln("Fecha - Hora : " + fechaDocumento1 + "  Turno: " + turno1, Printama.LEFT);
                                     printama.printTextln("Cajero       : " + Cajero1, Printama.LEFT);
-                                    printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
+                                    if (!nroLado1.isEmpty() && !nroLado1.equals("99")) {
+                                        printama.printTextln("Lado         : " + nroLado1, Printama.LEFT);
+                                    }
                                     if (!nroPlaca1.isEmpty()) {
                                         printama.printTextln("Nro. PLaca   : " + nroPlaca1, Printama.LEFT);
                                     }
