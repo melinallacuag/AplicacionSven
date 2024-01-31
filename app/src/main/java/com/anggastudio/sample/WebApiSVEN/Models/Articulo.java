@@ -11,6 +11,7 @@ public class Articulo {
     private Double precio_Venta;
     private Double stock_Actual;
     private Double salidas;
+    private String codigoBarra;
     private String imagen_Ruta;
     private Boolean generar_Vale;
     private Boolean usar_Decimales;
@@ -89,6 +90,14 @@ public class Articulo {
 
     public void setSalidas(Double salidas) {
         this.salidas = salidas;
+    }
+
+    public String getCodigoBarra() {
+        return codigoBarra;
+    }
+
+    public void setCodigoBarra(String codigoBarra) {
+        this.codigoBarra = codigoBarra;
     }
 
     public String getImagen_Ruta() {

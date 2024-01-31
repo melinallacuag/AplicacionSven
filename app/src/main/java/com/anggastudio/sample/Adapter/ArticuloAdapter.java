@@ -146,12 +146,12 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.ViewHo
                 // Filtrar por código de barras
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                     List<Articulo> filteredList = listaOriginal.stream()
-                            .filter(i -> i.getArticuloID().toLowerCase().contains(txtBuscarLowerCase))
+                            .filter(i -> i.getCodigoBarra().toLowerCase().contains(txtBuscarLowerCase))
                             .collect(Collectors.toList());
                     articuloList.addAll(filteredList);
                 } else {
                     for (Articulo c : listaOriginal) {
-                        if (c.getArticuloID().toLowerCase().contains(txtBuscar.toLowerCase())) {
+                        if (c.getCodigoBarra().toLowerCase().contains(txtBuscar.toLowerCase())) {
                             articuloList.add(c);
                         }
                     }

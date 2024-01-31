@@ -22,6 +22,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_extrabold"
                 android:gravity="center"
+                android:layout_marginStart="35sp"
                 android:text="Venta de Productos"
                 android:textAlignment="center"
                 android:textColor="@color/black"
@@ -32,7 +33,6 @@
                 android:id="@+id/btnscanear"
                 android:layout_width="wrap_content"
                 android:layout_height="55dp"
-                android:visibility="gone"
                 android:backgroundTint="@color/coloCar"
                 android:scaleType="fitCenter"
                 android:src="@drawable/icon_barrascanner"
@@ -59,7 +59,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/input_border"
                     android:inputType="textCapCharacters"
-                    app:queryHint="Buscar por nombre" />
+                    app:queryHint="Buscar por nombre o código" />
 
                 <ImageButton
                     android:id="@+id/btnfiltrar"

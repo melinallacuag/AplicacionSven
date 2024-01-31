@@ -21,6 +21,7 @@ import android.nfc.tech.NfcF;
 import android.nfc.tech.NfcV;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
@@ -57,6 +58,7 @@ import com.anggastudio.sample.Adapter.FamiliaAdapter;
 import com.anggastudio.sample.Adapter.LClienteAdapter;
 import com.anggastudio.sample.Adapter.LRegistroClienteAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
+import com.anggastudio.sample.CaptureActivityPortrait;
 import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.PasswordChecker;
@@ -81,6 +83,8 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -156,7 +160,7 @@ public class ArticuloFragment extends Fragment {
     TipoPago tipoPago;
 
 
-    ImageButton btnfiltrar;
+    ImageButton btnfiltrar,btnscanear;
 
     TextView nombreCliente,textCliente;
 
@@ -167,6 +171,17 @@ public class ArticuloFragment extends Fragment {
             mnMtoSubTotal1, mnMtoImpuesto1;
 
     private Integer mnPagoID,mnTarjetaCreditoID;
+
+    /**
+     * @CONFIGURACIÓN:ObtenerResultado
+     */
+    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(), result -> {
+        if (result.getContents() == null) {
+            Toast.makeText(getContext(), "CANCELADO", Toast.LENGTH_SHORT).show();
+        } else {
+            BuscarProducto.setQuery(result.getContents(), true);
+        }
+    });
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -200,9 +215,20 @@ public class ArticuloFragment extends Fragment {
 
         btnfiltrar       = view.findViewById(R.id.btnfiltrar);
         BuscarProducto   = view.findViewById(R.id.btnBuscadorProducto);
+        btnscanear       = view.findViewById(R.id.btnscanear);
         btnTodoArticulo  = view.findViewById(R.id.btnTodoArticulo);
         btncarritocompra = view.findViewById(R.id.btncarritocompra);
         linearLayoutRecyclerArticulo = view.findViewById(R.id.linearLayoutRecyclerArticulo);
+
+        /**
+         * @MOSTRARSCANNER
+         */
+        btnscanear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startScanner();
+            }
+        });
 
         /**
          * @MOSTRARBOTON:DesactivadoOculto
@@ -1311,7 +1337,7 @@ public class ArticuloFragment extends Fragment {
                                     detCantidad   = Double.valueOf(cantidadesSeleccionadas.get(articulo.getArticuloID()));
                                     detTotal   = detPrecio * detCantidad;
 
-                                    String linnesS = String.format(Locale.getDefault(), "%-48s\n%-9s %4s %8s %7s %12s", detArticuloDs, "", detUmedida, String.format("%.2f", detPrecio), detCantidad, String.format("%.2f", detTotal));
+                                    String linnesS = String.format(Locale.getDefault(), "%-48s\n%-9s %4s %8s %7s %10s", detArticuloDs, "", detUmedida, String.format("%.2f", detPrecio), detCantidad, String.format("%.2f", detTotal));
                                     MarketDABuilder.append(linnesS).append("\n");
 
                                 }
@@ -2722,5 +2748,20 @@ public class ArticuloFragment extends Fragment {
                 .setNegativeButton(android.R.string.no, (dialog, which) -> {
                 })
                 .show();
+    }
+
+    /**
+     * @SCANNEAR:CódigoProductos
+     */
+    private void startScanner() {
+        ScanOptions options = new ScanOptions();
+        options.setDesiredBarcodeFormats(ScanOptions.ALL_CODE_TYPES);
+        options.setPrompt("ESCANEAR CODIGO");
+        options.setCameraId(0);
+        options.setOrientationLocked(false);
+        options.setBeepEnabled(false);
+        options.setCaptureActivity(CaptureActivityPortrait.class);
+        options.setBarcodeImageEnabled(false);
+        barcodeLauncher.launch(options);
     }
 }
