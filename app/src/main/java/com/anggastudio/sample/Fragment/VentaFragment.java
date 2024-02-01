@@ -1999,7 +1999,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnFactura.setEnabled(true);
                 btnNotaDespacho.setEnabled(true);
                 btnSerafin.setEnabled(true);
-                btnGratruito.setEnabled(true);
+                btnGratruito.setEnabled(false);
 
                 GlobalInfo.getManguera10 = item.getMangueraID();
 

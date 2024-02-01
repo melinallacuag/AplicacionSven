@@ -117,6 +117,7 @@ public class ArticuloFragment extends Fragment {
     FamiliaAdapter familiaAdapter;
 
     List<Articulo> articuloList;
+    List<Articulo> articuloGList;
     ArticuloAdapter articuloAdapter;
 
     List<Articulo> articuloFiltrados;
@@ -160,7 +161,7 @@ public class ArticuloFragment extends Fragment {
     TipoPago tipoPago;
 
 
-    ImageButton btnfiltrar,btnscanear;
+    ImageButton btnfiltrar,btnscanear,btnpromociones;
 
     TextView nombreCliente,textCliente;
 
@@ -219,6 +220,66 @@ public class ArticuloFragment extends Fragment {
         btnTodoArticulo  = view.findViewById(R.id.btnTodoArticulo);
         btncarritocompra = view.findViewById(R.id.btncarritocompra);
         linearLayoutRecyclerArticulo = view.findViewById(R.id.linearLayoutRecyclerArticulo);
+        btnpromociones = view.findViewById(R.id.btnpromociones);
+        recyclerArticulo = view.findViewById(R.id.recyclerProducto);
+
+        btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+        btnpromociones.setColorFilter(getResources().getColor(R.color.white));
+
+        btnpromociones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                btnpromociones.setSelected(!btnpromociones.isSelected());
+
+                if (btnpromociones.isSelected()) {
+
+                    recyclerArticulo.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    getArticuloG();
+
+                    btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFC107")));
+                    btnpromociones.setColorFilter(getResources().getColor(R.color.white));
+
+                    btnfiltrar.setEnabled(false);
+                    btnTodoArticulo.setEnabled(false);
+                    recyclerFamilia.setEnabled(false);
+                    familiaAdapter.setTodosBotonesHabilitados(false);
+
+                    /**
+                     * @BOTON:DesactivarEstado
+                     */
+                    isTodoProductoSelected = false;
+                    btnTodoArticulo.setBackgroundColor(Color.parseColor("#999999"));
+                    btnTodoArticulo.setTextColor(Color.parseColor("#FFFFFF"));
+
+                    /**
+                     * @BOTON:ActivarFamiliaSeleccionado
+                     */
+                    familiaAdapter.setTodoSelected(true);
+
+                    /**
+                     * @BOTON:DesactivarEstado
+                     */
+                    isTodoProductoSelected = false;
+
+                    btnfiltrar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+                    btnfiltrar.setColorFilter(getResources().getColor(R.color.white));
+
+                }else {
+
+                    btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+                    btnpromociones.setColorFilter(getResources().getColor(R.color.white));
+
+                    btnfiltrar.setEnabled(true);
+                    btnTodoArticulo.setEnabled(true);
+                    recyclerFamilia.setEnabled(true);
+                    familiaAdapter.setTodosBotonesHabilitados(true);
+
+                    getArticulo();
+                    actualizarBoton();
+                }
+            }
+        });
 
         /**
          * @MOSTRARSCANNER
@@ -358,7 +419,6 @@ public class ArticuloFragment extends Fragment {
         /**
          * @LISTADO:Productos
          */
-        recyclerArticulo = view.findViewById(R.id.recyclerProducto);
         recyclerArticulo.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         getArticulo();
 
@@ -1611,6 +1671,92 @@ public class ArticuloFragment extends Fragment {
             }
         });
 
+    }
+
+    /**
+     * @APISERVICE:ListaArticuloPromocion
+     */
+    private void getArticuloG(){
+
+        Call<List<Articulo>> call = mAPIService.getArticuloG();
+
+        call.enqueue(new Callback<List<Articulo>>() {
+            @Override
+            public void onResponse(Call<List<Articulo>> call, Response<List<Articulo>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    articuloGList = response.body();
+
+                    articuloAdapter = new ArticuloAdapter(articuloGList, new ArticuloAdapter.OnItemClickListener() {
+                        @Override
+                        public int onItemClick(Articulo item, boolean isSelected) {
+
+                            /**
+                             * @PRODUCTOSELECCIONADO:Agregar_Remover
+                             */
+                            item.setSeleccionado(isSelected);
+
+                            if (isSelected) {
+                                articuloSeleccionados.add(item);
+                            } else {
+                                articuloSeleccionados.remove(item);
+                            }
+
+                            /**
+                             * @VISUALIZAR:BotonIrCarritoCompra
+                             */
+                            if (!articuloSeleccionados.isEmpty()) {
+                                btncarritocompra.setVisibility(View.VISIBLE);
+                                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) linearLayoutRecyclerArticulo.getLayoutParams();
+                                layoutParams.bottomMargin = 100;
+                                linearLayoutRecyclerArticulo.setLayoutParams(layoutParams);
+                            } else {
+                                btncarritocompra.setVisibility(View.GONE);
+                                ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) linearLayoutRecyclerArticulo.getLayoutParams();
+                                layoutParams.bottomMargin = 0;
+                                linearLayoutRecyclerArticulo.setLayoutParams(layoutParams);
+                                limpiarDatos();
+                            }
+                            return 0;
+                        }
+
+                    });
+
+                    articuloAdapter.setOnDeseleccionarArticuloListener(new ArticuloAdapter.OnDeseleccionarProductoListener() {
+                        @Override
+                        public void onDeseleccionarProducto(Articulo articulo) {
+                            /**
+                             * @DESELECCIONARPRODUCTO:RestablecerProductosInicial
+                             */
+                            cantidadesSeleccionadas.put(articulo.getArticuloID(), 1);
+                            nuevosPrecios.put(articulo.getArticuloID(), articulo.getPrecio_Venta());
+                            carritoAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+                    /**
+                     * @MOSTRARPEODUCTOS:Columnas3
+                     */
+                    GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
+                    recyclerArticulo.setLayoutManager(layoutManager);
+                    recyclerArticulo.setAdapter(articuloAdapter);
+                    articuloAdapter.notifyDataSetChanged();
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Articulo>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Articulo - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**

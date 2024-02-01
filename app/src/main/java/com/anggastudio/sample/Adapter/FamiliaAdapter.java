@@ -4,17 +4,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Models.Familia;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FamiliaAdapter extends RecyclerView.Adapter<FamiliaAdapter.ViewHolder>{
 
     final FamiliaAdapter.OnItemClickListener listener;
     private List<Familia> familiaList;
+
+    private boolean todosBotonesHabilitados = true;
+
+    public void setTodosBotonesHabilitados(boolean habilitados) {
+        todosBotonesHabilitados = habilitados;
+        notifyDataSetChanged();
+    }
 
     private boolean isTodoSelected = false;
     private int selectedItem;
@@ -55,6 +66,8 @@ public class FamiliaAdapter extends RecyclerView.Adapter<FamiliaAdapter.ViewHold
             holder.btncategorias.setBackgroundColor(Color.parseColor("#999999"));
             holder.btncategorias.setTextColor(Color.parseColor("#FFFFFF"));
         }
+
+        holder.btncategorias.setEnabled(todosBotonesHabilitados);
 
         holder.btncategorias.setOnClickListener(new View.OnClickListener() {
             @Override

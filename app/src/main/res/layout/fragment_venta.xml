@@ -263,7 +263,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimaryBtn"
+                android:backgroundTint="@color/colorHumo"
                 android:fontFamily="@font/nunito_black"
                 android:gravity="center"
                 android:text="GRATUITO"
