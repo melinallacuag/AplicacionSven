@@ -23,6 +23,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
@@ -36,12 +37,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.anggastudio.printama.Printama;
+import com.anggastudio.sample.Adapter.ArticuloAdapter;
+import com.anggastudio.sample.Adapter.ArticuloGAdapter;
+import com.anggastudio.sample.Adapter.CarritoAdapter;
 import com.anggastudio.sample.Adapter.ClienteCreditoAdapter;
 import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
 import com.anggastudio.sample.Adapter.LClienteAdapter;
@@ -54,6 +59,7 @@ import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.PasswordChecker;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
@@ -78,7 +84,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -107,7 +115,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     TimerTask timerTask;
     boolean mIsTaskScheduled = false;
 
-    RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta,recyclerLClienteCredito,recyclerListaClientesAfiliados;
+    RecyclerView recyclerPGratuito,recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta,recyclerLClienteCredito,recyclerListaClientesAfiliados;
 
     ClienteCreditoAdapter clienteCreditoAdapter;
 
@@ -123,13 +131,14 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     TipoPago tipoPago;
     TipoPagoAdapter tipoPagoAdapter;
 
-    TextView  datos_terminal,textMensajePEfectivo;
+    TextView  datos_terminal,textMensajePEfectivo,totalmontoCar;
 
-    Dialog modalNFCLogin,modallistNFC,modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin,modalClienteCredito;
+    Dialog modalGratuito,modalNFCLogin,modallistNFC,modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin,modalClienteCredito;
 
     Button btnCancelarNFC,btnAceptarNFC,buscarListNFC,btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
            btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
-            btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnCancelarNotaDespacho,btnAgregarNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin;
+            btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnCancelarNotaDespacho,btnAgregarNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin,
+            btnGratruito;
 
     TextInputLayout alertuserNFC,alertpasswordNFC,alertSoles,alertGalones,alertPlaca,alertDNI,alertRUC,alertNombre,alertRazSocial,alertPEfectivo,alertOperacion,alertSelectTPago,
             alertCPlaca,alertCTarjeta,alertCCliente,alertCRazSocial;
@@ -147,6 +156,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     Double monto;
 
     FloatingActionButton btncarritocompra;
+
+    LinearLayout btnGuardarPG,btnCancelarPG;
+
+    ArticuloGAdapter articuloGAdapter;
+    List<Articulo> articuloGList;
+    Map<String, Integer> cantidadesSeleccionadas = new HashMap<>();
+    Map<String, Double> nuevosPrecios = new HashMap<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -172,6 +188,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnNotaDespacho       = view.findViewById(R.id.btnnotadespacho);
         btnSerafin            = view.findViewById(R.id.btnSerafin);
         datos_terminal        = view.findViewById(R.id.datos_terminal);
+        btnGratruito          = view.findViewById(R.id.btngratruito);
 
         /**
          * @Bloquear:Botones
@@ -183,6 +200,50 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnFactura.setEnabled(false);
         btnNotaDespacho.setEnabled(false);
         btnSerafin.setEnabled(false);
+        btnGratruito.setEnabled(false);
+
+        /**
+         * @MODAL:ProductoGratuito
+         */
+
+        modalGratuito = new Dialog(getContext());
+        modalGratuito.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalGratuito.setContentView(R.layout.fragmento_gratuito);
+        modalGratuito.setCancelable(false);
+
+        btnGratruito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                modalGratuito.show();
+
+                btnGuardarPG     = modalGratuito.findViewById(R.id.btnGuardarPG);
+                btnCancelarPG    = modalGratuito.findViewById(R.id.btnCancelarPG);
+                totalmontoCar    = modalGratuito.findViewById(R.id.totalmontoCar);
+                /**
+                 * @MODAL:MostrarListadoClienteDNI
+                 */
+                recyclerPGratuito = modalGratuito.findViewById(R.id.recyclerPGratuito);
+                recyclerPGratuito.setLayoutManager(new LinearLayoutManager(getContext()));
+                getArticuloG();
+
+                btnCancelarPG.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        modalGratuito.dismiss();
+                        reiniciarInteracciones();
+                    }
+                });
+
+                btnGuardarPG.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getContext(), "Guardar Producto Gratuito", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
 
         /**
          * @VISTA:CarritoCompra
@@ -1891,6 +1952,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnFactura.setEnabled(false);
                 btnNotaDespacho.setEnabled(false);
                 btnSerafin.setEnabled(false);
+                btnGratruito.setEnabled(false);
 
                 Manguera_ByLados();
 
@@ -1937,6 +1999,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnFactura.setEnabled(true);
                 btnNotaDespacho.setEnabled(true);
                 btnSerafin.setEnabled(true);
+                btnGratruito.setEnabled(true);
 
                 GlobalInfo.getManguera10 = item.getMangueraID();
 
@@ -1946,6 +2009,53 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         recyclerMangueras.setAdapter(manguerasAdapter);
 
+    }
+
+    /**
+     * @APISERVICE:ListadoPGratuito
+     */
+    private void getArticuloG(){
+
+        Call<List<Articulo>> call = mAPIService.getArticuloG();
+
+        call.enqueue(new Callback<List<Articulo>>() {
+            @Override
+            public void onResponse(Call<List<Articulo>> call, Response<List<Articulo>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error PG: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    articuloGList = response.body();
+
+                    articuloGAdapter = new ArticuloGAdapter(articuloGList,cantidadesSeleccionadas,nuevosPrecios,totalmontoCar, new ArticuloGAdapter.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(Articulo item) {
+
+                        }
+                    });
+
+                    recyclerPGratuito.setAdapter(articuloGAdapter);
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Articulo>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Articulo - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void reiniciarInteracciones() {
+        cantidadesSeleccionadas.clear();
+        nuevosPrecios.clear();
+        articuloGAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -2735,6 +2845,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         if (mnClienteID.equals(GlobalInfo.getsettingClienteID10)  && mnTipoDocumento.equals("99")) {
                             mnobservacionPag = "CONTADO";
                         }
+
+                        /** Articulos Gratuitos mayor a 150.00 **/
+                      /*  if (GlobalInfo.getoptranSoles10 >= 150.00) {
+                            Toast.makeText(getContext(), "Por montos mayores a 150.00 soles debe ingresar articulos gratuitos", Toast.LENGTH_SHORT).show();
+                            return;
+                        }*/
 
                         /** Generamos correlativo para grabar **/
 

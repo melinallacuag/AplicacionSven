@@ -328,4 +328,13 @@ public interface APIService {
     @GET("api/ventamarketca/listado/{tipodoc}/{seriedoc}/{nrodoc}/{terminalID}/{clienteID}/{clienteRUC}/{clienteRZ}/{clienteDR}/{fechaDocumento}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}/{nroPlaca}/{userID}/{pagoID}/{tarjetaID}/{tarjetaDS}/{mtoPagoPEN}/{mtoPagoUSD}/{observacionPag}")
     Call<List<VentaMarketCA>> getMarketCA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("terminalID") String terminalID,@Path("clienteID") String clienteID, @Path("clienteRUC") String clienteRUC, @Path("clienteRZ") String clienteRZ, @Path("clienteDR") String clienteDR, @Path("fechaDocumento") String fechaDocumento,@Path("mtoSubTotal") Double mtoSubTotal,@Path("mtoImpuesto") Double mtoImpuesto,@Path("mtoTotal") Double mtoTotal, @Path("nroPlaca") String nroPlaca, @Path("userID") String userID, @Path("pagoID") Integer pagoID, @Path("tarjetaID") Integer tarjetaID,@Path("tarjetaDS") String tarjetaDS,@Path("mtoPagoPEN") Double mtoPagoPEN,@Path("mtoPagoUSD") Double mtoPagoUSD,@Path("observacionPag") String observacionPag);
 
+    /**
+     * @PGratuito
+     */
+
+    /**
+     * Articulo
+     */
+    @GET("api/articulo/listadotg")
+    Call<List<Articulo>> getArticuloG();
 }
