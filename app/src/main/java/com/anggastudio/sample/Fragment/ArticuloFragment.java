@@ -117,7 +117,7 @@ public class ArticuloFragment extends Fragment {
     FamiliaAdapter familiaAdapter;
 
     List<Articulo> articuloList;
-    List<Articulo> articuloGList;
+
     ArticuloAdapter articuloAdapter;
 
     List<Articulo> articuloFiltrados;
@@ -138,7 +138,7 @@ public class ArticuloFragment extends Fragment {
     Map<String, Integer> cantidadesSeleccionadas = new HashMap<>();
     Map<String, Double> nuevosPrecios = new HashMap<>();
 
-    TextView totalmontoCar,textMensajePEfectivo,text_guardarC,text_inprimirC,titleconfirmar,titleimprimir;
+    TextView totalmontoCar,textMensajePEfectivo,textMensajeGratuito,text_guardarC,text_inprimirC,titleconfirmar,titleimprimir;
     Dialog modal_CV_Articulo,modalCarrito, modalBoleta, modalClienteDNI,modalFactura,modalClienteRUC;
 
     CarritoAdapter carritoAdapter;
@@ -152,7 +152,7 @@ public class ArticuloFragment extends Fragment {
             inputRUC,inputRazSocial;
 
     RadioGroup radioFormaPago;
-    RadioButton radioEfectivo,radioTarjeta,radioCredito,radioNombreFormaPago;
+    RadioButton radioEfectivo,radioTarjeta,radioCredito,radioGratuito,radioNombreFormaPago;
 
     Spinner SpinnerTPago;
     LClienteAdapter lclienteAdapter;
@@ -166,7 +166,7 @@ public class ArticuloFragment extends Fragment {
     TextView nombreCliente,textCliente;
 
     private String mnTipoDocumento,mnTipoPago,mnNroPlaca,mnClienteID,mnClienteRUC,mnClienteRS,mnCliernteDR,mnTarjetaCredito,mnOperacionREF,mnobservacionPag,
-            detArticuloId,detArticuloDs,detUmedida;
+            detArticuloId,detArticuloDs,detUmedida,opGratruitas;
 
     private Double mnMontoSoles,mnMtoSaldoCredito,mnPtosDisponibles,detPrecio,detCantidad,detTotal,detTotal1,detSubtotal,detSubtotal1,detImpuesto,detImpuesto1,
             mnMtoSubTotal1, mnMtoImpuesto1;
@@ -235,6 +235,7 @@ public class ArticuloFragment extends Fragment {
                 if (btnpromociones.isSelected()) {
 
                     recyclerArticulo.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                    limpiarDatos();
                     getArticuloG();
 
                     btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFC107")));
@@ -265,6 +266,18 @@ public class ArticuloFragment extends Fragment {
                     btnfiltrar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
                     btnfiltrar.setColorFilter(getResources().getColor(R.color.white));
 
+                    /** Limpiar articulo Seleccionado **/
+                    for (Articulo articulo : articuloSeleccionados) {
+                        articulo.setSeleccionado(false);
+                    }
+
+                    articuloSeleccionados.clear();
+                    cantidadesSeleccionadas.clear();
+
+                    articuloAdapter.notifyDataSetChanged();
+                    carritoAdapter.notifyDataSetChanged();
+                    btncarritocompra.setVisibility(View.GONE);
+
                 }else {
 
                     btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
@@ -275,8 +288,21 @@ public class ArticuloFragment extends Fragment {
                     recyclerFamilia.setEnabled(true);
                     familiaAdapter.setTodosBotonesHabilitados(true);
 
+                    limpiarDatos();
                     getArticulo();
                     actualizarBoton();
+
+                    /** Limpiar articulo Seleccionado **/
+                    for (Articulo articulo : articuloSeleccionados) {
+                        articulo.setSeleccionado(false);
+                    }
+
+                    articuloSeleccionados.clear();
+                    cantidadesSeleccionadas.clear();
+
+                    articuloAdapter.notifyDataSetChanged();
+                    carritoAdapter.notifyDataSetChanged();
+                    btncarritocompra.setVisibility(View.GONE);
                 }
             }
         });
@@ -523,11 +549,13 @@ public class ArticuloFragment extends Fragment {
                         alertSelectTPago  = modalBoleta.findViewById(R.id.inputSelectTPago);
 
                         textMensajePEfectivo = modalBoleta.findViewById(R.id.textMensajePEfectivo);
+                        textMensajeGratuito = modalBoleta.findViewById(R.id.textMensajeGratuito);
 
                         radioFormaPago    = modalBoleta.findViewById(R.id.radioFormaPago);
                         radioEfectivo     = modalBoleta.findViewById(R.id.radioEfectivo);
                         radioTarjeta      = modalBoleta.findViewById(R.id.radioTarjeta);
                         radioCredito      = modalBoleta.findViewById(R.id.radioCredito);
+                        radioGratuito     = modalBoleta.findViewById(R.id.radioGratuito);
 
                         buscarDNIBoleta   = modalBoleta.findViewById(R.id.buscarDNIBoleta);
                         buscarPlacaBoleta = modalBoleta.findViewById(R.id.buscarPlacaBoleta);
@@ -540,6 +568,7 @@ public class ArticuloFragment extends Fragment {
                         buscarListNFC.setVisibility(View.GONE);
                         alertObservacion.setVisibility(View.GONE);
                         radioCredito.setVisibility(View.GONE);
+                        radioGratuito.setVisibility(View.VISIBLE);
 
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
@@ -630,19 +659,28 @@ public class ArticuloFragment extends Fragment {
 
                                 if (checkedId == radioEfectivo.getId()){
                                     textMensajePEfectivo.setVisibility(View.VISIBLE);
+                                    textMensajeGratuito.setVisibility(View.GONE);
                                     alertSelectTPago.setVisibility(View.GONE);
                                     alertOperacion.setVisibility(View.GONE);
                                     alertPEfectivo.setVisibility(View.GONE);
                                 } else if (checkedId == radioTarjeta.getId()){
                                     textMensajePEfectivo.setVisibility(View.GONE);
+                                    textMensajeGratuito.setVisibility(View.GONE);
                                     alertSelectTPago.setVisibility(View.VISIBLE);
                                     alertOperacion.setVisibility(View.VISIBLE);
                                     alertPEfectivo.setVisibility(View.VISIBLE);
                                 } else if (checkedId == radioCredito.getId()){
                                     textMensajePEfectivo.setVisibility(View.GONE);
+                                    textMensajeGratuito.setVisibility(View.GONE);
                                     alertSelectTPago.setVisibility(View.GONE);
                                     alertOperacion.setVisibility(View.GONE);
                                     alertPEfectivo.setVisibility(View.VISIBLE);
+                                } else if (checkedId == radioGratuito.getId()){
+                                    textMensajeGratuito.setVisibility(View.VISIBLE);
+                                    textMensajePEfectivo.setVisibility(View.GONE);
+                                    alertSelectTPago.setVisibility(View.GONE);
+                                    alertOperacion.setVisibility(View.GONE);
+                                    alertPEfectivo.setVisibility(View.GONE);
                                 }
                             }
                         });
@@ -1308,7 +1346,7 @@ public class ArticuloFragment extends Fragment {
                                 mnTipoDocumento = "03";
 
                                 switch (mnTipoPago) {
-                                    case "E" :
+                                    case "E" : //Efectivo
                                         if (mnClienteID != null && mnClienteID.length() == 11) {
                                             mnTipoDocumento = "01";
                                             mnClienteRUC = mnClienteID;
@@ -1316,7 +1354,7 @@ public class ArticuloFragment extends Fragment {
                                             mnTipoDocumento = "03";
                                         }
                                         break;
-                                    case "T" :
+                                    case "T" : //Tarjeta
                                         if (mnClienteID != null && mnClienteID.length() == 11) {
                                             mnTipoDocumento = "01";
                                             mnClienteRUC = mnClienteID;
@@ -1326,6 +1364,10 @@ public class ArticuloFragment extends Fragment {
                                         mnPagoID = 2;
                                         mnTarjetaCreditoID = Integer.valueOf(mnTarjetaCredito);
                                         mnobservacionPag = "TARJETA";
+                                        break;
+
+                                    case "G" : //Transferencia Gratuita
+                                        mnobservacionPag = "GRATUITA";
                                         break;
                                 }
 
@@ -1397,6 +1439,10 @@ public class ArticuloFragment extends Fragment {
                                     detCantidad   = Double.valueOf(cantidadesSeleccionadas.get(articulo.getArticuloID()));
                                     detTotal   = detPrecio * detCantidad;
 
+                                    if (mnobservacionPag.equals("GRATUITA")){
+                                        detTotal = 0.00;
+                                    }
+
                                     String linnesS = String.format(Locale.getDefault(), "%-48s\n%-9s %4s %8s %7s %10s", detArticuloDs, "", detUmedida, String.format("%.2f", detPrecio), detCantidad, String.format("%.2f", detTotal));
                                     MarketDABuilder.append(linnesS).append("\n");
 
@@ -1437,6 +1483,16 @@ public class ArticuloFragment extends Fragment {
                                 getArticulo();
                                 actualizarBoton();
 
+                                btnpromociones.setSelected(!btnpromociones.isSelected());
+
+                                btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+                                btnpromociones.setColorFilter(getResources().getColor(R.color.white));
+
+                                btnfiltrar.setEnabled(true);
+                                btnTodoArticulo.setEnabled(true);
+                                recyclerFamilia.setEnabled(true);
+                                familiaAdapter.setTodosBotonesHabilitados(true);
+
                                 }
                         });
 
@@ -1461,6 +1517,15 @@ public class ArticuloFragment extends Fragment {
                                 getArticulo();
                                 actualizarBoton();
 
+                                btnpromociones.setSelected(!btnpromociones.isSelected());
+
+                                btnpromociones.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#999999")));
+                                btnpromociones.setColorFilter(getResources().getColor(R.color.white));
+
+                                btnfiltrar.setEnabled(true);
+                                btnTodoArticulo.setEnabled(true);
+                                recyclerFamilia.setEnabled(true);
+                                familiaAdapter.setTodosBotonesHabilitados(true);
                             }
                         });
 
@@ -1639,8 +1704,13 @@ public class ArticuloFragment extends Fragment {
                         detSubtotal = detTotal1 / 1.18;
                         detSubtotal1 = Math.round(detSubtotal*100.0)/100.0;
 
-                        detImpuesto = detTotal1 - detSubtotal1;
-                        detImpuesto1 = Math.round(detImpuesto*100.0)/100.0;
+                        if (mnobservacionPag.equals("GRATUITA")){
+                            detImpuesto1 = 0.00;
+                            detTotal1 = 0.00;
+                        } else {
+                            detImpuesto = detTotal1 - detSubtotal1;
+                            detImpuesto1 = Math.round(detImpuesto*100.0)/100.0;
+                        }
 
                         mnItem += 1;
 
@@ -1690,9 +1760,9 @@ public class ArticuloFragment extends Fragment {
                         return;
                     }
 
-                    articuloGList = response.body();
+                    articuloList = response.body();
 
-                    articuloAdapter = new ArticuloAdapter(articuloGList, new ArticuloAdapter.OnItemClickListener() {
+                    articuloAdapter = new ArticuloAdapter(articuloList, new ArticuloAdapter.OnItemClickListener() {
                         @Override
                         public int onItemClick(Articulo item, boolean isSelected) {
 
@@ -2181,7 +2251,7 @@ public class ArticuloFragment extends Fragment {
 
     }
 
-    private void imprimirMarket(String tipopapel,String _TipoDocumento, String _NroDocumento, String _FechaDocumento, Integer _Turno,
+    private void imprimirMarket(String tipopapel, String _TipoDocumento, String _NroDocumento, String _FechaDocumento, Integer _Turno,
                                 String _Cajero, Double _MtoTotal, Double _MtoSubTotal, Double _MtoImpuesto,
                                 String _ClienteID, String _ClienteRZ, String _ClienteDR, String _NroPlaca,
                                 String _FechaQR, Integer _PagoID, Integer _TarjetaCreditoID, String _OperacionREF, Double _mtoSoles, StringBuilder MarketDABuilder){
@@ -2223,6 +2293,13 @@ public class ArticuloFragment extends Fragment {
             case "98" :
                 TipoDNI = "0";
                 break;
+        }
+
+        opGratruitas = "0.00";
+
+        if (mnTipoPago.equals("G")){
+            opGratruitas = String.format("%.2f",_MtoTotal);
+            _MtoTotal = 0.00;
         }
 
         String MtoSubTotalFF = String.format("%.2f",_MtoSubTotal);
@@ -2289,6 +2366,9 @@ public class ArticuloFragment extends Fragment {
                             break;
 
                         case "03":
+                            if (mnTipoPago.equals("G")){
+                                printama.printTextlnBold("***** TRANSFERENCIA GRATUITA *****", Printama.CENTER);
+                            }
                             printama.printTextlnBold("BOLETA DE VENTA ELECTRONICA", Printama.CENTER);
                             break;
 
@@ -2448,8 +2528,11 @@ public class ArticuloFragment extends Fragment {
                             break;
                         case "03" :
 
-                            printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                            if (mnTipoPago.equals("G")){
+                                printama.printTextlnBold("OP. GRATUITAS: S/ " + opGratruitas, Printama.RIGHT);
 
+                            }
+                            printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
                             printama.setSmallText();
                             printSeparatorLine(printama, tipopapel);
                             printama.addNewLine(1);
@@ -2574,6 +2657,9 @@ public class ArticuloFragment extends Fragment {
                             break;
 
                         case "03":
+                            if (mnTipoPago.equals("G")){
+                                printama.printTextlnBold("***** TRANSFERENCIA GRATUITA *****", Printama.CENTER);
+                            }
                             printama.printTextlnBold("BOLETA DE VENTA ELECTRONICA", Printama.CENTER);
                             break;
 
@@ -2733,12 +2819,15 @@ public class ArticuloFragment extends Fragment {
                             break;
                         case "03" :
 
-                            printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                if (mnTipoPago.equals("G")){
+                                    printama.printTextlnBold("OP. GRATUITAS: S/ " + opGratruitas, Printama.RIGHT);
 
-                            printama.setSmallText();
-                            printSeparatorLine(printama, tipopapel);
-                            printama.addNewLine(1);
-                            printama.setSmallText();
+                                }
+                                printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                printama.setSmallText();
+                                printSeparatorLine(printama, tipopapel);
+                                printama.addNewLine(1);
+                                printama.setSmallText();
 
                             switch (_PagoID) {
                                 case 1 :

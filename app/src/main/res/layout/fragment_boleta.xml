@@ -278,6 +278,16 @@
                     android:text="Credito"
                     android:textColor="@color/gris"
                     android:textSize="14sp" />
+                <RadioButton
+                    android:id="@+id/radioGratuito"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="Gratuito"
+                    android:visibility="gone"
+                    android:textColor="@color/gris"
+                    android:textSize="14sp" />
             </RadioGroup>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -308,6 +318,21 @@
                 android:backgroundTint="@color/colorInfo"
                 android:fontFamily="@font/nunito_semibold"
                 android:text="Se realizara el modo de Pago en Efectivo"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textMensajeGratuito"
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:layout_gravity="center"
+                android:background="@drawable/cardlogin"
+                android:backgroundTint="@color/colorNer"
+                android:fontFamily="@font/nunito_semibold"
+                android:text="Se realizara el modo de Pago en Gratuito"
                 android:textAlignment="center"
                 android:gravity="center"
                 android:textColor="@color/white"

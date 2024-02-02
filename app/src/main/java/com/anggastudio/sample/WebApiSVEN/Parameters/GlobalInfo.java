@@ -40,6 +40,7 @@ public class GlobalInfo {
     public static String getTotalPagosSoles10;
     public static String getTotalRTarjetasSoles10;
     public static String getMontoBruto10;
+    public static String getTGratuita10;
 
     /**
      * Datos lista de Clases

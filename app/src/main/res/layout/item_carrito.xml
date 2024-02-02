@@ -126,7 +126,6 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:layout_marginStart="20dp"
-                        android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:gravity="center"
                         android:text="S/. "/>
@@ -138,7 +137,6 @@
                         android:textSize="14sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"
-                        android:textAlignment="textEnd"
                         android:gravity="center"
                         tools:text="1000.00"/>
                 </LinearLayout>

@@ -9,6 +9,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Familia;
+import com.anggastudio.sample.WebApiSVEN.Models.Gratuita;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
@@ -217,6 +218,12 @@ public interface APIService {
 
     @GET("api/rpago/listado/{id}/{turno}")
     Call<List<VTipoPago>> findVTipoPago(@Path("id") String id,@Path("turno") Integer turno);
+
+    /**
+     * Reporte de Transferencia Gratuita
+     */
+    @GET("api/rgratuita/listado/{id}/{turno}")
+    Call<List<Gratuita>> findRGratuita(@Path("id") String id, @Path("turno") Integer turno);
 
     /**
      * Incio de Día

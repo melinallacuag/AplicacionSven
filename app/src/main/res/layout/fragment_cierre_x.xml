@@ -697,6 +697,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/rgratuita"
                     android:layout_width="200sp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
