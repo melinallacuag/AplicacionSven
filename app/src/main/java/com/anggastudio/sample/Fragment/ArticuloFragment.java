@@ -2822,10 +2822,10 @@ public class ArticuloFragment extends Fragment {
                         case "03" :
 
                                 if (mnTipoPago.equals("G")){
-                                    printama.printTextlnBold("OP. GRATUITAS: S/ " + opGratruitas, Printama.RIGHT);
+                                    printama.printTextln("OP. GRATUITAS: S/ " + opGratruitas, Printama.RIGHT);
 
                                 }
-                                printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
                                 printama.setSmallText();
                                 printSeparatorLine(printama, tipopapel);
                                 printama.addNewLine(1);
