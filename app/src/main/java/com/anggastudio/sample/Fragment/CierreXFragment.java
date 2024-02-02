@@ -283,8 +283,7 @@ public class CierreXFragment extends Fragment {
                     gratuitaList = response.body();
 
                     for(Gratuita gratuita: gratuitaList) {
-                        GlobalInfo.getTGratuita10 = String.valueOf(gratuita.getSoles());
-
+                        GlobalInfo.getTGratuita10 = String.format("%.2f",gratuita.getSoles());
                     }
 
                     rgratuita.setText(String.valueOf(GlobalInfo.getTGratuita10));

@@ -1393,7 +1393,7 @@ public class ArticuloFragment extends Fragment {
                                 findCorrelativo(GlobalInfo.getterminalImei10,
                                         mnTipoDocumento, mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR,
                                         mnNroPlaca,mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
-                                        mnobservacionPag, mnMontoSoles,GlobalInfo.getMarketMontoTotal);
+                                        mnobservacionPag, mnMontoSoles, GlobalInfo.getMarketMontoTotal);
 
                                 btnGuardarVenta.setVisibility(View.GONE);
                                 btnCancelarVenta.setVisibility(View.GONE);
@@ -1689,6 +1689,16 @@ public class ArticuloFragment extends Fragment {
 
                     Double mnMtoDescuentoUnitario = 0.00;
 
+                    /** GRABAR VENTA CAB. EN BASE DE DATOS **/
+
+                    grabarVentaMarketCA(mnTipoDocumento, GRNumeroSerie, GRNumeroDocumento, GlobalInfo.getterminalID10,
+                            mnClienteID, mnClienteRUC,mnClienteRS, mnCliernteDR, xFechaDocumento,
+                            mnMtoSubTotal1, mnMtoImpuesto1, mnMtoTotal, mnNroPlaca, GlobalInfo.getuserID10,
+                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoTotal, mnMontoSoles,
+                            mnobservacionPag);
+
+                    /** GRABAR VENTA DETALLE EN BASE DE DATOS **/
+
                     for (Articulo articulo : articuloSeleccionados) {
 
 
@@ -1719,14 +1729,6 @@ public class ArticuloFragment extends Fragment {
                                             detPrecio, detCantidad, detSubtotal1, detImpuesto1, detTotal1);
 
                     }
-
-                    /** GRABAR VENTA CAB. EN BASE DE DATOS **/
-
-                    grabarVentaMarketCA(mnTipoDocumento, GRNumeroSerie, GRNumeroDocumento, GlobalInfo.getterminalID10,
-                                        mnClienteID, mnClienteRUC,mnClienteRS, mnCliernteDR, xFechaDocumento,
-                                        mnMtoSubTotal1, mnMtoImpuesto1, mnMtoTotal, mnNroPlaca, GlobalInfo.getuserID10,
-                                        mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoTotal, mnMontoSoles,
-                                        mnobservacionPag);
 
                     /** FIN GRABAR VENTA EN BASE DE DATOS **/
 
