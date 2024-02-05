@@ -1419,13 +1419,12 @@ public class ArticuloFragment extends Fragment {
                             @Override
                             public void onClick(View v) {
 
-                                String NroComprobante = GlobalInfo.getcorrelativoSerie + "-" + GlobalInfo.getcorrelativoNumero;
+                                String NroComprobante = GlobalInfo.getCorrelativoMarketSerie + "-" + GlobalInfo.getCorrelativoMarketNumero;
 
                                 /** Fecha de Impresión */
                                 Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
                                 SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                                 String xFechaHoraImpresion   = formatdate.format(calendarprint.getTime());
-                                String xFechaDocumento       = xFechaHoraImpresion.substring(6,10) + xFechaHoraImpresion.substring(3,5) + xFechaHoraImpresion.substring(0,2) + " " + xFechaHoraImpresion.substring(11,19);
                                 String xFechaDocumentoQR     = xFechaHoraImpresion.substring(6,10) + "-" + xFechaHoraImpresion.substring(3,5) + "-" + xFechaHoraImpresion.substring(0,2);
 
 
@@ -1617,32 +1616,28 @@ public class ArticuloFragment extends Fragment {
                     List<Correlativo> correlativoList = response.body();
 
                     for(Correlativo correlativo: correlativoList) {
-                        GlobalInfo.getcorrelativoFecha      = String.valueOf(correlativo.getFechaProceso());
-                        GlobalInfo.getcorrelativoSerie      = String.valueOf(correlativo.getSerie());
-                        GlobalInfo.getcorrelativoNumero     = String.valueOf(correlativo.getNumero());
-                        GlobalInfo.getcorrelativoMDescuento = correlativo.getMontoDescuento();
-                        GlobalInfo.getcorrelativoDocumentoVenta = correlativo.getDocumentoVenta();
-                        GlobalInfo.getcorrelativoTipoDesc       = correlativo.getTipoDescuento();
+                        GlobalInfo.getCorrelativoMarketFecha      = String.valueOf(correlativo.getFechaProceso());
+                        GlobalInfo.getCorrelativoMarketSerie      = String.valueOf(correlativo.getSerie());
+                        GlobalInfo.getCorrelativoMarketNumero     = String.valueOf(correlativo.getNumero());
+                        GlobalInfo.getCorrelativoMarketMDescuento = correlativo.getMontoDescuento();
+                        GlobalInfo.getCorrelativoMarketDocumentoVenta = correlativo.getDocumentoVenta();
+                        GlobalInfo.getCorrelativoMarketTipoDesc       = correlativo.getTipoDescuento();
                     }
 
-                    if(!GlobalInfo.getcorrelativoDocumentoVenta.isEmpty()){
+                    if(!GlobalInfo.getCorrelativoMarketDocumentoVenta.isEmpty()){
                         return;
                     }
 
                     /** Consultando datos del DOCUMENTO-SERIE-CORRELATIVO*/
 
-                    String GRFecProceso = GlobalInfo.getcorrelativoFecha;
-                    String GRNumeroSerie = GlobalInfo.getcorrelativoSerie;
-                    String GRNumeroDocumento = GlobalInfo.getcorrelativoNumero;
-
-                    String NroComprobante = GlobalInfo.getcorrelativoSerie + "-" + GlobalInfo.getcorrelativoNumero;
+                    String GRNumeroSerie     = GlobalInfo.getCorrelativoMarketSerie;
+                    String GRNumeroDocumento = GlobalInfo.getCorrelativoMarketNumero;
 
                     /** Fecha de Impresión */
                     Calendar calendarprint       = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
                     SimpleDateFormat formatdate  = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                     String xFechaHoraImpresion   = formatdate.format(calendarprint.getTime());
                     String xFechaDocumento       = xFechaHoraImpresion.substring(6,10) + xFechaHoraImpresion.substring(3,5) + xFechaHoraImpresion.substring(0,2) + " " + xFechaHoraImpresion.substring(11,19);
-                    String xFechaDocumentoQR     = xFechaHoraImpresion.substring(6,10) + "-" + xFechaHoraImpresion.substring(3,5) + "-" + xFechaHoraImpresion.substring(0,2);
 
                     /** FIN Consultando datos del DOCUMENTO-SERIE-CORRELATIVO*/
 
@@ -1651,16 +1646,6 @@ public class ArticuloFragment extends Fragment {
                     Double mnPrecioOrig = 0.00;
                     Double mnMtoPagar = 0.00;
                     Double mnMtoCanje = 0.00;
-                    Double mnmtoPagoUSD = 0.00;
-                    Double mnPtosGanados = 0.00;
-
-                    Double mnMtoDescuento0 = 0.00;
-                    Double mnMtoDescuento1 = 0.00;
-                    String mnMtoDescuento2 = "";
-
-                    Double mnMtoIncremento0 = 0.00;
-                    Double mnMtoIncremento1 = 0.00;
-                    String mnMtoIncremento2 = "";
 
                     Double mnMtoSubTotal0 = 0.00;
                     mnMtoSubTotal1 = 0.00;
@@ -1671,10 +1656,6 @@ public class ArticuloFragment extends Fragment {
                     String mnMtoImpuesto2 = "";
 
                     Integer mnItem = 0;
-                    Double mnFise = 0.00;
-                    String mnobservacionDet = "";
-                    String mnReferencia = "";
-                    String mnOdometro = "";
 
                     mnPrecioOrig = GlobalInfo.getMarketPrecio;
 
@@ -1687,8 +1668,6 @@ public class ArticuloFragment extends Fragment {
                     mnMtoImpuesto0 = mnMtoTotal - mnMtoSubTotal1;
                     mnMtoImpuesto1 = Math.round(mnMtoImpuesto0*100.0)/100.0;
 
-                    Double mnMtoDescuentoUnitario = 0.00;
-
                     /** GRABAR VENTA CAB. EN BASE DE DATOS **/
 
                     grabarVentaMarketCA(mnTipoDocumento, GRNumeroSerie, GRNumeroDocumento, GlobalInfo.getterminalID10,
@@ -1700,7 +1679,6 @@ public class ArticuloFragment extends Fragment {
                     /** GRABAR VENTA DETALLE EN BASE DE DATOS **/
 
                     for (Articulo articulo : articuloSeleccionados) {
-
 
                         detArticuloId = articulo.getArticuloID();
                         detArticuloDs = articulo.getArticuloDS1();

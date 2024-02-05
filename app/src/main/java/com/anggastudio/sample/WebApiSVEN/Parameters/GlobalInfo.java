@@ -316,6 +316,18 @@ public class GlobalInfo {
     public static String  getMarketPEfectivo = "0.00";
     public static Double getMarketMontoTotal;
     public static Double getMarketPrecio;
+
+
+    /**
+     * Correlativo Tienda
+     */
+    public static String  getCorrelativoMarketFecha;
+    public static String  getCorrelativoMarketSerie;
+    public static String  getCorrelativoMarketNumero;
+    public static Double  getCorrelativoMarketMDescuento;
+    public static String  getCorrelativoMarketDocumentoVenta;
+    public static String  getCorrelativoMarketTipoDesc;
+
     /**|
      * URL - APIService
      */
