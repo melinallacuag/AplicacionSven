@@ -1,6 +1,7 @@
 package com.anggastudio.sample.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,12 @@ public class ClienteCreditoAdapter extends RecyclerView.Adapter<ClienteCreditoAd
         holder.clienteC_Articulo.setText(String.valueOf(clienteCreditoList.get(position).getArticuloID()));
 
         holder.clienteC_Tipo.setText(clienteCreditoList.get(position).getTipo());
+
+        if (clienteCredito.getSaldo() > 0.00) {
+            holder.clienteC_Saldo.setTextColor(Color.parseColor("#001E8A"));
+        } else {
+            holder.clienteC_Saldo.setTextColor(Color.RED);
+        }
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
