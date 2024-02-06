@@ -83,6 +83,12 @@ public interface APIService {
     @GET("api/lados/listado/{id}")
     Call<List<Lados>> findLados(@Path("id") String id);
 
+    @GET("api/lados/agregar/{nrolado}/{terminalid}")
+    Call<List<Lados>> findLadosAgregar(@Path("nrolado") String nrolado,@Path("terminalid") String terminalid);
+
+    @GET("api/lados/quitar/{nrolado}/{terminalid}")
+    Call<List<Lados>> findLadosQuitar(@Path("nrolado") String nrolado,@Path("terminalid") String terminalid);
+
     /**
      * @Manguera
      * @Guardar_ListadoMangueras
