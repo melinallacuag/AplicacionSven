@@ -18,23 +18,33 @@
 
         <TextView
             android:id="@+id/clienteC_RZ"
-            android:layout_width="150sp"
+            android:layout_width="130sp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_extrabold"
             android:gravity="center"
             android:textColor="@color/blue"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/clienteC_Tarj"
-            android:layout_width="80sp"
+            android:layout_width="70sp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/nunito_extrabold"
             android:gravity="center"
             android:textColor="@color/blue"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/clienteC_Articulo"
+            android:layout_width="50sp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/nunito_extrabold"
+            android:gravity="center"
+            android:textColor="@color/blue"
+            android:textSize="9sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/clienteC_Saldo"
@@ -43,7 +53,7 @@
             android:fontFamily="@font/nunito_extrabold"
             android:gravity="center"
             android:textColor="@color/blue"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
 
         <TextView
@@ -53,7 +63,7 @@
             android:fontFamily="@font/nunito_extrabold"
             android:gravity="center"
             android:textColor="@color/blue"
-            android:textSize="10sp"
+            android:textSize="9sp"
             android:textStyle="bold" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -51,7 +51,7 @@ public class ClienteCreditoAdapter extends RecyclerView.Adapter<ClienteCreditoAd
         holder.clienteC_RZ.setText(clienteCreditoList.get(position).getClienteRZ());
         holder.clienteC_Tarj.setText(clienteCreditoList.get(position).getTarjetaID());
         holder.clienteC_Saldo.setText(String.valueOf(clienteCreditoList.get(position).getSaldo()));
-
+        holder.clienteC_Articulo.setText(String.valueOf(clienteCreditoList.get(position).getArticuloID()));
 
         holder.clienteC_Tipo.setText(clienteCreditoList.get(position).getTipo());
 
@@ -94,6 +94,7 @@ public class ClienteCreditoAdapter extends RecyclerView.Adapter<ClienteCreditoAd
         private TextView clienteC_Tarj;
         private TextView clienteC_Saldo;
         private TextView clienteC_Tipo;
+        private TextView  clienteC_Articulo;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -102,6 +103,7 @@ public class ClienteCreditoAdapter extends RecyclerView.Adapter<ClienteCreditoAd
             clienteC_Tarj   = itemView.findViewById(R.id.clienteC_Tarj);
             clienteC_Saldo  = itemView.findViewById(R.id.clienteC_Saldo);
             clienteC_Tipo   = itemView.findViewById(R.id.clienteC_Tipo);
+            clienteC_Articulo   = itemView.findViewById(R.id.clienteC_Articulo);
         }
     }
 }
