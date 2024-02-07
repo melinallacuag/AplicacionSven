@@ -20,7 +20,7 @@
 
             <Button
                 android:id="@+id/btnAutomatico"
-                android:layout_width="match_parent"
+                android:layout_width="500sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/colorDanger"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:backgroundTint="@color/colorSuccess"
                 android:fontFamily="@font/nunito_black"
                 android:gravity="center"
@@ -46,6 +46,16 @@
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
+
+            <ImageButton
+                android:id="@+id/btnLimpiarLado"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:layout_marginTop="5sp"
+                android:layout_marginStart="8sp"
+                android:background="@drawable/input_border"
+                android:backgroundTint="@color/colorNer"
+                android:src="@drawable/icons8_limpiar"/>
         </LinearLayout>
 
         <LinearLayout

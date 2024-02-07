@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -164,6 +165,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     Map<String, Integer> cantidadesSeleccionadas = new HashMap<>();
     Map<String, Double> nuevosPrecios = new HashMap<>();
 
+    ImageButton btnLimpiarLado;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -189,6 +192,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnSerafin            = view.findViewById(R.id.btnSerafin);
         datos_terminal        = view.findViewById(R.id.datos_terminal);
         btnGratruito          = view.findViewById(R.id.btngratruito);
+        btnLimpiarLado        = view.findViewById(R.id.btnLimpiarLado);
 
         /**
          * @Bloquear:Botones
@@ -201,6 +205,44 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnNotaDespacho.setEnabled(false);
         btnSerafin.setEnabled(false);
         btnGratruito.setEnabled(false);
+
+        /**
+         * @LIMPIAR:Lados
+         */
+
+        btnLimpiarLado.setColorFilter(getResources().getColor(R.color.white));
+        btnLimpiarLado.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String ladoSeleccionado = GlobalInfo.getCara10;
+
+                for (DetalleVenta detalleVenta : GlobalInfo.getdetalleVentaList10) {
+                    if (detalleVenta.getCara().equals(ladoSeleccionado)) {
+                        detalleVenta.setTipoPago("E");
+                        detalleVenta.setImpuesto(18.00);
+                        detalleVenta.setNroPlaca("");
+                        detalleVenta.setTarjetaPuntos("");
+                        detalleVenta.setClienteID("");
+                        detalleVenta.setClienteRUC("");
+                        detalleVenta.setClienteRS("");
+                        detalleVenta.setClienteDR("");
+                        detalleVenta.setTarjetaND("");
+                        detalleVenta.setTarjetaCredito("");
+                        detalleVenta.setOperacionREF("");
+                        detalleVenta.setObservacion("");
+                        detalleVenta.setKilometraje("");
+                        detalleVenta.setMontoSoles(0.00);
+                        detalleVenta.setMtoSaldoCredito(0.00);
+                        detalleVenta.setPtosDisponible(0.00);
+                        detalleVenta.setRfid("1");
+                    }
+                }
+
+                detalleVentaAdapter.notifyDataSetChanged();
+
+            }
+        });
 
         /**
          * @MODAL:ProductoGratuito
@@ -2542,6 +2584,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         btnListadoComprobante.setEnabled(false);
         btncarritocompra.setEnabled(false);
+        btnLimpiarLado.setEnabled(false);
 
     }
 
@@ -2580,6 +2623,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         btnListadoComprobante.setEnabled(true);
         btncarritocompra.setEnabled(true);
+        btnLimpiarLado.setEnabled(true);
 
     }
 
