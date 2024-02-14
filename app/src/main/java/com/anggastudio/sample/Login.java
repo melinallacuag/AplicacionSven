@@ -394,6 +394,7 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getsettingtimerAppVenta10   = String.valueOf(setting.getTimerAppVenta());
                         GlobalInfo.getsettingRutaLogo110       = String.valueOf(setting.getRutaLogo1());
                         GlobalInfo.getsettingRutaLogo210       = String.valueOf(setting.getRutaLogo2());
+                        GlobalInfo.getsettingDescuentoRFID10   = setting.getDescuentoRFID();
                     }
 
                 }catch (Exception ex){

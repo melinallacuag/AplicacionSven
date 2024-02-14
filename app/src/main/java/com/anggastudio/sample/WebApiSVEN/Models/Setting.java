@@ -21,6 +21,7 @@ public class Setting {
     private Integer timerAppVenta;
     private String rutaLogo1;
     private String rutaLogo2;
+    private Integer descuentoRFID;
 
     public Integer getCompanyID() {
         return companyID;
@@ -172,5 +173,13 @@ public class Setting {
 
     public void setRutaLogo2(String rutaLogo2) {
         this.rutaLogo2 = rutaLogo2;
+    }
+
+    public Integer getDescuentoRFID() {
+        return descuentoRFID;
+    }
+
+    public void setDescuentoRFID(Integer descuentoRFID) {
+        this.descuentoRFID = descuentoRFID;
     }
 }

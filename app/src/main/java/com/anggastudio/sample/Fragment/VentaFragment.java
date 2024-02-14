@@ -1444,9 +1444,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                                     alertRazSocial.setError("* La Razon Social es obligatorio");
                                     return;
-                                }  else if (campoRazSocial.length() < 11 ) {
+                                }  else if (campoRazSocial.length() < 5 ) {
 
-                                    alertRazSocial.setError("* La Razon Social debe tener mínino 11 dígitos");
+                                    alertRazSocial.setError("* La Razon Social debe tener mínino 5 dígitos");
                                     return;
                                 }else if (checkedRadioButtonId == radioTarjeta.getId()) {
 
@@ -1579,6 +1579,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                 btnCancelarNotaDespacho   = modalNotaDespacho.findViewById(R.id.btnCancelarNotaDespacho);
                 btnAgregarNotaDespacho    = modalNotaDespacho.findViewById(R.id.btnAgregarNotaDespacho);
+                buscarListNFC             = modalNotaDespacho.findViewById(R.id.buscarListNFC);
 
                 inputCPlaca               = modalNotaDespacho.findViewById(R.id.inputCPlaca);
                 input_CNTarjeta           = modalNotaDespacho.findViewById(R.id.input_CNTarjeta);
@@ -1588,10 +1589,106 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputCKilometraje         = modalNotaDespacho.findViewById(R.id.inputCKilometraje);
                 inputCObservacion         = modalNotaDespacho.findViewById(R.id.inputCObservacion);
 
+                inputNFC                  = modalNotaDespacho.findViewById(R.id.input_EtiquetaNFC);
+
                 alertCPlaca               = modalNotaDespacho.findViewById(R.id.alertPlaca);
                 alertCTarjeta             = modalNotaDespacho.findViewById(R.id.alertTarjeta);
                 alertCCliente             = modalNotaDespacho.findViewById(R.id.alertCCliente);
                 alertCRazSocial           = modalNotaDespacho.findViewById(R.id.alertCRazSocial);
+
+                /**
+                 * @MODAL:LoginDescuentoNFC
+                 */
+                modalNFCLogin = new Dialog(getContext());
+                modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalNFCLogin.setContentView(R.layout.modal_nfc_login);
+                modalNFCLogin.setCancelable(false);
+
+                buscarListNFC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        modalNFCLogin.show();
+
+                        btnCancelarNFC    = modalNFCLogin.findViewById(R.id.btnCancelarAnular);
+                        btnAceptarNFC     = modalNFCLogin.findViewById(R.id.btnAceptarIngreso);
+                        usuarioNFC        = modalNFCLogin.findViewById(R.id.inputUserAnulado);
+                        contraseñaNFC     = modalNFCLogin.findViewById(R.id.inputContraseñaAnulado);
+                        alertuserNFC      = modalNFCLogin.findViewById(R.id.alertUserAnulado);
+                        alertpasswordNFC  = modalNFCLogin.findViewById(R.id.alertContraseñaAnulado);
+
+                        btnCancelarNFC.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                modalNFCLogin.dismiss();
+
+                                usuarioNFC.getText().clear();
+                                contraseñaNFC.getText().clear();
+
+                                alertuserNFC.setErrorEnabled(false);
+                                alertpasswordNFC.setErrorEnabled(false);
+
+                            }
+                        });
+
+                        btnAceptarNFC.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+
+                                usuarioUserNFC    = usuarioNFC.getText().toString();
+                                contraseñaUserNFC = contraseñaNFC.getText().toString();
+
+                                if (usuarioUserNFC.isEmpty()) {
+                                    alertuserNFC.setError("El campo usuario es obligatorio");
+                                    return;
+                                } else if (contraseñaUserNFC.isEmpty()) {
+                                    alertpasswordNFC.setError("El campo contraseña es obligatorio");
+                                    return;
+                                }
+
+                                /**
+                                 * @Usuario-Autorizado
+                                 */
+                                findUsers(usuarioUserNFC);
+
+                                alertuserNFC.setErrorEnabled(false);
+                                alertpasswordNFC.setErrorEnabled(false);
+
+                            }
+                        });
+
+                    }
+                });
+
+                /**
+                 * @DETECTAR:EtiquietaNFC
+                 */
+                inputNFC.setKeyListener(null);
+                insertNFC();
+
+                /**
+                 * @DETECTAR:NFC
+                 * @OBTENER:DatosClientes
+                 */
+                inputNFC.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.length() == 16) {
+                            String nfcCode = s.toString();
+
+                            findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
 
                 /**
                  * @MODAL:MostrarListadoClienteNotaDespacho
@@ -1678,6 +1775,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputCDireccion.getText().clear();
                         inputCKilometraje.getText().clear();
                         inputCObservacion.getText().clear();
+                        inputNFC.getText().clear();
 
                         alertCCliente.setErrorEnabled(false);
                         alertCPlaca.setErrorEnabled(false);
@@ -1700,6 +1798,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 String campoNCliente   = inputCCliente.getText().toString();
                                 String campoCRazSocial = inputCRazSocial.getText().toString();
                                 String campoPlaca      = inputCPlaca.getText().toString();
+                                String nfc             = inputNFC.getText().toString();
 
                                 if (campoNCliente.isEmpty()) {
 
@@ -1734,6 +1833,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 detalleVenta.setMontoSoles(0.00);
                                 detalleVenta.setRfid("1");
 
+
+                                if(!nfc.isEmpty() && nfc.equals(GlobalInfo.getRfIdCPrecio10)){
+                                    detalleVenta.setRfid(GlobalInfo.getRfIdCPrecio10);
+                                }
+
                                 Toast.makeText(getContext(), "Se agrego correctamente", Toast.LENGTH_SHORT).show();
 
                                 modalNotaDespacho.dismiss();
@@ -1746,6 +1850,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputCDireccion.getText().clear();
                                 inputCKilometraje.getText().clear();
                                 inputCObservacion.getText().clear();
+                                inputNFC.getText().clear();
                             }
 
                             recyclerDetalleVenta.setAdapter(detalleVentaAdapter);
@@ -2902,15 +3007,32 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                         if (mnRFID.equals("1")) {
 
-                            findCorrelativoSINRFID(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
-                                                   mnClienteRUC, mnClienteRS, mnCliernteDR,
-                                                   mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
-                                                   mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
-                                                   mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
-                                                   mnobservacionPag, GlobalInfo.getoptranOperador10,
-                                                   mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
-                                                   GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
-                                                   GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+                            /** Cuando es 0 no es necesario leer RFID **/
+                            if (GlobalInfo.getsettingDescuentoRFID10 == 0) {
+
+                                findCorrelativoSINRFID(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
+                                        mnClienteRUC, mnClienteRS, mnCliernteDR,
+                                        mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
+                                        mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
+                                        mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
+                                        mnobservacionPag, GlobalInfo.getoptranOperador10,
+                                        mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
+                                        GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
+                                        GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+
+                            } else {
+
+                                findCorrelativoCPE(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
+                                        mnClienteRUC, mnClienteRS, mnCliernteDR,
+                                        mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
+                                        mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
+                                        mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
+                                        mnobservacionPag, GlobalInfo.getoptranOperador10,
+                                        mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
+                                        GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
+                                        GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+
+                            }
 
 
                         } else {
