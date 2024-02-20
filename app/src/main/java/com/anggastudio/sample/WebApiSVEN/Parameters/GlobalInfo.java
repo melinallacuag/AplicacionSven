@@ -46,6 +46,7 @@ public class GlobalInfo {
     public  static List<LClientes> getlclientesList10;
     public  static List<ClienteCredito> getlclientesCreditoList10;
     public  static List<TipoPago> gettipopagoList10;
+    public  static List<TipoPago> gettipoDocumentoList10;
     public  static List<DetalleVenta> getdetalleVentaList10;
     public  static List<SettingTurno> getsettingTurnoList10;
     public static  List<CDia>   getCDiaList10;
@@ -234,8 +235,15 @@ public class GlobalInfo {
     public static String  getCorrelativoMarketDocumentoVenta;
     public static String  getCorrelativoMarketTipoDesc;
 
-    /**|
-     * URL - APIService
+    /**
+     * @CONSULTACOMPROBANTES
+     */
+    public static String   getConsultaComprobanteNroSerie;
+    public static String   getConsultaComprobanteNroDocumento;
+    public static int  getConsultaComprobanteTipoDocumento;
+
+    /**
+     * @APIService
      */
 
     //public static final String BASE_URL = "http://4-fact.com:8081/";

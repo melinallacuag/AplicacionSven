@@ -45,65 +45,60 @@ public interface APIService {
 
     /**
      * @Users
-     * @Conseguir el identificador "userID" - "05070608"
      */
     @GET("api/users/listado")
     Call<List<Users>> getUsers();
 
-    @GET("api/users/listado/{id}")
-    Call<List<Users>> findUsers(@Path("id") String id);
+    @GET("api/users/listado/{userID}")
+    Call<List<Users>> findUsers(@Path("userID") String userID);
 
     /**
      * @Company
-     * @Conseguir el identificador "companyID"
      */
     @GET("api/company/listado")
     Call<List<Company>> getCompany();
 
-    @GET("api/company/listado/{id}")
-    Call<List<Company>> findCompany(@Path("id") Integer id);
+    @GET("api/company/listado/{companyID}")
+    Call<List<Company>> findCompany(@Path("companyID") Integer companyID);
 
     /**
      * @Terminal
-     * @Conseguir el ifentificador "imei"
      */
     @GET("api/terminal/listado")
     Call<List<Terminal>> getTerminal();
 
-    @GET("api/terminal/listado/{id}")
-    Call<List<Terminal>> findTerminal(@Path("id") String id);
+    @GET("api/terminal/listado/{imei}")
+    Call<List<Terminal>> findTerminal(@Path("imei") String imei);
 
     /**
      * @Lados
-     * @Conseguir el identificador "terminalID"
      */
     @GET("api/lados/listado")
     Call<List<Lados>> getLados();
 
-    @GET("api/lados/listado/{id}")
-    Call<List<Lados>> findLados(@Path("id") String id);
+    @GET("api/lados/listado/{imei}")
+    Call<List<Lados>> findLados(@Path("imei") String imei);
 
-    @GET("api/lados/agregar/{nrolado}/{terminalid}")
-    Call<List<Lados>> findLadosAgregar(@Path("nrolado") String nrolado,@Path("terminalid") String terminalid);
+    @GET("api/lados/agregar/{nroLado}/{terminalID}")
+    Call<List<Lados>> findLadosAgregar(@Path("nroLado") String nroLado,@Path("terminalID") String terminalID);
 
-    @GET("api/lados/quitar/{nrolado}/{terminalid}")
-    Call<List<Lados>> findLadosQuitar(@Path("nrolado") String nrolado,@Path("terminalid") String terminalid);
+    @GET("api/lados/quitar/{nroLado}/{terminalID}")
+    Call<List<Lados>> findLadosQuitar(@Path("nroLado") String nroLado,@Path("terminalID") String terminalID);
 
     /**
      * @Manguera
-     * @Guardar_ListadoMangueras
      */
     @GET("api/picos/listado")
     Call<List<Mangueras>> getMangueras();
 
-    @GET("api/picos/listado2/{id}")
-    Call<List<Mangueras>> findManguerasByTerminal(@Path("id") String id);
+    @GET("api/picos/listado2/{terminalID}")
+    Call<List<Mangueras>> findManguerasByTerminal(@Path("terminalID") String terminalID);
 
     @POST("api/picos/guardar")
     Call<Mangueras> postMangueras(@Body Mangueras mangueras);
 
     /**
-     * @Cliente RUC - DNI
+     * @ClienteRUC/DNI
      */
     @GET("api/cliente/listado")
     Call<List<LClientes>> getCliente();
@@ -114,20 +109,20 @@ public interface APIService {
     @GET("api/cliente/listado/DNI")
     Call<List<LClientes>> getClienteDNI();
 
-    @GET("api/cliente/listado/DNI/{id}")
-    Call<List<LClientes>> findClienteDNI(@Path("id") String id);
+    @GET("api/cliente/listado/DNI/{clienteId}")
+    Call<List<LClientes>> findClienteDNI(@Path("clienteId") String clienteId);
 
     @GET("api/cliente/listado/RUC")
     Call<List<LClientes>> getClienteRUC();
 
-    @GET("api/cliente/listado/RUC/{id}")
-    Call<List<LClientes>> findClienteRUC(@Path("id") String id);
+    @GET("api/cliente/listado/RUC/{clienteId}")
+    Call<List<LClientes>> findClienteRUC(@Path("clienteId") String clienteId);
 
     /**
-     * @Detalle de la Venta
+     * @DetalleVenta
      */
-    @GET("api/detalleventa/listado/{id}")
-    Call<List<DetalleVenta>> findDetalleVenta(@Path("id") String id);
+    @GET("api/detalleventa/listado/{imei}")
+    Call<List<DetalleVenta>> findDetalleVenta(@Path("imei") String imei);
 
     /**
      * @VentaCA
@@ -138,12 +133,11 @@ public interface APIService {
     /**
      * @Optran
      */
-    @GET("api/optran/listado/{id}")
-    Call<List<Optran>> findOptran(@Path("id") String id);
-
+    @GET("api/optran/listado/{imei}")
+    Call<List<Optran>> findOptran(@Path("imei") String imei);
 
     /**
-     * Tipo de Pago - Spinner Tarjeta
+     * @TipoPago
      */
     @GET("api/card/listado")
     Call<List<TipoPago>> getTipoPago();
@@ -152,7 +146,7 @@ public interface APIService {
     Call<List<TipoPago>> findTipoPago(@Path("id") Integer id);
 
     /**
-     * Placa
+     * @Placa
      */
     @GET("api/placa/listado")
     Call<List<Placa>> getPlaca();
@@ -160,19 +154,17 @@ public interface APIService {
     @GET("api/placa/listado/{id}")
     Call<List<Placa>> findPlaca(@Path("id") String id);
 
-
     /**
-     * Configuración
+     * @Setting
      */
     @GET("api/setting/listado")
     Call<List<Setting>> getSetting();
 
-    @GET("api/setting/listado/{id}")
-    Call<List<Setting>> findSetting(@Path("id") Integer id);
-
+    @GET("api/setting/listado/{companyID}")
+    Call<List<Setting>> findSetting(@Path("companyID") Integer companyID);
 
     /**
-     * Ajustes
+     * @SettingTask
      */
     @GET("api/settingTask/listado")
     Call<List<SettingTask>> getSettingTask();
@@ -180,89 +172,104 @@ public interface APIService {
     @GET("api/settingTask/listado/{id}")
     Call<List<SettingTask>> findSettingTask(@Path("id") String id);
 
+    /**
+     * @SettingTurno
+     */
+    @GET("api/settingturno/listado")
+    Call<List<SettingTurno>> getSettingTurno();
 
     /**
-     * Correlativo
+     * @Correlativo
      */
     @GET("api/correlativo/listado")
     Call<List<Correlativo>> getCorrelativo();
 
-    @GET("api/correlativo/listado/{imei}/{tipodoc}/{rfid}/{articuloid}/{tranId}")
-    Call<List<Correlativo>> findCorrelativo(@Path("imei") String imei, @Path("tipodoc") String tipodoc, @Path("rfid") String rfid, @Path("articuloid") String articuloid, @Path("tranId") String tranId);
+    @GET("api/correlativo/listado/{imei}/{tipoDoc}/{rfid}/{articuloId}/{tranId}")
+    Call<List<Correlativo>> findCorrelativo(@Path("imei") String imei, @Path("tipoDoc") String tipoDoc, @Path("rfid") String rfid, @Path("articuloId") String articuloId, @Path("tranId") String tranId);
 
-    @GET("api/correlativo/listadosinrfid/{imei}/{tipodoc}/{clienteid}/{articuloid}/{tranId}")
-    Call<List<Correlativo>> findCorrelativosinrfid(@Path("imei") String imei, @Path("tipodoc") String tipodoc, @Path("clienteid") String clienteid, @Path("articuloid") String articuloid, @Path("tranId") String tranId);
+    @GET("api/correlativo/listadosinrfid/{imei}/{tipoDoc}/{clienteId}/{articuloId}/{tranId}")
+    Call<List<Correlativo>> findCorrelativosinrfid(@Path("imei") String imei, @Path("tipoDoc") String tipoDoc, @Path("clienteId") String clienteId, @Path("articuloId") String articuloId, @Path("tranId") String tranId);
 
     /**
-     * Venta por Contometro
+     * @CIERREX:VentaContometro
      */
-
     @GET("api/rcontom/listado")
     Call<List<VContometro>> getVContometro();
 
-    @GET("api/rcontom/listado/{id}")
-    Call<List<VContometro>> findVContometro(@Path("id") String id);
-
+    @GET("api/rcontom/listado/{terminalID}")
+    Call<List<VContometro>> findVContometro(@Path("terminalID") String terminalID);
 
     /**
-     * Venta por Producto
+     * @CIERREX:VentaProducto
      */
-
     @GET("api/rproducto/listado")
     Call<List<VProducto>> getVProducto();
 
-    @GET("api/rproducto/listado/{id}/{turno}")
-    Call<List<VProducto>> findVProducto(@Path("id") String id,@Path("turno") Integer turno);
-
+    @GET("api/rproducto/listado/{terminalID}/{terminalTurno}")
+    Call<List<VProducto>> findVProducto(@Path("terminalID") String terminalID,@Path("terminalTurno") Integer terminalTurno);
 
     /**
-     * Venta por Pago
+     * @CIERREX:VentaPago
      */
-
     @GET("api/rpago/listado")
     Call<List<VTipoPago>> getVTipoPago();
 
-    @GET("api/rpago/listado/{id}/{turno}")
-    Call<List<VTipoPago>> findVTipoPago(@Path("id") String id,@Path("turno") Integer turno);
+    @GET("api/rpago/listado/{terminalID}/{terminalTurno}")
+    Call<List<VTipoPago>> findVTipoPago(@Path("terminalID") String terminalID,@Path("terminalTurno") Integer terminalTurno);
 
     /**
-     * Reporte de Transferencia Gratuita
+     * @CIERREX:ReporteTransferenciaGratuita
      */
-    @GET("api/rgratuita/listado/{id}/{turno}")
-    Call<List<Gratuita>> findRGratuita(@Path("id") String id, @Path("turno") Integer turno);
+    @GET("api/rgratuita/listado/{terminalID}/{terminalTurno}")
+    Call<List<Gratuita>> findRGratuita(@Path("terminalID") String terminalID, @Path("terminalTurno") Integer terminalTurno);
 
     /**
-     * Incio de Día
+     * @CIERREX:ReporteTarjeta
      */
-    @GET("api/cdia/listado/{terminalid}")
-    Call<List<CDia>> findCDia(@Path("terminalid") String terminalid);
-
-    @POST("api/cdia/iniciar/{terminalid}")
-    Call<CDia> postCDia(@Path("terminalid") String terminalid);
+    @GET("api/rtarjeta/listado/{terminalID}/{terminalTurno}")
+    Call<List<ReporteTarjetas>> findRTarjetas(@Path("terminalID") String terminalID, @Path("terminalTurno") Integer terminalTurno);
 
     /**
-     * Cambio de Turno
+     * @CIERREX:ReporteAnulados
      */
-    @POST("api/cturno/cerrar/{id}")
-    Call<CTurno> postCTurno(@Path("id") String id);
-
+    @GET("api/ranulados/listado/{terminalId}/{terminalTurno}/{tipo}")
+    Call<List<RAnulados>> findRAnulados(@Path("terminalId") String terminalId, @Path("terminalTurno") String terminalTurno, @Path("tipo") String tipo);
 
     /**
-     * Descuentos (Cliente Precio)
+     * @CIERREX:ReporteVendedor
      */
-    @GET("api/clienteprecio/listado/{rfid}/{companyid}")
-    Call<List<ClientePrecio>> findDescuentos(@Path("rfid") String rfid, @Path("companyid") String companyid);
+    @GET("api/rvendedor/listado/{terminalId}/{terminalTurno}")
+    Call<List<ReporteVendedor>> findRVendedor(@Path("terminalId") String terminalId, @Path("terminalTurno") String terminalTurno);
 
-   // Call<List<Descuentos>> findDescuentos(@Path("rfid") String rfid, @Path("companyid") String companyid);
     /**
-     * Consultar Venta
+     * @IncioDía
      */
-    @GET("api/consultarventa/listado/{id}")
-    Call<List<ListaComprobante>> findConsultarVenta(@Path("id") String id);
+    @GET("api/cdia/listado/{terminalID}")
+    Call<List<CDia>> findCDia(@Path("terminalID") String terminalID);
 
+    @POST("api/cdia/iniciar/{terminalID}")
+    Call<CDia> postCDia(@Path("terminalID") String terminalID);
 
     /**
-     * Anular
+     * @CambioTurno
+     */
+    @POST("api/cturno/cerrar/{terminalID}")
+    Call<CTurno> postCTurno(@Path("terminalID") String terminalID);
+
+    /**
+     * @Descuentos(ClientePrecio)
+     */
+    @GET("api/clienteprecio/listado/{rfid}/{companyId}")
+    Call<List<ClientePrecio>> findDescuentos(@Path("rfid") String rfid, @Path("companyId") String companyId);
+
+    /**
+     * @ConsultarVenta
+     */
+    @GET("api/consultarventa/listado/{terminalID}")
+    Call<List<ListaComprobante>> findConsultarVenta(@Path("terminalID") String terminalID);
+
+    /**
+     * @Anular
      */
     @POST("api/anular/anular/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}/{terminalid}")
     Call<Anular> postAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid, @Path("terminalid") String terminalid);
@@ -270,58 +277,35 @@ public interface APIService {
     @GET("api/anular/listado/{tipodoc}/{seriedoc}/{nrodoc}/{anuladoid}/{terminalid}")
     Call<List<Anular>> findAnular(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("anuladoid") String anuladoid, @Path("terminalid") String terminalid);
 
-
     /**
-     * Reimprimir
+     * @Reimprimir
      */
     @GET("api/reimpresion/listado/{tipodoc}/{seriedoc}/{nrodoc}")
     Call<List<Reimpresion>> findReimpresion(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc);
 
-
     /**
-     * Reporte por Tarjeta
-     */
-
-    @GET("api/rtarjeta/listado/{id}/{turno}")
-    Call<List<ReporteTarjetas>> findRTarjetas(@Path("id") String id, @Path("turno") Integer turno);
-
-    /**
-     * R. Anulados
-     */
-
-    @GET("api/ranulados/listado/{terminalId}/{turno}/{tipo}")
-    Call<List<RAnulados>> findRAnulados(@Path("terminalId") String terminalId, @Path("turno") String turno, @Path("tipo") String tipo);
-
-    /**
-     * R. Vendedor
-     */
-
-    @GET("api/rvendedor/listado/{idterminal}/{turno}")
-    Call<List<ReporteVendedor>> findRVendedor(@Path("idterminal") String idterminal, @Path("turno") String turno);
-
-    /**
-     * Cliente Credito
+     * @ClienteCredito
      */
     @GET("api/clientelineacredito/listado")
     Call<List<ClienteCredito>> getClienteCredito();
 
     /**
-     * Setting Turno
-     */
-    @GET("api/settingturno/listado")
-    Call<List<SettingTurno>> getSettingTurno();
-
-    /**
-     * Familia
+     * @Familia
      */
     @GET("api/familia/listado")
     Call<List<Familia>> getFamilia();
 
     /**
-     * Articulo
+     * @Articulo
      */
     @GET("api/articulo/listado")
     Call<List<Articulo>> getArticulo();
+
+    /**
+     * @ArticuloGratuito
+     */
+    @GET("api/articulo/listadotg")
+    Call<List<Articulo>> getArticuloG();
 
     /**
      * @VentaMarketDA
@@ -341,13 +325,4 @@ public interface APIService {
     @GET("api/ventamarketca/listado/{tipodoc}/{seriedoc}/{nrodoc}/{terminalID}/{clienteID}/{clienteRUC}/{clienteRZ}/{clienteDR}/{fechaDocumento}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}/{nroPlaca}/{userID}/{pagoID}/{tarjetaID}/{tarjetaDS}/{mtoPagoPEN}/{mtoPagoUSD}/{observacionPag}")
     Call<List<VentaMarketCA>> getMarketCA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("terminalID") String terminalID,@Path("clienteID") String clienteID, @Path("clienteRUC") String clienteRUC, @Path("clienteRZ") String clienteRZ, @Path("clienteDR") String clienteDR, @Path("fechaDocumento") String fechaDocumento,@Path("mtoSubTotal") Double mtoSubTotal,@Path("mtoImpuesto") Double mtoImpuesto,@Path("mtoTotal") Double mtoTotal, @Path("nroPlaca") String nroPlaca, @Path("userID") String userID, @Path("pagoID") Integer pagoID, @Path("tarjetaID") Integer tarjetaID,@Path("tarjetaDS") String tarjetaDS,@Path("mtoPagoPEN") Double mtoPagoPEN,@Path("mtoPagoUSD") Double mtoPagoUSD,@Path("observacionPag") String observacionPag);
 
-    /**
-     * @PGratuito
-     */
-
-    /**
-     * Articulo
-     */
-    @GET("api/articulo/listadotg")
-    Call<List<Articulo>> getArticuloG();
 }
