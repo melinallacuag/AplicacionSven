@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         Printama.showPrinterList(this, R.color.colorBlue, printerName -> {
             Toast.makeText(this, printerName, Toast.LENGTH_SHORT).show();
             TextView connectedTo = findViewById(R.id.tv_printer_info);
-            String text = "Connected to : " + printerName;
+            String text = "Conectado a : " + printerName;
             connectedTo.setText(text);
             if (!printerName.contains("failed")) {
                 findViewById(R.id.btn_printer_test).setVisibility(View.VISIBLE);
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            String text = "Connected to : " + connectedPrinter.getName();
+            String text = "Conectado a : " + connectedPrinter.getName();
             connectedTo.setText(text);
         }
     }
@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
     private void showResult(String printerName) {
         showToast(printerName);
         TextView connectedTo = findViewById(R.id.tv_printer_info);
-        String text = "Connected to : " + printerName;
+        String text = "Conectado a : " + printerName;
         connectedTo.setText(text);
     }
 
