@@ -132,20 +132,21 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     TipoPago tipoPago;
     TipoPagoAdapter tipoPagoAdapter;
 
-    TextView  datos_terminal,textMensajePEfectivo,totalmontoCar;
+    TextView  datos_terminal,textMensajePEfectivo,totalmontoCar,textTDescuento;
 
-    Dialog modalGratuito,modalNFCLogin,modallistNFC,modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin,modalClienteCredito;
+    Dialog modalCalcular,modalGratuito,modalNFCLogin,modallistNFC,modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin,modalClienteCredito;
 
     Button btnCancelarNFC,btnAceptarNFC,buscarListNFC,btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
            btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
             btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnCancelarNotaDespacho,btnAgregarNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin,
-            btnGratruito;
+            btnAgregarCalcular,btnCancelarCalcular;
 
     TextInputLayout alertuserNFC,alertpasswordNFC,alertSoles,alertGalones,alertPlaca,alertDNI,alertRUC,alertNombre,alertRazSocial,alertPEfectivo,alertOperacion,alertSelectTPago,
-            alertCPlaca,alertCTarjeta,alertCCliente,alertCRazSocial;
+            alertCPlaca,alertCTarjeta,alertCCliente,alertCRazSocial,alertCalcular;
 
     TextInputEditText usuarioNFC,contraseñaNFC,inputNFC,inputMontoSoles,inputCantidadGalones,inputPlaca,inputDNI,inputRUC,inputNombre,inputRazSocial,inputDireccion,
-            inputObservacion,inputOperacion,inputPEfectivo,inputCPlaca,input_CNTarjeta,inputCCliente,inputCRazSocial,inputCDireccion,inputCKilometraje,inputCObservacion;
+            inputObservacion,inputOperacion,inputPEfectivo,inputCPlaca,input_CNTarjeta,inputCCliente,inputCRazSocial,inputCDireccion,inputCKilometraje,inputCObservacion,
+            inputCalcular;
 
     String usuarioUserNFC,contraseñaUserNFC;
     RadioGroup radioFormaPago;
@@ -158,14 +159,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     FloatingActionButton btncarritocompra;
 
-    LinearLayout btnGuardarPG,btnCancelarPG;
-
     ArticuloGAdapter articuloGAdapter;
     List<Articulo> articuloGList;
     Map<String, Integer> cantidadesSeleccionadas = new HashMap<>();
     Map<String, Double> nuevosPrecios = new HashMap<>();
 
-    ImageButton btnLimpiarLado;
+    ImageButton btnLimpiarLado,btnCalcular;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -191,7 +190,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnNotaDespacho       = view.findViewById(R.id.btnnotadespacho);
         btnSerafin            = view.findViewById(R.id.btnSerafin);
         datos_terminal        = view.findViewById(R.id.datos_terminal);
-        btnGratruito          = view.findViewById(R.id.btngratruito);
         btnLimpiarLado        = view.findViewById(R.id.btnLimpiarLado);
 
         /**
@@ -204,7 +202,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         btnFactura.setEnabled(false);
         btnNotaDespacho.setEnabled(false);
         btnSerafin.setEnabled(false);
-        btnGratruito.setEnabled(false);
 
         /**
          * @LIMPIAR:Lados
@@ -240,49 +237,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 }
 
                 detalleVentaAdapter.notifyDataSetChanged();
-
-            }
-        });
-
-        /**
-         * @MODAL:ProductoGratuito
-         */
-
-        modalGratuito = new Dialog(getContext());
-        modalGratuito.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        modalGratuito.setContentView(R.layout.fragmento_gratuito);
-        modalGratuito.setCancelable(false);
-
-        btnGratruito.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                modalGratuito.show();
-
-                btnGuardarPG     = modalGratuito.findViewById(R.id.btnGuardarPG);
-                btnCancelarPG    = modalGratuito.findViewById(R.id.btnCancelarPG);
-                totalmontoCar    = modalGratuito.findViewById(R.id.totalmontoCar);
-                /**
-                 * @MODAL:MostrarListadoClienteDNI
-                 */
-                recyclerPGratuito = modalGratuito.findViewById(R.id.recyclerPGratuito);
-                recyclerPGratuito.setLayoutManager(new LinearLayoutManager(getContext()));
-                getArticuloG();
-
-                btnCancelarPG.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        modalGratuito.dismiss();
-                        reiniciarInteracciones();
-                    }
-                });
-
-                btnGuardarPG.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Toast.makeText(getContext(), "Guardar Producto Gratuito", Toast.LENGTH_SHORT).show();
-                    }
-                });
 
             }
         });
@@ -537,6 +491,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputCantidadGalones    = modalGalones.findViewById(R.id.inputCantidadGalones);
                 alertGalones            = modalGalones.findViewById(R.id.alertGalones);
 
+                if(GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
+                    inputCantidadGalones.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                }else{
+                    inputCantidadGalones.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
+
                 btnCancelarGalones.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -553,7 +513,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnAgregarGalones.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
                         String CantidadGalones = inputCantidadGalones.getText().toString();
 
                         if (CantidadGalones.isEmpty()) {
@@ -561,18 +520,44 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             return;
                         }
 
-                        Double DoubleGalonesMonto  = Double.parseDouble(CantidadGalones);
+                        boolean isDecimal  = CantidadGalones.contains(".");
 
-                        Integer NumIntGalones = Integer.parseInt(CantidadGalones);
+                        if(GlobalInfo.getsettingFuelName10 == null || GlobalInfo.getsettingFuelName10.isEmpty()) {
 
-                        if(NumIntGalones < 1 || NumIntGalones > 999){
-                            alertGalones.setError("El valor debe ser mayor a 1 y menor que 999");
-                            return;
+                            if (isDecimal) {
+
+                                Double DoubleGalonesMonto  = Double.parseDouble(CantidadGalones);
+
+                                if(DoubleGalonesMonto < 1.0 || DoubleGalonesMonto > 999.0){
+                                    alertGalones.setError("El valor debe ser mayor a 1.0 y menor que 999.0");
+                                    return;
+                                }
+
+                            } else {
+
+                                int NumIntGalones = Integer.parseInt(CantidadGalones);
+
+                                if (NumIntGalones < 1 || NumIntGalones > 999) {
+                                    alertGalones.setError("El valor debe ser mayor a 1 y menor que 999");
+                                    return;
+                                }
+
+                            }
+
+                        }else {
+
+                            int NumIntGalones = Integer.parseInt(CantidadGalones);
+
+                            if (NumIntGalones < 1 || NumIntGalones > 999) {
+                                alertGalones.setError("El valor debe ser mayor a 1 y menor que 999");
+                                return;
+                            }
+
                         }
 
                         alertGalones.setErrorEnabled(false);
 
-                        guardar_galones(GlobalInfo.getManguera10,DoubleGalonesMonto);
+                        guardar_galones(GlobalInfo.getManguera10, Double.valueOf(CantidadGalones));
 
                         Toast.makeText(getContext(), "SE AGREGO CORRECTAMENTE", Toast.LENGTH_SHORT).show();
                         modalGalones.dismiss();
@@ -633,11 +618,66 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnCancelarBoleta = modalBoleta.findViewById(R.id.btnCancelarBoleta);
                 btnAgregarBoleta  = modalBoleta.findViewById(R.id.btnAgregarBoleta);
                 buscarListNFC     = modalBoleta.findViewById(R.id.buscarListNFC);
+                btnCalcular       = modalBoleta.findViewById(R.id.btnCalcular);
 
                 inputDNI.setEnabled(true);
                 inputNombre.setEnabled(true);
                 alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                 alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+
+                /**
+                 * @CALCULARDESCUENTOS
+                 */
+                modalCalcular = new Dialog(getContext());
+                modalCalcular.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalCalcular.setContentView(R.layout.modal_calcular);
+                modalCalcular.setCancelable(false);
+
+                btnCalcular.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        modalCalcular.show();
+
+                        inputCalcular       = modalCalcular.findViewById(R.id.inputCalcular);
+                        alertCalcular       = modalCalcular.findViewById(R.id.alertCalcular);
+                        btnCancelarCalcular = modalCalcular.findViewById(R.id.btnCancelarCalcular);
+                        btnAgregarCalcular  = modalCalcular.findViewById(R.id.btnAgregarCalcular);
+                        textTDescuento      = modalCalcular.findViewById(R.id.textTDescuento);
+
+                        textTDescuento.setVisibility(View.GONE);
+
+                        btnCancelarCalcular.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                modalCalcular.dismiss();
+                                inputCalcular.getText().clear();
+                                textTDescuento.setText(" ");
+
+                                textTDescuento.setVisibility(View.GONE);
+                                alertCalcular.setErrorEnabled(false);
+                            }
+                        });
+                        btnAgregarCalcular.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                String calcular = inputCalcular.getText().toString();
+
+                                if (calcular.isEmpty()) {
+                                    alertCalcular.setError("* El campo Monto a Calcular es obligatorio");
+                                    return;
+                                }
+
+                                textTDescuento.setText("El descuento es: " + calcular);
+                                textTDescuento.setVisibility(View.VISIBLE);
+                                alertCalcular.setErrorEnabled(false);
+
+                            }
+                        });
+
+                    }
+                });
 
                 /**
                  * @MODAL:LoginDescuentoNFC
@@ -819,16 +859,19 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             alertSelectTPago.setVisibility(View.GONE);
                             alertOperacion.setVisibility(View.GONE);
                             alertPEfectivo.setVisibility(View.GONE);
+                            btnCalcular.setVisibility(View.GONE);
                         } else if (checkedId == radioTarjeta.getId()){
                             textMensajePEfectivo.setVisibility(View.GONE);
                             alertSelectTPago.setVisibility(View.VISIBLE);
                             alertOperacion.setVisibility(View.VISIBLE);
                             alertPEfectivo.setVisibility(View.VISIBLE);
+                            btnCalcular.setVisibility(View.GONE);
                         } else if (checkedId == radioCredito.getId()){
                             textMensajePEfectivo.setVisibility(View.GONE);
                             alertSelectTPago.setVisibility(View.GONE);
                             alertOperacion.setVisibility(View.GONE);
                             alertPEfectivo.setVisibility(View.VISIBLE);
+                            btnCalcular.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -1128,11 +1171,66 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnCancelarFactura = modalFactura.findViewById(R.id.btnCancelarFactura);
                 btnAgregarFactura  = modalFactura.findViewById(R.id.btnAgregarFactura);
                 buscarListNFC      = modalFactura.findViewById(R.id.buscarListNFC);
+                btnCalcular        = modalFactura.findViewById(R.id.btnCalcular);
 
                 inputRUC.setEnabled(true);
                 inputRazSocial.setEnabled(true);
                 alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
                 alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+
+                /**
+                 * @CALCULARDESCUENTOS
+                 */
+                modalCalcular = new Dialog(getContext());
+                modalCalcular.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalCalcular.setContentView(R.layout.modal_calcular);
+                modalCalcular.setCancelable(false);
+
+                btnCalcular.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        modalCalcular.show();
+
+                        inputCalcular       = modalCalcular.findViewById(R.id.inputCalcular);
+                        alertCalcular       = modalCalcular.findViewById(R.id.alertCalcular);
+                        btnCancelarCalcular = modalCalcular.findViewById(R.id.btnCancelarCalcular);
+                        btnAgregarCalcular  = modalCalcular.findViewById(R.id.btnAgregarCalcular);
+                        textTDescuento      = modalCalcular.findViewById(R.id.textTDescuento);
+
+                        textTDescuento.setVisibility(View.GONE);
+
+                        btnCancelarCalcular.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                modalCalcular.dismiss();
+                                inputCalcular.getText().clear();
+                                textTDescuento.setText(" ");
+
+                                textTDescuento.setVisibility(View.GONE);
+                                alertCalcular.setErrorEnabled(false);
+                            }
+                        });
+                        btnAgregarCalcular.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                String calcular = inputCalcular.getText().toString();
+
+                                if (calcular.isEmpty()) {
+                                    alertCalcular.setError("* El campo Monto a Calcular es obligatorio");
+                                    return;
+                                }
+
+                                textTDescuento.setText("El descuento es: " + calcular);
+                                textTDescuento.setVisibility(View.VISIBLE);
+                                alertCalcular.setErrorEnabled(false);
+
+                            }
+                        });
+
+                    }
+                });
 
                 /**
                  * @MODAL:LoginDescuentoNFC
@@ -1312,16 +1410,19 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             alertSelectTPago.setVisibility(View.GONE);
                             alertOperacion.setVisibility(View.GONE);
                             alertPEfectivo.setVisibility(View.GONE);
+                            btnCalcular.setVisibility(View.GONE);
                         } else if (checkedId == radioTarjeta.getId()){
                             textMensajePEfectivo.setVisibility(View.GONE);
                             alertSelectTPago.setVisibility(View.VISIBLE);
                             alertOperacion.setVisibility(View.VISIBLE);
                             alertPEfectivo.setVisibility(View.VISIBLE);
+                            btnCalcular.setVisibility(View.GONE);
                         } else if (checkedId == radioCredito.getId()){
                             textMensajePEfectivo.setVisibility(View.GONE);
                             alertSelectTPago.setVisibility(View.GONE);
                             alertOperacion.setVisibility(View.GONE);
                             alertPEfectivo.setVisibility(View.VISIBLE);
+                            btnCalcular.setVisibility(View.GONE);
                         }
                     }
                 });
@@ -1500,9 +1601,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 String NombreFormaPago = radioNombreFormaPago.getText().toString();
 
                                 if (NombreFormaPago.equals("Tarjeta")){
-
-                                    detalleVenta.setTarjetaCredito(String.valueOf(Integer.valueOf(tipoPago.getCardID())));
-                                    detalleVenta.setOperacionREF(inputOperacion.getText().toString());
 
                                     Double dosDecimales = Double.valueOf(campoPEfectivo);
                                     DecimalFormat decimalFormat = new DecimalFormat("#.##");
@@ -2099,7 +2197,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnFactura.setEnabled(false);
                 btnNotaDespacho.setEnabled(false);
                 btnSerafin.setEnabled(false);
-                btnGratruito.setEnabled(false);
 
                 Manguera_ByLados();
 
@@ -2146,7 +2243,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnFactura.setEnabled(true);
                 btnNotaDespacho.setEnabled(true);
                 btnSerafin.setEnabled(true);
-                btnGratruito.setEnabled(false);
 
                 GlobalInfo.getManguera10 = item.getMangueraID();
 
@@ -2679,7 +2775,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
             insertarDespacho();
 
-            timer.schedule(timerTask, Long.parseLong(GlobalInfo.getsettingtimerAppVenta10), Long.parseLong(GlobalInfo.getsettingtimerAppVenta10));
+            timer.schedule(timerTask, Long.parseLong(GlobalInfo.getTerminaltimerAppVenta10), Long.parseLong(GlobalInfo.getTerminaltimerAppVenta10));
             mIsTaskScheduled = true;
         }
 
@@ -3642,30 +3738,61 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
         Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);
 
-       /* String rutaImagen="/storage/emulated/0/appSven/" + GlobalInfo.getsettingRutaLogo210;
-        File file = new File(rutaImagen);
-        if(!file.exists()){
-            rutaImagen = "/storage/emulated/0/appSven/sinfoto.jpg";
-        }
-        Bitmap logoRobles = BitmapFactory.decodeFile(rutaImagen);*/
-
         String TipoDNI = "1";
         String CVarios = "11111111";
 
         String NameCompany = GlobalInfo.getNameCompany10;
-        String RUCCompany = GlobalInfo.getRucCompany10;
+        String RUCCompany  = GlobalInfo.getRucCompany10;
+
+        /** Address Company **/
 
         String AddressCompany = (GlobalInfo.getAddressCompany10 != null) ? GlobalInfo.getAddressCompany10 : "";
-        String[] partesAddress = AddressCompany.split(" - " , 2);
-        String Address1 = partesAddress[0];
-        String Address2 = partesAddress[1];
+        String finalAddress = "";
+        String finalAddress1 = "";
+
+        if (!AddressCompany.isEmpty()) {
+            String[] partesAddress = AddressCompany.split(" - " , 2);
+            finalAddress = partesAddress[0];
+            finalAddress1 = (partesAddress.length > 1) ? partesAddress[1] : "";
+        }
+        String Address1 = finalAddress;
+        String Address2 = finalAddress1;
+
+        String Address1Part1 = Address1.substring(0, Math.min(Address1.length(), 36));
+        String Address1Part2 = "";
+
+        if (!Address1Part1.isEmpty()) {
+            if (Address1.length() > 36) {
+                Address1Part2 = Address1.substring(36);
+            }
+        }
+        String finalAddress1Part = Address1Part2;
+
+        /** Branch Company **/
 
         String BranchCompany = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
-        String[] partesBranch = BranchCompany.split(" - " , 2);
-        String Branch1 = partesBranch[0];
-        String Branch2 = partesBranch[1];
+        String finalBranch = "";
+        String finalBranch1 = "";
 
+        if (!BranchCompany.isEmpty()) {
+            String[] partesBranch = BranchCompany.split(" - ", 2);
+            finalBranch = partesBranch[0];
+            finalBranch1 = (partesBranch.length > 1) ? partesBranch[1] : "";
+        }
+        String Branch1 = finalBranch;
+        String Branch2 = finalBranch1;
 
+        String Branch1Part1 = Branch1.substring(0, Math.min(Branch1.length(), 37));
+        String Branch1Part2 = "";
+
+        if (!Branch1Part1.isEmpty()) {
+            if (Branch1.length() > 37) {
+                Branch1Part2 = Branch1.substring(37);
+            }
+        }
+        String finalBranch1Part = Branch1Part2;
+
+        /** Tipo de Documento **/
 
         switch (_TipoDocumento) {
             case "01" :
@@ -3731,10 +3858,29 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }else {
                                 printama.printTextlnBold(" ");
                             }
-                            printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
-                            printama.printTextlnBold(Address2, Printama.CENTER);
-                            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                            printama.printTextlnBold(Branch2, Printama.CENTER);
+
+                            if (!Address1.isEmpty()) {
+                                if (!Address1Part1.isEmpty() && !Address2.isEmpty()) {
+                                    printama.printTextlnBold("PRINCIPAL: " + Address1Part1, Printama.CENTER);
+                                    if (!finalAddress1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalAddress1Part + " - " + Address2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Address2, Printama.CENTER);
+                                    }
+                                }
+                            }
+
+                            if (!Branch1.isEmpty()) {
+                                if (!Branch1Part1.isEmpty() && !Branch2.isEmpty()) {
+                                    printama.printTextlnBold("SUCURSAL: " + Branch1Part1, Printama.CENTER);
+                                    if (!finalBranch1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalBranch1Part + " - " + Branch2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                    }
+                                }
+                            }
+
                             printama.printTextlnBold("RUC: " + RUCCompany, Printama.CENTER);
 
                             break;
@@ -3749,8 +3895,28 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }else {
                                 printama.printTextlnBold(" ");
                             }
-                            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                            printama.printTextlnBold(Branch2, Printama.CENTER);
+
+                            if (!Branch1.isEmpty()) {
+                                if (!Branch1Part1.isEmpty() && !Branch2.isEmpty()) {
+                                    printama.printTextlnBold("SUCURSAL: " + Branch1Part1, Printama.CENTER);
+                                    if (!finalBranch1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalBranch1Part + " - " + Branch2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                    }
+                                }
+                            }else{
+                                if (!Address1.isEmpty()) {
+                                    if (!Address1Part1.isEmpty() && !Address2.isEmpty()) {
+                                        printama.printTextlnBold("PRINCIPAL: " + Address1Part1, Printama.CENTER);
+                                        if (!finalAddress1Part.isEmpty()) {
+                                            printama.printTextlnBold(finalAddress1Part + " - " + Address2, Printama.CENTER);
+                                        } else {
+                                            printama.printTextlnBold(Address2, Printama.CENTER);
+                                        }
+                                    }
+                                }
+                            }
                             break;
                     }
 
@@ -4077,7 +4243,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                             printama.printTextlnBold("DNI    :" , Printama.LEFT);
                             printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
-                            printama.addNewLine(1);
                             break;
                     }
 
@@ -4097,10 +4262,29 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }else {
                                 printama.printTextlnBold(" ");
                             }
-                            printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
-                            printama.printTextlnBold(Address2, Printama.CENTER);
-                            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                            printama.printTextlnBold(Branch2, Printama.CENTER);
+
+                            if (!Address1.isEmpty()) {
+                                if (!Address1Part1.isEmpty() && !Address2.isEmpty()) {
+                                    printama.printTextlnBold("PRINCIPAL: " + Address1Part1, Printama.CENTER);
+                                    if (!finalAddress1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalAddress1Part + " - " + Address2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Address2, Printama.CENTER);
+                                    }
+                                }
+                            }
+
+                            if (!Branch1.isEmpty()) {
+                                if (!Branch1Part1.isEmpty() && !Branch2.isEmpty()) {
+                                    printama.printTextlnBold("SUCURSAL: " + Branch1Part1, Printama.CENTER);
+                                    if (!finalBranch1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalBranch1Part + " - " + Branch2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                    }
+                                }
+                            }
+
                             printama.printTextlnBold("RUC: " + RUCCompany, Printama.CENTER);
 
                             break;
@@ -4115,8 +4299,28 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }else {
                                 printama.printTextlnBold(" ");
                             }
-                            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                            printama.printTextlnBold(Branch2, Printama.CENTER);
+
+                            if (!Branch1.isEmpty()) {
+                                if (!Branch1Part1.isEmpty() && !Branch2.isEmpty()) {
+                                    printama.printTextlnBold("SUCURSAL: " + Branch1Part1, Printama.CENTER);
+                                    if (!finalBranch1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalBranch1Part + " - " + Branch2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                    }
+                                }
+                            }else{
+                                if (!Address1.isEmpty()) {
+                                    if (!Address1Part1.isEmpty() && !Address2.isEmpty()) {
+                                        printama.printTextlnBold("PRINCIPAL: " + Address1Part1, Printama.CENTER);
+                                        if (!finalAddress1Part.isEmpty()) {
+                                            printama.printTextlnBold(finalAddress1Part + " - " + Address2, Printama.CENTER);
+                                        } else {
+                                            printama.printTextlnBold(Address2, Printama.CENTER);
+                                        }
+                                    }
+                                }
+                            }
                             break;
                     }
 
@@ -4442,7 +4646,6 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                             printama.printTextlnBold("DNI    :" , Printama.LEFT);
                             printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
-                            printama.addNewLine(1);
                             break;
                     }
 
@@ -4461,10 +4664,29 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }else {
                                 printama.printTextlnBold(" ");
                             }
-                            printama.printTextlnBold("PRINCIPAL: " + Address1, Printama.CENTER);
-                            printama.printTextlnBold(Address2, Printama.CENTER);
-                            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                            printama.printTextlnBold(Branch2, Printama.CENTER);
+
+                            if (!Address1.isEmpty()) {
+                                if (!Address1Part1.isEmpty() && !Address2.isEmpty()) {
+                                    printama.printTextlnBold("PRINCIPAL: " + Address1Part1, Printama.CENTER);
+                                    if (!finalAddress1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalAddress1Part + " - " + Address2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Address2, Printama.CENTER);
+                                    }
+                                }
+                            }
+
+                            if (!Branch1.isEmpty()) {
+                                if (!Branch1Part1.isEmpty() && !Branch2.isEmpty()) {
+                                    printama.printTextlnBold("SUCURSAL: " + Branch1Part1, Printama.CENTER);
+                                    if (!finalBranch1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalBranch1Part + " - " + Branch2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                    }
+                                }
+                            }
+
                             printama.printTextln("RUC: " + RUCCompany, Printama.CENTER);
 
                             break;
@@ -4478,8 +4700,27 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }else {
                                 printama.printTextlnBold(" ");
                             }
-                            printama.printTextlnBold("SUCURSAL: " + Branch1, Printama.CENTER);
-                            printama.printTextlnBold(Branch2, Printama.CENTER);
+                            if (!Branch1.isEmpty()) {
+                                if (!Branch1Part1.isEmpty() && !Branch2.isEmpty()) {
+                                    printama.printTextlnBold("SUCURSAL: " + Branch1Part1, Printama.CENTER);
+                                    if (!finalBranch1Part.isEmpty()) {
+                                        printama.printTextlnBold(finalBranch1Part + " - " + Branch2, Printama.CENTER);
+                                    } else {
+                                        printama.printTextlnBold(Branch2, Printama.CENTER);
+                                    }
+                                }
+                            }else{
+                                if (!Address1.isEmpty()) {
+                                    if (!Address1Part1.isEmpty() && !Address2.isEmpty()) {
+                                        printama.printTextlnBold("PRINCIPAL: " + Address1Part1, Printama.CENTER);
+                                        if (!finalAddress1Part.isEmpty()) {
+                                            printama.printTextlnBold(finalAddress1Part + " - " + Address2, Printama.CENTER);
+                                        } else {
+                                            printama.printTextlnBold(Address2, Printama.CENTER);
+                                        }
+                                    }
+                                }
+                            }
                             break;
                     }
 
@@ -4805,14 +5046,12 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                             printama.printTextlnBold("DNI    :" , Printama.LEFT);
                             printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
-                            printama.addNewLine(1);
                             break;
                     }
 
                     break;
 
             }
-
             printama.feedPaper();
             printama.cutPaper();
             printama.close();

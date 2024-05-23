@@ -22,8 +22,11 @@ public class VentaMarketCA {
     private Double mtoPagoPEN;
     private Double mtoPagoUSD;
     private String observacionPag;
+    private String nroTarjetaNotaD;
+    private String observacion;
+    private Integer nroItem;
 
-    public VentaMarketCA(String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, String fechaDocumento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String userID, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag) {
+    public VentaMarketCA(String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, String fechaDocumento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String userID, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag, String nroTarjetaNotaD, String observacion, Integer nroItem) {
         this.tipoDocumento = tipoDocumento;
         this.serieDocumento = serieDocumento;
         this.nroDocumento = nroDocumento;
@@ -44,6 +47,9 @@ public class VentaMarketCA {
         this.mtoPagoPEN = mtoPagoPEN;
         this.mtoPagoUSD = mtoPagoUSD;
         this.observacionPag = observacionPag;
+        this.nroTarjetaNotaD = nroTarjetaNotaD;
+        this.observacion = observacion;
+        this.nroItem = nroItem;
     }
 
     public String getTipoDocumento() {
@@ -204,5 +210,29 @@ public class VentaMarketCA {
 
     public void setObservacionPag(String observacionPag) {
         this.observacionPag = observacionPag;
+    }
+
+    public String getNroTarjetaNotaD() {
+        return nroTarjetaNotaD;
+    }
+
+    public void setNroTarjetaNotaD(String nroTarjetaNotaD) {
+        this.nroTarjetaNotaD = nroTarjetaNotaD;
+    }
+
+    public String getObservacion() {
+        return observacion;
+    }
+
+    public void setObservacion(String observacion) {
+        this.observacion = observacion;
+    }
+
+    public Integer getNroItem() {
+        return nroItem;
+    }
+
+    public void setNroItem(Integer nroItem) {
+        this.nroItem = nroItem;
     }
 }

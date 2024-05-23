@@ -20,7 +20,7 @@
 
             <Button
                 android:id="@+id/btnAutomatico"
-                android:layout_width="500sp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/colorDanger"
@@ -34,7 +34,7 @@
 
             <Button
                 android:id="@+id/btnListadoComprobante"
-                android:layout_width="match_parent"
+                android:layout_width="300sp"
                 android:layout_height="wrap_content"
                 android:layout_margin="2sp"
                 android:layout_weight="1"
@@ -217,6 +217,12 @@
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
             <Button
                 android:id="@+id/btnnotadespacho"
                 android:layout_width="wrap_content"
@@ -231,11 +237,6 @@
                 android:textColor="@color/white"
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
             <Button
                 android:id="@+id/btnSerafin"
@@ -252,51 +253,6 @@
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
 
-            <Button
-                android:id="@+id/btnpuntos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2sp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorHumo"
-                android:fontFamily="@font/nunito_black"
-                android:gravity="center"
-                android:text="@string/ope_puntos"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:cornerRadius="10sp" />
-
-            <Button
-                android:id="@+id/btngratruito"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2sp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorHumo"
-                android:fontFamily="@font/nunito_black"
-                android:gravity="center"
-                android:text="GRATUITO"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:cornerRadius="10sp" />
-
-            <Button
-                android:id="@+id/btnimprimir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2sp"
-                android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimaryBtn"
-                android:fontFamily="@font/nunito_black"
-                android:gravity="center"
-                android:text="GRATUITO"
-                android:visibility="gone"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:cornerRadius="10sp" />
         </LinearLayout>
 
         <TextView

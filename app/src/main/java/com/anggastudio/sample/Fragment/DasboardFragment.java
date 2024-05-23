@@ -127,11 +127,36 @@ public class DasboardFragment extends Fragment{
         /**
          * @OBTENER:DatoGeneralCompania
          */
-        String DirSucursal = (GlobalInfo.getBranchCompany10 != null) ? GlobalInfo.getBranchCompany10 : "";
-        DirSucursal = DirSucursal.replace("-","");
-        nombre_empresa.setText(GlobalInfo.getNameCompany10);
-        sucursal_empresa.setText(DirSucursal);
-        slogan_empresa.setText(GlobalInfo.getSloganCompany10);
+        String DirSucursal = "";
+        if (GlobalInfo.getBranchCompany10 != null && !GlobalInfo.getBranchCompany10.isEmpty()) {
+            DirSucursal = GlobalInfo.getBranchCompany10.replace("-", "");
+            sucursal_empresa.setText(DirSucursal);
+        } else {
+
+            if (GlobalInfo.getAddressCompany10 != null && !GlobalInfo.getAddressCompany10.isEmpty()) {
+                DirSucursal = GlobalInfo.getAddressCompany10.replace("-", "");
+                sucursal_empresa.setText(DirSucursal);
+            }else {
+                sucursal_empresa.setText("");
+            }
+
+        }
+
+        String NameCompany = "";
+        if (GlobalInfo.getNameCompany10 != null && !GlobalInfo.getNameCompany10.isEmpty()) {
+            NameCompany = GlobalInfo.getNameCompany10;
+            nombre_empresa.setText(NameCompany);
+        } else {
+            nombre_empresa.setText("");
+        }
+
+        String SloganCompany = "";
+        if (GlobalInfo.getSloganCompany10 != null && !GlobalInfo.getSloganCompany10.isEmpty()) {
+            SloganCompany = GlobalInfo.getSloganCompany10;
+            slogan_empresa.setText(SloganCompany);
+        } else {
+            slogan_empresa.setText("");
+        }
 
         /**
          * @MODAL:MostrarAlertaInicioDía_Ingresar
@@ -310,7 +335,7 @@ public class DasboardFragment extends Fragment{
 
                     Boolean xPase                 = false;
 
-                    if (FechaActual == 1) {
+                    if (FechaActual == 1 && GlobalInfo.getTerminalInicioDiaValidar10) {
 
                         if (GlobalInfo.getSettingTurno10.equals(0) && GlobalInfo.getterminalTurno10.equals(1)) {
 
@@ -706,7 +731,7 @@ public class DasboardFragment extends Fragment{
                             String FechasImpresion    = formatfecha.format(calendarfecha.getTime());
                             Integer FechaActual = Integer.valueOf(FechasImpresion);
 
-                            if (FechaActual == 1) {
+                            if (FechaActual == 1 && GlobalInfo.getTerminalInicioDiaValidar10) {
 
                                 if (HoraActual >= 0 && HoraActual <= 3000) {
                                     findOptranDia(GlobalInfo.getterminalImei10);

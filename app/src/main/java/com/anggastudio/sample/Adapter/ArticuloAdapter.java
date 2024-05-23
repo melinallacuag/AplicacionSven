@@ -71,7 +71,7 @@ public class ArticuloAdapter extends RecyclerView.Adapter<ArticuloAdapter.ViewHo
 
         /** Longitud del nombre del producto **/
         String nombreProducto = articulo.getArticuloDS1();
-        int maxCaracteres = 28;
+        int maxCaracteres = 32;
 
         if (nombreProducto.length() > maxCaracteres) {
             nombreProducto = nombreProducto.substring(0, maxCaracteres - 3) + "...";

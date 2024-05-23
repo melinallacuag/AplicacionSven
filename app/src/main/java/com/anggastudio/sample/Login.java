@@ -150,7 +150,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText( getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText( getApplicationContext(), "Codigo de error User: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -213,7 +213,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText( getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText( getApplicationContext(), "Codigo de error Terminal: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -239,6 +239,8 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getTerminalImageW10          = terminal.getImageW();
                         GlobalInfo.getTipoPapel10               = terminal.getImpresora();
                         GlobalInfo.getterminalCvariosPrinter10  = terminal.getcVarios_Printer();
+                        GlobalInfo.getTerminaltimerAppVenta10    = String.valueOf(terminal.getTimerAppVenta());
+                        GlobalInfo.getTerminalInicioDiaValidar10 = terminal.getInicio_Dia_Validar();
 
                         /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);
@@ -291,7 +293,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Codigo de error Company: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -335,7 +337,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Codigo de error Lados: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -368,7 +370,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Codigo de error Setting: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -391,7 +393,7 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getsettingClienteRZ10       = String.valueOf(setting.getClienteRZ());
                         GlobalInfo.getsettingNroPlaca10        = String.valueOf(setting.getNroplaca());
                         GlobalInfo.getsettingDNIMontoMinimo10  = Double.valueOf(setting.getDnI_Monto_Minimo());
-                        GlobalInfo.getsettingtimerAppVenta10   = String.valueOf(setting.getTimerAppVenta());
+                       // GlobalInfo.getsettingtimerAppVenta10   = String.valueOf(setting.getTimerAppVenta());
                         GlobalInfo.getsettingRutaLogo110       = String.valueOf(setting.getRutaLogo1());
                         GlobalInfo.getsettingRutaLogo210       = String.valueOf(setting.getRutaLogo2());
                         GlobalInfo.getsettingDescuentoRFID10   = setting.getDescuentoRFID();
@@ -423,7 +425,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Codigo de error DetalleVenta: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -454,7 +456,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Codigo de error MTerminal: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 
@@ -485,7 +487,7 @@ public class Login extends AppCompatActivity{
                 try {
 
                     if(!response.isSuccessful()){
-                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Codigo de error Tipo Pago: " + response.code(), Toast.LENGTH_SHORT).show();
                         return;
                     }
 

@@ -97,6 +97,7 @@
                     android:id="@+id/input_EtiquetaNFC"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorDark"
                     android:focusable="false"
                     android:textSize="12sp" />
 
@@ -146,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_semibold"
                         android:inputType="number"
-
+                        android:textColor="@color/colorDark"
                         android:maxLength="8"
                         android:textSize="12sp" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -186,6 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
+                    android:textColor="@color/colorDark"
                     android:inputType="textCapCharacters"
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -290,24 +292,42 @@
                     android:textSize="14sp" />
             </RadioGroup>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSelectTPago"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/cardlogin"
-                android:backgroundTint="#AFB1B1"
-                android:gravity="center"
-                android:visibility="gone">
+                android:layout_height="wrap_content">
 
-                <Spinner
-                    android:id="@+id/SpinnerTPago"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/inputSelectTPago"
                     android:layout_width="match_parent"
-                    android:layout_height="50sp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="-22sp"
-                    android:gravity="center"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:background="@drawable/cardlogin"
+                    android:backgroundTint="#AFB1B1"
+                    android:layout_weight="1"
+                    android:layout_marginRight="10sp"
+                    android:visibility="gone"
+                    android:gravity="center">
+
+                    <Spinner
+                        android:id="@+id/SpinnerTPago"
+                        android:layout_width="match_parent"
+                        android:layout_height="50sp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="-22sp"
+                        android:gravity="center"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/btnCalcular"
+                    android:layout_width="55sp"
+                    android:layout_height="50sp"
+                    android:visibility="gone"
+                    android:backgroundTint="@color/colorNer"
+                    android:background="@drawable/input_border"
+                    android:src="@drawable/icons_calculator"
+                    android:text="calcular"/>
+
+            </LinearLayout>
 
             <TextView
                 android:id="@+id/textMensajePEfectivo"

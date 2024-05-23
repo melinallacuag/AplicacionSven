@@ -190,6 +190,9 @@ public interface APIService {
     @GET("api/correlativo/listadosinrfid/{imei}/{tipoDoc}/{clienteId}/{articuloId}/{tranId}")
     Call<List<Correlativo>> findCorrelativosinrfid(@Path("imei") String imei, @Path("tipoDoc") String tipoDoc, @Path("clienteId") String clienteId, @Path("articuloId") String articuloId, @Path("tranId") String tranId);
 
+    @GET("api/correlativo/listadomarket/{imei}/{tipoDoc}")
+    Call<List<Correlativo>> findCorrelativomarket(@Path("imei") String imei, @Path("tipoDoc") String tipoDoc);
+
     /**
      * @CIERREX:VentaContometro
      */
@@ -310,8 +313,8 @@ public interface APIService {
     /**
      * @VentaMarketDA
      */
-    @POST("api/ventamarketda/listado")
-    Call<VentaMarketDA> postVentaMarketDA(@Body VentaMarketDA ventaMarketDA);
+   /** @POST("api/ventamarketda/listado")
+    Call<VentaMarketDA> postVentaMarketDA(@Body VentaMarketDA ventaMarketDA);**/
 
     @GET("api/ventamarketda/listado/{tipodoc}/{seriedoc}/{nrodoc}/{nroItem}/{articuloID}/{articuloDS}/{uniMed}/{terminalID}/{fechaDocumento}/{precio1}/{cantidad}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}")
         Call<List<VentaMarketDA>> getMarketDA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("nroItem") Integer nroItem, @Path("articuloID") String articuloID, @Path("articuloDS") String articuloDS, @Path("uniMed") String uniMed, @Path("terminalID") String terminalID, @Path("fechaDocumento") String fechaDocumento, @Path("precio1") Double precio1, @Path("cantidad") Double cantidad, @Path("mtoSubTotal") Double mtoSubTotal, @Path("mtoImpuesto") Double mtoImpuesto, @Path("mtoTotal") Double mtoTotal);
@@ -319,10 +322,10 @@ public interface APIService {
     /**
      * @VentaMarketCA
      */
-    @POST("api/ventamarketca/listado")
-    Call<VentaMarketCA> postVentaMarketCA(@Body VentaMarketCA ventaMarketCA);
+    /** @POST("api/ventamarketca/listado")
+    Call<VentaMarketCA> postVentaMarketCA(@Body VentaMarketCA ventaMarketCA);**/
 
-    @GET("api/ventamarketca/listado/{tipodoc}/{seriedoc}/{nrodoc}/{terminalID}/{clienteID}/{clienteRUC}/{clienteRZ}/{clienteDR}/{fechaDocumento}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}/{nroPlaca}/{userID}/{pagoID}/{tarjetaID}/{tarjetaDS}/{mtoPagoPEN}/{mtoPagoUSD}/{observacionPag}")
-    Call<List<VentaMarketCA>> getMarketCA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("terminalID") String terminalID,@Path("clienteID") String clienteID, @Path("clienteRUC") String clienteRUC, @Path("clienteRZ") String clienteRZ, @Path("clienteDR") String clienteDR, @Path("fechaDocumento") String fechaDocumento,@Path("mtoSubTotal") Double mtoSubTotal,@Path("mtoImpuesto") Double mtoImpuesto,@Path("mtoTotal") Double mtoTotal, @Path("nroPlaca") String nroPlaca, @Path("userID") String userID, @Path("pagoID") Integer pagoID, @Path("tarjetaID") Integer tarjetaID,@Path("tarjetaDS") String tarjetaDS,@Path("mtoPagoPEN") Double mtoPagoPEN,@Path("mtoPagoUSD") Double mtoPagoUSD,@Path("observacionPag") String observacionPag);
+    @GET("api/ventamarketca/listado/{tipodoc}/{seriedoc}/{nrodoc}/{terminalID}/{clienteID}/{clienteRUC}/{clienteRZ}/{clienteDR}/{fechaDocumento}/{mtoSubTotal}/{mtoImpuesto}/{mtoTotal}/{nroPlaca}/{userID}/{pagoID}/{tarjetaID}/{tarjetaDS}/{mtoPagoPEN}/{mtoPagoUSD}/{observacionPag}/{nroTarjetaNotaD}/{observacion}/{nroItem}")
+    Call<List<VentaMarketCA>> getMarketCA(@Path("tipodoc") String tipodoc, @Path("seriedoc") String seriedoc, @Path("nrodoc") String nrodoc, @Path("terminalID") String terminalID,@Path("clienteID") String clienteID, @Path("clienteRUC") String clienteRUC, @Path("clienteRZ") String clienteRZ, @Path("clienteDR") String clienteDR, @Path("fechaDocumento") String fechaDocumento,@Path("mtoSubTotal") Double mtoSubTotal,@Path("mtoImpuesto") Double mtoImpuesto,@Path("mtoTotal") Double mtoTotal, @Path("nroPlaca") String nroPlaca, @Path("userID") String userID, @Path("pagoID") Integer pagoID, @Path("tarjetaID") Integer tarjetaID,@Path("tarjetaDS") String tarjetaDS,@Path("mtoPagoPEN") Double mtoPagoPEN,@Path("mtoPagoUSD") Double mtoPagoUSD,@Path("observacionPag") String observacionPag,@Path("nroTarjetaNotaD") String nroTarjetaNotaD,@Path("observacion") String observacion, @Path("nroItem") Integer nroItem);
 
 }

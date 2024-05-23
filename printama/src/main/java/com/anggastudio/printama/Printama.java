@@ -191,6 +191,7 @@ public class Printama {
 
     public void feedPaper() {
         util.feedPaper();
+        util.feedPaper();
     }
 
 

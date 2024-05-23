@@ -38,6 +38,8 @@ public class Terminal {
     private Integer imageW;
     private String  impresora;
     private Boolean cVarios_Printer;
+    private Integer timerAppVenta;
+    private Boolean inicio_Dia_Validar;
 
     public String getTerminalID() {
         return terminalID;
@@ -325,5 +327,21 @@ public class Terminal {
 
     public void setcVarios_Printer(Boolean cVarios_Printer) {
         this.cVarios_Printer = cVarios_Printer;
+    }
+
+    public Integer getTimerAppVenta() {
+        return timerAppVenta;
+    }
+
+    public void setTimerAppVenta(Integer timerAppVenta) {
+        this.timerAppVenta = timerAppVenta;
+    }
+
+    public Boolean getInicio_Dia_Validar() {
+        return inicio_Dia_Validar;
+    }
+
+    public void setInicio_Dia_Validar(Boolean inicio_Dia_Validar) {
+        this.inicio_Dia_Validar = inicio_Dia_Validar;
     }
 }
