@@ -40,6 +40,9 @@ public class Terminal {
     private Boolean cVarios_Printer;
     private Integer timerAppVenta;
     private Boolean inicio_Dia_Validar;
+    private String  validar_Fecha_Hora;
+    private Boolean nota_Despacho_Default;
+    private Integer feed_Cabecera;
 
     public String getTerminalID() {
         return terminalID;
@@ -343,5 +346,29 @@ public class Terminal {
 
     public void setInicio_Dia_Validar(Boolean inicio_Dia_Validar) {
         this.inicio_Dia_Validar = inicio_Dia_Validar;
+    }
+
+    public String getValidar_Fecha_Hora() {
+        return validar_Fecha_Hora;
+    }
+
+    public void setValidar_Fecha_Hora(String validar_Fecha_Hora) {
+        this.validar_Fecha_Hora = validar_Fecha_Hora;
+    }
+
+    public Boolean getNota_Despacho_Default() {
+        return nota_Despacho_Default;
+    }
+
+    public void setNota_Despacho_Default(Boolean nota_Despacho_Default) {
+        this.nota_Despacho_Default = nota_Despacho_Default;
+    }
+
+    public Integer getFeed_Cabecera() {
+        return feed_Cabecera;
+    }
+
+    public void setFeed_Cabecera(Integer feed_Cabecera) {
+        this.feed_Cabecera = feed_Cabecera;
     }
 }

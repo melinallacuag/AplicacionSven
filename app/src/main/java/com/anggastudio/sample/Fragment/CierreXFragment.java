@@ -1046,7 +1046,7 @@ public class CierreXFragment extends Fragment {
                 break;
         }
 
-        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
+        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("58mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
         /** Imprimir Cierre X**/
 
@@ -1057,7 +1057,7 @@ public class CierreXFragment extends Fragment {
                 case "58mm":
                     printama.printTextln("                 ", Printama.CENTER);
                     printama.printImage(logoRobles, logoSize);
-
+                    printama.addNewLine(GlobalInfo.getterminalFCabecera);
                     printama.setSmallText();
                     if(GlobalInfo.getTerminalNameCompany10){
                         printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1189,6 +1189,7 @@ public class CierreXFragment extends Fragment {
 
                     printama.printTextln("                 ", Printama.CENTER);
                     printama.printImage(logoRobles, logoSize);
+                    printama.addNewLine(GlobalInfo.getterminalFCabecera);
                     printama.setSmallText();
                     if(GlobalInfo.getTerminalNameCompany10){
                         printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1318,7 +1319,7 @@ public class CierreXFragment extends Fragment {
                 case "65mm":
 
                     printama.printImage(Printama.RIGHT,logoRobles, logoSize);
-
+                    printama.addNewLine(GlobalInfo.getterminalFCabecera);
                     printama.setSmallText();
                     if(GlobalInfo.getTerminalNameCompany10){
                         printama.printTextlnBold(NameCompany, Printama.CENTER);

@@ -2860,6 +2860,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                         case "03" :
                             printama.printTextln("                 ", Printama.CENTER);
                             printama.printImage( logoRobles,logoSize);
+                            printama.addNewLine(GlobalInfo.getterminalFCabecera);
                             printama.setSmallText();
                             if(GlobalInfo.getTerminalNameCompany10){
                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -2893,6 +2894,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             case "99" :
                                 printama.printTextln("                 ", Printama.CENTER);
                                 printama.printImage(logoRobles, logoSize);
+                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                 printama.setSmallText();
                                 if(GlobalInfo.getTerminalNameCompany10){
                                     printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -3231,6 +3233,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                         case "01" :
                         case "03" :
                             printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                            printama.addNewLine(GlobalInfo.getterminalFCabecera);
                             printama.setSmallText();
                             if(GlobalInfo.getTerminalNameCompany10){
                                 printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -3264,6 +3267,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                         case "99" :
                             printama.printTextln("                 ", Printama.CENTER);
                             printama.printImage(logoRobles, logoSize);
+                            printama.addNewLine(GlobalInfo.getterminalFCabecera);
                             printama.setSmallText();
                             if(GlobalInfo.getTerminalNameCompany10){
                                 printama.printTextlnBold(NameCompany, Printama.CENTER);

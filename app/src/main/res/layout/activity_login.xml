@@ -136,15 +136,26 @@
             android:fontFamily="@font/nunito_black" />
 
         <TextView
+            android:id="@+id/terminalId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20sp"
             android:textAllCaps="true"
-            android:textSize="10sp"
-            android:text=" Version: 1.3"
+            android:textSize="15sp"
             android:textColor="#1E242B"
             android:textAlignment="center"
             android:fontFamily="@font/nunito_black" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:fontFamily="@font/nunito_black"
+            android:text=" Version: 1.3.1"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textColor="#1E242B"
+            android:textSize="10sp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,6 +39,51 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textNFC"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Detectar la Etiqueta NFC"
+                    app:boxBackgroundColor="#B5D9F8"
+                    android:layout_weight="1"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxCornerRadiusBottomEnd="15dp"
+                    app:boxCornerRadiusTopEnd="15dp"
+                    android:layout_marginBottom="5sp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_EtiquetaNFC"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorDark"
+                        android:focusable="false"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/buscarListNFC"
+                    android:layout_width="250sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="afiliados"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:textSize="10sp"
+                    android:layout_marginTop="-4sp"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    app:cornerRadius="10sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/alertPlaca"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="300sp"
@@ -73,53 +118,21 @@
                     android:textSize="10sp"
                     android:visibility="gone"
                     app:cornerRadius="10sp" />
-            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textNFC"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Detectar la Etiqueta NFC"
-                app:boxBackgroundColor="#B5D9F8"
-                android:layout_weight="1"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                android:layout_marginBottom="5sp">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/input_EtiquetaNFC"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textNumPuntos"
+                    android:layout_width="195sp"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorDark"
-                    android:focusable="false"
-                    android:textSize="12sp" />
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nunito_black"
+                    android:text="0"
+                    android:visibility="gone"
+                    android:textColor="@color/red_200"
+                    android:textSize="16sp" />
 
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <Button
-                android:id="@+id/buscarListNFC"
-                android:layout_width="250sp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/nunito_extrabold"
-                android:text="afiliados"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/colorSecondary"
-                android:textSize="10sp"
-                android:layout_marginTop="-4sp"
-                android:layout_marginStart="10sp"
-                android:layout_marginLeft="10sp"
-                app:cornerRadius="10sp" />
-
-        </LinearLayout>
-
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -259,7 +272,7 @@
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="Efectivo"
                     android:textColor="@color/gris"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:id="@+id/radioTarjeta"
@@ -269,7 +282,7 @@
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="Tarjeta"
                     android:textColor="@color/gris"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
 
                 <RadioButton
                     android:id="@+id/radioCredito"
@@ -279,7 +292,7 @@
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="Credito"
                     android:textColor="@color/gris"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
                 <RadioButton
                     android:id="@+id/radioGratuito"
                     android:layout_width="wrap_content"
@@ -289,7 +302,17 @@
                     android:text="Gratuito"
                     android:visibility="gone"
                     android:textColor="@color/gris"
-                    android:textSize="14sp" />
+                    android:textSize="12sp" />
+                <RadioButton
+                    android:id="@+id/radioCanje"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="Canje"
+                    android:visibility="gone"
+                    android:textColor="@color/gris"
+                    android:textSize="12sp" />
             </RadioGroup>
 
             <LinearLayout
@@ -353,6 +376,21 @@
                 android:backgroundTint="@color/colorNer"
                 android:fontFamily="@font/nunito_semibold"
                 android:text="Se realizara el modo de Pago en Gratuito"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textMensajeCanje"
+                android:layout_width="match_parent"
+                android:layout_height="50sp"
+                android:layout_gravity="center"
+                android:background="@drawable/cardlogin"
+                android:backgroundTint="@color/colorNer"
+                android:fontFamily="@font/nunito_semibold"
+                android:text="Se realizara el modo de Canje"
                 android:textAlignment="center"
                 android:gravity="center"
                 android:textColor="@color/white"

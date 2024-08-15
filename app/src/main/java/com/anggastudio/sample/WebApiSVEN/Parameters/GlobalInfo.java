@@ -128,9 +128,12 @@ public class GlobalInfo {
     public static boolean getVentasContometros10;
     public static Integer getTerminalImageW10;
     public static String  getTipoPapel10;
-    public static boolean getterminalCvariosPrinter10 = true;
+    public static boolean getterminalCvariosPrinter10;
     public static String  getTerminaltimerAppVenta10;
     public static boolean getTerminalInicioDiaValidar10;
+    public static String  getTerminalValidarFechaHora10;
+    public static boolean getterminalNDespacho;
+    public static Integer getterminalFCabecera;
 
     /**
      * @SETTING
@@ -252,13 +255,15 @@ public class GlobalInfo {
 
     //public static final String BASE_URL = "http://4-fact.com:8081/";
     //public static final String BASE_URL = "http://192.168.1.14:8081/";
-    //public static final String BASE_URL = "http://192.168.1.20:8081/";
+    //public static final String BASE_URL = "http://192.168.18.20:8081/";
     //public static final String BASE_URL = "http://192.168.1.227:8081/";
     //  public static final String BASE_URL = "http://192.168.1.3:8081/";
-   // public static final String BASE_URL = "http://192.168.1.245:8081/";
+    //public static final String BASE_URL = "http://192.168.0.245:8081/";
+    //public static final String BASE_URL = "http://192.168.1.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
-    public static final String BASE_URL = "http://192.168.18.33:8081/";
+    // public static final String BASE_URL = "http://192.168.18.33:8081/";
     // public static final String BASE_URL = "http://192.168.1.19:8081/";
+    public static final String BASE_URL = "http://192.168.1.245:8082/";
 
     public static APIService getAPIService() {
         return getClient(BASE_URL).create(APIService.class);

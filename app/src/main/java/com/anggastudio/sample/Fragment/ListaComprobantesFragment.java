@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.nfc.NfcAdapter;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.MifareClassic;
@@ -71,8 +73,8 @@ public class ListaComprobantesFragment extends Fragment  {
     TextInputLayout alertuser,alertpassword;
     String usuarioUser,contraseñaUser;
 
-    Dialog modalReimpresion,modalAnulacion;
-    Button btnCancelarRImpresion,btnRImpresion,btnAnular,btnCancelarAnular,btnAceptarIngreso;
+    Dialog modal_ErrorWifi,modalReimpresion,modalAnulacion;
+    Button btnAceptarErrorWifi,btnCancelarRImpresion,btnRImpresion,btnAnular,btnCancelarAnular,btnAceptarIngreso;
     TextView campo_correlativo;
 
     SearchView BuscarRazonSocial;
@@ -157,6 +159,12 @@ public class ListaComprobantesFragment extends Fragment  {
             }
         });
 
+        /** Modal de Error al Wifi **/
+        modal_ErrorWifi = new Dialog(getContext());
+        modal_ErrorWifi.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modal_ErrorWifi.setContentView(R.layout.alerta_wifi);
+        modal_ErrorWifi.setCancelable(false);
+
         return view;
     }
 
@@ -207,8 +215,26 @@ public class ListaComprobantesFragment extends Fragment  {
                                 @Override
                                 public void onClick(View v) {
 
-                                    Reimpresion(GlobalInfo.getTipoPapel10,GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
-                                    modalReimpresion.dismiss();
+                                    Context context = requireContext();
+
+                                    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                    if (networkInfo != null && networkInfo.isConnected()) {
+
+                                        Reimpresion(GlobalInfo.getTipoPapel10,GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10);
+                                        modalReimpresion.dismiss();
+
+                                    }else{
+                                        modal_ErrorWifi.show();
+                                        btnAceptarErrorWifi   = modal_ErrorWifi.findViewById(R.id.btnAceptarWifi);
+                                        btnAceptarErrorWifi.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                modal_ErrorWifi.dismiss();
+                                            }
+                                        });
+                                    }
 
                                 }
                             });
@@ -222,62 +248,96 @@ public class ListaComprobantesFragment extends Fragment  {
                                 @Override
                                 public void onClick(View v) {
 
-                                    if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
+                                    Context context = requireContext();
 
-                                        if (!modalAnulacion.isShowing()) {
-                                            modalAnulacion.show();
+                                    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                    if (networkInfo != null && networkInfo.isConnected()) {
+
+                                        if (GlobalInfo.getconsultaventaAnulado10.equals("NO")) {
+
+                                            if (!modalAnulacion.isShowing()) {
+                                                modalAnulacion.show();
+                                            }
+
+                                            btnCancelarAnular = modalAnulacion.findViewById(R.id.btnCancelarAnular);
+                                            btnAceptarIngreso = modalAnulacion.findViewById(R.id.btnAceptarIngreso);
+                                            usuario           = modalAnulacion.findViewById(R.id.inputUserAnulado);
+                                            contraseña        = modalAnulacion.findViewById(R.id.inputContraseñaAnulado);
+                                            alertuser         = modalAnulacion.findViewById(R.id.alertUserAnulado);
+                                            alertpassword     = modalAnulacion.findViewById(R.id.alertContraseñaAnulado);
+
+                                            btnCancelarAnular.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    modalAnulacion.dismiss();
+
+                                                    usuario.getText().clear();
+                                                    contraseña.getText().clear();
+
+                                                    alertuser.setErrorEnabled(false);
+                                                    alertpassword.setErrorEnabled(false);
+
+                                                }
+                                            });
+
+                                            btnAceptarIngreso.setOnClickListener(new View.OnClickListener() {
+                                                @Override
+                                                public void onClick(View view) {
+
+                                                    usuarioUser = usuario.getText().toString();
+                                                    contraseñaUser = contraseña.getText().toString();
+
+                                                    if (usuarioUser.isEmpty()) {
+                                                        alertuser.setError("El campo usuario es obligatorio");
+                                                        return;
+                                                    } else if (contraseñaUser.isEmpty()) {
+                                                        alertpassword.setError("El campo contraseña es obligatorio");
+                                                        return;
+                                                    }
+
+                                                    Context context = requireContext();
+
+                                                    ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                                                    NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+                                                    if (networkInfo != null && networkInfo.isConnected()) {
+
+                                                        findUsers(usuarioUser);
+
+                                                        alertuser.setErrorEnabled(false);
+                                                        alertpassword.setErrorEnabled(false);
+
+                                                    }else{
+                                                        modal_ErrorWifi.show();
+                                                        btnAceptarErrorWifi   = modal_ErrorWifi.findViewById(R.id.btnAceptarWifi);
+                                                        btnAceptarErrorWifi.setOnClickListener(new View.OnClickListener() {
+                                                            @Override
+                                                            public void onClick(View v) {
+                                                                modal_ErrorWifi.dismiss();
+                                                            }
+                                                        });
+                                                    }
+
+                                                }
+                                            });
+
+                                        } else {
+                                            Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
                                         }
 
-                                        btnCancelarAnular = modalAnulacion.findViewById(R.id.btnCancelarAnular);
-                                        btnAceptarIngreso = modalAnulacion.findViewById(R.id.btnAceptarIngreso);
-                                        usuario           = modalAnulacion.findViewById(R.id.inputUserAnulado);
-                                        contraseña        = modalAnulacion.findViewById(R.id.inputContraseñaAnulado);
-                                        alertuser         = modalAnulacion.findViewById(R.id.alertUserAnulado);
-                                        alertpassword     = modalAnulacion.findViewById(R.id.alertContraseñaAnulado);
-
-                                        btnCancelarAnular.setOnClickListener(new View.OnClickListener() {
+                                    }else{
+                                        modal_ErrorWifi.show();
+                                        btnAceptarErrorWifi   = modal_ErrorWifi.findViewById(R.id.btnAceptarWifi);
+                                        btnAceptarErrorWifi.setOnClickListener(new View.OnClickListener() {
                                             @Override
-                                            public void onClick(View view) {
-
-                                                modalAnulacion.dismiss();
-
-                                                usuario.getText().clear();
-                                                contraseña.getText().clear();
-
-                                                alertuser.setErrorEnabled(false);
-                                                alertpassword.setErrorEnabled(false);
-
+                                            public void onClick(View v) {
+                                                modal_ErrorWifi.dismiss();
                                             }
                                         });
-
-                                        btnAceptarIngreso.setOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-
-                                                usuarioUser = usuario.getText().toString();
-                                                contraseñaUser = contraseña.getText().toString();
-
-                                                if (usuarioUser.isEmpty()) {
-                                                    alertuser.setError("El campo usuario es obligatorio");
-                                                    return;
-                                                } else if (contraseñaUser.isEmpty()) {
-                                                    alertpassword.setError("El campo contraseña es obligatorio");
-                                                    return;
-                                                }
-
-                                                findUsers(usuarioUser);
-
-                                                alertuser.setErrorEnabled(false);
-                                                alertpassword.setErrorEnabled(false);
-
-                                            }
-                                        });
-
-                                    } else {
-                                        Toast.makeText(getContext(), "Documento se encuntra anulado", Toast.LENGTH_SHORT).show();
                                     }
-
-
                                 }
 
                             });
@@ -621,7 +681,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                         String qrSven = qrSVEN.toString();
 
-                        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
+                        int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("58mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
                         String finalTipoDocumento  = tipoDocumento1;
                         String finalFechaDocumento = fechaDocumento1;
@@ -661,6 +721,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                             case "03" :
                                                 printama.printTextln("                 ", Printama.CENTER);
                                                 printama.printImage( logoRobles,logoSize);
+                                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                                 printama.setSmallText();
                                                 if(GlobalInfo.getTerminalNameCompany10){
                                                     printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -696,6 +757,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                             case "99" :
                                                 printama.printTextln("                 ", Printama.CENTER);
                                                 printama.printImage(logoRobles, logoSize);
+                                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                                 printama.setSmallText();
                                                 if(GlobalInfo.getTerminalNameCompany10){
                                                     printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -958,30 +1020,6 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
-                                                QRCodeWriter writer = new QRCodeWriter();
-                                                BitMatrix bitMatrix;
-                                                try {
-
-                                                    bitMatrix = writer.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
-                                                    int width = bitMatrix.getWidth();
-                                                    int height = bitMatrix.getHeight();
-                                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                                    for (int x = 0; x < width; x++) {
-                                                        for (int y = 0; y < height; y++) {
-                                                            int color = Color.WHITE;
-                                                            if (bitMatrix.get(x, y)) color = Color.BLACK;
-                                                            bitmap.setPixel(x, y, color);
-                                                        }
-                                                    }
-                                                    if (bitmap != null) {
-                                                        printama.printImage(bitmap);
-                                                    }
-
-                                                } catch (WriterException e) {
-
-                                                    e.printStackTrace();
-                                                }
-
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -1091,26 +1129,6 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
-                                                QRCodeWriter writerB = new QRCodeWriter();
-                                                BitMatrix bitMatrixB;
-                                                try {
-                                                    bitMatrixB = writerB.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
-                                                    int width = bitMatrixB.getWidth();
-                                                    int height = bitMatrixB.getHeight();
-                                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                                    for (int x = 0; x < width; x++) {
-                                                        for (int y = 0; y < height; y++) {
-                                                            int color = Color.WHITE;
-                                                            if (bitMatrixB.get(x, y)) color = Color.BLACK;
-                                                            bitmap.setPixel(x, y, color);
-                                                        }
-                                                    }
-                                                    if (bitmap != null) {
-                                                        printama.printImage(bitmap);
-                                                    }
-                                                } catch (WriterException e) {
-                                                    e.printStackTrace();
-                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -1147,6 +1165,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                             case "03" :
                                                 printama.printTextln("                 ", Printama.CENTER);
                                                 printama.printImage( logoRobles,logoSize);
+                                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                                 printama.setSmallText();
                                                 if(GlobalInfo.getTerminalNameCompany10){
                                                     printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1184,6 +1203,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                             case "99" :
                                                 printama.printTextln("                 ", Printama.CENTER);
                                                 printama.printImage(logoRobles, logoSize);
+                                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                                 printama.setSmallText();
                                                 if(GlobalInfo.getTerminalNameCompany10){
                                                     printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1636,6 +1656,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                             case "01" :
                                             case "03" :
                                                 printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                                 printama.setSmallText();
                                                 if(GlobalInfo.getTerminalNameCompany10){
                                                     printama.printTextlnBold(NameCompany, Printama.CENTER);
@@ -1670,6 +1691,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                             case "98" :
                                             case "99" :
                                                 printama.printImage(Printama.RIGHT,logoRobles, logoSize);
+                                                printama.addNewLine(GlobalInfo.getterminalFCabecera);
                                                 printama.setSmallText();
                                                 if(GlobalInfo.getTerminalNameCompany10){
                                                     printama.printTextlnBold(NameCompany, Printama.CENTER);

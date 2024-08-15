@@ -34,48 +34,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/alertPlaca"
-                android:layout_width="300sp"
-                android:layout_height="wrap_content"
-                android:hint="Ingresar N° de Placa"
-                app:boxBackgroundMode="outline"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                app:endIconMode="clear_text"
-                android:layout_weight="1">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputPlaca"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:textSize="12sp"
-                    android:text="000-0000"
-                    android:inputType="textCapCharacters"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <Button
-                android:id="@+id/buscarPlacaFactura"
-                android:layout_width="200sp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10sp"
-                android:text="@string/btn_buscar"
-                android:textSize="10sp"
-                android:fontFamily="@font/nunito_extrabold"
-                android:layout_weight="1"
-                app:cornerRadius="10sp"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/colorSecondary"
-                android:layout_marginTop="2sp"
-                android:visibility="gone"
-                android:layout_marginLeft="10sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -116,6 +74,60 @@
                 android:layout_marginLeft="10sp"
                 app:cornerRadius="10sp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/alertPlaca"
+                android:layout_width="300sp"
+                android:layout_height="wrap_content"
+                android:hint="Ingresar N° de Placa"
+                app:boxBackgroundMode="outline"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:endIconMode="clear_text"
+                android:layout_weight="1">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputPlaca"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textSize="12sp"
+                    android:text="000-0000"
+                    android:inputType="textCapCharacters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+            <Button
+                android:id="@+id/buscarPlacaFactura"
+                android:layout_width="200sp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:text="@string/btn_buscar"
+                android:textSize="10sp"
+                android:fontFamily="@font/nunito_extrabold"
+                android:layout_weight="1"
+                app:cornerRadius="10sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/colorSecondary"
+                android:layout_marginTop="2sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/textNumPuntos"
+                android:layout_width="195sp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_black"
+                android:text="0"
+                android:visibility="gone"
+                android:textColor="@color/red_200"
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -247,7 +259,7 @@
                 android:text="Efectivo"
                 android:fontFamily="@font/nunito_extrabold"
                 android:textColor="@color/gris"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/radioTarjeta"
@@ -258,7 +270,7 @@
                 android:text="Tarjeta"
                 android:fontFamily="@font/nunito_extrabold"
                 android:textColor="@color/gris"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
 
             <RadioButton
                 android:id="@+id/radioCredito"
@@ -269,7 +281,19 @@
                 android:text="Credito"
                 android:fontFamily="@font/nunito_extrabold"
                 android:textColor="@color/gris"
-                android:textSize="14sp" />
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/radioCanje"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="Canje"
+                android:visibility="gone"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textColor="@color/gris"
+                android:textSize="12sp" />
         </RadioGroup>
 
         <LinearLayout
@@ -308,8 +332,6 @@
 
         </LinearLayout>
 
-
-
         <TextView
             android:id="@+id/textMensajePEfectivo"
             android:layout_width="match_parent"
@@ -324,6 +346,21 @@
             android:textColor="#fff"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textMensajeCanje"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_gravity="center"
+            android:background="@drawable/cardlogin"
+            android:backgroundTint="@color/colorNer"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Se realizara el modo de Canje"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             android:visibility="gone"/>
 
         <com.google.android.material.textfield.TextInputLayout
