@@ -5,6 +5,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
+import com.anggastudio.sample.WebApiSVEN.Models.LClientePuntos;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
@@ -51,6 +52,7 @@ public class GlobalInfo {
     public  static List<SettingTurno> getsettingTurnoList10;
     public static  List<CDia>   getCDiaList10;
     public static  List<ClientePrecio>  getclientePrecioList10;
+    public static  List<LClientePuntos> getclientePuntosList10;
 
     /**
      * @DESCUENTO:ClientePrecio
@@ -63,6 +65,10 @@ public class GlobalInfo {
     public static String getTipClientePrecio10;
     public static String getTipoDescuentoPrecio10;
     public static Double getMontoDescuentoPrecio10;
+
+    public static Boolean getStatusPuntos10;
+    public static Double getDisponiblePuntos10;
+    public static String getNroTarjetasPuntos10;
 
     /**
      * @COMPANY
@@ -134,6 +140,8 @@ public class GlobalInfo {
     public static String  getTerminalValidarFechaHora10;
     public static boolean getterminalNDespacho;
     public static Integer getterminalFCabecera;
+    public static boolean getTerminalSoloPuntos10;
+    public static boolean getTerminalLecturar10;
 
     /**
      * @SETTING
@@ -201,6 +209,8 @@ public class GlobalInfo {
     public static Double  getcorrelativoMDescuento;
     public static String  getcorrelativoDocumentoVenta;
     public static String  getcorrelativoTipoDesc;
+    public static Double  getcorrelativoPuntosGanados;
+    public static Double  getcorrelativoPuntosDisponibles;
 
     /**
      * @ANULACION:DatosCorrelativo
@@ -259,11 +269,11 @@ public class GlobalInfo {
     //public static final String BASE_URL = "http://192.168.1.227:8081/";
     //  public static final String BASE_URL = "http://192.168.1.3:8081/";
     //public static final String BASE_URL = "http://192.168.0.245:8081/";
-    //public static final String BASE_URL = "http://192.168.1.245:8081/";
+    public static final String BASE_URL = "http://192.168.1.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
     // public static final String BASE_URL = "http://192.168.18.33:8081/";
     // public static final String BASE_URL = "http://192.168.1.19:8081/";
-    public static final String BASE_URL = "http://192.168.1.245:8082/";
+    //public static final String BASE_URL = "http://192.168.1.245:8082/";
 
     public static APIService getAPIService() {
         return getClient(BASE_URL).create(APIService.class);

@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -56,6 +57,7 @@ import com.anggastudio.sample.Adapter.ClienteCreditoAdapter;
 import com.anggastudio.sample.Adapter.DetalleVentaAdapter;
 import com.anggastudio.sample.Adapter.LClienteAdapter;
 import com.anggastudio.sample.Adapter.LRegistroClienteAdapter;
+import com.anggastudio.sample.Adapter.LRegistroClientePuntosAdapter;
 import com.anggastudio.sample.Adapter.LadosAdapter;
 import com.anggastudio.sample.Adapter.ManguerasAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
@@ -69,6 +71,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
+import com.anggastudio.sample.WebApiSVEN.Models.LClientePuntos;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
@@ -112,15 +115,18 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     private String[][] techLists;
 
     List<ClientePrecio> clientePrecioList;
+    List<LClientePuntos>  clientePuntosList;
+
     List<Users> usersListNFC;
     LRegistroClienteAdapter lRegistroClienteAdapter;
+    LRegistroClientePuntosAdapter lRegistroClientePuntosAdapter;
 
     boolean mTimerRunning;
     Timer timer;
     TimerTask timerTask;
     boolean mIsTaskScheduled = false;
 
-    RecyclerView recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta,recyclerLClienteCredito,recyclerListaClientesAfiliados;
+    RecyclerView recyclerLClientePuntosNFC,recyclerLados,recyclerMangueras,recyclerLCliente,recyclerDetalleVenta,recyclerLClienteCredito,recyclerListaClientesAfiliados;
 
     ClienteCreditoAdapter clienteCreditoAdapter;
 
@@ -138,19 +144,19 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
     TextView  datos_terminal,textMensajePEfectivo,textTDescuento,textNumPuntos,textMensajeCanje;
 
-    Dialog modal_ErrorWifi,modal_ErrorServidor,modalCalcular,modalNFCLogin,modallistNFC,modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin,modalClienteCredito;
+    Dialog modallistNFCPuntos,modal_ErrorWifi,modal_ErrorServidor,modalCalcular,modalNFCLogin,modallistNFC,modalLibre,modalSoles,modalGalones,modalBoleta,modalClienteDNI,modalClienteRUC,modalFactura,modalNotaDespacho,modalSerafin,modalClienteCredito;
 
-    Button btnAceptarErrorWifi,btnAceptarError,btnCancelarNFC,btnAceptarNFC,buscarListNFC,btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
-           btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
+    Button btnAceptarErrorWifi,btnAceptarError,btnCancelarNFC,btnAceptarNFC,btnAutomatico,btnListadoComprobante,btnLibre,btnCancelarLibre,btnAceptarLibre,btnSoles,btnCancelarSoles,btnAgregarSoles,btnGalones,btnCancelarGalones,btnAgregarGalones,
+            btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
             btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,btnNotaDespacho,btnCancelarNotaDespacho,btnAgregarNotaDespacho,btnSerafin,btnCancelarSerafin,btnAgregarSerafin,
-            btnAgregarCalcular,btnCancelarCalcular;
+            btnAgregarCalcular,btnCancelarCalcular,Activar_Descuento_Punto,buscarListPuntosNFC,buscarListNFC;
 
     TextInputLayout alertuserNFC,alertpasswordNFC,alertSoles,alertGalones,alertPlaca,alertDNI,alertRUC,alertNombre,alertRazSocial,alertPEfectivo,alertOperacion,alertSelectTPago,
             alertCPlaca,alertCTarjeta,alertCCliente,alertCRazSocial,alertCalcular;
 
     TextInputEditText usuarioNFC,contraseñaNFC,inputNFC,inputMontoSoles,inputCantidadGalones,inputPlaca,inputDNI,inputRUC,inputNombre,inputRazSocial,inputDireccion,
             inputObservacion,inputOperacion,inputPEfectivo,inputCPlaca,input_CNTarjeta,inputCCliente,inputCRazSocial,inputCDireccion,inputCKilometraje,inputCObservacion,
-            inputCalcular;
+            inputCalcular,inputCMonto;
 
     String usuarioUserNFC,contraseñaUserNFC;
     RadioGroup radioFormaPago;
@@ -647,7 +653,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             @Override
             public void onClick(View view) {
 
-                limpiarCamposBoletaFactura();
+                limpiarCamposBoletaFacturaNDespacho();
 
                 modalBoleta.show();
 
@@ -687,12 +693,77 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnAgregarBoleta  = modalBoleta.findViewById(R.id.btnAgregarBoleta);
                 buscarListNFC     = modalBoleta.findViewById(R.id.buscarListNFC);
                 btnCalcular       = modalBoleta.findViewById(R.id.btnCalcular);
+                buscarListPuntosNFC  = modalBoleta.findViewById(R.id.buscarListPuntosNFC);
 
                 inputDNI.setEnabled(true);
                 inputNombre.setEnabled(true);
                 alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                 alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
                 radioCanje.setVisibility(View.GONE);
+
+                if(GlobalInfo.getTerminalSoloPuntos10){
+                    buscarListNFC.setVisibility(View.GONE);
+                    buscarListPuntosNFC.setVisibility(View.VISIBLE);
+                }else{
+                    buscarListNFC.setVisibility(View.VISIBLE);
+                    buscarListPuntosNFC.setVisibility(View.GONE);
+                }
+
+                /**
+                 * @LOGIN_MODAL:ListaDescuentos_Puntos
+                 */
+                modalNFCLogin = new Dialog(getContext());
+                modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalNFCLogin.setContentView(R.layout.modal_nfc_login);
+                modalNFCLogin.setCancelable(false);
+
+                buscarListNFC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarModalNFCListaDescuentoPunto();
+                    }
+                });
+
+                buscarListPuntosNFC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarModalNFCListaDescuentoPunto();
+                    }
+                });
+
+                /**
+                 * @LectorNFC:Descuentos_Puntos
+                 */
+                inputNFC.setKeyListener(null);
+                insertNFC();
+
+                if (inputNFC.getTag() != null) {
+                    inputNFC.removeTextChangedListener((TextWatcher) inputNFC.getTag());
+                }
+
+                inputNFC.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.length() == 16) {
+                            String nfcCode = s.toString();
+
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                findClientePrecioConPuntosDNI(nfcCode, GlobalInfo.getterminalCompanyID10);
+                            }else{
+                                findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                            }
+
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
 
                 /**
                  * @CALCULARDESCUENTOS
@@ -748,99 +819,79 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     }
                 });
 
+
                 /**
-                 * @MODAL:LoginDescuentoNFC
+                 * @Modal-ListadoClientes-Puntos
                  */
-                modalNFCLogin = new Dialog(getContext());
-                modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                modalNFCLogin.setContentView(R.layout.modal_nfc_login);
-                modalNFCLogin.setCancelable(false);
+                modallistNFCPuntos = new Dialog(getContext());
+                modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
+                modallistNFCPuntos.setCancelable(false);
 
-                buscarListNFC.setOnClickListener(new View.OnClickListener() {
+                recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+                findListaClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+
+                /**
+                 * @SELECCIONAR:DobleClick_MostrarListadoClienteDNI
+                 */
+                GestureDetector gestureDetectorNFC = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+
                     @Override
-                    public void onClick(View v) {
+                    public boolean onDoubleTap(MotionEvent e) {
 
-                        modalNFCLogin.show();
+                        modallistNFCPuntos.show();
 
-                        btnCancelarNFC    = modalNFCLogin.findViewById(R.id.btnCancelarAnular);
-                        btnAceptarNFC     = modalNFCLogin.findViewById(R.id.btnAceptarIngreso);
-                        usuarioNFC        = modalNFCLogin.findViewById(R.id.inputUserAnulado);
-                        contraseñaNFC     = modalNFCLogin.findViewById(R.id.inputContraseñaAnulado);
-                        alertuserNFC      = modalNFCLogin.findViewById(R.id.alertUserAnulado);
-                        alertpasswordNFC  = modalNFCLogin.findViewById(R.id.alertContraseñaAnulado);
+                        BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                        btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
 
-                        btnCancelarNFC.setOnClickListener(new View.OnClickListener() {
+                        BuscarRazonSocial.setIconifiedByDefault(false);
+
+                        /**
+                         * @BUSCAR:NombreClienteRZ
+                         */
+
+                        /** Buscador por Razon Social */
+                        BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                             @Override
-                            public void onClick(View view) {
-
-                                modalNFCLogin.dismiss();
-
-                                usuarioNFC.getText().clear();
-                                contraseñaNFC.getText().clear();
-
-                                alertuserNFC.setErrorEnabled(false);
-                                alertpasswordNFC.setErrorEnabled(false);
-
+                            public boolean onQueryTextSubmit(String query) {
+                                onQueryTextChange(query);
+                                return true;
                             }
-                        });
 
-                        btnAceptarNFC.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View view) {
-
-                                usuarioUserNFC    = usuarioNFC.getText().toString();
-                                contraseñaUserNFC = contraseñaNFC.getText().toString();
-
-                                if (usuarioUserNFC.isEmpty()) {
-                                    alertuserNFC.setError("El campo usuario es obligatorio");
-                                    return;
-                                } else if (contraseñaUserNFC.isEmpty()) {
-                                    alertpasswordNFC.setError("El campo contraseña es obligatorio");
-                                    return;
+                            public boolean onQueryTextChange(String newText) {
+                                String userInput = newText.toLowerCase();
+                                if (lRegistroClientePuntosAdapter != null) {
+                                    lRegistroClientePuntosAdapter.filtrado(userInput);
                                 }
-
-                                /**
-                                 * @Usuario-Autorizado
-                                 */
-                                findUsers(usuarioUserNFC);
-
-                                alertuserNFC.setErrorEnabled(false);
-                                alertpasswordNFC.setErrorEnabled(false);
-
+                                return true;
                             }
                         });
 
+                        btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                BuscarRazonSocial.setQuery("", false);
+                                modallistNFCPuntos.dismiss();
+                            }
+                        });
+
+                        return true;
                     }
                 });
 
-                /**
-                 * @DETECTAR:EtiquietaNFC
-                 */
-                inputNFC.setKeyListener(null);
-                insertNFC();
-
-                /**
-                 * @DETECTAR:NFC
-                 * @OBTENER:DatosClientes
-                 */
-                inputNFC.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s.length() == 16) {
-                            String nfcCode = s.toString();
-
-                            findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                if(GlobalInfo.getTerminalLecturar10){
+                    inputNFC.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            boolean handled = gestureDetectorNFC.onTouchEvent(event);
+                            return handled;
                         }
-                    }
+                    });
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                });
+                }
+
 
                 /**
                  * @MODAL:MostrarListadoClienteDNI
@@ -905,12 +956,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputDNI.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        gestureDetector.onTouchEvent(event);
-                        if (!gestureDetector.onTouchEvent(event)) {
-
-                            return false;
-                        }
-                        return true;
+                        boolean handled = gestureDetector.onTouchEvent(event);
+                        return handled;
                     }
                 });
 
@@ -996,14 +1043,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputNFC.getText().clear();
                         inputNombre.getText().clear();
                         inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
 
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
                         alertDNI.setErrorEnabled(false);
                         alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                         alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
-
-
 
                     }
                 });
@@ -1019,6 +1065,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputDNI.setText(GlobalInfo.getsettingClienteID10);
                         inputNombre.setText(GlobalInfo.getsettingClienteRZ10);
                         inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
 
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
@@ -1046,6 +1093,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         radioFormaPago.check(radioEfectivo.getId());
                         inputPEfectivo.setText("0");
                         inputOperacion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
 
                         alertPlaca.setErrorEnabled(false);
                         alertDNI.setErrorEnabled(false);
@@ -1138,40 +1186,41 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 detalleVenta.setTarjetaCredito("");
                                 detalleVenta.setOperacionREF("");
                                 detalleVenta.setMontoSoles(0.00);
+                                detalleVenta.setPtosDisponible(Double.parseDouble(textNumPuntos.getText().toString()));
                                 detalleVenta.setRfid("1");
 
 
                                 String NombreFormaPago = radioNombreFormaPago.getText().toString();
 
-                                    if (NombreFormaPago.equals("Tarjeta")){
+                                if (NombreFormaPago.equals("Tarjeta")){
 
-                                        Double dosDecimales = Double.valueOf(campoPEfectivo);
-                                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+                                    Double dosDecimales = Double.valueOf(campoPEfectivo);
+                                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-                                        detalleVenta.setTarjetaCredito(String.valueOf(Integer.valueOf(tipoPago.getCardID())));
-                                        detalleVenta.setOperacionREF(inputOperacion.getText().toString());
+                                    detalleVenta.setTarjetaCredito(String.valueOf(Integer.valueOf(tipoPago.getCardID())));
+                                    detalleVenta.setOperacionREF(inputOperacion.getText().toString());
 
-                                        if(dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
-                                            alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
-                                            return;
-                                        }else{
-                                            detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
-                                        }
-
-
-
-                                    }else if (NombreFormaPago.equals("Credito")) {
-
-                                        Double dosDecimales = Double.valueOf(campoPEfectivo);
-                                        DecimalFormat decimalFormat = new DecimalFormat("#.##");
-
-                                        if(dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
-                                            alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
-                                            return;
-                                        }else{
-                                            detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
-                                        }
+                                    if(dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
+                                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                                        return;
+                                    }else{
+                                        detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
                                     }
+
+
+
+                                }else if (NombreFormaPago.equals("Credito")) {
+
+                                    Double dosDecimales = Double.valueOf(campoPEfectivo);
+                                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+                                    if(dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))){
+                                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                                        return;
+                                    }else{
+                                        detalleVenta.setMontoSoles(Double.parseDouble(inputPEfectivo.getText().toString()));
+                                    }
+                                }
 
                                 if(!nfc.isEmpty() && nfc.equals(GlobalInfo.getRfIdCPrecio10)){
                                     detalleVenta.setRfid(GlobalInfo.getRfIdCPrecio10);
@@ -1190,6 +1239,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputObservacion.getText().clear();
                                 inputPEfectivo.setText("0");
                                 inputOperacion.getText().clear();
+                                textNumPuntos.setText(String.valueOf(0));
                                 radioFormaPago.check(radioEfectivo.getId());
 
                             }
@@ -1216,7 +1266,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             @Override
             public void onClick(View view) {
 
-                limpiarCamposBoletaFactura();
+                limpiarCamposBoletaFacturaNDespacho();
 
                 modalFactura.show();
 
@@ -1254,12 +1304,78 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnAgregarFactura  = modalFactura.findViewById(R.id.btnAgregarFactura);
                 buscarListNFC      = modalFactura.findViewById(R.id.buscarListNFC);
                 btnCalcular        = modalFactura.findViewById(R.id.btnCalcular);
+                buscarListPuntosNFC  = modalFactura.findViewById(R.id.buscarListPuntosNFC);
 
                 inputRUC.setEnabled(true);
                 inputRazSocial.setEnabled(true);
                 alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
                 alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
                 radioCanje.setVisibility(View.GONE);
+
+                if(GlobalInfo.getTerminalSoloPuntos10){
+                    buscarListNFC.setVisibility(View.GONE);
+                    buscarListPuntosNFC.setVisibility(View.VISIBLE);
+                }else{
+                    buscarListNFC.setVisibility(View.VISIBLE);
+                    buscarListPuntosNFC.setVisibility(View.GONE);
+                }
+
+                /**
+                 * @LOGIN_MODAL:ListaDescuentos_Puntos
+                 */
+                modalNFCLogin = new Dialog(getContext());
+                modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modalNFCLogin.setContentView(R.layout.modal_nfc_login);
+                modalNFCLogin.setCancelable(false);
+
+                buscarListNFC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarModalNFCListaDescuentoPunto();
+                    }
+                });
+
+                buscarListPuntosNFC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarModalNFCListaDescuentoPunto();
+                    }
+                });
+
+                /**
+                 * @LectorNFC:Descuentos_Puntos
+                 */
+                inputNFC.setKeyListener(null);
+                insertNFC();
+
+                if (inputNFC.getTag() != null) {
+                    inputNFC.removeTextChangedListener((TextWatcher) inputNFC.getTag());
+                }
+
+                inputNFC.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        if (s.length() == 16) {
+                            String nfcCode = s.toString();
+
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                findClientePrecioConPuntosRUC(nfcCode,GlobalInfo.getterminalCompanyID10);
+
+                            }else{
+                                findClientePrecioRUC(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                    }
+                });
 
                 /**
                  * @CALCULARDESCUENTOS
@@ -1315,100 +1431,74 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     }
                 });
 
+                modallistNFCPuntos = new Dialog(getContext());
+                modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
+                modallistNFCPuntos.setCancelable(false);
+
+                recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+                findListaClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+
                 /**
-                 * @MODAL:LoginDescuentoNFC
+                 * @SELECCIONAR:DobleClick_MostrarListadoClienteDNI
                  */
-                modalNFCLogin = new Dialog(getContext());
-                modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                modalNFCLogin.setContentView(R.layout.modal_nfc_login);
-                modalNFCLogin.setCancelable(false);
+                GestureDetector gestureDetectorNFC = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
 
-                buscarListNFC.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public boolean onDoubleTap(MotionEvent e) {
 
-                        modalNFCLogin.show();
+                        modallistNFCPuntos.show();
 
-                        btnCancelarNFC    = modalNFCLogin.findViewById(R.id.btnCancelarAnular);
-                        btnAceptarNFC     = modalNFCLogin.findViewById(R.id.btnAceptarIngreso);
-                        usuarioNFC        = modalNFCLogin.findViewById(R.id.inputUserAnulado);
-                        contraseñaNFC     = modalNFCLogin.findViewById(R.id.inputContraseñaAnulado);
-                        alertuserNFC      = modalNFCLogin.findViewById(R.id.alertUserAnulado);
-                        alertpasswordNFC  = modalNFCLogin.findViewById(R.id.alertContraseñaAnulado);
+                        BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                        btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
 
-                        btnCancelarNFC.setOnClickListener(new View.OnClickListener() {
+                        BuscarRazonSocial.setIconifiedByDefault(false);
+
+                        /**
+                         * @BUSCAR:NombreClienteRZ
+                         */
+
+                        /** Buscador por Razon Social */
+                        BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                             @Override
-                            public void onClick(View view) {
-
-                                modalNFCLogin.dismiss();
-
-                                usuarioNFC.getText().clear();
-                                contraseñaNFC.getText().clear();
-
-                                alertuserNFC.setErrorEnabled(false);
-                                alertpasswordNFC.setErrorEnabled(false);
-
+                            public boolean onQueryTextSubmit(String query) {
+                                onQueryTextChange(query);
+                                return true;
                             }
-                        });
 
-                        btnAceptarNFC.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(View view) {
-
-                                usuarioUserNFC    = usuarioNFC.getText().toString();
-                                contraseñaUserNFC = contraseñaNFC.getText().toString();
-
-                                if (usuarioUserNFC.isEmpty()) {
-                                    alertuserNFC.setError("El campo usuario es obligatorio");
-                                    return;
-                                } else if (contraseñaUserNFC.isEmpty()) {
-                                    alertpasswordNFC.setError("El campo contraseña es obligatorio");
-                                    return;
+                            public boolean onQueryTextChange(String newText) {
+                                String userInput = newText.toLowerCase();
+                                if (lRegistroClientePuntosAdapter != null) {
+                                    lRegistroClientePuntosAdapter.filtrado(userInput);
                                 }
-
-                                /**
-                                 * @Usuario-Autorizado
-                                 */
-                                findUsers(usuarioUserNFC);
-
-                                alertuserNFC.setErrorEnabled(false);
-                                alertpasswordNFC.setErrorEnabled(false);
-
+                                return true;
                             }
                         });
 
+                        btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                BuscarRazonSocial.setQuery("", false);
+                                modallistNFCPuntos.dismiss();
+                            }
+                        });
+
+                        return true;
                     }
                 });
 
-                /**
-                 * @DETECTAR:EtiquietaNFC
-                 */
-                inputNFC.setKeyListener(null);
-                insertNFC();
-
-                /**
-                 * @DETECTAR:NFC
-                 * @OBTENER:DatosClientes
-                 */
-                inputNFC.addTextChangedListener(new TextWatcher() {
-                    @Override
-                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                    }
-
-                    @Override
-                    public void onTextChanged(CharSequence s, int start, int before, int count) {
-                        if (s.length() == 16) {
-                            String nfcCode = s.toString();
-
-                            findClientePrecioRUC(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
-
+                if(GlobalInfo.getTerminalLecturar10){
+                    inputNFC.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            boolean handled = gestureDetectorNFC.onTouchEvent(event);
+                            return handled;
                         }
-                    }
+                    });
 
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                    }
-                });
+                }
 
                 /**
                  * @MODAL:MostrarListadoClienteRUC
@@ -1428,7 +1518,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 /**
                  * @SELECCIONAR:DobleClick_MostrarListadoClienteRUC
                  */
-                 GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
 
@@ -1470,12 +1560,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputRUC.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        gestureDetector.onTouchEvent(event);
-                        if (!gestureDetector.onTouchEvent(event)) {
-
-                            return false;
-                        }
-                        return true;
+                        boolean handled = gestureDetector.onTouchEvent(event);
+                        return handled;
                     }
                 });
 
@@ -1564,6 +1650,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputNFC.getText().clear();
                         inputRazSocial.getText().clear();
                         inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
 
                         inputRUC.setEnabled(true);
                         inputRazSocial.setEnabled(true);
@@ -1591,6 +1678,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputObservacion.getText().clear();
                         radioFormaPago.check(radioEfectivo.getId());
                         inputPEfectivo.setText("0");
+                        textNumPuntos.setText(String.valueOf(0));
                         inputOperacion.getText().clear();
 
                         alertPlaca.setErrorEnabled(false);
@@ -1688,6 +1776,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 detalleVenta.setTarjetaCredito("");
                                 detalleVenta.setOperacionREF("");
                                 detalleVenta.setMontoSoles(0.00);
+                                detalleVenta.setPtosDisponible(Double.parseDouble(textNumPuntos.getText().toString()));
                                 detalleVenta.setRfid("1");
 
 
@@ -1740,6 +1829,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputObservacion.getText().clear();
                                 inputPEfectivo.setText("0");
                                 inputOperacion.getText().clear();
+                                textNumPuntos.setText(String.valueOf(0));
                                 radioFormaPago.check(radioEfectivo.getId());
                             }
 
@@ -1766,11 +1856,13 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             @Override
             public void onClick(View view) {
 
+                limpiarCamposBoletaFacturaNDespacho();
                 modalNotaDespacho.show();
 
                 btnCancelarNotaDespacho   = modalNotaDespacho.findViewById(R.id.btnCancelarNotaDespacho);
                 btnAgregarNotaDespacho    = modalNotaDespacho.findViewById(R.id.btnAgregarNotaDespacho);
                 buscarListNFC             = modalNotaDespacho.findViewById(R.id.buscarListNFC);
+                buscarListPuntosNFC       = modalNotaDespacho.findViewById(R.id.buscarListPuntosNFC);
 
                 inputCPlaca               = modalNotaDespacho.findViewById(R.id.inputCPlaca);
                 input_CNTarjeta           = modalNotaDespacho.findViewById(R.id.input_CNTarjeta);
@@ -1779,6 +1871,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputCDireccion           = modalNotaDespacho.findViewById(R.id.inputCDireccion);
                 inputCKilometraje         = modalNotaDespacho.findViewById(R.id.inputCKilometraje);
                 inputCObservacion         = modalNotaDespacho.findViewById(R.id.inputCObservacion);
+                inputCMonto               = modalNotaDespacho.findViewById(R.id.inputCMonto);
 
                 inputNFC                  = modalNotaDespacho.findViewById(R.id.input_EtiquetaNFC);
 
@@ -1787,8 +1880,20 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 alertCCliente             = modalNotaDespacho.findViewById(R.id.alertCCliente);
                 alertCRazSocial           = modalNotaDespacho.findViewById(R.id.alertCRazSocial);
 
+                textNumPuntos             = modalNotaDespacho.findViewById(R.id.textNumPuntos);
+
+                inputCCliente.setEnabled(true);
+
+                if(GlobalInfo.getTerminalSoloPuntos10){
+                    buscarListNFC.setVisibility(View.GONE);
+                    buscarListPuntosNFC.setVisibility(View.VISIBLE);
+                }else{
+                    buscarListNFC.setVisibility(View.VISIBLE);
+                    buscarListPuntosNFC.setVisibility(View.GONE);
+                }
+
                 /**
-                 * @MODAL:LoginDescuentoNFC
+                 * @LOGIN_MODAL:ListaDescuentos_Puntos
                  */
                 modalNFCLogin = new Dialog(getContext());
                 modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -1798,70 +1903,27 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 buscarListNFC.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        mostrarModalNFCListaDescuentoPunto();
+                    }
+                });
 
-                        modalNFCLogin.show();
-
-                        btnCancelarNFC    = modalNFCLogin.findViewById(R.id.btnCancelarAnular);
-                        btnAceptarNFC     = modalNFCLogin.findViewById(R.id.btnAceptarIngreso);
-                        usuarioNFC        = modalNFCLogin.findViewById(R.id.inputUserAnulado);
-                        contraseñaNFC     = modalNFCLogin.findViewById(R.id.inputContraseñaAnulado);
-                        alertuserNFC      = modalNFCLogin.findViewById(R.id.alertUserAnulado);
-                        alertpasswordNFC  = modalNFCLogin.findViewById(R.id.alertContraseñaAnulado);
-
-                        btnCancelarNFC.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                modalNFCLogin.dismiss();
-
-                                usuarioNFC.getText().clear();
-                                contraseñaNFC.getText().clear();
-
-                                alertuserNFC.setErrorEnabled(false);
-                                alertpasswordNFC.setErrorEnabled(false);
-
-                            }
-                        });
-
-                        btnAceptarNFC.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-
-                                usuarioUserNFC    = usuarioNFC.getText().toString();
-                                contraseñaUserNFC = contraseñaNFC.getText().toString();
-
-                                if (usuarioUserNFC.isEmpty()) {
-                                    alertuserNFC.setError("El campo usuario es obligatorio");
-                                    return;
-                                } else if (contraseñaUserNFC.isEmpty()) {
-                                    alertpasswordNFC.setError("El campo contraseña es obligatorio");
-                                    return;
-                                }
-
-                                /**
-                                 * @Usuario-Autorizado
-                                 */
-                                findUsers(usuarioUserNFC);
-
-                                alertuserNFC.setErrorEnabled(false);
-                                alertpasswordNFC.setErrorEnabled(false);
-
-                            }
-                        });
-
+                buscarListPuntosNFC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mostrarModalNFCListaDescuentoPunto();
                     }
                 });
 
                 /**
-                 * @DETECTAR:EtiquietaNFC
+                 * @LectorNFC:Descuentos_Puntos
                  */
                 inputNFC.setKeyListener(null);
                 insertNFC();
 
-                /**
-                 * @DETECTAR:NFC
-                 * @OBTENER:DatosClientes
-                 */
+                if (inputNFC.getTag() != null) {
+                    inputNFC.removeTextChangedListener((TextWatcher) inputNFC.getTag());
+                }
+
                 inputNFC.addTextChangedListener(new TextWatcher() {
                     @Override
                     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -1872,7 +1934,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         if (s.length() == 16) {
                             String nfcCode = s.toString();
 
-                            findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                            if (GlobalInfo.getTerminalSoloPuntos10) {
+                                findClientePrecioConPuntosNotaDespacho(nfcCode,GlobalInfo.getterminalCompanyID10);
+                            } else {
+                                findClientePrecioNotaDespacho(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                            }
                         }
                     }
 
@@ -1880,6 +1946,75 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     public void afterTextChanged(Editable s) {
                     }
                 });
+
+                modallistNFCPuntos = new Dialog(getContext());
+                modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
+                modallistNFCPuntos.setCancelable(false);
+
+                recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+                findListaClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+
+                /**
+                 * @SELECCIONAR:DobleClick_MostrarListadoClienteDNI
+                 */
+                GestureDetector gestureDetectorNFC = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+
+                    @Override
+                    public boolean onDoubleTap(MotionEvent e) {
+
+                        modallistNFCPuntos.show();
+
+                        BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                        btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
+
+                        BuscarRazonSocial.setIconifiedByDefault(false);
+
+                        /**
+                         * @BUSCAR:NombreClienteRZ
+                         */
+
+                        /** Buscador por Razon Social */
+                        BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(String query) {
+                                onQueryTextChange(query);
+                                return true;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(String newText) {
+                                String userInput = newText.toLowerCase();
+                                if (lRegistroClientePuntosAdapter != null) {
+                                    lRegistroClientePuntosAdapter.filtrado(userInput);
+                                }
+                                return true;
+                            }
+                        });
+
+                        btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                BuscarRazonSocial.setQuery("", false);
+                                modallistNFCPuntos.dismiss();
+                            }
+                        });
+
+                        return true;
+                    }
+                });
+
+                if(GlobalInfo.getTerminalLecturar10){
+                    inputNFC.setOnTouchListener(new View.OnTouchListener() {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event) {
+                            boolean handled = gestureDetectorNFC.onTouchEvent(event);
+                            return handled;
+                        }
+                    });
+
+                }
 
                 /**
                  * @MODAL:MostrarListadoClienteNotaDespacho
@@ -1899,7 +2034,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 /**
                  * @SELECCIONAR:DobleClick_MostrarListadoClienteCredito
                  */
-                 GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+                GestureDetector gestureDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
 
@@ -1941,12 +2076,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 inputCCliente.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {
-                        gestureDetector.onTouchEvent(event);
-                        if (!gestureDetector.onTouchEvent(event)) {
-
-                            return false;
-                        }
-                        return true;
+                        boolean handled = gestureDetector.onTouchEvent(event);
+                        return handled;
                     }
                 });
 
@@ -1966,6 +2097,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputCDireccion.getText().clear();
                         inputCKilometraje.getText().clear();
                         inputCObservacion.getText().clear();
+                        inputCMonto.setText(String.valueOf(0));
+                        textNumPuntos.setText(String.valueOf(0));
                         inputNFC.getText().clear();
 
                         alertCCliente.setErrorEnabled(false);
@@ -2018,10 +2151,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 detalleVenta.setObservacion(inputCObservacion.getText().toString());
                                 detalleVenta.setKilometraje(inputCKilometraje.getText().toString());
                                 detalleVenta.setTarjetaND(input_CNTarjeta.getText().toString());
-                                detalleVenta.setMtoSaldoCredito(monto);
+                                detalleVenta.setMtoSaldoCredito(Double.parseDouble(inputCMonto.getText().toString()));
                                 detalleVenta.setTarjetaCredito("");
                                 detalleVenta.setOperacionREF("");
                                 detalleVenta.setMontoSoles(0.00);
+                                detalleVenta.setPtosDisponible(Double.parseDouble(textNumPuntos.getText().toString()) );
                                 detalleVenta.setRfid("1");
 
 
@@ -2041,6 +2175,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 inputCDireccion.getText().clear();
                                 inputCKilometraje.getText().clear();
                                 inputCObservacion.getText().clear();
+                                inputCMonto.setText(String.valueOf(0));
+                                textNumPuntos.setText(String.valueOf(0));
                                 inputNFC.getText().clear();
                             }
 
@@ -2074,8 +2210,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                 btnCancelarSerafin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                                modalSerafin.dismiss();
-                            }
+                        modalSerafin.dismiss();
+                    }
                 });
 
                 btnAgregarSerafin.setOnClickListener(new View.OnClickListener() {
@@ -2099,6 +2235,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                 detalleVenta.setOperacionREF("");
                                 detalleVenta.setTarjetaCredito("");
                                 detalleVenta.setMontoSoles(0.00);
+                                detalleVenta.setPtosDisponible(0.00);
                                 detalleVenta.setRfid("1");
 
                                 Toast.makeText(getContext(), "SE GENERO SERAFIN", Toast.LENGTH_SHORT).show();
@@ -2122,6 +2259,55 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
         DetalleVenta();
 
         return view;
+    }
+    /**
+     * @ModaLogin_ParaMostarListaDescuentosPuntosNFC
+     */
+    private void mostrarModalNFCListaDescuentoPunto() {
+        modalNFCLogin.show();
+
+        btnCancelarNFC = modalNFCLogin.findViewById(R.id.btnCancelarAnular);
+        btnAceptarNFC = modalNFCLogin.findViewById(R.id.btnAceptarIngreso);
+        usuarioNFC = modalNFCLogin.findViewById(R.id.inputUserAnulado);
+        contraseñaNFC = modalNFCLogin.findViewById(R.id.inputContraseñaAnulado);
+        alertuserNFC = modalNFCLogin.findViewById(R.id.alertUserAnulado);
+        alertpasswordNFC = modalNFCLogin.findViewById(R.id.alertContraseñaAnulado);
+
+        btnCancelarNFC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modalNFCLogin.dismiss();
+                usuarioNFC.getText().clear();
+                contraseñaNFC.getText().clear();
+                alertuserNFC.setErrorEnabled(false);
+                alertpasswordNFC.setErrorEnabled(false);
+            }
+        });
+
+        btnAceptarNFC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usuarioUserNFC = usuarioNFC.getText().toString();
+                contraseñaUserNFC = contraseñaNFC.getText().toString();
+
+                if (usuarioUserNFC.isEmpty()) {
+                    alertuserNFC.setError("El campo usuario es obligatorio");
+                    return;
+                } else if (contraseñaUserNFC.isEmpty()) {
+                    alertpasswordNFC.setError("El campo contraseña es obligatorio");
+                    return;
+                }
+
+                if(GlobalInfo.getTerminalSoloPuntos10){
+                    findUsersPuntos(usuarioUserNFC);
+                }else{
+                    findUsers(usuarioUserNFC);
+                }
+
+                alertuserNFC.setErrorEnabled(false);
+                alertpasswordNFC.setErrorEnabled(false);
+            }
+        });
     }
 
     /**
@@ -2269,6 +2455,191 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             @Override
             public void onFailure(Call<List<ClientePrecio>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error de conexión APICORE Lista Cliente - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * @APISERVICE:UsuarioAutorizadoPuntos
+     */
+    private void findUsersPuntos(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    usersListNFC = response.body();
+
+                    for (Users user : usersListNFC) {
+                        GlobalInfo.getuserIDAnular10 = user.getUserID();
+                        GlobalInfo.getuserNameAnular10 = user.getNames();
+                        GlobalInfo.getuserPassAnular10 = user.getPassword();
+                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    }
+
+                    if (GlobalInfo.getuserCancelAnular10 == true) {
+
+                        String getName = usuarioNFC.getText().toString();
+                        String getPass = PasswordChecker.checkpassword(contraseñaNFC.getText().toString());
+
+                        /**
+                         * @Modal-ListadoClientes-Puntos
+                         */
+                        modallistNFCPuntos = new Dialog(getContext());
+                        modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
+                        modallistNFCPuntos.setCancelable(false);
+
+                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
+
+                            recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                            recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                            BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                            btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
+
+                            BuscarRazonSocial.setIconifiedByDefault(false);
+
+                            btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    BuscarRazonSocial.setQuery("", false);
+                                    modallistNFCPuntos.dismiss();
+                                }
+                            });
+
+                            /** Buscador por Razon Social */
+                            BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                @Override
+                                public boolean onQueryTextSubmit(String query) {
+                                    onQueryTextChange(query);
+                                    return true;
+                                }
+
+                                @Override
+                                public boolean onQueryTextChange(String newText) {
+                                    String userInput = newText.toLowerCase();
+                                    if (lRegistroClientePuntosAdapter != null) {
+                                        lRegistroClientePuntosAdapter.filtrado(userInput);
+                                    }
+                                    return true;
+                                }
+                            });
+
+                            modalNFCLogin.dismiss();
+
+                            usuarioNFC.getText().clear();
+                            contraseñaNFC.getText().clear();
+
+                            /**
+                             * @APISERVICE-ListadoCliente-Descuento
+                             */
+                            findClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+
+                        } else {
+                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
+     *
+     */
+    private void findListaClientePuntos(String nfcId,Integer comapyId){
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                GlobalInfo.getclientePuntosList10 = response.body();
+
+                lRegistroClientePuntosAdapter = new LRegistroClientePuntosAdapter(GlobalInfo.getclientePuntosList10, getContext(), new LRegistroClientePuntosAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(LClientePuntos item) {
+
+                        inputNFC.setText(item.getRfid());
+
+                        BuscarRazonSocial.setQuery("", false);
+
+                        modallistNFCPuntos.dismiss();
+
+                    }
+                });
+                recyclerLClientePuntosNFC.setAdapter(lRegistroClientePuntosAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Lista Cliente - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * @APISERVICE:ListaClientePuntos
+     */
+    private void findClientePuntos(String nfcId,Integer comapyId) {
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                GlobalInfo.getclientePuntosList10 = response.body();
+
+                modallistNFCPuntos.show();
+
+                lRegistroClientePuntosAdapter = new LRegistroClientePuntosAdapter(GlobalInfo.getclientePuntosList10, getContext(), new LRegistroClientePuntosAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(LClientePuntos item) {
+
+                        inputNFC.setText(item.getRfid());
+
+                        BuscarRazonSocial.setQuery("", false);
+
+                        modallistNFCPuntos.dismiss();
+
+                    }
+                });
+                recyclerLClientePuntosNFC.setAdapter(lRegistroClientePuntosAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Lista Cliente Puntos - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -2468,7 +2839,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputCCliente.setText(item.getClienteID());
                             inputCRazSocial.setText(item.getClienteRZ());
                             inputCDireccion.setText(item.getClienteDR());
-                            monto = item.getSaldo();
+                            inputCMonto.setText(String.valueOf(item.getSaldo()));
 
                             btnBuscadorClienteRZ.setQuery("", false);
                             modalClienteCredito.dismiss();
@@ -2610,6 +2981,279 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     }
 
     /**
+     * @APISERVICE:BuscarClienteConPuntos_DNI
+     */
+    private String findClientePrecioConPuntosNotaDespacho(String nfcId,Integer comapyId) {
+
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientePuntosList = response.body();
+
+                    if (clientePuntosList != null && !clientePuntosList.isEmpty()) {
+                        LClientePuntos clientePuntos = clientePuntosList.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10      = clientePuntos.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePuntos.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePuntos.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePuntos.getNroPlaca();
+                        GlobalInfo.getStatusPuntos10     = clientePuntos.getStatus();
+                        GlobalInfo.getDisponiblePuntos10 = clientePuntos.getDisponibles();
+                        GlobalInfo.getNroTarjetasPuntos10 = "70100";
+
+                        if (GlobalInfo.getClienteIDPrecio10.length() == 8 || GlobalInfo.getClienteIDPrecio10.length() == 11  && GlobalInfo.getStatusPuntos10){
+                            inputCPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputCCliente.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputCRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputCDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(GlobalInfo.getDisponiblePuntos10));
+                            input_CNTarjeta.setText(GlobalInfo.getNroTarjetasPuntos10);
+
+                            inputCCliente.setEnabled(false);
+                            inputCRazSocial.setEnabled(false);
+
+                            alertCCliente.setBoxBackgroundColorResource(R.color.colornew);
+                            alertCRazSocial.setBoxBackgroundColorResource(R.color.colornew);
+
+                        }else{
+                            Toast.makeText(getContext(), "El NFC esta bloqueado", Toast.LENGTH_SHORT).show();
+
+                            inputNFC.getText().clear();
+                            inputCPlaca.setText("000-0000");
+                            inputCCliente.getText().clear();
+                            inputCRazSocial.getText().clear();
+                            inputCDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
+                            input_CNTarjeta.getText().clear();
+
+                            inputCCliente.setEnabled(true);
+                            inputCRazSocial.setEnabled(true);
+                            alertCCliente.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertCRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
+                        inputCPlaca.setText("000-0000");
+                        inputCCliente.getText().clear();
+                        inputCRazSocial.getText().clear();
+                        inputCDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
+                        input_CNTarjeta.getText().clear();
+
+                        inputCCliente.setEnabled(true);
+                        inputCRazSocial.setEnabled(true);
+                        alertCCliente.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertCRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return nfcId;
+    }
+
+    /**
+     * @APISERVICE:BuscarClienteRFID_NotaDespacho
+     */
+    private String findClientePrecioNotaDespacho(String rfid, String companyid) {
+
+        Call<List<ClientePrecio>> call = mAPIService.findDescuentos(rfid, companyid);
+
+        call.enqueue(new Callback<List<ClientePrecio>>() {
+            @Override
+            public void onResponse(Call<List<ClientePrecio>> call, Response<List<ClientePrecio>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientePrecioList = response.body();
+
+                    if (clientePrecioList != null && !clientePrecioList.isEmpty()) {
+                        ClientePrecio clientePrecio = clientePrecioList.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10      = clientePrecio.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePrecio.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePrecio.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePrecio.getNroPlaca();
+                        GlobalInfo.getArticuloIdPrecio10     = clientePrecio.getArticuloID();
+                        GlobalInfo.getTipClientePrecio10     = clientePrecio.getTipoCliente();
+                        GlobalInfo.getTipoDescuentoPrecio10  = clientePrecio.getTipoDescuento();
+                        GlobalInfo.getMontoDescuentoPrecio10 = clientePrecio.getMontoDescuento();
+                        GlobalInfo.getNroTarjetasPuntos10 = "70100";
+
+                        if (GlobalInfo.getClienteIDPrecio10.length() == 8 || GlobalInfo.getClienteIDPrecio10.length() == 11){
+
+                            inputCPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputCCliente.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputCRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputCDireccion.getText().clear();
+                            input_CNTarjeta.setText(GlobalInfo.getNroTarjetasPuntos10);
+                            textNumPuntos.setText(String.valueOf(0));
+
+                            inputCCliente.setEnabled(false);
+                            inputCRazSocial.setEnabled(false);
+
+                            alertCCliente.setBoxBackgroundColorResource(R.color.colornew);
+                            alertCRazSocial.setBoxBackgroundColorResource(R.color.colornew);
+
+
+                        }else{
+                            Toast.makeText(getContext(), "No se encontraron datos el NFC del cliente.", Toast.LENGTH_SHORT).show();
+
+                            inputNFC.getText().clear();
+                            inputCPlaca.setText("000-0000");
+                            inputCCliente.getText().clear();
+                            inputCRazSocial.getText().clear();
+                            inputCDireccion.getText().clear();
+                            input_CNTarjeta.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
+
+                            inputCCliente.setEnabled(true);
+                            inputCRazSocial.setEnabled(true);
+                            alertCCliente.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertCRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
+                        inputCPlaca.setText("000-0000");
+                        inputCCliente.getText().clear();
+                        inputCRazSocial.getText().clear();
+                        inputCDireccion.getText().clear();
+                        input_CNTarjeta.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
+
+                        inputCCliente.setEnabled(true);
+                        inputCRazSocial.setEnabled(true);
+                        alertCCliente.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertCRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ClientePrecio>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return rfid;
+    }
+
+    /**
+     * @APISERVICE:BuscarClienteConPuntos_DNI
+     */
+    private String findClientePrecioConPuntosDNI(String nfcId,Integer comapyId) {
+
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientePuntosList = response.body();
+
+                    if (clientePuntosList != null && !clientePuntosList.isEmpty()) {
+                        LClientePuntos clientePuntos = clientePuntosList.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10      = clientePuntos.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePuntos.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePuntos.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePuntos.getNroPlaca();
+                        GlobalInfo.getStatusPuntos10     = clientePuntos.getStatus();
+                        GlobalInfo.getDisponiblePuntos10 = clientePuntos.getDisponibles();
+
+                        if (GlobalInfo.getClienteIDPrecio10.length() == 8 && GlobalInfo.getStatusPuntos10){
+                            inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(GlobalInfo.getDisponiblePuntos10));
+
+                            inputDNI.setEnabled(false);
+                            inputNombre.setEnabled(false);
+
+                            alertDNI.setBoxBackgroundColorResource(R.color.colornew);
+                            alertNombre.setBoxBackgroundColorResource(R.color.colornew);
+
+                        }else{
+                            Toast.makeText(getContext(), "El NFC esta registrado con un RUC o esta bloqueado", Toast.LENGTH_SHORT).show();
+
+                            inputNFC.getText().clear();
+                            inputPlaca.setText("000-0000");
+                            inputDNI.getText().clear();
+                            inputNombre.getText().clear();
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
+
+                            inputDNI.setEnabled(true);
+                            inputNombre.setEnabled(true);
+                            alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
+                        inputPlaca.setText("000-0000");
+                        inputDNI.getText().clear();
+                        inputNombre.getText().clear();
+                        inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
+
+                        inputDNI.setEnabled(true);
+                        inputNombre.setEnabled(true);
+                        alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return nfcId;
+    }
+
+    /**
      * @APISERVICE:BuscarClienteRFID_DNI
      */
     private String findClientePrecioDNI(String rfid, String companyid) {
@@ -2641,32 +3285,34 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         GlobalInfo.getTipoDescuentoPrecio10  = clientePrecio.getTipoDescuento();
                         GlobalInfo.getMontoDescuentoPrecio10 = clientePrecio.getMontoDescuento();
 
-                            if (GlobalInfo.getClienteIDPrecio10.length() == 8){
-                                inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
-                                inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
-                                inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
-                                inputDireccion.getText().clear();
+                        if (GlobalInfo.getClienteIDPrecio10.length() == 8){
+                            inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
 
-                                inputDNI.setEnabled(false);
-                                inputNombre.setEnabled(false);
+                            inputDNI.setEnabled(false);
+                            inputNombre.setEnabled(false);
 
-                                alertDNI.setBoxBackgroundColorResource(R.color.colornew);
-                                alertNombre.setBoxBackgroundColorResource(R.color.colornew);
+                            alertDNI.setBoxBackgroundColorResource(R.color.colornew);
+                            alertNombre.setBoxBackgroundColorResource(R.color.colornew);
 
-                            }else{
-                                Toast.makeText(getContext(), "El NFC esta registrado con un RUC", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getContext(), "El NFC esta registrado con un RUC", Toast.LENGTH_SHORT).show();
 
-                                inputNFC.getText().clear();
-                                inputPlaca.setText("000-0000");
-                                inputDNI.getText().clear();
-                                inputNombre.getText().clear();
-                                inputDireccion.getText().clear();
+                            inputNFC.getText().clear();
+                            inputPlaca.setText("000-0000");
+                            inputDNI.getText().clear();
+                            inputNombre.getText().clear();
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
 
-                                inputDNI.setEnabled(true);
-                                inputNombre.setEnabled(true);
-                                alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
-                                alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
-                            }
+                            inputDNI.setEnabled(true);
+                            inputNombre.setEnabled(true);
+                            alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                        }
 
                     } else {
                         Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
@@ -2675,6 +3321,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputDNI.getText().clear();
                         inputNombre.getText().clear();
                         inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
 
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
@@ -2693,6 +3340,91 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
             }
         });
         return rfid;
+    }
+
+    /**
+     * @APISERVICE:BuscarClienteRFID_RUC
+     */
+    private String findClientePrecioConPuntosRUC(String nfcId,Integer comapyId) {
+
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientePuntosList = response.body();
+
+                    if (clientePuntosList != null && !clientePuntosList.isEmpty()) {
+                        LClientePuntos clientePuntos = clientePuntosList.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10      = clientePuntos.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePuntos.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePuntos.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePuntos.getNroPlaca();
+                        GlobalInfo.getStatusPuntos10     = clientePuntos.getStatus();
+                        GlobalInfo.getDisponiblePuntos10 = clientePuntos.getDisponibles();
+
+                        if(GlobalInfo.getClienteIDPrecio10.length() == 11 &&  GlobalInfo.getStatusPuntos10){
+                            inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputRUC.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(GlobalInfo.getDisponiblePuntos10));
+
+                            inputRUC.setEnabled(false);
+                            inputRazSocial.setEnabled(false);
+                            alertRUC.setBoxBackgroundColorResource(R.color.colornew);
+                            alertRazSocial.setBoxBackgroundColorResource(R.color.colornew);
+                        }else{
+                            Toast.makeText(getContext(), "El NFC esta registrado con un DNI o esta bloqueado", Toast.LENGTH_SHORT).show();
+
+                            inputNFC.getText().clear();
+                            inputPlaca.setText("000-0000");
+                            inputRUC.getText().clear();
+                            inputRazSocial.getText().clear();
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
+
+                            inputRUC.setEnabled(true);
+                            inputRazSocial.setEnabled(true);
+                            alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
+                        inputPlaca.setText("000-0000");
+                        inputRUC.getText().clear();
+                        inputRazSocial.getText().clear();
+                        inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
+
+                        inputRUC.setEnabled(true);
+                        inputRazSocial.setEnabled(true);
+                        alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return nfcId;
     }
 
     /**
@@ -2733,10 +3465,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputRUC.setText(GlobalInfo.getClienteIDPrecio10);
                             inputRazSocial.setText(GlobalInfo.getClienteRZPrecio10);
                             inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
 
                             inputRUC.setEnabled(false);
                             inputRazSocial.setEnabled(false);
-
                             alertRUC.setBoxBackgroundColorResource(R.color.colornew);
                             alertRazSocial.setBoxBackgroundColorResource(R.color.colornew);
                         }else{
@@ -2747,6 +3479,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             inputRUC.getText().clear();
                             inputRazSocial.getText().clear();
                             inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
 
                             inputRUC.setEnabled(true);
                             inputRazSocial.setEnabled(true);
@@ -2761,6 +3494,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         inputRUC.getText().clear();
                         inputRazSocial.getText().clear();
                         inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
 
                         inputRUC.setEnabled(true);
                         inputRazSocial.setEnabled(true);
@@ -2784,29 +3518,50 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
     /**
      * @LIMPIAR:CamposBoletaFactura
      */
-    private void limpiarCamposBoletaFactura() {
+    private void limpiarCamposBoletaFacturaNDespacho() {
 
         TextInputEditText inputNFCBoleta    = modalBoleta.findViewById(R.id.input_EtiquetaNFC);
         TextInputEditText inputPlaca        = modalBoleta.findViewById(R.id.inputPlaca);
         TextInputEditText inputDNI          = modalBoleta.findViewById(R.id.inputDNI);
         TextInputEditText inputNombre       = modalBoleta.findViewById(R.id.inputNombre);
+        TextView textNumPuntosB              = modalBoleta.findViewById(R.id.textNumPuntos);
 
         TextInputEditText inputNFCFactura   = modalFactura.findViewById(R.id.input_EtiquetaNFC);
+        TextInputEditText inputPlacaF       = modalFactura.findViewById(R.id.inputPlaca);
         TextInputEditText inputRUC          = modalFactura.findViewById(R.id.inputRUC);
         TextInputEditText inputRZ           = modalFactura.findViewById(R.id.inputRazSocial);
+        TextView textNumPuntosF             = modalFactura.findViewById(R.id.textNumPuntos);
+
+        TextInputEditText inputNFCNotaDespacho = modalNotaDespacho.findViewById(R.id.input_EtiquetaNFC);
+        TextInputEditText inputPlacaND         = modalNotaDespacho.findViewById(R.id.inputCPlaca);
+        TextInputEditText inputIDClienteND     = modalNotaDespacho.findViewById(R.id.inputCCliente);
+        TextInputEditText inputRZND            = modalNotaDespacho.findViewById(R.id.inputCRazSocial);
+        TextView inputNTarjeta                 = modalNotaDespacho.findViewById(R.id.input_CNTarjeta);
+        TextView textNumPuntosND               = modalNotaDespacho.findViewById(R.id.textNumPuntos);
 
         if (inputNFCBoleta != null) {
             inputNFCBoleta.setText("");
             inputPlaca.setText("000-0000");
             inputDNI.setText("");
             inputNombre.setText("");
+            textNumPuntosB.setText("0");
         }
 
         if (inputNFCFactura != null) {
             inputNFCFactura.setText("");
-            inputPlaca.setText("000-0000");
+            inputPlacaF.setText("000-0000");
             inputRUC.setText("");
             inputRZ.setText("");
+            textNumPuntosF.setText("0");
+        }
+
+        if (inputNFCNotaDespacho != null) {
+            inputNFCNotaDespacho.setText("");
+            inputPlacaND.setText("000-0000");
+            inputIDClienteND.setText("");
+            inputRZND.setText("");
+            inputNTarjeta.setText("");
+            textNumPuntosND.setText("0");
         }
     }
 
@@ -3247,14 +4002,14 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         } else {
 
                             findCorrelativoCPE(GlobalInfo.getterminalImei10, mnTipoDocumento, mnClienteID,
-                                               mnClienteRUC, mnClienteRS, mnCliernteDR,
-                                               mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
-                                               mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
-                                               mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
-                                               mnobservacionPag, GlobalInfo.getoptranOperador10,
-                                               mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
-                                               GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
-                                               GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
+                                    mnClienteRUC, mnClienteRS, mnCliernteDR,
+                                    mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion,
+                                    mnTarjND, mnTarjetaPuntos, mnPtosDisponibles,
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF,
+                                    mnobservacionPag, GlobalInfo.getoptranOperador10,
+                                    mnImpuesto, mnMontoSoles, mnMtoSaldoCredito, mnRFID,
+                                    GlobalInfo.getoptranSoles10, GlobalInfo.getoptranArticuloID10,
+                                    GlobalInfo.getoptranGalones10, String.valueOf(GlobalInfo.getoptranTranID10));
 
                         }
 
@@ -3336,6 +4091,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         GlobalInfo.getcorrelativoMDescuento = correlativo.getMontoDescuento();
                         GlobalInfo.getcorrelativoDocumentoVenta = correlativo.getDocumentoVenta();
                         GlobalInfo.getcorrelativoTipoDesc       = correlativo.getTipoDescuento();
+                        GlobalInfo.getcorrelativoPuntosGanados  = correlativo.getPuntosGanados();
+                        GlobalInfo.getcorrelativoPuntosDisponibles  = correlativo.getPuntosDisponibles();
                     }
 
                     if(!GlobalInfo.getcorrelativoDocumentoVenta.isEmpty()){
@@ -3347,6 +4104,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     String GRFecProceso = GlobalInfo.getcorrelativoFecha;
                     String GRNumeroSerie = GlobalInfo.getcorrelativoSerie;
                     String GRNumeroDocumento = GlobalInfo.getcorrelativoNumero;
+                    Double GRPuntosGanados =  GlobalInfo.getcorrelativoPuntosGanados;
+                    Double GRPuntosDisponibles =  GlobalInfo.getcorrelativoPuntosDisponibles;
+                    String mnTarjetaPuntos = mnRFID;
 
                     String NroComprobante = GlobalInfo.getcorrelativoSerie + "-" + GlobalInfo.getcorrelativoNumero;
 
@@ -3441,6 +4201,11 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     /** FIN Calculando los totales **/
 
+                    if(!GlobalInfo.getTerminalSoloPuntos10){
+                        GRPuntosGanados = 0.00;
+                        GRPuntosDisponibles = 0.00;
+                    }
+
                     /** GRABAR VENTA EN BASE DE DATOS **/
 
                     grabarVentaCA(GlobalInfo.getterminalCompanyID10, mnTipoDocumento, GRNumeroSerie, GRNumeroDocumento,
@@ -3449,7 +4214,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             GlobalInfo.getoptranFechaTran10,
                             mnMtoDescuento1, mnMtoSubTotal1, mnMtoImpuesto1, mnMtoPagar,
                             mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion, mnReferencia,
-                            mnTarjND, mnTarjetaPuntos, mnPtosGanados, mnPtosDisponibles,
+                            mnTarjND, mnTarjetaPuntos, GRPuntosGanados, GRPuntosDisponibles,
                             mnMtoCanje, GlobalInfo.getuserID10,
                             mnItem, mnArticuloID, GlobalInfo.getoptranProductoDs10, GlobalInfo.getoptranUniMed10, GlobalInfo.getterminalAlmacenID10,
                             GlobalInfo.getsettingImpuestoID110, GlobalInfo.getsettingImpuestoValor110, GlobalInfo.getoptranPrecio10, mnPrecioOrig, mnCantidad,
@@ -3482,7 +4247,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
                                     mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
                                     mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles,mnTarjetaPuntos,GRPuntosGanados,GRPuntosDisponibles);
 
 
                             Double finalMnMtoPagar1 = mnMtoPagar;
@@ -3498,6 +4263,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             }
 
                             Timer timerS = new Timer();
+
+                            Double finalGRPuntosGanados = GRPuntosGanados;
+                            Double finalGRPuntosDisponibles = GRPuntosDisponibles;
                             /** @IMPRESION02 */
                             timerS.schedule(new TimerTask() {
                                 @Override
@@ -3508,7 +4276,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                             finalMnMtoPagar1, finalMnMtoSubTotal1, finalMnMtoImpuesto1,
                                             mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
                                             mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles);
+                                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles,mnTarjetaPuntos,finalGRPuntosGanados,finalGRPuntosDisponibles);
 
                                     timerS.cancel();
                                 }
@@ -3522,7 +4290,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
                                     mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
                                     mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles,mnTarjetaPuntos,GRPuntosGanados,GRPuntosDisponibles);
 
                         }
 
@@ -3576,6 +4344,8 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                         GlobalInfo.getcorrelativoMDescuento = correlativo.getMontoDescuento();
                         GlobalInfo.getcorrelativoDocumentoVenta = correlativo.getDocumentoVenta();
                         GlobalInfo.getcorrelativoTipoDesc       = correlativo.getTipoDescuento();
+                        GlobalInfo.getcorrelativoPuntosGanados  = correlativo.getPuntosGanados();
+                        GlobalInfo.getcorrelativoPuntosDisponibles  = correlativo.getPuntosDisponibles();
                     }
 
                     if(!GlobalInfo.getcorrelativoDocumentoVenta.isEmpty()){
@@ -3587,6 +4357,9 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                     String GRFecProceso = GlobalInfo.getcorrelativoFecha;
                     String GRNumeroSerie = GlobalInfo.getcorrelativoSerie;
                     String GRNumeroDocumento = GlobalInfo.getcorrelativoNumero;
+                    Double GRPuntosGanados =  GlobalInfo.getcorrelativoPuntosGanados;
+                    Double GRPuntosDisponibles =  GlobalInfo.getcorrelativoPuntosDisponibles;
+                    String mnTarjetaPuntos = mnRFID;
 
                     String NroComprobante = GlobalInfo.getcorrelativoSerie + "-" + GlobalInfo.getcorrelativoNumero;
 
@@ -3683,20 +4456,25 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                     /** GRABAR VENTA EN BASE DE DATOS **/
 
+                    if(!GlobalInfo.getTerminalSoloPuntos10){
+                        GRPuntosGanados = 0.00;
+                        GRPuntosDisponibles = 0.00;
+                    }
+
                     grabarVentaCA(GlobalInfo.getterminalCompanyID10, mnTipoDocumento, GRNumeroSerie, GRNumeroDocumento,
-                                  GlobalInfo.getterminalID10, mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR,
-                                  GlobalInfo.getterminalTurno10, GlobalInfo.getcorrelativoFecha, xFechaDocumento,
-                                  GlobalInfo.getoptranFechaTran10,
-                                  mnMtoDescuento1, mnMtoSubTotal1, mnMtoImpuesto1, mnMtoPagar,
-                                  mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion, mnReferencia,
-                                  mnTarjND, mnTarjetaPuntos, mnPtosGanados, mnPtosDisponibles,
-                                  mnMtoCanje, GlobalInfo.getuserID10,
-                                  mnItem, mnArticuloID, GlobalInfo.getoptranProductoDs10, GlobalInfo.getoptranUniMed10, GlobalInfo.getterminalAlmacenID10,
-                                  GlobalInfo.getsettingImpuestoID110, GlobalInfo.getsettingImpuestoValor110, GlobalInfo.getoptranPrecio10, mnPrecioOrig, mnCantidad,
-                                  mnFise, GlobalInfo.getoptranTranID10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranManguera10,
-                                  mnobservacionDet,
-                                  mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoPagar, mnMontoSoles, mnobservacionPag,
-                                  mnOperador, mnMtoIncremento1);
+                            GlobalInfo.getterminalID10, mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR,
+                            GlobalInfo.getterminalTurno10, GlobalInfo.getcorrelativoFecha, xFechaDocumento,
+                            GlobalInfo.getoptranFechaTran10,
+                            mnMtoDescuento1, mnMtoSubTotal1, mnMtoImpuesto1, mnMtoPagar,
+                            mnNroPlaca, mnKilometraje, mnTipoVenta, mnObservacion, mnReferencia,
+                            mnTarjND, mnTarjetaPuntos, GRPuntosGanados, GRPuntosDisponibles,
+                            mnMtoCanje, GlobalInfo.getuserID10,
+                            mnItem, mnArticuloID, GlobalInfo.getoptranProductoDs10, GlobalInfo.getoptranUniMed10, GlobalInfo.getterminalAlmacenID10,
+                            GlobalInfo.getsettingImpuestoID110, GlobalInfo.getsettingImpuestoValor110, GlobalInfo.getoptranPrecio10, mnPrecioOrig, mnCantidad,
+                            mnFise, GlobalInfo.getoptranTranID10, GlobalInfo.getoptranNroLado10, GlobalInfo.getoptranManguera10,
+                            mnobservacionDet,
+                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoPagar, mnMontoSoles, mnobservacionPag,
+                            mnOperador, mnMtoIncremento1);
 
                     /** FIN GRABAR VENTA EN BASE DE DATOS **/
 
@@ -3722,8 +4500,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
                                     mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
                                     mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
-
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles,mnTarjetaPuntos,GRPuntosGanados,GRPuntosDisponibles);
 
                             Double finalMnMtoPagar1 = mnMtoPagar;
                             Double finalMnMtoSubTotal1 = mnMtoSubTotal1;
@@ -3739,6 +4516,10 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
 
                             Timer timerS = new Timer();
                             /** @IMPRESION02 */
+
+                            Double finalGRPuntosGanados = GRPuntosGanados;
+                            Double finalGRPuntosDisponibles = GRPuntosDisponibles;
+
                             timerS.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
@@ -3748,7 +4529,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                             finalMnMtoPagar1, finalMnMtoSubTotal1, finalMnMtoImpuesto1,
                                             mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
                                             mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles);
+                                            mnPagoID, mnTarjetaCreditoID, mnOperacionREF, finalMnMtoCanje1, finalMnMtoDescuento1, mnMontoSoles,mnTarjetaPuntos, finalGRPuntosGanados, finalGRPuntosDisponibles);
 
                                     timerS.cancel();
                                 }
@@ -3762,7 +4543,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                                     mnMtoPagar, mnMtoSubTotal1, mnMtoImpuesto1,
                                     mnClienteID, mnClienteRUC, mnClienteRS, mnCliernteDR, mnNroPlaca,
                                     mnKilometraje, mnObservacion, mnTarjND, xFechaDocumentoQR,
-                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles);
+                                    mnPagoID, mnTarjetaCreditoID, mnOperacionREF, mnMtoCanje, mnMtoDescuento1, mnMontoSoles,mnTarjetaPuntos,GRPuntosGanados,GRPuntosDisponibles);
 
                         }
 
@@ -3848,7 +4629,7 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                               String _ClienteID, String _ClienteRUC, String _ClienteRZ, String _ClienteDR, String _NroPlaca,
                               String _Kilometraje, String _Obervacion,String _NTarjND,
                               String _FechaQR, Integer _PagoID, Integer _TarjetaCreditoID, String _OperacionREF,
-                              Double _mtoCanjeado, Double _mtoDescuento, Double _mtoSoles){
+                              Double _mtoCanjeado, Double _mtoDescuento, Double _mtoSoles, String mnTarjetaPuntos,Double GRPuntosGanados, Double GRPuntosDisponibles){
 
         String rutaImagen = "/storage/emulated/0/appSven/";
 
@@ -4227,6 +5008,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.setSmallText();
                             printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                             printama.printTextln("                 ", Printama.CENTER);
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }
                             printama.setSmallText();
                             printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
                             break;
@@ -4314,6 +5105,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.setSmallText();
                             printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                             printama.printTextln("                 ", Printama.CENTER);
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }
                             printama.setSmallText();
                             printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
                             break;
@@ -4325,8 +5126,21 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.setSmallText();
                             printSeparatorLine(printama, tipopapel);
                             printama.addNewLine(1);
-                            printama.setSmallText();
-                            printama.addNewLine(1);
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }else{
+                                printama.setSmallText();
+                                printama.addNewLine(1);
+                            }
                             printama.setSmallText();
                             printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                             printama.printTextlnBold("DNI    :" , Printama.LEFT);
@@ -4613,6 +5427,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             } catch (WriterException e) {
                                 e.printStackTrace();
                             }
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }
                             printama.setSmallText();
                             printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
                             break;
@@ -4720,6 +5544,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             } catch (WriterException e) {
                                 e.printStackTrace();
                             }
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }
                             printama.setSmallText();
                             printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
                             break;
@@ -4731,8 +5565,21 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.setSmallText();
                             printSeparatorLine(printama, tipopapel);
                             printama.addNewLine(1);
-                            printama.setSmallText();
-                            printama.addNewLine(1);
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }else{
+                                printama.setSmallText();
+                                printama.addNewLine(1);
+                            }
                             printama.setSmallText();
                             printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                             printama.printTextlnBold("DNI    :" , Printama.LEFT);
@@ -5015,6 +5862,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             } catch (WriterException e) {
                                 e.printStackTrace();
                             }
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }
                             printama.setSmallText();
                             printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
                             break;
@@ -5122,6 +5979,16 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             } catch (WriterException e) {
                                 e.printStackTrace();
                             }
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }
                             printama.setSmallText();
                             printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
                             break;
@@ -5133,8 +6000,21 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             printama.setSmallText();
                             printSeparatorLine(printama, tipopapel);
                             printama.addNewLine(1);
-                            printama.setSmallText();
-                            printama.addNewLine(1);
+                            if(GlobalInfo.getTerminalSoloPuntos10){
+                                if(!mnTarjetaPuntos.isEmpty() && !mnTarjetaPuntos.equals("1")){
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                    printama.setSmallText();
+                                    printama.printTextlnBold("NRO. TARJETA PUNTOS : " + mnTarjetaPuntos , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS GANADOS     : " + GRPuntosGanados , Printama.LEFT);
+                                    printama.printTextlnBold("PUNTOS DISPONIBLES : " + GRPuntosDisponibles, Printama.LEFT);
+                                    printama.setSmallText();
+                                    printama.addNewLine(1);
+                                }
+                            }else{
+                                printama.setSmallText();
+                                printama.addNewLine(1);
+                            }
                             printama.setSmallText();
                             printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                             printama.printTextlnBold("DNI    :" , Printama.LEFT);

@@ -62,17 +62,31 @@
 
                 <Button
                     android:id="@+id/buscarListNFC"
-                    android:layout_width="250sp"
+                    android:layout_width="120sp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
-                    android:text="afiliados"
+                    android:text=" lista de descuentos"
                     android:textColor="@color/white"
-                    android:backgroundTint="@color/colorSecondary"
+                    android:backgroundTint="@color/colorNer"
                     android:textSize="10sp"
                     android:layout_marginTop="-4sp"
                     android:layout_marginStart="10sp"
                     android:layout_marginLeft="10sp"
+                    app:cornerRadius="10sp" />
+
+                <Button
+                    android:id="@+id/buscarListPuntosNFC"
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="lista de puntos"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/purple_200"
+                    android:textSize="10sp"
+                    android:layout_marginTop="-4sp"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:visibility="gone"
                     app:cornerRadius="10sp" />
 
             </LinearLayout>
@@ -86,7 +100,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/alertPlaca"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="300sp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="Ingresar N° de Placa"
@@ -121,14 +135,13 @@
 
                 <TextView
                     android:id="@+id/textNumPuntos"
-                    android:layout_width="195sp"
+                    android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:layout_weight="1"
                     android:fontFamily="@font/nunito_black"
                     android:text="0"
-                    android:visibility="gone"
                     android:textColor="@color/red_200"
                     android:textSize="16sp" />
 
@@ -167,10 +180,8 @@
 
                 <Button
                     android:id="@+id/buscarDNIBoleta"
-                    android:layout_width="200sp"
+                    android:layout_width="120sp"
                     android:layout_height="wrap_content"
-
-                    android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="@string/btn_reniec"
                     android:textColor="@color/white"

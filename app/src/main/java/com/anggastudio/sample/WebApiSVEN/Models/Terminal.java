@@ -43,6 +43,8 @@ public class Terminal {
     private String  validar_Fecha_Hora;
     private Boolean nota_Despacho_Default;
     private Integer feed_Cabecera;
+    private Boolean soloPuntos;
+    private Boolean lecturar;
 
     public String getTerminalID() {
         return terminalID;
@@ -370,5 +372,21 @@ public class Terminal {
 
     public void setFeed_Cabecera(Integer feed_Cabecera) {
         this.feed_Cabecera = feed_Cabecera;
+    }
+
+    public Boolean getSoloPuntos() {
+        return soloPuntos;
+    }
+
+    public void setSoloPuntos(Boolean soloPuntos) {
+        this.soloPuntos = soloPuntos;
+    }
+
+    public Boolean getLecturar() {
+        return lecturar;
+    }
+
+    public void setLecturar(Boolean lecturar) {
+        this.lecturar = lecturar;
     }
 }

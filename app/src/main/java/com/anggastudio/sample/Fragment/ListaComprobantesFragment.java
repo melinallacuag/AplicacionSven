@@ -517,6 +517,10 @@ public class ListaComprobantesFragment extends Fragment  {
                     String nroLado1          = "";
                     Double mtoTotalEfectivo  = 0.00;
                     String nroTarjetaNotaD   = "";
+                    String nroTarjetaPuntos  = "";
+                    Double puntosGanados     = 0.00;
+                    Double puntosDisponibles = 0.00;
+
 
                     String Cajero1           = GlobalInfo.getuserName10;
                     String NroComprobante    = "";
@@ -554,6 +558,10 @@ public class ListaComprobantesFragment extends Fragment  {
                         nroLado1          = String.valueOf(reimpresion.getNroLado());
                         mtoTotalEfectivo  = Double.valueOf(reimpresion.getMtoTotalEfectivo());
                         nroTarjetaNotaD   = String.valueOf(reimpresion.getNroTarjetaNotaD());
+                        nroTarjetaPuntos  = String.valueOf(reimpresion.getNroTarjetaPuntos());
+                        puntosGanados     = Double.valueOf(reimpresion.getPuntosGanados());
+                        puntosDisponibles = Double.valueOf(reimpresion.getPuntosDisponibles());
+
                         NroComprobante    = serieDocumento1 + "-" + nroDocumento1;
 
                         /**  Verificar si ya existe un comprobante con esta NroComprobante **/
@@ -701,14 +709,16 @@ public class ListaComprobantesFragment extends Fragment  {
                         String finalTarjetaDS      = tarjetaDS1;
                         String finalNroComprobante = NroComprobante;
                         String finalMontoCanjeado  = String.format("%.2f", montoCanjeado1);
+                        Double finalMtoTotal = mtoTotal1;
+                        Double finalMontoCanjeado1 = montoCanjeado1;
+                        String finalNroTarjetaPuntos = nroTarjetaPuntos;
+                        Double finalPuntosGanados = puntosGanados;
+                        Double finalPuntosDisponibles = puntosDisponibles;
 
                         for (Map.Entry<String, List<Reimpresion>> entry : mapComprobantes.entrySet()) {
 
                             List<Reimpresion> productos = entry.getValue();
 
-
-                            Double finalMtoTotal = mtoTotal1;
-                            Double finalMontoCanjeado1 = montoCanjeado1;
                             Printama.with(getContext()).connect(printama -> {
 
                                 switch (tipopapel) {
@@ -1020,6 +1030,16 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -1129,6 +1149,16 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -1146,9 +1176,21 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
-                                                printama.setSmallText();
-                                                printama.addNewLine(1);
-                                                printama.setSmallText();
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos , Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados , Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }else{
+                                                    printama.setSmallText();
+                                                    printama.addNewLine(1);
+                                                }
                                                 printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                                                 printama.printTextlnBold("DNI    :" , Printama.LEFT);
                                                 printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
@@ -1491,7 +1533,16 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                     e.printStackTrace();
                                                 }
-
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -1621,6 +1672,16 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 } catch (WriterException e) {
                                                     e.printStackTrace();
                                                 }
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -1638,9 +1699,21 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
-                                                printama.setSmallText();
-                                                printama.addNewLine(1);
-                                                printama.setSmallText();
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos , Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados , Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }else{
+                                                    printama.setSmallText();
+                                                    printama.addNewLine(1);
+                                                }
                                                 printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                                                 printama.printTextlnBold("DNI    :" , Printama.LEFT);
                                                 printama.printTextlnBold("FIRMA  :" , Printama.LEFT);
@@ -1978,7 +2051,16 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                     e.printStackTrace();
                                                 }
-
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -2108,6 +2190,16 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 } catch (WriterException e) {
                                                     e.printStackTrace();
                                                 }
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }
                                                 printama.setSmallText();
                                                 printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
 
@@ -2125,9 +2217,21 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
-                                                printama.setSmallText();
-                                                printama.addNewLine(1);
-                                                printama.setSmallText();
+                                                if(GlobalInfo.getTerminalSoloPuntos10){
+                                                    if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                        printama.setSmallText();
+                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos , Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados , Printama.LEFT);
+                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.setSmallText();
+                                                        printama.addNewLine(1);
+                                                    }
+                                                }else{
+                                                    printama.setSmallText();
+                                                    printama.addNewLine(1);
+                                                }
                                                 printama.printTextlnBold("NOMBRE :" , Printama.LEFT);
                                                 printama.printTextlnBold("DNI    :" , Printama.LEFT);
                                                 printama.printTextlnBold("FIRMA  :" , Printama.LEFT);

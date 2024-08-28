@@ -35,7 +35,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -61,20 +60,40 @@
 
                 <Button
                     android:id="@+id/buscarListNFC"
-                    android:layout_width="250sp"
+                    android:layout_width="120sp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
-                    android:text="afiliados"
+                    android:text=" lista de descuentos"
                     android:textColor="@color/white"
-                    android:backgroundTint="@color/colorSecondary"
+                    android:backgroundTint="@color/colorNer"
                     android:textSize="10sp"
                     android:layout_marginTop="-4sp"
                     android:layout_marginStart="10sp"
                     android:layout_marginLeft="10sp"
                     app:cornerRadius="10sp" />
 
+                <Button
+                    android:id="@+id/buscarListPuntosNFC"
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="lista de puntos"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/purple_200"
+                    android:textSize="10sp"
+                    android:layout_marginTop="-4sp"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:visibility="gone"
+                    app:cornerRadius="10sp" />
+
             </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/alertCCliente"
@@ -95,8 +114,21 @@
                     android:inputType="number"
                     android:focusable="false"
                     android:textSize="12sp" />
+
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/textNumPuntos"
+                android:layout_width="120sp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:fontFamily="@font/nunito_black"
+                android:text="0"
+                android:textColor="@color/red_200"
+                android:textSize="16sp" />
+        </LinearLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/alertCRazSocial"
                 android:layout_width="match_parent"
@@ -219,6 +251,29 @@
                     android:id="@+id/inputCObservacion"
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="12sp"
+                    android:inputType="textCapCharacters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/alertMonto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresar Monto"
+                app:boxBackgroundMode="outline"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:endIconMode="clear_text"
+                android:visibility="gone"
+                android:layout_weight="1">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCMonto"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textSize="12sp"
+                    android:text="0"
                     android:inputType="textCapCharacters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

@@ -99,6 +99,7 @@ public class Login extends AppCompatActivity{
         /**
          * @OBTENER:Imei
          */
+
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
@@ -303,6 +304,8 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getTerminalValidarFechaHora10 = terminal.getValidar_Fecha_Hora();
                         GlobalInfo.getterminalNDespacho          = terminal.getNota_Despacho_Default();
                         GlobalInfo.getterminalFCabecera          = terminal.getFeed_Cabecera();
+                        GlobalInfo.getTerminalSoloPuntos10       = terminal.getSoloPuntos();
+                        GlobalInfo.getTerminalLecturar10         = terminal.getLecturar();
 
                         /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);

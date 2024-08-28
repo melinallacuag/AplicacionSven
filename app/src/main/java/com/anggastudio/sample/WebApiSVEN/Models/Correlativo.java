@@ -11,6 +11,8 @@ public class Correlativo {
     private Double  montoDescuento;
     private String  documentoVenta;
     private String  tipoDescuento;
+    private Double puntosGanados;
+    private Double puntosDisponibles;
 
     public String getTerminalID() {
         return terminalID;
@@ -78,5 +80,21 @@ public class Correlativo {
 
     public void setTipoDescuento(String tipoDescuento) {
         this.tipoDescuento = tipoDescuento;
+    }
+
+    public Double getPuntosGanados() {
+        return puntosGanados;
+    }
+
+    public void setPuntosGanados(Double puntosGanados) {
+        this.puntosGanados = puntosGanados;
+    }
+
+    public Double getPuntosDisponibles() {
+        return puntosDisponibles;
+    }
+
+    public void setPuntosDisponibles(Double puntosDisponibles) {
+        this.puntosDisponibles = puntosDisponibles;
     }
 }

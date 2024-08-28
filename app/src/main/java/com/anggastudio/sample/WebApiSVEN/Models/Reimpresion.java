@@ -33,6 +33,9 @@ public class Reimpresion {
     private String nroLado;
     private Double mtoTotalEfectivo;
     private String nroTarjetaNotaD;
+    private String nroTarjetaPuntos;
+    private Double puntosGanados;
+    private Double puntosDisponibles;
 
     public String getFechaDocumento() {
         return fechaDocumento;
@@ -280,5 +283,29 @@ public class Reimpresion {
 
     public void setNroTarjetaNotaD(String nroTarjetaNotaD) {
         this.nroTarjetaNotaD = nroTarjetaNotaD;
+    }
+
+    public String getNroTarjetaPuntos() {
+        return nroTarjetaPuntos;
+    }
+
+    public void setNroTarjetaPuntos(String nroTarjetaPuntos) {
+        this.nroTarjetaPuntos = nroTarjetaPuntos;
+    }
+
+    public Double getPuntosGanados() {
+        return puntosGanados;
+    }
+
+    public void setPuntosGanados(Double puntosGanados) {
+        this.puntosGanados = puntosGanados;
+    }
+
+    public Double getPuntosDisponibles() {
+        return puntosDisponibles;
+    }
+
+    public void setPuntosDisponibles(Double puntosDisponibles) {
+        this.puntosDisponibles = puntosDisponibles;
     }
 }
