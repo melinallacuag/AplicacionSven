@@ -110,6 +110,7 @@ public class ListaComprobantesFragment extends Fragment  {
         BuscarRazonSocial       = view.findViewById(R.id.BuscarRazonSocial);
         btnConsultaComprobantes = view.findViewById(R.id.btnConsultaComprobantes);
 
+        btnConsultaComprobantes.setVisibility(View.GONE);
         BuscarRazonSocial.setIconifiedByDefault(false);
 
         /**
@@ -676,6 +677,8 @@ public class ListaComprobantesFragment extends Fragment  {
                         Numero_Letras NumLetra = new Numero_Letras();
                         String LetraSoles = NumLetra.Convertir(String.valueOf(mtoTotal1), true);
 
+                        String OpGravadoF =  String.format("%.2f",0.00);
+
                         /** Generar codigo QR */
                         StringBuilder qrSVEN = new StringBuilder();
                         qrSVEN.append(RUCCompany + "|".toString());
@@ -924,12 +927,32 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                             case "01":
 
-                                                if (finalMtoDescuento > 0) {
-                                                    printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                if (GlobalInfo.getsettingImpuestoID110 == 20) {
+                                                    if (finalMtoDescuento > 0) {
+                                                        printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                        printama.printTextln("OP. GRAVADAS: S/  " + OpGravadoF, Printama.RIGHT);
+                                                        printama.printTextln("OP. EXONERADAS: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL A PAGAR: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                    }else{
+                                                        printama.printTextln("OP. GRAVADAS: S/ " + OpGravadoF, Printama.RIGHT);
+                                                        printama.printTextln("OP. EXONERADAS: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                    }
+                                                }else{
+                                                    if (finalMtoDescuento > 0) {
+                                                        printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                        printama.printTextln("OP. GRAVADAS: S/  " + MtoSubTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextln("TOTAL A PAGAR: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                    }else{
+                                                        printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                    }
                                                 }
-                                                printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
-                                                printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
-                                                printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -1015,6 +1038,16 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                                 break;
 
+                                                            case 7:
+
+                                                                if (finalMtoTotalEfectivo > 0){
+                                                                    printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                                }
+                                                                printama.printTextlnBold("TRANSFERENCIA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
+                                                                printama.setSmallText();
+                                                                printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
+                                                                break;
+
                                                         }
 
                                                         break;
@@ -1041,7 +1074,14 @@ public class ListaComprobantesFragment extends Fragment  {
                                                     }
                                                 }
                                                 printama.setSmallText();
-                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                                if (GlobalInfo.getsettingImpuestoID110 == 20) {
+                                                    printama.printTextln("Bienes transferidos en la Amazonia para ser\n"+"consumidos en la misma.");
+                                                    printama.setSmallText();
+                                                    printSeparatorLine(printama, tipopapel);
+                                                    printama.addNewLine(1);
+                                                    printama.setSmallText();
+                                                }
+                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                                 break;
 
@@ -1049,13 +1089,15 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                 if (finalMtoDescuento > 0) {
                                                     printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                    printama.printTextlnBold("TOTAL A PAGAR: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }else{
+                                                    printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                                 }
 
                                                 if(finalMtoTotal <= 0.00 && finalMontoCanjeado1 > 0.00 ){
                                                     printama.printTextlnBold("OP. GRATUITAS: S/ " + finalMontoCanjeado, Printama.RIGHT);
                                                 }
 
-                                                printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -1137,6 +1179,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                                                 printama.setSmallText();
                                                                 printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
                                                                 break;
+                                                            case 7:
+
+                                                                if (finalMtoTotalEfectivo > 0){
+                                                                    printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                                }
+                                                                printama.printTextlnBold("TRANSFERENCIA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
+                                                                printama.setSmallText();
+                                                                printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
+                                                                break;
                                                         }
 
                                                         break;
@@ -1160,7 +1211,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                                     }
                                                 }
                                                 printama.setSmallText();
-                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                                 break;
 
@@ -1172,7 +1223,12 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                             case "99":
 
-                                                printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                if (finalMtoDescuento > 0) {
+                                                    printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                    printama.printTextlnBold("TOTAL A PAGAR: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }else{
+                                                    printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -1404,12 +1460,32 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                             case "01":
 
-                                                if (finalMtoDescuento > 0) {
-                                                    printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                if (GlobalInfo.getsettingImpuestoID110 == 20) {
+                                                    if (finalMtoDescuento > 0) {
+                                                        printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                        printama.printTextln("OP. GRAVADAS: S/  " + OpGravadoF, Printama.RIGHT);
+                                                        printama.printTextln("OP. EXONERADAS: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL A PAGAR: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                    }else{
+                                                        printama.printTextln("OP. GRAVADAS: S/  " + OpGravadoF, Printama.RIGHT);
+                                                        printama.printTextln("OP. EXONERADAS: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                    }
+                                                }else{
+                                                    if (finalMtoDescuento > 0) {
+                                                        printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                        printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL A PAGAR: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                    }else{
+                                                        printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                    }
                                                 }
-                                                printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
-                                                printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
-                                                printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -1494,6 +1570,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                                                 printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
 
                                                                 break;
+                                                            case 7:
+
+                                                                if (finalMtoTotalEfectivo > 0){
+                                                                    printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                                }
+                                                                printama.printTextlnBold("TRANSFERENCIA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
+                                                                printama.setSmallText();
+                                                                printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
+                                                                break;
 
                                                         }
 
@@ -1510,28 +1595,30 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
-                                                QRCodeWriter writer = new QRCodeWriter();
-                                                BitMatrix bitMatrix;
-                                                try {
+                                                if(GlobalInfo.getVistaQR){
+                                                    QRCodeWriter writer = new QRCodeWriter();
+                                                    BitMatrix bitMatrix;
+                                                    try {
 
-                                                    bitMatrix = writer.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
-                                                    int width = bitMatrix.getWidth();
-                                                    int height = bitMatrix.getHeight();
-                                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                                    for (int x = 0; x < width; x++) {
-                                                        for (int y = 0; y < height; y++) {
-                                                            int color = Color.WHITE;
-                                                            if (bitMatrix.get(x, y)) color = Color.BLACK;
-                                                            bitmap.setPixel(x, y, color);
+                                                        bitMatrix = writer.encode(qrSven, BarcodeFormat.QR_CODE, 150, 150);
+                                                        int width = bitMatrix.getWidth();
+                                                        int height = bitMatrix.getHeight();
+                                                        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                                        for (int x = 0; x < width; x++) {
+                                                            for (int y = 0; y < height; y++) {
+                                                                int color = Color.WHITE;
+                                                                if (bitMatrix.get(x, y)) color = Color.BLACK;
+                                                                bitmap.setPixel(x, y, color);
+                                                            }
                                                         }
-                                                    }
-                                                    if (bitmap != null) {
-                                                        printama.printImage(bitmap);
-                                                    }
+                                                        if (bitmap != null) {
+                                                            printama.printImage(bitmap);
+                                                        }
 
-                                                } catch (WriterException e) {
+                                                    } catch (WriterException e) {
 
-                                                    e.printStackTrace();
+                                                        e.printStackTrace();
+                                                    }
                                                 }
                                                 if(GlobalInfo.getTerminalSoloPuntos10){
                                                     if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
@@ -1544,7 +1631,14 @@ public class ListaComprobantesFragment extends Fragment  {
                                                     }
                                                 }
                                                 printama.setSmallText();
-                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                                if (GlobalInfo.getsettingImpuestoID110 == 20) {
+                                                    printama.printTextln("Bienes transferidos en la Amazonia para ser\n"+"consumidos en la misma.");
+                                                    printama.setSmallText();
+                                                    printSeparatorLine(printama, tipopapel);
+                                                    printama.addNewLine(1);
+                                                    printama.setSmallText();
+                                                }
+                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                                 break;
 
@@ -1552,13 +1646,14 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                 if (finalMtoDescuento > 0) {
                                                     printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                    printama.printTextlnBold("TOTAL A PAGAR: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }else{
+                                                    printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                                 }
 
                                                 if(finalMtoTotal <= 0.00 && finalMontoCanjeado1 > 0.00 ){
                                                     printama.printTextlnBold("OP. GRATUITAS: S/ " + finalMontoCanjeado, Printama.RIGHT);
                                                 }
-
-                                                printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -1640,6 +1735,16 @@ public class ListaComprobantesFragment extends Fragment  {
                                                                 printama.setSmallText();
                                                                 printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
                                                                 break;
+
+                                                            case 7:
+
+                                                                if (finalMtoTotalEfectivo > 0){
+                                                                    printama.printTextlnBold("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                                }
+                                                                printama.printTextlnBold("TRANSFERENCIA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
+                                                                printama.setSmallText();
+                                                                printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
+                                                                break;
                                                         }
 
                                                         break;
@@ -1652,25 +1757,27 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
-                                                QRCodeWriter writerB = new QRCodeWriter();
-                                                BitMatrix bitMatrixB;
-                                                try {
-                                                    bitMatrixB = writerB.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
-                                                    int width = bitMatrixB.getWidth();
-                                                    int height = bitMatrixB.getHeight();
-                                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                                    for (int x = 0; x < width; x++) {
-                                                        for (int y = 0; y < height; y++) {
-                                                            int color = Color.WHITE;
-                                                            if (bitMatrixB.get(x, y)) color = Color.BLACK;
-                                                            bitmap.setPixel(x, y, color);
+                                                if(GlobalInfo.getVistaQR){
+                                                    QRCodeWriter writerB = new QRCodeWriter();
+                                                    BitMatrix bitMatrixB;
+                                                    try {
+                                                        bitMatrixB = writerB.encode(qrSven, BarcodeFormat.QR_CODE, 150, 150);
+                                                        int width = bitMatrixB.getWidth();
+                                                        int height = bitMatrixB.getHeight();
+                                                        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                                        for (int x = 0; x < width; x++) {
+                                                            for (int y = 0; y < height; y++) {
+                                                                int color = Color.WHITE;
+                                                                if (bitMatrixB.get(x, y)) color = Color.BLACK;
+                                                                bitmap.setPixel(x, y, color);
+                                                            }
                                                         }
+                                                        if (bitmap != null) {
+                                                            printama.printImage(bitmap);
+                                                        }
+                                                    } catch (WriterException e) {
+                                                        e.printStackTrace();
                                                     }
-                                                    if (bitmap != null) {
-                                                        printama.printImage(bitmap);
-                                                    }
-                                                } catch (WriterException e) {
-                                                    e.printStackTrace();
                                                 }
                                                 if(GlobalInfo.getTerminalSoloPuntos10){
                                                     if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
@@ -1683,7 +1790,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                                     }
                                                 }
                                                 printama.setSmallText();
-                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                                 break;
 
@@ -1695,7 +1802,12 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                             case "99":
 
-                                                printama.printTextlnBold("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                if (finalMtoDescuento > 0) {
+                                                    printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                    printama.printTextlnBold("TOTAL A PAGAR: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }else{
+                                                    printama.printTextlnBold("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -1922,12 +2034,32 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                             case "01":
 
-                                                if (finalMtoDescuento > 0) {
-                                                    printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                if (GlobalInfo.getsettingImpuestoID110 == 20) {
+                                                    if (finalMtoDescuento > 0) {
+                                                        printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                        printama.printTextln("OP. GRAVADAS: S/  " + OpGravadoF, Printama.RIGHT);
+                                                        printama.printTextln("OP. EXONERADAS: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextln("TOTAL A PAGAR: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                    }else{
+                                                        printama.printTextln("OP. GRAVADAS: S/ " + OpGravadoF, Printama.RIGHT);
+                                                        printama.printTextln("OP. EXONERADAS: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                    }
+                                                }else{
+                                                    if (finalMtoDescuento > 0) {
+                                                        printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                        printama.printTextln("OP. GRAVADAS: S/  " + MtoSubTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextln("TOTAL A PAGAR: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                    }else{
+                                                        printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
+                                                        printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
+                                                        printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF , Printama.RIGHT);
+                                                    }
                                                 }
-                                                printama.printTextln("OP. GRAVADAS: S/ " + MtoSubTotalFF, Printama.RIGHT);
-                                                printama.printTextln("I.G.V. 18%: S/  " + MtoImpuestoFF, Printama.RIGHT);
-                                                printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -2012,6 +2144,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                                                 printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
 
                                                                 break;
+                                                            case 7:
+
+                                                                if (finalMtoTotalEfectivo > 0){
+                                                                    printama.printTextln("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                                }
+                                                                printama.printTextln("TRANSFERENCIA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
+                                                                printama.setSmallText();
+                                                                printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
+                                                                break;
 
                                                         }
 
@@ -2028,41 +2169,50 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
-                                                QRCodeWriter writer = new QRCodeWriter();
-                                                BitMatrix bitMatrix;
-                                                try {
+                                                if(GlobalInfo.getVistaQR){
+                                                    QRCodeWriter writer = new QRCodeWriter();
+                                                    BitMatrix bitMatrix;
+                                                    try {
 
-                                                    bitMatrix = writer.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
-                                                    int width = bitMatrix.getWidth();
-                                                    int height = bitMatrix.getHeight();
-                                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                                    for (int x = 0; x < width; x++) {
-                                                        for (int y = 0; y < height; y++) {
-                                                            int color = Color.WHITE;
-                                                            if (bitMatrix.get(x, y)) color = Color.BLACK;
-                                                            bitmap.setPixel(x, y, color);
+                                                        bitMatrix = writer.encode(qrSven, BarcodeFormat.QR_CODE, 150, 150);
+                                                        int width = bitMatrix.getWidth();
+                                                        int height = bitMatrix.getHeight();
+                                                        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                                        for (int x = 0; x < width; x++) {
+                                                            for (int y = 0; y < height; y++) {
+                                                                int color = Color.WHITE;
+                                                                if (bitMatrix.get(x, y)) color = Color.BLACK;
+                                                                bitmap.setPixel(x, y, color);
+                                                            }
                                                         }
-                                                    }
-                                                    if (bitmap != null) {
-                                                        printama.printImage(Printama.RIGHT,bitmap,200);
-                                                    }
+                                                        if (bitmap != null) {
+                                                            printama.printImage(Printama.RIGHT,bitmap,150);
+                                                        }
 
-                                                } catch (WriterException e) {
+                                                    } catch (WriterException e) {
 
-                                                    e.printStackTrace();
+                                                        e.printStackTrace();
+                                                    }
                                                 }
                                                 if(GlobalInfo.getTerminalSoloPuntos10){
                                                     if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
                                                         printama.setSmallText();
-                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
-                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
-                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.printTextln("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextln("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextln("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
                                                         printama.setSmallText();
                                                         printama.addNewLine(1);
                                                     }
                                                 }
                                                 printama.setSmallText();
-                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                                if (GlobalInfo.getsettingImpuestoID110 == 20) {
+                                                    printama.printTextln("Bienes transferidos en la Amazonia para ser\n"+"consumidos en la misma.");
+                                                    printama.setSmallText();
+                                                    printSeparatorLine(printama, tipopapel);
+                                                    printama.addNewLine(1);
+                                                    printama.setSmallText();
+                                                }
+                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                                 break;
 
@@ -2070,13 +2220,15 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                 if (finalMtoDescuento > 0) {
                                                     printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                    printama.printTextln("TOTAL A PAGAR: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }else{
+                                                    printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                                 }
 
                                                 if(finalMtoTotal <= 0.00 && finalMontoCanjeado1 > 0.00 ){
                                                     printama.printTextlnBold("OP. GRATUITAS: S/ " + finalMontoCanjeado, Printama.RIGHT);
                                                 }
 
-                                                printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -2158,6 +2310,15 @@ public class ListaComprobantesFragment extends Fragment  {
                                                                 printama.setSmallText();
                                                                 printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
                                                                 break;
+                                                            case 7:
+
+                                                                if (finalMtoTotalEfectivo > 0){
+                                                                    printama.printTextln("EFECTIVO: S/ " + MTotalEfectivo , Printama.RIGHT);
+                                                                }
+                                                                printama.printTextln("TRANSFERENCIA: S/ " + MtoTotalPagoFF, Printama.RIGHT);
+                                                                printama.setSmallText();
+                                                                printama.printTextln("NRO.OPERACION:" + finalTarjetaDS, Printama.LEFT);
+                                                                break;
                                                         }
 
                                                         break;
@@ -2170,38 +2331,40 @@ public class ListaComprobantesFragment extends Fragment  {
                                                 printama.setSmallText();
                                                 printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                                                 printama.printTextln("                 ", Printama.CENTER);
-                                                QRCodeWriter writerB = new QRCodeWriter();
-                                                BitMatrix bitMatrixB;
-                                                try {
-                                                    bitMatrixB = writerB.encode(qrSven, BarcodeFormat.QR_CODE, 200, 200);
-                                                    int width = bitMatrixB.getWidth();
-                                                    int height = bitMatrixB.getHeight();
-                                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                                    for (int x = 0; x < width; x++) {
-                                                        for (int y = 0; y < height; y++) {
-                                                            int color = Color.WHITE;
-                                                            if (bitMatrixB.get(x, y)) color = Color.BLACK;
-                                                            bitmap.setPixel(x, y, color);
+                                                if(GlobalInfo.getVistaQR){
+                                                    QRCodeWriter writerB = new QRCodeWriter();
+                                                    BitMatrix bitMatrixB;
+                                                    try {
+                                                        bitMatrixB = writerB.encode(qrSven, BarcodeFormat.QR_CODE, 150, 150);
+                                                        int width = bitMatrixB.getWidth();
+                                                        int height = bitMatrixB.getHeight();
+                                                        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                                        for (int x = 0; x < width; x++) {
+                                                            for (int y = 0; y < height; y++) {
+                                                                int color = Color.WHITE;
+                                                                if (bitMatrixB.get(x, y)) color = Color.BLACK;
+                                                                bitmap.setPixel(x, y, color);
+                                                            }
                                                         }
+                                                        if (bitmap != null) {
+                                                            printama.printImage(Printama.RIGHT,bitmap,150);
+                                                        }
+                                                    } catch (WriterException e) {
+                                                        e.printStackTrace();
                                                     }
-                                                    if (bitmap != null) {
-                                                        printama.printImage(Printama.RIGHT,bitmap,200);
-                                                    }
-                                                } catch (WriterException e) {
-                                                    e.printStackTrace();
                                                 }
                                                 if(GlobalInfo.getTerminalSoloPuntos10){
                                                     if(!finalNroTarjetaPuntos.isEmpty() && !finalNroTarjetaPuntos.equals("1")){
                                                         printama.setSmallText();
-                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
-                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
-                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.printTextln("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos, Printama.LEFT);
+                                                        printama.printTextln("PUNTOS GANADOS     : " + finalPuntosGanados, Printama.LEFT);
+                                                        printama.printTextln("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
                                                         printama.setSmallText();
                                                         printama.addNewLine(1);
                                                     }
                                                 }
                                                 printama.setSmallText();
-                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                                printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                                 break;
 
@@ -2213,7 +2376,13 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                             case "99":
 
-                                                printama.printTextln("TOTAL VENTA: S/ "+ MtoTotalFF , Printama.RIGHT);
+                                                if (finalMtoDescuento > 0) {
+                                                    printama.printTextln("DESCUENTO: S/ " + MtoDescuento, Printama.RIGHT);
+                                                    printama.printTextln("TOTAL A PAGAR: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }else{
+                                                    printama.printTextln("TOTAL VENTA: S/ " + MtoTotalFF, Printama.RIGHT);
+                                                }
+
                                                 printama.setSmallText();
                                                 printSeparatorLine(printama, tipopapel);
                                                 printama.addNewLine(1);
@@ -2222,9 +2391,9 @@ public class ListaComprobantesFragment extends Fragment  {
                                                         printama.setSmallText();
                                                         printama.addNewLine(1);
                                                         printama.setSmallText();
-                                                        printama.printTextlnBold("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos , Printama.LEFT);
-                                                        printama.printTextlnBold("PUNTOS GANADOS     : " + finalPuntosGanados , Printama.LEFT);
-                                                        printama.printTextlnBold("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
+                                                        printama.printTextln("NRO. TARJETA PUNTOS : " + finalNroTarjetaPuntos , Printama.LEFT);
+                                                        printama.printTextln("PUNTOS GANADOS     : " + finalPuntosGanados , Printama.LEFT);
+                                                        printama.printTextln("PUNTOS DISPONIBLES : " + finalPuntosDisponibles, Printama.LEFT);
                                                         printama.setSmallText();
                                                         printama.addNewLine(1);
                                                     }

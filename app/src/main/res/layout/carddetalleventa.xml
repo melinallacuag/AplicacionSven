@@ -186,6 +186,26 @@
                 android:textSize="8sp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/textDCredito"
+                android:layout_width="50sp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_extrabold"
+                android:gravity="center"
+                android:textColor="@color/blue"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textvehiculoID"
+                android:layout_width="50sp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_extrabold"
+                android:gravity="center"
+                android:textColor="@color/blue"
+                android:textSize="8sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </HorizontalScrollView>
 </androidx.cardview.widget.CardView>

@@ -20,6 +20,8 @@ public class DetalleVenta {
     private Double mtoSaldoCredito;
     private Double ptosDisponible;
     private String rfid;
+    private Integer diasCredito;
+    private Integer vehiculoID;
 
     public DetalleVenta(String cara, String tipoPago, Double impuesto, String nroPlaca, String tarjetaPuntos) {
         this.cara = cara;
@@ -171,5 +173,21 @@ public class DetalleVenta {
 
     public void setRfid(String rfid) {
         this.rfid = rfid;
+    }
+
+    public Integer getDiasCredito() {
+        return diasCredito;
+    }
+
+    public void setDiasCredito(Integer diasCredito) {
+        this.diasCredito = diasCredito;
+    }
+
+    public Integer getVehiculoID() {
+        return vehiculoID;
+    }
+
+    public void setVehiculoID(Integer vehiculoID) {
+        this.vehiculoID = vehiculoID;
     }
 }

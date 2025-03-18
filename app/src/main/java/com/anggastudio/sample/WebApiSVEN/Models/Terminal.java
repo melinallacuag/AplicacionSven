@@ -45,6 +45,12 @@ public class Terminal {
     private Integer feed_Cabecera;
     private Boolean soloPuntos;
     private Boolean lecturar;
+    private Boolean cierreX_VProducto_Otros;
+    private Boolean bloqueoSerafin;
+    private Boolean bloqueoConfigLados;
+    private Boolean rfidPuntos;
+    private Boolean mostrarQr;
+    private Boolean imprimirDoble;
 
     public String getTerminalID() {
         return terminalID;
@@ -388,5 +394,53 @@ public class Terminal {
 
     public void setLecturar(Boolean lecturar) {
         this.lecturar = lecturar;
+    }
+
+    public Boolean getCierreX_VProducto_Otros() {
+        return cierreX_VProducto_Otros;
+    }
+
+    public void setCierreX_VProducto_Otros(Boolean cierreX_VProducto_Otros) {
+        this.cierreX_VProducto_Otros = cierreX_VProducto_Otros;
+    }
+
+    public Boolean getBloqueoSerafin() {
+        return bloqueoSerafin;
+    }
+
+    public void setBloqueoSerafin(Boolean bloqueoSerafin) {
+        this.bloqueoSerafin = bloqueoSerafin;
+    }
+
+    public Boolean getBloqueoConfigLados() {
+        return bloqueoConfigLados;
+    }
+
+    public void setBloqueoConfigLados(Boolean bloqueoConfigLados) {
+        this.bloqueoConfigLados = bloqueoConfigLados;
+    }
+
+    public Boolean getRfidPuntos() {
+        return rfidPuntos;
+    }
+
+    public void setRfidPuntos(Boolean rfidPuntos) {
+        this.rfidPuntos = rfidPuntos;
+    }
+
+    public Boolean getMostrarQr() {
+        return mostrarQr;
+    }
+
+    public void setMostrarQr(Boolean mostrarQr) {
+        this.mostrarQr = mostrarQr;
+    }
+
+    public Boolean getImprimirDoble() {
+        return imprimirDoble;
+    }
+
+    public void setImprimirDoble(Boolean imprimirDoble) {
+        this.imprimirDoble = imprimirDoble;
     }
 }

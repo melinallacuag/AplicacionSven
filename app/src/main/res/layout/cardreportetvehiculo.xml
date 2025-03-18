@@ -6,47 +6,38 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textNumDocumento"
-        android:layout_width="410sp"
+        android:id="@+id/textTVehiculo"
+        android:layout_width="420sp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/nunito_extrabold"
         android:gravity="start"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
+        android:layout_gravity="center"
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textTipo"
-        android:layout_width="370sp"
+        android:id="@+id/textVolumen"
+        android:layout_width="380sp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/nunito_extrabold"
         android:gravity="center"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
+        android:layout_gravity="center"
+        android:text=""
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textReferencia"
-        android:layout_width="360sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fontFamily="@font/nunito_extrabold"
-        android:gravity="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="17sp"
-        android:textStyle="bold" />
-
-
-
-    <TextView
-        android:id="@+id/textMonto"
-        android:layout_width="360sp"
+        android:id="@+id/textSoles"
+        android:layout_width="350sp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/nunito_extrabold"
         android:gravity="end"
+        android:layout_gravity="center"
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
         android:textStyle="bold" />

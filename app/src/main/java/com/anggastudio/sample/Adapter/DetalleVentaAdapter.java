@@ -53,6 +53,8 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
         holder.textSaldoCredito.setText(String.valueOf(detalleVentaList.get(position).getMtoSaldoCredito()));
         holder.textPtosDisponibles.setText(String.valueOf(detalleVentaList.get(position).getPtosDisponible()));
         holder.textRfid.setText(detalleVentaList.get(position).getRfid());
+        holder.textDCredito.setText(String.valueOf(detalleVentaList.get(position).getDiasCredito()));
+        holder.textvehiculoID.setText(String.valueOf(detalleVentaList.get(position).getVehiculoID()));
     }
 
     @Override
@@ -80,6 +82,8 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
         private TextView textSaldoCredito;
         private TextView textPtosDisponibles;
         private TextView textRfid;
+        private TextView textDCredito;
+        private TextView textvehiculoID;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
@@ -104,6 +108,8 @@ public class DetalleVentaAdapter extends RecyclerView.Adapter<DetalleVentaAdapte
             textSaldoCredito     = itemView.findViewById(R.id.textSaldoCredito);
             textPtosDisponibles  = itemView.findViewById(R.id.textPtosDisponibles);
             textRfid             = itemView.findViewById(R.id.textRfid);
+            textDCredito         = itemView.findViewById(R.id.textDCredito);
+            textvehiculoID       = itemView.findViewById(R.id.textvehiculoID);
         }
     }
 }

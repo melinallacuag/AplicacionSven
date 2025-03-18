@@ -1,12 +1,18 @@
 package com.anggastudio.sample.Fragment;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -21,11 +27,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anggastudio.printama.Printama;
+import com.anggastudio.sample.Adapter.ListaComprobanteAdapter;
 import com.anggastudio.sample.Adapter.TipoDocumentoAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Reimpresion;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoDocumento;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
@@ -64,7 +72,7 @@ public class ConsultaComprobantesFragment extends Fragment {
     RadioGroup radioFormaPago;
     RadioButton radioEfectivo,radioTarjeta,radioCredito,radioNombreFormaPago;
 
-    Button btnConsultar,btnGrabaImprimir,btnReimprimir;
+    Button btnConsultar,btnGrabaImprimir;
 
     TextView textMensajePEfectivo,textCTotal,textCAnulado;
 
@@ -122,10 +130,10 @@ public class ConsultaComprobantesFragment extends Fragment {
 
         btnConsultar      = view.findViewById(R.id.btnConsultar);
         btnGrabaImprimir  = view.findViewById(R.id.btnGrabaImprimir);
-        btnReimprimir     = view.findViewById(R.id.btnReimprimir);
+      //  btnReimprimir     = view.findViewById(R.id.btnReimprimir);
 
 
-        btnReimprimir.setEnabled(false);
+     //   btnReimprimir.setEnabled(false);
         /**
          *
          */
@@ -136,10 +144,6 @@ public class ConsultaComprobantesFragment extends Fragment {
                 GlobalInfo.getConsultaComprobanteNroSerie      = inputNroSerie.getText().toString();
                 GlobalInfo.getConsultaComprobanteNroDocumento  = inputNroDocumento.getText().toString();
                 GlobalInfo.getConsultaComprobanteTipoDocumento = tipoDocumento.getCardID();
-
-                String nropuntos = "";
-                String direccion = "";
-                String observacion = "";
 
                 if (GlobalInfo.getConsultaComprobanteNroSerie.isEmpty()) {
                     alertNroSerie.setError("* El campo Nro. Serie es obligatorio");
@@ -156,18 +160,10 @@ public class ConsultaComprobantesFragment extends Fragment {
                     inputNroLado.setText("05");
                     inputNroPlaca.setText("000-0000");
                     inputIdCliente.setText("11111111");
-
-                    if (nropuntos == null || nropuntos.isEmpty()) {
-                        // Si está vacío o nulo, limpiar inputNroTPuntos
-                        inputNroTPuntos.getText().clear();
-                    } else {
-                        // Si no está vacío, establecer el texto en inputNroTPuntos
-                        inputNroTPuntos.setText(nropuntos);
-                    }
-                    inputNroTPuntos.setText(" ");
+                    inputNroTPuntos.setText("");
                     inputRazSocial.setText("CLIENTE VARIOS");
-                    inputDireccion.setText(" ");
-                    inputObservacion.setText(" ");
+                    inputDireccion.setText("");
+                    inputObservacion.setText("");
 
                     int cardID = 4;
                     switch (cardID) {
@@ -216,7 +212,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                     inputOperacion.setText("2545");
                     inputPEfectivo.setText("0");
 
-                    btnReimprimir.setEnabled(true);
+                  //  btnReimprimir.setEnabled(true);
 
                 }else{
                     Toast.makeText(getContext(), "No se encontro comprobante", Toast.LENGTH_SHORT).show();
@@ -234,19 +230,19 @@ public class ConsultaComprobantesFragment extends Fragment {
                     inputOperacion.getText().clear();
                     radioFormaPago.check(radioEfectivo.getId());
 
-                    btnReimprimir.setEnabled(false);
+                   // btnReimprimir.setEnabled(false);
                 }
             }
         });
 
-        btnReimprimir.setOnClickListener(new View.OnClickListener() {
+       /** btnReimprimir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Reimpresion(GlobalInfo.getTipoPapel10, String.valueOf(String.format("%02d", GlobalInfo.getConsultaComprobanteTipoDocumento)),GlobalInfo.getConsultaComprobanteNroSerie, GlobalInfo.getConsultaComprobanteNroDocumento);
                 Toast.makeText(getContext(), String.valueOf(GlobalInfo.getConsultaComprobanteTipoDocumento) + GlobalInfo.getConsultaComprobanteNroSerie + GlobalInfo.getConsultaComprobanteNroDocumento, Toast.LENGTH_SHORT).show();
                 btnReimprimir.setEnabled(false);
             }
-        });
+        });**/
 
         /**
          * @SELECCIONAR:OpciónFormaPago
@@ -344,10 +340,8 @@ public class ConsultaComprobantesFragment extends Fragment {
         List<TipoDocumento> cardTipoDocumento = new ArrayList<>();
 
         for (int i = 0; i < 1; i++){
-            cardTipoDocumento.add(new TipoDocumento(99,"NOTA DE DESPACHO"));
             cardTipoDocumento.add(new TipoDocumento(03,"BOLETA"));
             cardTipoDocumento.add(new TipoDocumento(01,"FACTURA"));
-            cardTipoDocumento.add(new TipoDocumento(98,"SERAFÍN"));
         }
 
         Resources res = getResources();
@@ -366,6 +360,38 @@ public class ConsultaComprobantesFragment extends Fragment {
         SpinnerTPago.setAdapter(tipoPagoAdapter);
 
     }
+
+
+    /** API SERVICE - Card Consultar Venta */
+    private void findConsultarVenta(String id){
+
+        Call<List<ListaComprobante>> call = mAPIService.findConsultarVenta(id);
+
+        call.enqueue(new Callback<List<ListaComprobante>>() {
+            @Override
+            public void onResponse(Call<List<ListaComprobante>> call, Response<List<ListaComprobante>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ListaComprobante>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Consulta Venta - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     /** API SERVICE - Reimprimir Comprobante */
     private void Reimpresion(String tipopapel,String tipodoc, String seriedoc, String nrodoc) {
@@ -784,7 +810,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                             }
 
                                             printama.setSmallText();
-                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                             break;
 
@@ -908,7 +934,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                                 e.printStackTrace();
                                             }
                                             printama.setSmallText();
-                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                             break;
 
@@ -1218,7 +1244,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                             }
 
                                             printama.setSmallText();
-                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                             break;
 
@@ -1342,7 +1368,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                                 e.printStackTrace();
                                             }
                                             printama.setSmallText();
-                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                             break;
 
@@ -1648,7 +1674,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                             }
 
                                             printama.setSmallText();
-                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                             break;
 
@@ -1772,7 +1798,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                                 e.printStackTrace();
                                             }
                                             printama.setSmallText();
-                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "http://4-fact.com/sven/auth/consulta");
+                                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n" + "https://cpesven.apisven.com");
 
                                             break;
 

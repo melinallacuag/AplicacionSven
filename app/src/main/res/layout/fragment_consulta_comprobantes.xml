@@ -506,26 +506,12 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/colorNer"
                 android:fontFamily="@font/nunito_extrabold"
-                android:text="GRABAR E IMPRIMIR"
+                android:text="GRABAR"
                 android:textAllCaps="true"
                 android:textColor="#fff"
                 android:textSize="10sp"
                 app:cornerRadius="10sp" />
 
-            <Button
-                android:id="@+id/btnReimprimir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="2sp"
-                android:layout_weight="1"
-                android:fontFamily="@font/nunito_extrabold"
-                android:text="reimprimir"
-                android:textAllCaps="true"
-                android:backgroundTint="@color/colorSuccess"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:cornerRadius="10sp" />
         </LinearLayout>
 
 

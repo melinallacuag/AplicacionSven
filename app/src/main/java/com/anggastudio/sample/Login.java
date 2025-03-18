@@ -4,7 +4,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,6 +23,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
@@ -42,14 +46,25 @@ public class Login extends AppCompatActivity{
     private APIService mAPIService;
     private NFCUtil nfcUtil;
 
-    ImageButton configuracion,btnConfigurarLados;
+    ImageButton configuracion,btnConfigurarLados,btnConfigurarPrecios;
     Button btniniciar;
     TextInputEditText inputUsuario, inputContraseña;
     TextInputLayout alertuser,alertpassword;
     TextView imeii,terminalId;
     String usuarioUser,contraseñaUser;
 
+    Dialog modalForzarEntrada;
+
+    Button btnCancelarCTFEntrada,btnAceptarCTFEntrada;
+    TextInputEditText usuarioEntrada, contraseñaEntrada;
+
+    TextInputLayout alertuserEntrada,alertpasswordEntrada;
+    String usuarioUserEntrada,contraseñaUserEntrada;
+
+
     List<Users> usersList;
+    List<Users> usersEntradaList;
+
     List<Terminal> terminalList;
     List<Company> companyList;
     List<Setting> settingList;
@@ -70,11 +85,80 @@ public class Login extends AppCompatActivity{
         alertpassword   = findViewById(R.id.textcontraseña);
         configuracion   = findViewById(R.id.btnconfiguracion);
         btnConfigurarLados = findViewById(R.id.btnConfigurarLados);
+        btnConfigurarPrecios = findViewById(R.id.btnConfigurarPrecios);
         imeii           = findViewById(R.id.imei);
         terminalId     = findViewById(R.id.terminalId);
 
         configuracion.setColorFilter(getResources().getColor(R.color.white));
         btnConfigurarLados.setColorFilter(getResources().getColor(R.color.white));
+
+        modalForzarEntrada  = new Dialog(Login.this);
+        modalForzarEntrada.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        modalForzarEntrada.setContentView(R.layout.modal_forzarentrada);
+        modalForzarEntrada.setCancelable(false);
+
+        /**
+         * @CONFIGURAR:Precios
+         */
+        btnConfigurarPrecios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    if (!modalForzarEntrada.isShowing()) {
+                        modalForzarEntrada.show();
+                    }
+
+                    btnCancelarCTFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                    btnAceptarCTFEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                    usuarioEntrada        = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                    contraseñaEntrada     = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                    alertuserEntrada      = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                    alertpasswordEntrada  = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                    btnCancelarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            modalForzarEntrada.dismiss();
+
+                            usuarioEntrada.getText().clear();
+                            contraseñaEntrada.getText().clear();
+
+                            alertuserEntrada.setErrorEnabled(false);
+                            alertpasswordEntrada.setErrorEnabled(false);
+
+                        }
+                    });
+
+                    btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            usuarioUserEntrada    = usuarioEntrada.getText().toString();
+                            contraseñaUserEntrada = contraseñaEntrada.getText().toString();
+
+                            if (usuarioUserEntrada.isEmpty()) {
+                                alertuserEntrada.setError("El campo usuario es obligatorio");
+                                return;
+                            } else if (contraseñaUserEntrada.isEmpty()) {
+                                alertpasswordEntrada.setError("El campo contraseña es obligatorio");
+                                return;
+                            }
+
+                            findUsersEntradaPrecios(usuarioUserEntrada);
+
+                            alertuserEntrada.setErrorEnabled(false);
+                            alertpasswordEntrada.setErrorEnabled(false);
+
+                        }
+                    });
+
+
+                    Toast.makeText(Login.this, "Configurar Precios", Toast.LENGTH_SHORT).show();
+
+
+            }
+        });
 
         /**
          * @CONFIGURAR:Lados
@@ -82,7 +166,66 @@ public class Login extends AppCompatActivity{
         btnConfigurarLados.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent( getApplicationContext(),ConfigurarLados.class));
+
+                if (GlobalInfo.getConfiguracionPL){
+
+                    if (!modalForzarEntrada.isShowing()) {
+                        modalForzarEntrada.show();
+                    }
+
+                    btnCancelarCTFEntrada = modalForzarEntrada.findViewById(R.id.btnCancelarFEntrada);
+                    btnAceptarCTFEntrada  = modalForzarEntrada.findViewById(R.id.btnAceptarFEntrada);
+                    usuarioEntrada        = modalForzarEntrada.findViewById(R.id.inputUserFEntrada);
+                    contraseñaEntrada     = modalForzarEntrada.findViewById(R.id.inputContraseñaFEntrada);
+                    alertuserEntrada      = modalForzarEntrada.findViewById(R.id.alertUserFEntrada);
+                    alertpasswordEntrada  = modalForzarEntrada.findViewById(R.id.alertContraseñaFEntrada);
+
+                    btnCancelarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            modalForzarEntrada.dismiss();
+
+                            usuarioEntrada.getText().clear();
+                            contraseñaEntrada.getText().clear();
+
+                            alertuserEntrada.setErrorEnabled(false);
+                            alertpasswordEntrada.setErrorEnabled(false);
+
+                        }
+                    });
+
+                    btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+
+                            usuarioUserEntrada    = usuarioEntrada.getText().toString();
+                            contraseñaUserEntrada = contraseñaEntrada.getText().toString();
+
+                            if (usuarioUserEntrada.isEmpty()) {
+                                alertuserEntrada.setError("El campo usuario es obligatorio");
+                                return;
+                            } else if (contraseñaUserEntrada.isEmpty()) {
+                                alertpasswordEntrada.setError("El campo contraseña es obligatorio");
+                                return;
+                            }
+
+                            findUsersLados(usuarioUserEntrada);
+
+                            alertuserEntrada.setErrorEnabled(false);
+                            alertpasswordEntrada.setErrorEnabled(false);
+
+                        }
+                    });
+
+
+                    Toast.makeText(Login.this, "Configurar Lados", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    startActivity(new Intent( getApplicationContext(),ConfigurarLados.class));
+                }
+
+
             }
         });
 
@@ -99,7 +242,7 @@ public class Login extends AppCompatActivity{
         /**
          * @OBTENER:Imei
          */
-
+       // imeii.setText("F6036B683498BFDA");
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
@@ -183,6 +326,11 @@ public class Login extends AppCompatActivity{
         });
 
         /**
+         * @LISTADO:SpinnerTipoVehiculo
+         */
+        getTipoVehiculo();
+
+        /**
          * @LISTADO:SpinnerTipoPago
          */
         getTipoPago();
@@ -191,6 +339,129 @@ public class Login extends AppCompatActivity{
          * @OBTENER_APISERVICE:Terminal
          */
         findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
+
+    }
+
+    private void findUsersEntradaPrecios(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    usersEntradaList = response.body();
+
+                    for (Users user : usersEntradaList) {
+                        GlobalInfo.getuserIDAnular10 = user.getUserID();
+                        GlobalInfo.getuserNameAnular10 = user.getNames();
+                        GlobalInfo.getuserPassAnular10 = user.getPassword();
+                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    }
+
+                    if (GlobalInfo.getuserCancelAnular10 == true) {
+
+                        String getName = usuarioUserEntrada.trim();
+                        String getPass = PasswordChecker.checkpassword(contraseñaUserEntrada.trim());
+
+                        if (getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)) {
+
+                            startActivity(new Intent( getApplicationContext(),ConfigurarPrecios.class));
+
+                            modalForzarEntrada.dismiss();
+                            usuarioEntrada.getText().clear();
+                            contraseñaEntrada.getText().clear();
+
+                            alertuserEntrada.setErrorEnabled(false);
+                            alertpasswordEntrada.setErrorEnabled(false);
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    private void findUsersLados(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getApplicationContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    usersEntradaList = response.body();
+
+                    for (Users user : usersEntradaList) {
+                        GlobalInfo.getuserIDAnular10 = user.getUserID();
+                        GlobalInfo.getuserNameAnular10 = user.getNames();
+                        GlobalInfo.getuserPassAnular10 = user.getPassword();
+                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    }
+
+                    if (GlobalInfo.getuserCancelAnular10 == true) {
+
+                        String getName = usuarioUserEntrada.trim();
+                        String getPass = PasswordChecker.checkpassword(contraseñaUserEntrada.trim());
+
+                        if (getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)) {
+
+                            startActivity(new Intent( getApplicationContext(),ConfigurarLados.class));
+
+                            modalForzarEntrada.dismiss();
+                            usuarioEntrada.getText().clear();
+                            contraseñaEntrada.getText().clear();
+
+                            alertuserEntrada.setErrorEnabled(false);
+                            alertpasswordEntrada.setErrorEnabled(false);
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -306,6 +577,12 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getterminalFCabecera          = terminal.getFeed_Cabecera();
                         GlobalInfo.getTerminalSoloPuntos10       = terminal.getSoloPuntos();
                         GlobalInfo.getTerminalLecturar10         = terminal.getLecturar();
+                        GlobalInfo.getVentasProductosTienda10    = terminal.getCierreX_VProducto_Otros();
+                        GlobalInfo.getConfiguracionSerafin       = terminal.getBloqueoSerafin();
+                        GlobalInfo.getConfiguracionPL            = terminal.getBloqueoConfigLados();
+                        GlobalInfo.getConRfdPuntos               = terminal.getRfidPuntos();
+                        GlobalInfo.getVistaQR                    = terminal.getMostrarQr();
+                        GlobalInfo.getDobleImpresion             = terminal.getImprimirDoble();
 
                         /** Mostrar el listado de Datos*/
                         findCompany(GlobalInfo.getterminalCompanyID10);
@@ -473,6 +750,7 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getsettingRutaLogo110       = String.valueOf(setting.getRutaLogo1());
                         GlobalInfo.getsettingRutaLogo210       = String.valueOf(setting.getRutaLogo2());
                         GlobalInfo.getsettingDescuentoRFID10   = setting.getDescuentoRFID();
+                        GlobalInfo.getsettingValorIGV10        = setting.getValorIGV();
                     }
 
                 }catch (Exception ex){
@@ -576,6 +854,38 @@ public class Login extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<List<TipoPago>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tipo de Pago - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    /**
+     * @APISERVICE:SpinnerTipoVehiculo
+     */
+    private void getTipoVehiculo(){
+
+        Call<List<SettingVehiculo>> call = mAPIService.getSettingVehiculo();
+
+        call.enqueue(new Callback<List<SettingVehiculo>>() {
+            @Override
+            public void onResponse(Call<List<SettingVehiculo>> call, Response<List<SettingVehiculo>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error Tipo Vehiculo: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.gettipovehiculoList10 = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SettingVehiculo>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Error de conexión APICORE Tipo de Pago - RED - WIFI", Toast.LENGTH_SHORT).show();
             }
         });

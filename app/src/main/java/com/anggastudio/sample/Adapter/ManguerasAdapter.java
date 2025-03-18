@@ -59,7 +59,23 @@ public class ManguerasAdapter extends RecyclerView.Adapter<ManguerasAdapter.View
 
                 holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#50B955"));
 
+            } else if (mangueras.getDescripcion().equals("G-REGULAR1")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#50B955"));
+
+            } else if (mangueras.getDescripcion().equals("G-REGULAR2")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#50B955"));
+
             } else if (mangueras.getDescripcion().equals("G-PREMIUM")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#3A43FF"));
+
+            } else if (mangueras.getDescripcion().equals("G-PREMIUM1")){
+
+                holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#3A43FF"));
+
+            } else if (mangueras.getDescripcion().equals("G-PREMIUM2")){
 
                 holder.card_Manguera.setCardBackgroundColor(Color.parseColor("#3A43FF"));
 

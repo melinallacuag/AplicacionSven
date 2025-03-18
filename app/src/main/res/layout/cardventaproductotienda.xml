@@ -6,8 +6,8 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textNumDocumento"
-        android:layout_width="410sp"
+        android:id="@+id/textPNombreTienda"
+        android:layout_width="420sp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:fontFamily="@font/nunito_extrabold"
@@ -17,31 +17,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textTipo"
-        android:layout_width="370sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fontFamily="@font/nunito_extrabold"
-        android:gravity="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="17sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/textReferencia"
-        android:layout_width="360sp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:fontFamily="@font/nunito_extrabold"
-        android:gravity="center"
-        android:textColor="@color/colorBlack"
-        android:textSize="17sp"
-        android:textStyle="bold" />
-
-
-
-    <TextView
-        android:id="@+id/textMonto"
+        android:id="@+id/textPCantidadTienda"
         android:layout_width="360sp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -50,5 +26,17 @@
         android:textColor="@color/colorBlack"
         android:textSize="17sp"
         android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textPSolesTienda"
+        android:layout_width="360sp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:fontFamily="@font/nunito_extrabold"
+        android:gravity="end"
+        android:textColor="@color/colorBlack"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
 
 </LinearLayout>

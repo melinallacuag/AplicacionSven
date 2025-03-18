@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/textcantidadI"
-            android:layout_width="300sp"
+            android:layout_width="310sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"
@@ -40,7 +40,7 @@
 
         <TextView
             android:id="@+id/textcantidadF"
-            android:layout_width="300sp"
+            android:layout_width="310sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"
@@ -51,7 +51,7 @@
 
         <TextView
             android:id="@+id/textgalones"
-            android:layout_width="300sp"
+            android:layout_width="280sp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/nunito_extrabold"

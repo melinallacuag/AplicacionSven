@@ -53,8 +53,10 @@ public class VentaCA {
     private Double  mtoPagoUSD;
     private String  observacionPag;
     private Double  mtoIncremento;
+    private Integer diasCredito;
+    private Integer vehiculoID;
 
-    public VentaCA(Integer companyID, String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, Integer turno, String fechaProceso, String fechaDocumento, String fechaAtencion, Double mtoDescuento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String odometro, String tipoVenta, String observacion, String referencia, String nroTarjetaNotaD, String nroTarjetaPuntos, Double puntosGanados, Double puntosDisponibles, Double montoCanjeado, String userID, String identFID, Integer nroItem, String articuloID, String articuloDS, String uniMed, Integer almacenID, Integer impuestoID, Integer impuestoValor, Double precio1, Double precio2, Double cantidad, Double fise, String tranID, String nroLado, String manguera, String observacionDet, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag,Double  mtoIncremento) {
+    public VentaCA(Integer companyID, String tipoDocumento, String serieDocumento, String nroDocumento, String terminalID, String clienteID, String clienteRUC, String clienteRZ, String clienteDR, Integer turno, String fechaProceso, String fechaDocumento, String fechaAtencion, Double mtoDescuento, Double mtoSubTotal, Double mtoImpuesto, Double mtoTotal, String nroPlaca, String odometro, String tipoVenta, String observacion, String referencia, String nroTarjetaNotaD, String nroTarjetaPuntos, Double puntosGanados, Double puntosDisponibles, Double montoCanjeado, String userID, String identFID, Integer nroItem, String articuloID, String articuloDS, String uniMed, Integer almacenID, Integer impuestoID, Integer impuestoValor, Double precio1, Double precio2, Double cantidad, Double fise, String tranID, String nroLado, String manguera, String observacionDet, Integer pagoID, Integer tarjetaID, String tarjetaDS, Double mtoPagoPEN, Double mtoPagoUSD, String observacionPag, Double mtoIncremento, Integer diasCredito, Integer vehiculoID) {
         this.companyID = companyID;
         this.tipoDocumento = tipoDocumento;
         this.serieDocumento = serieDocumento;
@@ -106,6 +108,8 @@ public class VentaCA {
         this.mtoPagoUSD = mtoPagoUSD;
         this.observacionPag = observacionPag;
         this.mtoIncremento = mtoIncremento;
+        this.diasCredito = diasCredito;
+        this.vehiculoID = vehiculoID;
     }
 
     public Integer getCompanyID() {
@@ -514,5 +518,21 @@ public class VentaCA {
 
     public void setMtoIncremento(Double mtoIncremento) {
         this.mtoIncremento = mtoIncremento;
+    }
+
+    public Integer getDiasCredito() {
+        return diasCredito;
+    }
+
+    public void setDiasCredito(Integer diasCredito) {
+        this.diasCredito = diasCredito;
+    }
+
+    public Integer getVehiculoID() {
+        return vehiculoID;
+    }
+
+    public void setVehiculoID(Integer vehiculoID) {
+        this.vehiculoID = vehiculoID;
     }
 }

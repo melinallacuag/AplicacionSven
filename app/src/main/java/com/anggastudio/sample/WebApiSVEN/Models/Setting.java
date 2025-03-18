@@ -22,6 +22,7 @@ public class Setting {
     private String rutaLogo1;
     private String rutaLogo2;
     private Integer descuentoRFID;
+    private Double valorIGV;
 
     public Integer getCompanyID() {
         return companyID;
@@ -181,5 +182,13 @@ public class Setting {
 
     public void setDescuentoRFID(Integer descuentoRFID) {
         this.descuentoRFID = descuentoRFID;
+    }
+
+    public Double getValorIGV() {
+        return valorIGV;
+    }
+
+    public void setValorIGV(Double valorIGV) {
+        this.valorIGV = valorIGV;
     }
 }

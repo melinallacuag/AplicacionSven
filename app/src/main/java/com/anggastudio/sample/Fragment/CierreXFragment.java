@@ -41,10 +41,12 @@ import android.widget.Toast;
 
 import com.anggastudio.printama.Printama;
 import com.anggastudio.sample.Adapter.LadosAdapter;
+import com.anggastudio.sample.Adapter.ReporteTVehiculoAdapter;
 import com.anggastudio.sample.Adapter.ReporteTarjetasAdapter;
 import com.anggastudio.sample.Adapter.ReporteVendedorAdapter;
 import com.anggastudio.sample.Adapter.VContometroAdapter;
 import com.anggastudio.sample.Adapter.VProductoAdapter;
+import com.anggastudio.sample.Adapter.VProductoTiendaAdapter;
 import com.anggastudio.sample.Adapter.VTipoPagoAdapter;
 import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.R;
@@ -54,10 +56,12 @@ import com.anggastudio.sample.WebApiSVEN.Models.Gratuita;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
+import com.anggastudio.sample.WebApiSVEN.Models.ReporteTVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteVendedor;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
+import com.anggastudio.sample.WebApiSVEN.Models.VProductoTienda;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 import com.anggastudio.sample.WebApiSVEN.Parameters.GlobalInfo;
 import com.google.zxing.BarcodeFormat;
@@ -87,15 +91,17 @@ public class CierreXFragment extends Fragment {
     TextView TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalPagoBruto,
-            TotalDescuento2,TotalIncremento,GranTotal,GranVendedorTotal,rgratuita;
+            TotalDescuento2,TotalIncremento,GranTotal,GranVendedorTotal,rgratuita,
+            TotalCantidadProdTienda,TotalMontoProdTienda;
 
     String RAnuladosSoles10,RDespachosSoles10, TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,SProductosTotalIncremento,
-            TotalPagosSoles,MontoBruto,TotalRTarjetasSoles,TotalRVendedorSoles,TotalTGratuita;
+            TotalPagosSoles,TotalRTarjetasSoles,TotalRVendedorSoles,TotalTGratuita,
+            SProductosTotalCantidadTienda,SProductosTotalSolesTienda,SProductosTotalDescTienda,SProductosTotalIncrementoTienda;
 
     Button imprimirCierreX;
     Dialog modalAlerta;
 
-    RecyclerView recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj,recyclerReporteVendedores;
+    RecyclerView recyclerVProductosTienda,recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj,recyclerReporteVendedores;
 
     ReporteTarjetasAdapter reporteTarjetasAdapter;
     List<ReporteTarjetas> reporteTarjetasList;
@@ -109,6 +115,9 @@ public class CierreXFragment extends Fragment {
     VProductoAdapter vProductoAdapter;
     List<VProducto> vProductoList;
 
+    VProductoTiendaAdapter vProductoTiendaAdapter;
+    List<VProductoTienda> vProductoTiendaList;
+
     VTipoPagoAdapter vTipoPagoAdapter;
     List<VTipoPago> vTipoPagoList;
 
@@ -119,8 +128,8 @@ public class CierreXFragment extends Fragment {
 
     ImageView logoCierreX;
 
-    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc,RProductosTotalIncremento, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,RPagosTotalGratuita;
-
+    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc,RProductosTotalIncremento, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,RPagosTotalGratuita,
+            RProductosCantidadTienda,RProductosTotalSolesTienda,RProductosDescTienda,RProductosIncrementoTienda,MontoBruto,MontoBrutoTienda,montoBrutoTotal;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -153,6 +162,8 @@ public class CierreXFragment extends Fragment {
         TotalDescuento      = view.findViewById(R.id.TotalDescuento);
         TotalMontoPago      = view.findViewById(R.id.totalpago);
         totalPagoBruto      = view.findViewById(R.id.totalpagobruto);
+        TotalCantidadProdTienda  = view.findViewById(R.id.textMtoProductoTienda);
+        TotalMontoProdTienda     = view.findViewById(R.id.TotalSolesProductoTienda);
 
         TotalDescuento2     = view.findViewById(R.id.TotalDescuento2);
         TotalIncremento     = view.findViewById(R.id.TotalIncremento);
@@ -243,6 +254,15 @@ public class CierreXFragment extends Fragment {
         RTarjetasTotal       = 0.00;
         RVendedorTotal       = 0.00;
 
+        RProductosCantidadTienda   = 0.00;
+        RProductosTotalSolesTienda = 0.00;
+        RProductosDescTienda = 0.00;
+        RProductosIncrementoTienda = 0.00;
+
+        MontoBruto       = 0.00;
+        MontoBrutoTienda = 0.00;
+        montoBrutoTotal  = 0.00;
+
         /** Listado de R. Despacho */
         findRDespacho(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10), "B");
 
@@ -261,6 +281,11 @@ public class CierreXFragment extends Fragment {
         recyclerVProducto = view.findViewById(R.id.recyclerVProductos);
         recyclerVProducto.setLayoutManager(new LinearLayoutManager(getContext()));
         findVProducto(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
+
+        /** Listado de Venta por Productos Tienda  */
+        recyclerVProductosTienda  = view.findViewById(R.id.recyclerVProductosTienda);
+        recyclerVProductosTienda.setLayoutManager(new LinearLayoutManager(getContext()));
+        findVProductoTienda(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
         /** Listado de Venta por Tipo de Pago  */
         recyclerVTipoPago = view.findViewById(R.id.recyclerVTipoPago);
@@ -425,7 +450,7 @@ public class CierreXFragment extends Fragment {
                     }
 
                     /** Ventas Por Contometro - Volumen */
-                    TVolumenContometro = String.format(Locale.getDefault(), "%,.2f" ,RContometrosTotalGLL);
+                    TVolumenContometro = String.format(Locale.getDefault(), "%,.3f" ,RContometrosTotalGLL);
                     GlobalInfo.getTVolumenContometro10 = TVolumenContometro;
                     TotalVolumenContometro.setText(TVolumenContometro);
 
@@ -439,6 +464,71 @@ public class CierreXFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<VContometro>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
+    /** API SERVICE - Venta por Contrometro */
+    private void findVProductoTienda(String id,Integer turno){
+
+        Call<List<VProductoTienda>> call = mAPIService.findVProductoTienda(id,turno);
+
+        call.enqueue(new Callback<List<VProductoTienda>>() {
+            @Override
+            public void onResponse(Call<List<VProductoTienda>> call, Response<List<VProductoTienda>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    vProductoTiendaList = response.body();
+
+                    for(VProductoTienda vProductoTienda: vProductoTiendaList) {
+
+                        RProductosCantidadTienda   += Double.valueOf(vProductoTienda.getCantidad());
+                        RProductosTotalSolesTienda += Double.valueOf(vProductoTienda.getSoles());
+                        RProductosDescTienda       += Double.valueOf(vProductoTienda.getDescuento());
+                        RProductosIncrementoTienda += Double.valueOf(vProductoTienda.getIncremento());
+
+                    }
+
+                    /** Ventas Por Productos - Volumen */
+                    SProductosTotalCantidadTienda = String.format(Locale.getDefault(), "%,.2f" ,RProductosCantidadTienda);
+                    GlobalInfo.getTSProductosTotalCantidadTienda10 = SProductosTotalCantidadTienda;
+                    TotalCantidadProdTienda.setText(SProductosTotalCantidadTienda);
+
+                    /** Ventas Por Productos - Soles */
+                    SProductosTotalSolesTienda = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSolesTienda);
+                    GlobalInfo.getTSProductosTotalSolesTienda10 = SProductosTotalSolesTienda;
+                    TotalMontoProdTienda.setText(SProductosTotalSolesTienda);
+
+                    /** Ventas Por Productos - Descuento */
+                    SProductosTotalDescTienda = String.format(Locale.getDefault(), "%,.2f" ,RProductosDescTienda);
+                    GlobalInfo.getTSProductosTotalDescTienda10 = SProductosTotalDescTienda;
+
+                    /** Ventas Por Productos - Incremento */
+                    SProductosTotalIncrementoTienda = String.format(Locale.getDefault(), "%,.2f" ,RProductosIncrementoTienda);
+                    GlobalInfo.getTSProductosTotalIncrementoTienda10 = SProductosTotalIncrementoTienda;
+
+                    /** Pago Bruto - Suma TotalPagosSoles,TotalDesc y TotalIncremento */
+                    MontoBrutoTienda = RProductosTotalSolesTienda + RProductosDescTienda - RProductosIncrementoTienda;
+                    calcularMontoBrutoTotal();
+
+                    vProductoTiendaAdapter = new VProductoTiendaAdapter(vProductoTiendaList, getContext());
+                    recyclerVProductosTienda.setAdapter(vProductoTiendaAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<VProductoTienda>> call, Throwable t) {
                 Toast.makeText(getContext(), "Error de conexión APICORE Optran - RED - WIFI", Toast.LENGTH_SHORT).show();
 
             }
@@ -494,9 +584,8 @@ public class CierreXFragment extends Fragment {
                     TotalIncremento.setText(SProductosTotalIncremento);
 
                     /** Pago Bruto - Suma TotalPagosSoles,TotalDesc y TotalIncremento */
-                    MontoBruto = String.format(Locale.getDefault(), "%,.2f" ,RProductosTotalSoles + RProductosTotalDesc - RProductosTotalIncremento);
-                    GlobalInfo.getMontoBruto10 = MontoBruto;
-                    totalPagoBruto.setText(MontoBruto);
+                    MontoBruto = RProductosTotalSoles + RProductosTotalDesc - RProductosTotalIncremento;
+                    calcularMontoBrutoTotal();
 
                     vProductoAdapter = new VProductoAdapter(vProductoList, getContext());
                     recyclerVProducto.setAdapter(vProductoAdapter);
@@ -513,6 +602,12 @@ public class CierreXFragment extends Fragment {
             }
         });
 
+    }
+
+    private void calcularMontoBrutoTotal() {
+        montoBrutoTotal = MontoBruto + MontoBrutoTienda;
+        GlobalInfo.getMontoBruto10 = String.format(Locale.getDefault(), "%,.2f", montoBrutoTotal);
+        totalPagoBruto.setText(GlobalInfo.getMontoBruto10);
     }
 
     /** API SERVICE - Venta por Tipo de Pago */
@@ -793,9 +888,9 @@ public class CierreXFragment extends Fragment {
         for(VContometro vContometro: vContometroList) {
             String lado      = vContometro.getNroLado();
             String producto  = vContometro.getArticuloDS();
-            String cantidadI = String.format("%10.2f", vContometro.getContomInicial());
-            String cantidadF = String.format("%10.2f", vContometro.getContomFinal());
-            String galones   = String.format(Locale.getDefault(), "%,10.2f", vContometro.getGalones());
+            String cantidadI = String.format("%10.3f", vContometro.getContomInicial());
+            String cantidadF = String.format("%10.3f", vContometro.getContomFinal());
+            String galones   = String.format(Locale.getDefault(), "%,10.3f", vContometro.getGalones());
 
             switch (tipopapel) {
                 case "65mm":
@@ -811,7 +906,7 @@ public class CierreXFragment extends Fragment {
         }
 
 
-        /**  Venta por Productos **/
+        /**  Venta por Productos Combustible **/
         StringBuilder VProductoBuilder = new StringBuilder();
 
         for(VProducto vProducto: vProductoList) {
@@ -829,6 +924,28 @@ public class CierreXFragment extends Fragment {
                 case "58mm":
                     String lineS = String.format(Locale.getDefault(), "%-10s %-8s %10s %10s", producto, volumen, soles, descuentos);
                     VProductoBuilder.append(lineS).append("\n");
+                    break;
+            }
+
+        }
+
+        /**  Venta por Productos Tienda **/
+        StringBuilder VProductoTiendaBuilder = new StringBuilder();
+
+        for(VProductoTienda vProductoTienda: vProductoTiendaList) {
+            String producto   = vProductoTienda.getArticuloDS();
+            String cantidad   = String.format("%,10.2f",vProductoTienda.getCantidad());
+            String soles      = String.format("%,10.2f", vProductoTienda.getSoles());
+
+            switch (tipopapel) {
+                case "65mm":
+                case "80mm":
+                    String line = String.format(Locale.getDefault(), "%-24s %4s %12s", producto, cantidad, soles);
+                    VProductoTiendaBuilder.append(line).append("\n");
+                    break;
+                case "58mm":
+                    String lineS = String.format(Locale.getDefault(), "%-24s %2s %10s", producto, cantidad, soles);
+                    VProductoTiendaBuilder.append(lineS).append("\n");
                     break;
             }
 
@@ -896,7 +1013,7 @@ public class CierreXFragment extends Fragment {
         }
 
 
-        /** Totales por ventas por prodcutos*/
+        /** Totales por ventas por Combustible*/
         StringBuilder TotalVolumenPro = new StringBuilder();
 
         String TotalVolumenProC      = "TOTALES :";
@@ -913,6 +1030,25 @@ public class CierreXFragment extends Fragment {
             case "58mm":
                 String linesS = String.format(Locale.getDefault(), "%-10s %10s %10s %10s", TotalVolumenProC, TSProductosTotalGLL,TSProductosTotalSoles,TSProductosTotalDesc);
                 TotalVolumenPro.append(linesS);
+                break;
+        }
+
+        /** Totales por ventas por PRODUCTOS*/
+        StringBuilder TotalProTienda = new StringBuilder();
+
+        String TotalProTiendaC      = "TOTALES :";
+        String TSProductosTotalCantidadT   = GlobalInfo.getTSProductosTotalCantidadTienda10;
+        String TSProductosTotalSolesT = GlobalInfo.getTSProductosTotalSolesTienda10;
+
+        switch (tipopapel) {
+            case "65mm":
+            case "80mm":
+                String linest = String.format(Locale.getDefault(), "%-26s %8s %12s", TotalProTiendaC,TSProductosTotalCantidadT, TSProductosTotalSolesT);
+                TotalProTienda.append(linest);
+                break;
+            case "58mm":
+                String linesST = String.format(Locale.getDefault(), "%-26s %8s %10s", TotalProTiendaC,TSProductosTotalCantidadT, TSProductosTotalSolesT);
+                TotalProTienda.append(linesST);
                 break;
         }
 
@@ -1125,11 +1261,25 @@ public class CierreXFragment extends Fragment {
                         printSeparatorLine(printama, tipopapel);
                         printama.addNewLine(1);
                         printama.setSmallText();
-                        printama.printTextlnBold("VENTAS POR PRODUCTOS",Printama.CENTER);
+                        printama.printTextlnBold("VENTAS DE COMBUSTIBLES",Printama.CENTER);
                         printama.addNewLine(1);
                         printama.printTextlnBold("PRODUCTO        "+"VOL.    "+"S/  "+"DTO.",Printama.RIGHT);
                         printama.printTextlnBold( VProductoBuilder.toString()  + "---------" + "  " + "---------", Printama.RIGHT);
                         printama.printTextlnBold(TotalVolumenPro.toString(),Printama.RIGHT);
+
+                    }
+
+                    if(GlobalInfo.getVentasProductosTienda10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("VENTAS OTROS PRODUCTOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("PRODUCTO              "+"CANT."+"SOLES",Printama.RIGHT);
+                        printama.printTextlnBold( VProductoTiendaBuilder.toString() + "---------" + "    " + "---------", Printama.RIGHT);
+                        printama.printTextlnBold(TotalProTienda.toString(),Printama.RIGHT);
 
                     }
 
@@ -1256,11 +1406,25 @@ public class CierreXFragment extends Fragment {
                         printSeparatorLine(printama, tipopapel);
                         printama.addNewLine(1);
                         printama.setSmallText();
-                        printama.printTextlnBold("VENTAS POR PRODUCTOS",Printama.CENTER);
+                        printama.printTextlnBold("VENTAS DE COMBUSTIBLES",Printama.CENTER);
                         printama.addNewLine(1);
                         printama.printTextlnBold("PRODUCTO      "+"VOLUMEN        "+"SOLES   "+" DESCUENTO",Printama.RIGHT);
                         printama.printTextlnBold( VProductoBuilder.toString() + "---------" + "    " + "---------" + "    " + "---------", Printama.RIGHT);
                         printama.printTextlnBold(TotalVolumenPro.toString(),Printama.RIGHT);
+
+                    }
+
+                    if(GlobalInfo.getVentasProductosTienda10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("VENTAS OTROS PRODUCTOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("PRODUCTO                   "+"CANTIDAD        "+"SOLES",Printama.RIGHT);
+                        printama.printTextlnBold( VProductoTiendaBuilder.toString() + "---------" + "    " + "---------", Printama.RIGHT);
+                        printama.printTextlnBold(TotalProTienda.toString(),Printama.RIGHT);
 
                     }
 
@@ -1386,11 +1550,25 @@ public class CierreXFragment extends Fragment {
                         printSeparatorLine(printama, tipopapel);
                         printama.addNewLine(1);
                         printama.setSmallText();
-                        printama.printTextlnBold("VENTAS POR PRODUCTOS",Printama.CENTER);
+                        printama.printTextlnBold("VENTAS DE COMBUSTIBLES",Printama.CENTER);
                         printama.addNewLine(1);
                         printama.printTextlnBold("PRODUCTO      "+"VOLUMEN        "+"SOLES   "+" DESCUENTO",Printama.RIGHT);
                         printama.printTextln( VProductoBuilder.toString() + "---------" + "    " + "---------" + "    " + "---------", Printama.RIGHT);
                         printama.printTextln(TotalVolumenPro.toString(),Printama.RIGHT);
+
+                    }
+
+                    if(GlobalInfo.getVentasProductosTienda10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("VENTAS OTROS PRODUCTOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("PRODUCTO                   "+"CANTIDAD        "+"SOLES",Printama.RIGHT);
+                        printama.printTextln( VProductoTiendaBuilder.toString() + "---------" + "    " + "---------", Printama.RIGHT);
+                        printama.printTextln(TotalProTienda.toString(),Printama.RIGHT);
 
                     }
 

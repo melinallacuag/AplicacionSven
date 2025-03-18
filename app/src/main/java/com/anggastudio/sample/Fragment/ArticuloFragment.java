@@ -66,6 +66,7 @@ import com.anggastudio.sample.Adapter.ClienteCreditoAdapter;
 import com.anggastudio.sample.Adapter.FamiliaAdapter;
 import com.anggastudio.sample.Adapter.LClienteAdapter;
 import com.anggastudio.sample.Adapter.LRegistroClienteAdapter;
+import com.anggastudio.sample.Adapter.LRegistroClientePuntosAdapter;
 import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.CaptureActivityPortrait;
 import com.anggastudio.sample.NFCUtil;
@@ -80,6 +81,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Familia;
+import com.anggastudio.sample.WebApiSVEN.Models.LClientePuntos;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
@@ -140,8 +142,15 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
     List<Articulo> articuloSeleccionados = new ArrayList<Articulo>();
 
-    RecyclerView recyclerFamilia, recyclerArticulo, recyclerCarrito, recyclerLCliente,recyclerLClienteCredito;
-    Button btnAceptarErrorWifi,btnAceptarError,
+    List<Users> usersListNFC;
+    LRegistroClienteAdapter lRegistroClienteAdapter;
+    LRegistroClientePuntosAdapter lRegistroClientePuntosAdapter;
+
+    List<LClientePuntos>  clientePuntosList;
+
+    RecyclerView recyclerLClientePuntosNFC,recyclerListaClientesAfiliados,recyclerFamilia, recyclerArticulo, recyclerCarrito, recyclerLCliente,recyclerLClienteCredito;
+    Button btnCancelarNFC,btnAceptarNFC,
+            btnAceptarErrorWifi,btnAceptarError,
             btnTodoArticulo,
             btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
             btnFactura,buscarRUCFactura,buscarPlacaFactura,btnCancelarFactura,btnAgregarFactura,
@@ -155,20 +164,20 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
     Map<String, Double> nuevosPrecios = new HashMap<>();
 
     TextView totalmontoCar,textMensajePEfectivo,textMensajeGratuito,text_guardarC,text_inprimirC,titleconfirmar,titleimprimir;
-    Dialog modal_ErrorWifi,modal_ErrorServidor,modal_CV_Articulo,modalCarrito, modalBoleta, modalClienteDNI,modalFactura,modalClienteRUC,modalNotaDespacho,modalClienteCredito;
+    Dialog modallistNFCPuntos,modallistNFC,modalNFCLogin,modal_ErrorWifi,modal_ErrorServidor,modal_CV_Articulo,modalCarrito, modalBoleta, modalClienteDNI,modalFactura,modalClienteRUC,modalNotaDespacho,modalClienteCredito;
 
     CarritoAdapter carritoAdapter;
-    SearchView BuscarProducto,btnBuscadorClienteRZ;
+    SearchView BuscarProducto,btnBuscadorClienteRZ,BuscarRazonSocial;
 
-    TextInputLayout textNFC,alertPlaca,alertDNI,alertNombre,alertPEfectivo,alertOperacion,alertSelectTPago,
+    TextInputLayout alertuserNFC,alertpasswordNFC,textNFC,alertPlaca,alertDNI,alertNombre,alertPEfectivo,alertOperacion,alertSelectTPago,
             alertRUC,alertRazSocial,alertObservacion,alertTarjeta,alertCliente,alertKilometraje;
 
-    TextInputEditText inputNFC,inputPlaca,inputDNI,inputNombre,inputDireccion,inputObservacion,inputOperacion,inputPEfectivo,
+    TextInputEditText usuarioNFC,contraseñaNFC,inputNFC,inputPlaca,inputDNI,inputNombre,inputDireccion,inputObservacion,inputOperacion,inputPEfectivo,
             inputRUC,inputRazSocial,
             inputTarjeta,inputCliente,inputKilometraje;
 
     RadioGroup radioFormaPago;
-    RadioButton radioEfectivo,radioTarjeta,radioCredito,radioGratuito,radioNombreFormaPago;
+    RadioButton radioEfectivo,radioTarjeta,radioCredito,radioGratuito,radioNombreFormaPago,radioCanje;
 
     Spinner SpinnerTPago;
     LClienteAdapter lclienteAdapter;
@@ -179,9 +188,9 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
     ImageButton btnfiltrar,btnscanear,btnpromociones;
 
-    TextView nombreCliente,textCliente,textNumPuntos;
+    TextView nombreCliente,textCliente,textNumPuntos,textMensajeCanje;
 
-    private String mnTipoDocumento,mnTipoPago,mnNroPlaca,mnClienteID,mnClienteRUC,mnClienteRS,mnCliernteDR,mnTarjetaCredito,mnOperacionREF,mnobservacionPag,
+    private String usuarioUserNFC,contraseñaUserNFC,mnTipoDocumento,mnTipoPago,mnNroPlaca,mnClienteID,mnClienteRUC,mnClienteRS,mnCliernteDR,mnTarjetaCredito,mnOperacionREF,mnobservacionPag,
             detArticuloId,detArticuloDs,detUmedida,opGratruitas,mnTarjND,mnobservacion;
 
     private Double mnMontoSoles,mnMtoSaldoCredito,mnPtosDisponibles,detPrecio,detCantidad,detTotal,detTotal1,detSubtotal,detSubtotal1,detImpuesto,detImpuesto1,
@@ -577,12 +586,14 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                         textMensajePEfectivo = modalBoleta.findViewById(R.id.textMensajePEfectivo);
                         textMensajeGratuito = modalBoleta.findViewById(R.id.textMensajeGratuito);
+                        textMensajeCanje   = modalBoleta.findViewById(R.id.textMensajeCanje);
 
                         radioFormaPago    = modalBoleta.findViewById(R.id.radioFormaPago);
                         radioEfectivo     = modalBoleta.findViewById(R.id.radioEfectivo);
                         radioTarjeta      = modalBoleta.findViewById(R.id.radioTarjeta);
                         radioCredito      = modalBoleta.findViewById(R.id.radioCredito);
                         radioGratuito     = modalBoleta.findViewById(R.id.radioGratuito);
+                        radioCanje        = modalBoleta.findViewById(R.id.radioCanje);
 
                         buscarDNIBoleta   = modalBoleta.findViewById(R.id.buscarDNIBoleta);
                         buscarPlacaBoleta = modalBoleta.findViewById(R.id.buscarPlacaBoleta);
@@ -593,28 +604,54 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                         buscarListPuntosNFC  = modalBoleta.findViewById(R.id.buscarListPuntosNFC);
                         textNumPuntos     = modalBoleta.findViewById(R.id.textNumPuntos);
 
-                        textNumPuntos.setVisibility(View.GONE);
-                        buscarListNFC.setVisibility(View.GONE);
-                        buscarListPuntosNFC.setVisibility(View.GONE);
-                        alertObservacion.setVisibility(View.GONE);
-                        radioCredito.setVisibility(View.GONE);
-                        radioGratuito.setVisibility(View.VISIBLE);
-
                         inputDNI.setEnabled(true);
                         inputNombre.setEnabled(true);
                         alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                         alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                        radioCredito.setVisibility(View.GONE);
+                        radioGratuito.setVisibility(View.VISIBLE);
+                        radioCanje.setVisibility(View.GONE);
+
+                        if(GlobalInfo.getTerminalSoloPuntos10){
+                            buscarListNFC.setVisibility(View.GONE);
+                            buscarListPuntosNFC.setVisibility(View.VISIBLE);
+                        }else{
+                            buscarListNFC.setVisibility(View.VISIBLE);
+                            buscarListPuntosNFC.setVisibility(View.GONE);
+                        }
 
                         /**
-                         * @DETECTAR:EtiquietaNFC
+                         * @LOGIN_MODAL:ListaDescuentos_Puntos
+                         */
+                        modalNFCLogin = new Dialog(getContext());
+                        modalNFCLogin.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        modalNFCLogin.setContentView(R.layout.modal_nfc_login);
+                        modalNFCLogin.setCancelable(false);
+
+                        buscarListNFC.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mostrarModalNFCListaDescuentoPunto();
+                            }
+                        });
+
+                        buscarListPuntosNFC.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mostrarModalNFCListaDescuentoPunto();
+                            }
+                        });
+
+                        /**
+                         * @LectorNFC:Descuentos_Puntos
                          */
                         inputNFC.setKeyListener(null);
                         insertNFC();
 
-                        /**
-                         * @DETECTAR:NFC
-                         * @OBTENER:DatosClientes
-                         */
+                        if (inputNFC.getTag() != null) {
+                            inputNFC.removeTextChangedListener((TextWatcher) inputNFC.getTag());
+                        }
+
                         inputNFC.addTextChangedListener(new TextWatcher() {
                             @Override
                             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -625,7 +662,12 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                 if (s.length() == 16) {
                                     String nfcCode = s.toString();
 
-                                    findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                                    if(GlobalInfo.getTerminalSoloPuntos10){
+                                        findClientePrecioConPuntosDNI(nfcCode, GlobalInfo.getterminalCompanyID10);
+                                    }else{
+                                        findClientePrecioDNI(nfcCode, String.valueOf(GlobalInfo.getterminalCompanyID10));
+                                    }
+
                                 }
                             }
 
@@ -633,6 +675,78 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             public void afterTextChanged(Editable s) {
                             }
                         });
+
+                        /**
+                         * @Modal-ListadoClientes-Puntos
+                         */
+                        modallistNFCPuntos = new Dialog(getContext());
+                        modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
+                        modallistNFCPuntos.setCancelable(false);
+
+                        recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                        recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+                        findListaClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+
+                        /**
+                         * @SELECCIONAR:DobleClick_MostrarListadoClienteDNI
+                         */
+                        GestureDetector gestureDetectorNFC = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+
+                            @Override
+                            public boolean onDoubleTap(MotionEvent e) {
+
+                                modallistNFCPuntos.show();
+
+                                BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                                btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
+
+                                BuscarRazonSocial.setIconifiedByDefault(false);
+
+                                /**
+                                 * @BUSCAR:NombreClienteRZ
+                                 */
+
+                                /** Buscador por Razon Social */
+                                BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                    @Override
+                                    public boolean onQueryTextSubmit(String query) {
+                                        onQueryTextChange(query);
+                                        return true;
+                                    }
+
+                                    @Override
+                                    public boolean onQueryTextChange(String newText) {
+                                        String userInput = newText.toLowerCase();
+                                        if (lRegistroClientePuntosAdapter != null) {
+                                            lRegistroClientePuntosAdapter.filtrado(userInput);
+                                        }
+                                        return true;
+                                    }
+                                });
+
+                                btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        BuscarRazonSocial.setQuery("", false);
+                                        modallistNFCPuntos.dismiss();
+                                    }
+                                });
+
+                                return true;
+                            }
+                        });
+
+                        if(GlobalInfo.getTerminalLecturar10){
+                            inputNFC.setOnTouchListener(new View.OnTouchListener() {
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+                                    boolean handled = gestureDetectorNFC.onTouchEvent(event);
+                                    return handled;
+                                }
+                            });
+
+                        }
 
 
                         /**
@@ -718,25 +832,36 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                                 if (checkedId == radioEfectivo.getId()){
                                     textMensajePEfectivo.setVisibility(View.VISIBLE);
+                                    textMensajeCanje.setVisibility(View.GONE);
                                     textMensajeGratuito.setVisibility(View.GONE);
                                     alertSelectTPago.setVisibility(View.GONE);
                                     alertOperacion.setVisibility(View.GONE);
                                     alertPEfectivo.setVisibility(View.GONE);
                                 } else if (checkedId == radioTarjeta.getId()){
                                     textMensajePEfectivo.setVisibility(View.GONE);
+                                    textMensajeCanje.setVisibility(View.GONE);
                                     textMensajeGratuito.setVisibility(View.GONE);
                                     alertSelectTPago.setVisibility(View.VISIBLE);
                                     alertOperacion.setVisibility(View.VISIBLE);
                                     alertPEfectivo.setVisibility(View.VISIBLE);
                                 } else if (checkedId == radioCredito.getId()){
                                     textMensajePEfectivo.setVisibility(View.GONE);
+                                    textMensajeCanje.setVisibility(View.GONE);
                                     textMensajeGratuito.setVisibility(View.GONE);
                                     alertSelectTPago.setVisibility(View.GONE);
                                     alertOperacion.setVisibility(View.GONE);
                                     alertPEfectivo.setVisibility(View.VISIBLE);
                                 } else if (checkedId == radioGratuito.getId()){
                                     textMensajeGratuito.setVisibility(View.VISIBLE);
+                                    textMensajeCanje.setVisibility(View.GONE);
                                     textMensajePEfectivo.setVisibility(View.GONE);
+                                    alertSelectTPago.setVisibility(View.GONE);
+                                    alertOperacion.setVisibility(View.GONE);
+                                    alertPEfectivo.setVisibility(View.GONE);
+                                }else if (checkedId == radioCanje.getId()){
+                                    textMensajeGratuito.setVisibility(View.GONE);
+                                    textMensajePEfectivo.setVisibility(View.GONE);
+                                    textMensajeCanje.setVisibility(View.VISIBLE);
                                     alertSelectTPago.setVisibility(View.GONE);
                                     alertOperacion.setVisibility(View.GONE);
                                     alertPEfectivo.setVisibility(View.GONE);
@@ -785,13 +910,15 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                 inputNFC.getText().clear();
                                 inputNombre.getText().clear();
                                 inputDireccion.getText().clear();
+                                textNumPuntos.setText(String.valueOf(0));
 
                                 inputDNI.setEnabled(true);
                                 inputNombre.setEnabled(true);
                                 alertDNI.setErrorEnabled(false);
                                 alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                                 alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
-
+                                radioFormaPago.check(radioEfectivo.getId());
+                                radioCanje.setVisibility(View.GONE);
 
 
                             }
@@ -808,11 +935,14 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                 inputDNI.setText(GlobalInfo.getsettingClienteID10);
                                 inputNombre.setText(GlobalInfo.getsettingClienteRZ10);
                                 inputDireccion.getText().clear();
+                                textNumPuntos.setText(String.valueOf(0));
 
                                 inputDNI.setEnabled(true);
                                 inputNombre.setEnabled(true);
                                 alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
                                 alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                                radioFormaPago.check(radioEfectivo.getId());
+                                radioCanje.setVisibility(View.GONE);
                             }
                         });
 
@@ -834,6 +964,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                 inputPEfectivo.setText("0");
                                 inputNFC.getText().clear();
                                 inputOperacion.getText().clear();
+                                textNumPuntos.setText(String.valueOf(0));
 
                                 alertPlaca.setErrorEnabled(false);
                                 alertDNI.setErrorEnabled(false);
@@ -973,6 +1104,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                     inputOperacion.getText().clear();
                                     inputNFC.getText().clear();
                                     radioFormaPago.check(radioEfectivo.getId());
+                                    textNumPuntos.setText(String.valueOf(0));
 
                                     btnBoleta.setVisibility(View.GONE);
                                     btnFactura.setVisibility(View.GONE);
@@ -1124,7 +1256,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             @Override
                             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                                radioNombreFormaPago = modalBoleta.findViewById(checkedId);
+                                radioNombreFormaPago = modalFactura.findViewById(checkedId);
 
                                 if (checkedId == radioEfectivo.getId()){
                                     textMensajePEfectivo.setVisibility(View.VISIBLE);
@@ -1887,6 +2019,56 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
     }
 
     /**
+     * @ModaLogin_ParaMostarListaDescuentosPuntosNFC
+     */
+    private void mostrarModalNFCListaDescuentoPunto() {
+        modalNFCLogin.show();
+
+        btnCancelarNFC = modalNFCLogin.findViewById(R.id.btnCancelarAnular);
+        btnAceptarNFC = modalNFCLogin.findViewById(R.id.btnAceptarIngreso);
+        usuarioNFC = modalNFCLogin.findViewById(R.id.inputUserAnulado);
+        contraseñaNFC = modalNFCLogin.findViewById(R.id.inputContraseñaAnulado);
+        alertuserNFC = modalNFCLogin.findViewById(R.id.alertUserAnulado);
+        alertpasswordNFC = modalNFCLogin.findViewById(R.id.alertContraseñaAnulado);
+
+        btnCancelarNFC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                modalNFCLogin.dismiss();
+                usuarioNFC.getText().clear();
+                contraseñaNFC.getText().clear();
+                alertuserNFC.setErrorEnabled(false);
+                alertpasswordNFC.setErrorEnabled(false);
+            }
+        });
+
+        btnAceptarNFC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                usuarioUserNFC = usuarioNFC.getText().toString();
+                contraseñaUserNFC = contraseñaNFC.getText().toString();
+
+                if (usuarioUserNFC.isEmpty()) {
+                    alertuserNFC.setError("El campo usuario es obligatorio");
+                    return;
+                } else if (contraseñaUserNFC.isEmpty()) {
+                    alertpasswordNFC.setError("El campo contraseña es obligatorio");
+                    return;
+                }
+
+                if(GlobalInfo.getTerminalSoloPuntos10){
+                    findUsersPuntos(usuarioUserNFC);
+                }else{
+                    findUsers(usuarioUserNFC);
+                }
+
+                alertuserNFC.setErrorEnabled(false);
+                alertpasswordNFC.setErrorEnabled(false);
+            }
+        });
+    }
+
+    /**
      * @LIMPIAR:CamposBoletaFactura
      */
     private void limpiarCamposBoletaFacturaNDespacho() {
@@ -1935,6 +2117,444 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
             textNumPuntosND.setText("0");
         }
     }
+
+
+    /**
+     * @APISERVICE:UsuarioAutorizado
+     */
+    private void findUsers(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    usersListNFC = response.body();
+
+                    for (Users user : usersListNFC) {
+                        GlobalInfo.getuserIDAnular10 = user.getUserID();
+                        GlobalInfo.getuserNameAnular10 = user.getNames();
+                        GlobalInfo.getuserPassAnular10 = user.getPassword();
+                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    }
+
+                    if (GlobalInfo.getuserCancelAnular10 == true) {
+
+                        String getName = usuarioNFC.getText().toString();
+                        String getPass = PasswordChecker.checkpassword(contraseñaNFC.getText().toString());
+
+                        /**
+                         * @Modal-ListadoClientes-Descuento
+                         */
+                        modallistNFC = new Dialog(getContext());
+                        modallistNFC.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        modallistNFC.setContentView(R.layout.modal_list_nfc);
+                        modallistNFC.setCancelable(false);
+
+                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
+
+                            recyclerListaClientesAfiliados = modallistNFC.findViewById(R.id.recyclerLClienteNFC);
+                            recyclerListaClientesAfiliados.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                            BuscarRazonSocial     = modallistNFC.findViewById(R.id.btnBuscadorClienteRZ);
+                            btnCancelarLCliente   = modallistNFC.findViewById(R.id.btnCancelarLCliente);
+
+                            BuscarRazonSocial.setIconifiedByDefault(false);
+
+                            btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    BuscarRazonSocial.setQuery("", false);
+                                    modallistNFC.dismiss();
+                                }
+                            });
+
+                            /** Buscador por Razon Social */
+                            BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                @Override
+                                public boolean onQueryTextSubmit(String query) {
+                                    onQueryTextChange(query);
+                                    return true;
+                                }
+
+                                @Override
+                                public boolean onQueryTextChange(String newText) {
+                                    String userInput = newText.toLowerCase();
+                                    if (lRegistroClienteAdapter != null) {
+                                        lRegistroClienteAdapter.filtrado(userInput);
+                                    }
+                                    return true;
+                                }
+                            });
+
+                            modalNFCLogin.dismiss();
+
+                            usuarioNFC.getText().clear();
+                            contraseñaNFC.getText().clear();
+
+                            /**
+                             * @APISERVICE-ListadoCliente-Descuento
+                             */
+                            findCliente(GlobalInfo.getnfcId10 , String.valueOf(GlobalInfo.getterminalCompanyID10));
+
+                        } else {
+                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    /**
+     * @APISERVICE:ListaClienteDescuento
+     */
+    private void findCliente(String nfcId, String comapyId) {
+        Call<List<ClientePrecio>> call = mAPIService.findDescuentos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<ClientePrecio>>() {
+            @Override
+            public void onResponse(Call<List<ClientePrecio>> call, Response<List<ClientePrecio>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                GlobalInfo.getclientePrecioList10 = response.body();
+
+                modallistNFC.show();
+
+                lRegistroClienteAdapter = new LRegistroClienteAdapter(GlobalInfo.getclientePrecioList10, getContext(), new LRegistroClienteAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(ClientePrecio item) {
+
+                        inputNFC.setText(item.getRfid());
+
+                        BuscarRazonSocial.setQuery("", false);
+
+                        modallistNFC.dismiss();
+
+                    }
+                });
+
+                recyclerListaClientesAfiliados.setAdapter(lRegistroClienteAdapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<List<ClientePrecio>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Lista Cliente - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * @APISERVICE:UsuarioAutorizadoPuntos
+     */
+    private void findUsersPuntos(String id){
+
+        Call<List<Users>> call = mAPIService.findUsers(id);
+
+        call.enqueue(new Callback<List<Users>>() {
+            @Override
+            public void onResponse(Call<List<Users>> call, Response<List<Users>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    usersListNFC = response.body();
+
+                    for (Users user : usersListNFC) {
+                        GlobalInfo.getuserIDAnular10 = user.getUserID();
+                        GlobalInfo.getuserNameAnular10 = user.getNames();
+                        GlobalInfo.getuserPassAnular10 = user.getPassword();
+                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    }
+
+                    if (GlobalInfo.getuserCancelAnular10 == true) {
+
+                        String getName = usuarioNFC.getText().toString();
+                        String getPass = PasswordChecker.checkpassword(contraseñaNFC.getText().toString());
+
+                        /**
+                         * @Modal-ListadoClientes-Puntos
+                         */
+                        modallistNFCPuntos = new Dialog(getContext());
+                        modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
+                        modallistNFCPuntos.setCancelable(false);
+
+                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
+
+                            recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                            recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+
+                            BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                            btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
+
+                            BuscarRazonSocial.setIconifiedByDefault(false);
+
+                            btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    BuscarRazonSocial.setQuery("", false);
+                                    modallistNFCPuntos.dismiss();
+                                }
+                            });
+
+                            /** Buscador por Razon Social */
+                            BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                @Override
+                                public boolean onQueryTextSubmit(String query) {
+                                    onQueryTextChange(query);
+                                    return true;
+                                }
+
+                                @Override
+                                public boolean onQueryTextChange(String newText) {
+                                    String userInput = newText.toLowerCase();
+                                    if (lRegistroClientePuntosAdapter != null) {
+                                        lRegistroClientePuntosAdapter.filtrado(userInput);
+                                    }
+                                    return true;
+                                }
+                            });
+
+                            modalNFCLogin.dismiss();
+
+                            usuarioNFC.getText().clear();
+                            contraseñaNFC.getText().clear();
+
+                            /**
+                             * @APISERVICE-ListadoCliente-Descuento
+                             */
+                            findClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+
+                        } else {
+                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Users>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Users - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+
+    /**
+     * @APISERVICE:ListaClientePuntos
+     */
+    private void findClientePuntos(String nfcId,Integer comapyId) {
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                GlobalInfo.getclientePuntosList10 = response.body();
+
+                modallistNFCPuntos.show();
+
+                lRegistroClientePuntosAdapter = new LRegistroClientePuntosAdapter(GlobalInfo.getclientePuntosList10, getContext(), new LRegistroClientePuntosAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(LClientePuntos item) {
+
+                        inputNFC.setText(item.getRfid());
+
+                        BuscarRazonSocial.setQuery("", false);
+
+                        modallistNFCPuntos.dismiss();
+
+                    }
+                });
+                recyclerLClientePuntosNFC.setAdapter(lRegistroClientePuntosAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Lista Cliente Puntos - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * @APISERVICE:BuscarClienteConPuntos_DNI
+     */
+    private String findClientePrecioConPuntosDNI(String nfcId,Integer comapyId) {
+
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+
+                try {
+
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    clientePuntosList = response.body();
+
+                    if (clientePuntosList != null && !clientePuntosList.isEmpty()) {
+                        LClientePuntos clientePuntos = clientePuntosList.get(0);
+
+                        GlobalInfo.getRfIdCPrecio10      = clientePuntos.getRfid();
+                        GlobalInfo.getClienteIDPrecio10  = clientePuntos.getClienteID();
+                        GlobalInfo.getClienteRZPrecio10  = clientePuntos.getClienteRZ();
+                        GlobalInfo.getNroPlacaPrecio10   = clientePuntos.getNroPlaca();
+                        GlobalInfo.getStatusPuntos10     = clientePuntos.getStatus();
+                        GlobalInfo.getDisponiblePuntos10 = clientePuntos.getDisponibles();
+
+                        if (GlobalInfo.getClienteIDPrecio10.length() == 8 && GlobalInfo.getStatusPuntos10){
+                            inputPlaca.setText(GlobalInfo.getNroPlacaPrecio10);
+                            inputDNI.setText(GlobalInfo.getClienteIDPrecio10);
+                            inputNombre.setText(GlobalInfo.getClienteRZPrecio10);
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(GlobalInfo.getDisponiblePuntos10));
+
+                            inputDNI.setEnabled(false);
+                            inputNombre.setEnabled(false);
+
+                            alertDNI.setBoxBackgroundColorResource(R.color.colornew);
+                            alertNombre.setBoxBackgroundColorResource(R.color.colornew);
+
+                            Double numPuntos = Double.parseDouble(String.valueOf(textNumPuntos.getText().toString()));
+
+                            if(numPuntos >= 10){
+                                radioCanje.setVisibility(View.VISIBLE);
+                            }else{
+                                radioCanje.setVisibility(View.GONE);
+                                Toast.makeText(getContext(), "Canje no disponible: el número de puntos debe ser mayor a 50.", Toast.LENGTH_SHORT).show();
+                            }
+
+                        }else{
+                            Toast.makeText(getContext(), "El NFC esta registrado con un RUC o esta bloqueado", Toast.LENGTH_SHORT).show();
+
+                            inputNFC.getText().clear();
+                            inputPlaca.setText("000-0000");
+                            inputDNI.getText().clear();
+                            inputNombre.getText().clear();
+                            inputDireccion.getText().clear();
+                            textNumPuntos.setText(String.valueOf(0));
+
+                            inputDNI.setEnabled(true);
+                            inputNombre.setEnabled(true);
+                            alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                            alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                            radioFormaPago.check(radioEfectivo.getId());
+                            radioCanje.setVisibility(View.GONE);
+                        }
+
+                    } else {
+                        Toast.makeText(getContext(), "No se encontraron datos del cliente.", Toast.LENGTH_SHORT).show();
+                        inputNFC.getText().clear();
+                        inputPlaca.setText("000-0000");
+                        inputDNI.getText().clear();
+                        inputNombre.getText().clear();
+                        inputDireccion.getText().clear();
+                        textNumPuntos.setText(String.valueOf(0));
+
+                        inputDNI.setEnabled(true);
+                        inputNombre.setEnabled(true);
+                        alertDNI.setBoxBackgroundColorResource(R.color.transparentenew);
+                        alertNombre.setBoxBackgroundColorResource(R.color.transparentenew);
+                        radioFormaPago.check(radioEfectivo.getId());
+                        radioCanje.setVisibility(View.GONE);
+                    }
+
+                } catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente Precio - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+        return nfcId;
+    }
+
+
+    /**
+     * @LISTADOCLIENTESCONPUNTOS
+     */
+    private void findListaClientePuntos(String nfcId,Integer comapyId){
+        Call<List<LClientePuntos>> call = mAPIService.findClienteArticulosPuntos(nfcId,comapyId);
+
+        call.enqueue(new Callback<List<LClientePuntos>>() {
+            @Override
+            public void onResponse(Call<List<LClientePuntos>> call, Response<List<LClientePuntos>> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                GlobalInfo.getclientePuntosList10 = response.body();
+
+                lRegistroClientePuntosAdapter = new LRegistroClientePuntosAdapter(GlobalInfo.getclientePuntosList10, getContext(), new LRegistroClientePuntosAdapter.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(LClientePuntos item) {
+
+                        inputNFC.setText(item.getRfid());
+
+                        BuscarRazonSocial.setQuery("", false);
+
+                        modallistNFCPuntos.dismiss();
+
+                    }
+                });
+                recyclerLClientePuntosNFC.setAdapter(lRegistroClientePuntosAdapter);
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientePuntos>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Lista Cliente - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     /**
      * @OBTENER:LectorEtiquetaNFC
@@ -3158,28 +3778,30 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             printama.setSmallText();
                             printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                             printama.printTextln("                 ", Printama.CENTER);
-                            QRCodeWriter writer = new QRCodeWriter();
-                            BitMatrix bitMatrix;
-                            try {
-                                bitMatrix = writer.encode(QRGenerado, BarcodeFormat.QR_CODE, 200, 200);
-                                int width = bitMatrix.getWidth();
-                                int height = bitMatrix.getHeight();
-                                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                for (int x = 0; x < width; x++) {
-                                    for (int y = 0; y < height; y++) {
-                                        int color = Color.WHITE;
-                                        if (bitMatrix.get(x, y)) color = Color.BLACK;
-                                        bitmap.setPixel(x, y, color);
+                            if(GlobalInfo.getVistaQR) {
+                                QRCodeWriter writer = new QRCodeWriter();
+                                BitMatrix bitMatrix;
+                                try {
+                                    bitMatrix = writer.encode(QRGenerado, BarcodeFormat.QR_CODE, 150, 150);
+                                    int width = bitMatrix.getWidth();
+                                    int height = bitMatrix.getHeight();
+                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                    for (int x = 0; x < width; x++) {
+                                        for (int y = 0; y < height; y++) {
+                                            int color = Color.WHITE;
+                                            if (bitMatrix.get(x, y)) color = Color.BLACK;
+                                            bitmap.setPixel(x, y, color);
+                                        }
                                     }
+                                    if (bitmap != null) {
+                                        printama.printImage(bitmap);
+                                    }
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
                                 }
-                                if (bitmap != null) {
-                                    printama.printImage(bitmap);
-                                }
-                            } catch (WriterException e) {
-                                e.printStackTrace();
                             }
                             printama.setSmallText();
-                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
+                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "https://cpesven.apisven.com");
                             break;
                         case "03" :
 
@@ -3260,28 +3882,30 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             printama.setSmallText();
                             printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                             printama.printTextln("                 ", Printama.CENTER);
-                            QRCodeWriter writerB = new QRCodeWriter();
-                            BitMatrix bitMatrixB;
-                            try {
-                                bitMatrixB = writerB.encode(QRGenerado, BarcodeFormat.QR_CODE, 200, 200);
-                                int width = bitMatrixB.getWidth();
-                                int height = bitMatrixB.getHeight();
-                                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                for (int x = 0; x < width; x++) {
-                                    for (int y = 0; y < height; y++) {
-                                        int color = Color.WHITE;
-                                        if (bitMatrixB.get(x, y)) color = Color.BLACK;
-                                        bitmap.setPixel(x, y, color);
+                            if(GlobalInfo.getVistaQR) {
+                                QRCodeWriter writerB = new QRCodeWriter();
+                                BitMatrix bitMatrixB;
+                                try {
+                                    bitMatrixB = writerB.encode(QRGenerado, BarcodeFormat.QR_CODE, 150, 150);
+                                    int width = bitMatrixB.getWidth();
+                                    int height = bitMatrixB.getHeight();
+                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                    for (int x = 0; x < width; x++) {
+                                        for (int y = 0; y < height; y++) {
+                                            int color = Color.WHITE;
+                                            if (bitMatrixB.get(x, y)) color = Color.BLACK;
+                                            bitmap.setPixel(x, y, color);
+                                        }
                                     }
+                                    if (bitmap != null) {
+                                        printama.printImage(bitmap);
+                                    }
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
                                 }
-                                if (bitmap != null) {
-                                    printama.printImage(bitmap);
-                                }
-                            } catch (WriterException e) {
-                                e.printStackTrace();
                             }
                             printama.setSmallText();
-                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
+                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "https://cpesven.apisven.com");
                             break;
 
                         case "99" :
@@ -3529,28 +4153,30 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             printama.setSmallText();
                             printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                             printama.printTextln("                 ", Printama.CENTER);
-                            QRCodeWriter writer = new QRCodeWriter();
-                            BitMatrix bitMatrix;
-                            try {
-                                bitMatrix = writer.encode(QRGenerado, BarcodeFormat.QR_CODE, 200, 200);
-                                int width = bitMatrix.getWidth();
-                                int height = bitMatrix.getHeight();
-                                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                for (int x = 0; x < width; x++) {
-                                    for (int y = 0; y < height; y++) {
-                                        int color = Color.WHITE;
-                                        if (bitMatrix.get(x, y)) color = Color.BLACK;
-                                        bitmap.setPixel(x, y, color);
+                            if(GlobalInfo.getVistaQR) {
+                                QRCodeWriter writer = new QRCodeWriter();
+                                BitMatrix bitMatrix;
+                                try {
+                                    bitMatrix = writer.encode(QRGenerado, BarcodeFormat.QR_CODE, 150, 150);
+                                    int width = bitMatrix.getWidth();
+                                    int height = bitMatrix.getHeight();
+                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                    for (int x = 0; x < width; x++) {
+                                        for (int y = 0; y < height; y++) {
+                                            int color = Color.WHITE;
+                                            if (bitMatrix.get(x, y)) color = Color.BLACK;
+                                            bitmap.setPixel(x, y, color);
+                                        }
                                     }
+                                    if (bitmap != null) {
+                                        printama.printImage(Printama.RIGHT, bitmap, 150);
+                                    }
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
                                 }
-                                if (bitmap != null) {
-                                    printama.printImage(Printama.RIGHT,bitmap,200);
-                                }
-                            } catch (WriterException e) {
-                                e.printStackTrace();
                             }
                             printama.setSmallText();
-                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
+                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "https://cpesven.apisven.com");
                             break;
                         case "03" :
 
@@ -3631,28 +4257,30 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                             printama.setSmallText();
                             printama.printTextln("SON: " + LetraSoles, Printama.LEFT);
                             printama.printTextln("                 ", Printama.CENTER);
-                            QRCodeWriter writerB = new QRCodeWriter();
-                            BitMatrix bitMatrixB;
-                            try {
-                                bitMatrixB = writerB.encode(QRGenerado, BarcodeFormat.QR_CODE, 200, 200);
-                                int width = bitMatrixB.getWidth();
-                                int height = bitMatrixB.getHeight();
-                                Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
-                                for (int x = 0; x < width; x++) {
-                                    for (int y = 0; y < height; y++) {
-                                        int color = Color.WHITE;
-                                        if (bitMatrixB.get(x, y)) color = Color.BLACK;
-                                        bitmap.setPixel(x, y, color);
+                            if(GlobalInfo.getVistaQR) {
+                                QRCodeWriter writerB = new QRCodeWriter();
+                                BitMatrix bitMatrixB;
+                                try {
+                                    bitMatrixB = writerB.encode(QRGenerado, BarcodeFormat.QR_CODE, 150, 150);
+                                    int width = bitMatrixB.getWidth();
+                                    int height = bitMatrixB.getHeight();
+                                    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+                                    for (int x = 0; x < width; x++) {
+                                        for (int y = 0; y < height; y++) {
+                                            int color = Color.WHITE;
+                                            if (bitMatrixB.get(x, y)) color = Color.BLACK;
+                                            bitmap.setPixel(x, y, color);
+                                        }
                                     }
+                                    if (bitmap != null) {
+                                        printama.printImage(Printama.RIGHT, bitmap, 150);
+                                    }
+                                } catch (WriterException e) {
+                                    e.printStackTrace();
                                 }
-                                if (bitmap != null) {
-                                    printama.printImage(Printama.RIGHT,bitmap,200);
-                                }
-                            } catch (WriterException e) {
-                                e.printStackTrace();
                             }
                             printama.setSmallText();
-                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "http://4-fact.com/sven/auth/consulta");
+                            printama.printTextln("Autorizado mediante resolucion de Superintendencia Nro. 203-2015 SUNAT. Representacion impresa de la boleta de venta electronica. Consulte desde\n"+ "https://cpesven.apisven.com");
                             break;
 
                         case "99" :

@@ -3,6 +3,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Anular;
 import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
+import com.anggastudio.sample.WebApiSVEN.Models.CambioPrecios;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
@@ -24,11 +25,13 @@ import com.anggastudio.sample.WebApiSVEN.Models.ReporteVendedor;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTask;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.Users;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
 import com.anggastudio.sample.WebApiSVEN.Models.VProducto;
+import com.anggastudio.sample.WebApiSVEN.Models.VProductoTienda;
 import com.anggastudio.sample.WebApiSVEN.Models.VTipoPago;
 import com.anggastudio.sample.WebApiSVEN.Models.VentaCA;
 import com.anggastudio.sample.WebApiSVEN.Models.VentaMarketCA;
@@ -213,6 +216,14 @@ public interface APIService {
     Call<List<VProducto>> findVProducto(@Path("terminalID") String terminalID,@Path("terminalTurno") Integer terminalTurno);
 
     /**
+     * @CIERREX:VentaProducto
+     */
+
+    @GET("api/rproducto/listado2/{terminalID}/{terminalTurno}")
+    Call<List<VProductoTienda>> findVProductoTienda(@Path("terminalID") String terminalID, @Path("terminalTurno") Integer terminalTurno);
+
+
+    /**
      * @CIERREX:VentaPago
      */
     @GET("api/rpago/listado")
@@ -337,5 +348,28 @@ public interface APIService {
 
     @GET("api/ClientePuntos/Listado/{RFID}/{CompanyId}")
     Call<List<LClientePuntos>> findClienteArticulosPuntos(@Path("RFID") String RFID, @Path("CompanyId") Integer CompanyId);
+
+    /**
+     * @Comfirmacion Precio
+     */
+    @GET("api/PrecioComb/listado")
+    Call<List<CambioPrecios>> findConfirmacionPrecio();
+
+    /**
+     * @Guardar Precio
+     */
+    @POST("api/PrecioComb/guardar")
+    Call<CambioPrecios> post(@Body CambioPrecios cambioPrecios);
+
+    /**
+     * @TipoVehiculo
+     */
+
+    @GET("api/SettingVehiculo/Listado")
+    Call<List<SettingVehiculo>> getSettingVehiculo();
+
+
+    @GET("api/SettingVehiculo/Listado/{CompanyID}/{VehiculoID}")
+    Call<List<SettingVehiculo>> findSettingVehiculo(@Path("CompanyID") Integer CompanyID, @Path("VehiculoID") Integer VehiculoID);
 
 }

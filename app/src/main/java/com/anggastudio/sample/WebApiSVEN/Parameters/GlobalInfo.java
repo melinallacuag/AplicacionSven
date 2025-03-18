@@ -10,6 +10,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
 
 import java.util.List;
@@ -22,11 +23,16 @@ public class GlobalInfo {
     public static String  getTVolumenContometro10;
     public static String  getTSProductosTotalGLL10;
     public static String  getTSProductosTotalSoles10;
+    public static String  getTSProductosTotalCantidadTienda10;
+    public static String  getTSProductosTotalSolesTienda10;
+    public static String  getTSProductosTotalDescTienda10;
+    public static String  getTSProductosTotalIncrementoTienda10;
     public static String  getTSProductosTotalDesc10;
     public static String  getTSProductosTotalIncremento10;
     public static String  getTotalPagosSoles10;
     public static String  getTotalRTarjetasSoles10;
     public static String  getMontoBruto10;
+    public static String  getMontoBrutoTienda10;
     public static String  getTGratuita10;
     public static Integer getrAnuladosCantidad10;
     public static String  getrAnuladosSoles10;
@@ -53,6 +59,7 @@ public class GlobalInfo {
     public static  List<CDia>   getCDiaList10;
     public static  List<ClientePrecio>  getclientePrecioList10;
     public static  List<LClientePuntos> getclientePuntosList10;
+    public static  List<SettingVehiculo> gettipovehiculoList10;
 
     /**
      * @DESCUENTO:ClientePrecio
@@ -131,6 +138,7 @@ public class GlobalInfo {
     public static boolean getReporteTarjetas10;
     public static boolean getVentasTipoPago10;
     public static boolean getVentasProductos10;
+    public static boolean getVentasProductosTienda10;
     public static boolean getVentasContometros10;
     public static Integer getTerminalImageW10;
     public static String  getTipoPapel10;
@@ -142,6 +150,11 @@ public class GlobalInfo {
     public static Integer getterminalFCabecera;
     public static boolean getTerminalSoloPuntos10;
     public static boolean getTerminalLecturar10;
+    public static boolean getConfiguracionSerafin;
+    public static boolean getConfiguracionPL;
+    public static boolean getConRfdPuntos;
+    public static boolean getVistaQR;
+    public static boolean getDobleImpresion;
 
     /**
      * @SETTING
@@ -166,6 +179,7 @@ public class GlobalInfo {
     public static String  getsettingRutaLogo110;
     public static String  getsettingRutaLogo210;
     public static Integer getsettingDescuentoRFID10;
+    public static Double getsettingValorIGV10;
 
     /**
      * @SETTINGTURNO
@@ -260,6 +274,11 @@ public class GlobalInfo {
     public static int  getConsultaComprobanteTipoDocumento;
 
     /**
+     * Deposito Boveda
+     */
+    public static boolean getTerminalBoveda = false;
+
+    /**
      * @APIService
      */
 
@@ -269,7 +288,10 @@ public class GlobalInfo {
     //public static final String BASE_URL = "http://192.168.1.227:8081/";
     //  public static final String BASE_URL = "http://192.168.1.3:8081/";
     //public static final String BASE_URL = "http://192.168.0.245:8081/";
-    public static final String BASE_URL = "http://192.168.1.245:8081/";
+   // public static final String BASE_URL = "http://192.168.1.245:8081/";
+    public static final String BASE_URL = "http://192.168.18.29:8081/";
+    //public static final String BASE_URL = "http://192.168.1.245:8081/";
+  //  public static final String BASE_URL = "http://192.168.42.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
     // public static final String BASE_URL = "http://192.168.18.33:8081/";
     // public static final String BASE_URL = "http://192.168.1.19:8081/";

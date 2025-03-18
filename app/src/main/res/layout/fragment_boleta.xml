@@ -60,6 +60,29 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textBuscarPutnos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Buscar cliente con punto"
+                    app:boxBackgroundColor="#B5D9F8"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxCornerRadiusBottomEnd="15dp"
+                    app:boxCornerRadiusTopEnd="15dp"
+                    android:layout_marginBottom="5sp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_BuscarPutnos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorDark"
+                        android:inputType="number"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <Button
                     android:id="@+id/buscarListNFC"
                     android:layout_width="120sp"
@@ -89,61 +112,20 @@
                     android:visibility="gone"
                     app:cornerRadius="10sp" />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/alertPlaca"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Ingresar N° de Placa"
-                    app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusBottomEnd="15dp"
-                    app:boxCornerRadiusTopEnd="15dp"
-                    app:endIconMode="clear_text">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/inputPlaca"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/nunito_semibold"
-                        android:inputType="textCapCharacters"
-                        android:text="000-0000"
-                        android:textSize="12sp" />
-                </com.google.android.material.textfield.TextInputLayout>
-
                 <Button
-                    android:id="@+id/buscarPlacaBoleta"
-                    android:layout_width="200sp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5sp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/nunito_extrabold"
-                    android:text="@string/btn_buscar"
-                    android:textColor="@color/white"
-                    android:backgroundTint="@color/colorSecondary"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    app:cornerRadius="10sp" />
-
-                <TextView
-                    android:id="@+id/textNumPuntos"
+                    android:id="@+id/buscarListSinPuntosNFC"
                     android:layout_width="120sp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="buscar"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/purple_200"
+                    android:textSize="10sp"
+                    android:layout_marginTop="-4sp"
                     android:layout_marginStart="10sp"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:fontFamily="@font/nunito_black"
-                    android:text="0"
-                    android:textColor="@color/red_200"
-                    android:textSize="16sp" />
+                    android:layout_marginLeft="10sp"
+                    android:visibility="gone"
+                    app:cornerRadius="10sp" />
 
             </LinearLayout>
 
@@ -237,6 +219,62 @@
                     android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/alertPlaca"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Ingresar N° de Placa"
+                    app:boxBackgroundMode="outline"
+                    app:boxCornerRadiusBottomEnd="15dp"
+                    app:boxCornerRadiusTopEnd="15dp"
+                    app:endIconMode="clear_text">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputPlaca"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_semibold"
+                        android:inputType="textCapCharacters"
+                        android:text="000-0000"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/buscarPlacaBoleta"
+                    android:layout_width="200sp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5sp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="@string/btn_buscar"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    app:cornerRadius="10sp" />
+
+                <TextView
+                    android:id="@+id/textNumPuntos"
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10sp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:fontFamily="@font/nunito_black"
+                    android:text="0"
+                    android:textColor="@color/red_200"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/alertObservacion"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -321,8 +359,8 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="Canje"
-                    android:visibility="gone"
                     android:textColor="@color/gris"
+                    android:visibility="gone"
                     android:textSize="12sp" />
             </RadioGroup>
 
