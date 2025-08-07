@@ -6,13 +6,13 @@
     android:orientation="vertical"
     android:padding="1dip" >
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/spinnerItemMoneda"
+        android:id="@+id/spinnerItemTEgreso"
         android:layout_width="match_parent"
         android:layout_height="40sp"
         android:gravity="center"
-        android:layout_gravity="center"
         android:textColor="@color/black"
         android:fontFamily="@font/nunito_extrabold"
+        android:layout_gravity="center"
         android:padding="2dp"
         android:textSize="12sp" >
     </com.google.android.material.textview.MaterialTextView>

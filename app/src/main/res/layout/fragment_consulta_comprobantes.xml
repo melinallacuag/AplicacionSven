@@ -281,6 +281,7 @@
                 android:layout_weight="1"
                 android:hint="Ingresar Nro. Tarjeta Puntos"
                 app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="#BFBFBF"
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
                 app:endIconMode="clear_text">
@@ -289,6 +290,7 @@
                     android:id="@+id/inputNroTPuntos"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:focusable="false"
                     android:fontFamily="@font/nunito_semibold"
                     android:inputType="textCapCharacters"
                     android:textSize="12sp" />
@@ -400,15 +402,6 @@
                 android:textColor="@color/gris"
                 android:textSize="14sp" />
 
-            <RadioButton
-                android:id="@+id/radioCredito"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/nunito_extrabold"
-                android:text="Credito"
-                android:textColor="@color/gris"
-                android:textSize="14sp" />
         </RadioGroup>
 
         <TextView

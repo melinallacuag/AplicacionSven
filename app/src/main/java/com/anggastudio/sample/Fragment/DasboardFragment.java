@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +68,7 @@ public class DasboardFragment extends Fragment{
     String usuarioUser,contraseñaUser;
 
     List<Users> usersCTList;
+    CardView btn_Boveda;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,10 +97,30 @@ public class DasboardFragment extends Fragment{
         btn_Cambioturno       = view.findViewById(R.id.btnCambioTurno);
         btn_Iniciodia         = view.findViewById(R.id.btnInicioDia);
         btn_Salir             = view.findViewById(R.id.btnSalir);
+        btn_Boveda             = view.findViewById(R.id.btnBoveda);
         img_Logo              = view.findViewById(R.id.logo_dashboard);
 
-        ventas                  = view.findViewById(R.id.ventas);
-        imageee                 = view.findViewById(R.id.imageee);
+        ventas                = view.findViewById(R.id.ventas);
+        imageee               = view.findViewById(R.id.imageee);
+
+        /**
+         * @OBTENER:Boveda
+         */
+        btn_Boveda.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                FragmentManager fragmentManagerBoveda = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransactionBoveda= fragmentManagerBoveda.beginTransaction();
+                int fragmentContainerBoveda    = R.id.fragment_container;
+                BovedasFragment bovedasFragment = new BovedasFragment();
+
+                fragmentTransactionBoveda.replace(fragmentContainerBoveda, bovedasFragment);
+                fragmentTransactionBoveda.addToBackStack(null);
+                fragmentTransactionBoveda.commit();
+
+            }
+        });
 
         /**
          * @OBTENER:DatoGerealUserTerminal
@@ -379,11 +402,31 @@ public class DasboardFragment extends Fragment{
                                                 usuario.getText().clear();
                                                 contraseña.getText().clear();
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
                                             }
                                         });
+
+                                        TextWatcher campoVacioWatcher = new TextWatcher() {
+                                            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                if (usuario.hasFocus()) {
+                                                    alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                                                } else if (contraseña.hasFocus()) {
+                                                    alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                                                }
+                                            }
+
+                                            @Override public void afterTextChanged(Editable s) {}
+                                        };
+
+                                        usuario.addTextChangedListener(campoVacioWatcher);
+                                        contraseña.addTextChangedListener(campoVacioWatcher);
 
                                         btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -402,6 +445,8 @@ public class DasboardFragment extends Fragment{
 
                                                 findUsersCT(usuarioUser);
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
@@ -457,11 +502,31 @@ public class DasboardFragment extends Fragment{
                                                 usuario.getText().clear();
                                                 contraseña.getText().clear();
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
                                             }
                                         });
+
+                                        TextWatcher campoVacioWatcher = new TextWatcher() {
+                                            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                if (usuario.hasFocus()) {
+                                                    alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                                                } else if (contraseña.hasFocus()) {
+                                                    alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                                                }
+                                            }
+
+                                            @Override public void afterTextChanged(Editable s) {}
+                                        };
+
+                                        usuario.addTextChangedListener(campoVacioWatcher);
+                                        contraseña.addTextChangedListener(campoVacioWatcher);
 
                                         btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -480,6 +545,8 @@ public class DasboardFragment extends Fragment{
 
                                                 findUsersCT(usuarioUser);
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
@@ -535,11 +602,31 @@ public class DasboardFragment extends Fragment{
                                                 usuario.getText().clear();
                                                 contraseña.getText().clear();
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
                                             }
                                         });
+
+                                        TextWatcher campoVacioWatcher = new TextWatcher() {
+                                            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                if (usuario.hasFocus()) {
+                                                    alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                                                } else if (contraseña.hasFocus()) {
+                                                    alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                                                }
+                                            }
+
+                                            @Override public void afterTextChanged(Editable s) {}
+                                        };
+
+                                        usuario.addTextChangedListener(campoVacioWatcher);
+                                        contraseña.addTextChangedListener(campoVacioWatcher);
 
                                         btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -558,6 +645,8 @@ public class DasboardFragment extends Fragment{
 
                                                 findUsersCT(usuarioUser);
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
@@ -615,11 +704,31 @@ public class DasboardFragment extends Fragment{
                                                 usuario.getText().clear();
                                                 contraseña.getText().clear();
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
                                             }
                                         });
+
+                                        TextWatcher campoVacioWatcher = new TextWatcher() {
+                                            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                            @Override
+                                            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                if (usuario.hasFocus()) {
+                                                    alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                                                } else if (contraseña.hasFocus()) {
+                                                    alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                                                }
+                                            }
+
+                                            @Override public void afterTextChanged(Editable s) {}
+                                        };
+
+                                        usuario.addTextChangedListener(campoVacioWatcher);
+                                        contraseña.addTextChangedListener(campoVacioWatcher);
 
                                         btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -638,6 +747,8 @@ public class DasboardFragment extends Fragment{
 
                                                 findUsersCT(usuarioUser);
 
+                                                alertuser.setError(null);
+                                                alertpassword.setError(null);
                                                 alertuser.setErrorEnabled(false);
                                                 alertpassword.setErrorEnabled(false);
 
@@ -779,11 +890,31 @@ public class DasboardFragment extends Fragment{
                                                         usuario.getText().clear();
                                                         contraseña.getText().clear();
 
+                                                        alertuser.setError(null);
+                                                        alertpassword.setError(null);
                                                         alertuser.setErrorEnabled(false);
                                                         alertpassword.setErrorEnabled(false);
 
                                                     }
                                                 });
+
+                                                TextWatcher campoVacioWatcher = new TextWatcher() {
+                                                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                                    @Override
+                                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                        if (usuario.hasFocus()) {
+                                                            alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                                                        } else if (contraseña.hasFocus()) {
+                                                            alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                                                        }
+                                                    }
+
+                                                    @Override public void afterTextChanged(Editable s) {}
+                                                };
+
+                                                usuario.addTextChangedListener(campoVacioWatcher);
+                                                contraseña.addTextChangedListener(campoVacioWatcher);
 
                                                 btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
                                                     @Override
@@ -802,6 +933,8 @@ public class DasboardFragment extends Fragment{
 
                                                         findUsersID(usuarioUser);
 
+                                                        alertuser.setError(null);
+                                                        alertpassword.setError(null);
                                                         alertuser.setErrorEnabled(false);
                                                         alertpassword.setErrorEnabled(false);
 
@@ -864,11 +997,31 @@ public class DasboardFragment extends Fragment{
                                                         usuario.getText().clear();
                                                         contraseña.getText().clear();
 
+                                                        alertuser.setError(null);
+                                                        alertpassword.setError(null);
                                                         alertuser.setErrorEnabled(false);
                                                         alertpassword.setErrorEnabled(false);
 
                                                     }
                                                 });
+
+                                                TextWatcher campoVacioWatcher = new TextWatcher() {
+                                                    @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                                                    @Override
+                                                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                                                        if (usuario.hasFocus()) {
+                                                            alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                                                        } else if (contraseña.hasFocus()) {
+                                                            alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                                                        }
+                                                    }
+
+                                                    @Override public void afterTextChanged(Editable s) {}
+                                                };
+
+                                                usuario.addTextChangedListener(campoVacioWatcher);
+                                                contraseña.addTextChangedListener(campoVacioWatcher);
 
                                                 btnAceptarCIDEntrada.setOnClickListener(new View.OnClickListener() {
                                                     @Override
@@ -887,6 +1040,8 @@ public class DasboardFragment extends Fragment{
 
                                                         findUsersID(usuarioUser);
 
+                                                        alertuser.setError(null);
+                                                        alertpassword.setError(null);
                                                         alertuser.setErrorEnabled(false);
                                                         alertpassword.setErrorEnabled(false);
 

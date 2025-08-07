@@ -1,5 +1,7 @@
 package com.anggastudio.sample;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -54,6 +56,27 @@ public class ConfigurarLados extends AppCompatActivity {
         /**
          * @ELIMINAR:CLados
          */
+
+        inputTerminalId.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String inputTerminaCLados= s.toString();
+
+                if (!inputTerminaCLados.isEmpty() && !inputTerminaCLados.matches("^[A-Za-z0-9]+$")) {
+                    alertTerminalId.setError("* Solo se permiten letras y números");
+                    return;
+                } else {
+                    alertTerminalId.setError(null);
+                    alertTerminalId.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         btnEliminaCLado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

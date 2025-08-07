@@ -58,6 +58,29 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/textBuscarPutnos"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Buscar cliente con punto"
+                    app:boxBackgroundColor="#B5D9F8"
+                    android:layout_weight="1"
+                    android:visibility="gone"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    app:boxCornerRadiusBottomEnd="15dp"
+                    app:boxCornerRadiusTopEnd="15dp"
+                    android:layout_marginBottom="5sp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/input_BuscarPutnos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorDark"
+                        android:inputType="number"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <Button
                     android:id="@+id/buscarListNFC"
                     android:layout_width="120sp"
@@ -78,6 +101,21 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_extrabold"
                     android:text="lista de puntos"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/purple_200"
+                    android:textSize="10sp"
+                    android:layout_marginTop="-4sp"
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:visibility="gone"
+                    app:cornerRadius="10sp" />
+
+                <Button
+                    android:id="@+id/buscarListSinPuntosNFC"
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_extrabold"
+                    android:text="buscar"
                     android:textColor="@color/white"
                     android:backgroundTint="@color/purple_200"
                     android:textSize="10sp"
@@ -139,11 +177,30 @@
                 app:boxCornerRadiusBottomEnd="15dp"
                 app:boxCornerRadiusTopEnd="15dp"
                 app:endIconMode="clear_text"
-                app:counterEnabled="true"
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputCRazSocial"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:textSize="12sp"
+                    android:focusable="false"
+                    android:inputType="textCapCharacters"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/alertDireccion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Ingresar Dirección"
+                app:boxBackgroundColor="#E4E4E4"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxCornerRadiusBottomEnd="15dp"
+                app:boxCornerRadiusTopEnd="15dp"
+                app:endIconMode="clear_text"
+                android:layout_weight="1">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/inputCDireccion"
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="12sp"
                     android:focusable="false"
@@ -188,27 +245,6 @@
                     android:fontFamily="@font/nunito_semibold"
                     android:textSize="12sp"
                     android:text="000-0000"
-                    android:inputType="textCapCharacters"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/alertDireccion"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Ingresar Dirección"
-                app:boxBackgroundColor="#E4E4E4"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                app:boxCornerRadiusBottomEnd="15dp"
-                app:boxCornerRadiusTopEnd="15dp"
-                app:endIconMode="clear_text"
-                android:layout_weight="1">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/inputCDireccion"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:textSize="12sp"
-                    android:focusable="false"
                     android:inputType="textCapCharacters"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ingresar Cliente"
+                android:text="Generar Comprobante"
                 android:fontFamily="@font/nunito_extrabold"
                 android:textAllCaps="true"
                 android:textColor="@color/white"
@@ -59,7 +59,7 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="30dp"
-                android:src="@drawable/icons_peoples"
+                android:src="@drawable/icons_documentos"
                 android:layout_marginStart="20sp"
                 app:tint="@color/white" />
 

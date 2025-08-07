@@ -1,14 +1,20 @@
 package com.anggastudio.sample.WebApiSVEN.Parameters;
 import static com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient.getClient;
+import static com.anggastudio.sample.WebApiSVEN.Parameters.RetrofitClient.getClient2;
+
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Articulos;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
+import com.anggastudio.sample.WebApiSVEN.Models.Egreso;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientePuntos;
 import com.anggastudio.sample.WebApiSVEN.Models.LClientes;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingMoneda;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingTEgreso;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
@@ -39,6 +45,7 @@ public class GlobalInfo {
     public static Integer getrDespachosCantidad10;
     public static String  getrDespachosSoles10;
     public static String  getTotalRVenddorSoles10;
+    public static String  getTotalREgresoSoles10;
 
     /**
      * @MOSTRARMODAL:Alertas
@@ -60,6 +67,10 @@ public class GlobalInfo {
     public static  List<ClientePrecio>  getclientePrecioList10;
     public static  List<LClientePuntos> getclientePuntosList10;
     public static  List<SettingVehiculo> gettipovehiculoList10;
+    public static  List<SettingMoneda> getmonedaList10;
+    public static  List<SettingTEgreso> getegresoList10;
+    public static  List<Egreso> getlistegresoList10;
+    public  static List<Articulos> getarticulosList10;
 
     /**
      * @DESCUENTO:ClientePrecio
@@ -155,6 +166,8 @@ public class GlobalInfo {
     public static boolean getConRfdPuntos;
     public static boolean getVistaQR;
     public static boolean getDobleImpresion;
+    public static boolean getReporteEgreso10;
+    public static boolean getterminalModalidad;
 
     /**
      * @SETTING
@@ -180,6 +193,8 @@ public class GlobalInfo {
     public static String  getsettingRutaLogo210;
     public static Integer getsettingDescuentoRFID10;
     public static Double getsettingValorIGV10;
+    public static Double getsettingDescuentoGll10;
+    public static boolean getsettingByImei10;
 
     /**
      * @SETTINGTURNO
@@ -274,31 +289,43 @@ public class GlobalInfo {
     public static int  getConsultaComprobanteTipoDocumento;
 
     /**
-     * Deposito Boveda
+     * Egreso
      */
-    public static boolean getTerminalBoveda = false;
-
+    public static Integer getegresoID10;
+    public static String getegresoAnulado10;
+    /**
+    *
+     */
+    public static Double getmnMtoSubTotal1;
+    public static Double getmnMtoImpuesto1;
     /**
      * @APIService
      */
-
+    public static final String BASE_URLs = "http://192.168.18.27:5001/";
     //public static final String BASE_URL = "http://4-fact.com:8081/";
     //public static final String BASE_URL = "http://192.168.1.14:8081/";
     //public static final String BASE_URL = "http://192.168.18.20:8081/";
     //public static final String BASE_URL = "http://192.168.1.227:8081/";
-    //  public static final String BASE_URL = "http://192.168.1.3:8081/";
+    //public static final String BASE_URL = "http://192.168.1.3:8081/";
     //public static final String BASE_URL = "http://192.168.0.245:8081/";
-   // public static final String BASE_URL = "http://192.168.1.245:8081/";
-    public static final String BASE_URL = "http://192.168.18.29:8081/";
     //public static final String BASE_URL = "http://192.168.1.245:8081/";
-  //  public static final String BASE_URL = "http://192.168.42.245:8081/";
+  //  public static final String BASE_URL = "http://192.168.18.31:8082/";
+ //   public static final String BASE_URL = "http://192.168.68.106:8082/";
+   // public static final String BASE_URL = "https://pos.apisven.com/";
+
+    public static final String BASE_URL = "http://192.168.1.245:8081/";
+    //public static final String BASE_URL = "http://192.168.42.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
     // public static final String BASE_URL = "http://192.168.18.33:8081/";
     // public static final String BASE_URL = "http://192.168.1.19:8081/";
     //public static final String BASE_URL = "http://192.168.1.245:8082/";
+    //public static final String BASE_URL = "http://192.168.1.245:8081/";
 
     public static APIService getAPIService() {
         return getClient(BASE_URL).create(APIService.class);
     }
 
+    public static APIService getAPIService2() {
+        return getClient2(BASE_URLs).create(APIService.class);
+    }
 }

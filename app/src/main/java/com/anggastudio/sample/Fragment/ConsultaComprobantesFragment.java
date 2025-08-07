@@ -119,7 +119,6 @@ public class ConsultaComprobantesFragment extends Fragment {
         radioFormaPago    = view.findViewById(R.id.radioFormaPago);
         radioEfectivo     = view.findViewById(R.id.radioEfectivo);
         radioTarjeta      = view.findViewById(R.id.radioTarjeta);
-        radioCredito      = view.findViewById(R.id.radioCredito);
 
         SpinnerTDocumento = view.findViewById(R.id.SpinnerTDocumento);
         SpinnerTPago      = view.findViewById(R.id.SpinnerTPago);
@@ -262,11 +261,6 @@ public class ConsultaComprobantesFragment extends Fragment {
                     textMensajePEfectivo.setVisibility(View.GONE);
                     alertSelectTPago.setVisibility(View.VISIBLE);
                     alertOperacion.setVisibility(View.VISIBLE);
-                    alertPEfectivo.setVisibility(View.VISIBLE);
-                } else if (checkedId == radioCredito.getId()){
-                    textMensajePEfectivo.setVisibility(View.GONE);
-                    alertSelectTPago.setVisibility(View.GONE);
-                    alertOperacion.setVisibility(View.GONE);
                     alertPEfectivo.setVisibility(View.VISIBLE);
                 }
             }

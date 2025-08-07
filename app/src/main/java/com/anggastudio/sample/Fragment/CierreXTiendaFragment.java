@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.anggastudio.printama.Printama;
+import com.anggastudio.sample.Adapter.ReporteEgresoAdapter;
 import com.anggastudio.sample.Adapter.ReporteTarjetasAdapter;
 import com.anggastudio.sample.Adapter.ReporteVendedorAdapter;
 import com.anggastudio.sample.Adapter.VContometroAdapter;
@@ -32,6 +34,7 @@ import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
+import com.anggastudio.sample.WebApiSVEN.Models.ReporteEgreso;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteVendedor;
 import com.anggastudio.sample.WebApiSVEN.Models.VContometro;
@@ -57,20 +60,23 @@ public class CierreXTiendaFragment extends Fragment {
     private APIService mAPIService;
     private NFCUtil nfcUtil;
 
-    TextView TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
+    TextView GranEgresoTotal,TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,textSucural,textNombreEmpresa,
             TotalMontoPago,totalPagoBruto,
             TotalDescuento2,TotalIncremento,GranTotal,
             TotalCantidadProdTienda,TotalMontoProdTienda;
 
-    String RAnuladosSoles10,RDespachosSoles10,SProductosTotalDescTienda,SProductosTotalIncrementoTienda,
+    String TotalREgresoSoles,RAnuladosSoles10,RDespachosSoles10,SProductosTotalDescTienda,SProductosTotalIncrementoTienda,
             TotalPagosSoles,MontoBruto,TotalRTarjetasSoles,
             SProductosTotalCantidadTienda,SProductosTotalSolesTienda;
 
     Button imprimirCierreX;
     Dialog modalAlerta;
 
-    RecyclerView recyclerVProductosTienda,recyclerVTipoPago,recyclerReporteTarj;
+    RecyclerView recyclerReporteEgreso,recyclerVProductosTienda,recyclerVTipoPago,recyclerReporteTarj;
+
+    ReporteEgresoAdapter reporteEgresoAdapter;
+    List<ReporteEgreso> reporteEgresoList;
 
     ReporteTarjetasAdapter reporteTarjetasAdapter;
     List<ReporteTarjetas> reporteTarjetasList;
@@ -86,7 +92,9 @@ public class CierreXTiendaFragment extends Fragment {
 
     ImageView logoCierreX;
 
-    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalIncremento,RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,
+    LinearLayout reporteVendedor;
+
+    Double REgresoTotal,AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalIncremento,RProductosTotalDesc, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,
             RProductosCantidadTienda,RProductosTotalSolesTienda,RProductosDescTienda,RProductosIncrementoTienda,MontoBrutoTienda,montoBrutoTotal;
 
     @Override
@@ -123,10 +131,18 @@ public class CierreXTiendaFragment extends Fragment {
         TotalIncremento     = view.findViewById(R.id.TotalIncremento);
 
         GranTotal           = view.findViewById(R.id.GranTotal);
+        GranEgresoTotal     = view.findViewById(R.id.GranEgresoTotal);
 
         imprimirCierreX     = view.findViewById(R.id.imprimircierrex);
 
         logoCierreX         = view.findViewById(R.id.LogoCierreX);
+
+        reporteVendedor = view.findViewById(R.id.reporteVendedor);
+
+        reporteVendedor.setVisibility(View.VISIBLE);
+        if(!GlobalInfo.getsettingByImei10){
+            reporteVendedor.setVisibility(View.GONE);
+        }
 
         /** Mostrar Alerta - Sino tiene ninguna venta pendiente */
         modalAlerta = new Dialog(getContext());
@@ -205,6 +221,7 @@ public class CierreXTiendaFragment extends Fragment {
         RVendedorTotal       = 0.00;
         RProductosDescTienda = 0.00;
         RProductosIncrementoTienda = 0.00;
+        REgresoTotal         = 0.00;
 
         MontoBrutoTienda = 0.00;
         montoBrutoTotal  = 0.00;
@@ -230,8 +247,55 @@ public class CierreXTiendaFragment extends Fragment {
         recyclerReporteTarj.setLayoutManager(new LinearLayoutManager(getContext()));
         findRTarjetas(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
+        /** Reporte por Egreso */
+        recyclerReporteEgreso = view.findViewById(R.id.recyclerReporteEgreso);
+        recyclerReporteEgreso.setLayoutManager(new LinearLayoutManager(getContext()));
+        findREgreso(GlobalInfo.getterminalID10, GlobalInfo.getterminalTurno10);
+
         return view;
     }
+    /** API SERVICE - R. Egreso */
+    private void findREgreso(String id,Integer turno){
+
+        Call<List<ReporteEgreso>> call = mAPIService.findReporteEgresos(id,turno);
+
+        call.enqueue(new Callback<List<ReporteEgreso>>() {
+            @Override
+            public void onResponse(Call<List<ReporteEgreso>> call, Response<List<ReporteEgreso>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error R.egreso: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    reporteEgresoList = response.body();
+
+                    for(ReporteEgreso reporteEgreso: reporteEgresoList) {
+                        REgresoTotal += reporteEgreso.getMtoTotal();
+                    }
+
+                    TotalREgresoSoles = String.format(Locale.getDefault(), "%,.2f" ,REgresoTotal);
+                    GlobalInfo.getTotalREgresoSoles10 = TotalREgresoSoles;
+                    GranEgresoTotal.setText(TotalREgresoSoles);
+
+                    reporteEgresoAdapter = new ReporteEgresoAdapter(reporteEgresoList, getContext());
+                    recyclerReporteEgreso.setAdapter(reporteEgresoAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReporteEgreso>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE r.Egreso - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
     /** API SERVICE - R. Despacho */
     private void findRDespacho(String terminalId, String turno, String tipo){
 
@@ -631,7 +695,7 @@ public class CierreXTiendaFragment extends Fragment {
                     VProductoTiendaBuilder.append(line).append("\n");
                     break;
                 case "58mm":
-                    String lineS = String.format(Locale.getDefault(), "%-24s %2s %10s", producto, cantidad, soles);
+                    String lineS = String.format(Locale.getDefault(), "%-10s %4s %10s", producto, cantidad, soles);
                     VProductoTiendaBuilder.append(lineS).append("\n");
                     break;
             }
@@ -696,7 +760,7 @@ public class CierreXTiendaFragment extends Fragment {
                 TotalProTienda.append(linest);
                 break;
             case "58mm":
-                String linesST = String.format(Locale.getDefault(), "%-26s %8s %10s", TotalProTiendaC,TSProductosTotalCantidadT, TSProductosTotalSolesT);
+                String linesST = String.format(Locale.getDefault(), "%-14s %4s %10s", TotalProTiendaC,TSProductosTotalCantidadT, TSProductosTotalSolesT);
                 TotalProTienda.append(linesST);
                 break;
         }
@@ -791,6 +855,46 @@ public class CierreXTiendaFragment extends Fragment {
                 break;
         }
 
+        /**  Reporte por Egreso **/
+        StringBuilder ReporteEgresoBuilder = new StringBuilder();
+
+        for(ReporteEgreso reporteEgreso: reporteEgresoList) {
+            String IDEgreso   = String.valueOf(reporteEgreso.getId());
+            String tipoEgreso     = reporteEgreso.getEgresoDs();
+            String solesEgreso    = String.format("%,10.2f",reporteEgreso.getMtoTotal());
+
+            switch (tipopapel) {
+                case "65mm":
+                case "80mm":
+                    String linneEgreso = String.format(Locale.getDefault(), "%-5s %27s %14s", IDEgreso,tipoEgreso,solesEgreso);
+                    ReporteEgresoBuilder.append(linneEgreso).append("\n");
+                    break;
+                case "58mm":
+                    String linnesEgreso = String.format(Locale.getDefault(), "%-3s %9s %8s",IDEgreso, tipoEgreso,solesEgreso);
+                    ReporteEgresoBuilder.append(linnesEgreso).append("\n");
+                    break;
+            }
+        }
+
+        /** Gran Total de R Egreso */
+
+        StringBuilder GranREgresoTotal = new StringBuilder();
+
+        String GranREgresoTotalC   = "GRAN TOTAL :";
+        String TotalSolesE           = GlobalInfo.getTotalREgresoSoles10;
+
+        switch (tipopapel) {
+            case "65mm":
+            case "80mm":
+                String linneesSEgreso = String.format(Locale.getDefault(),"%-36s %11s", GranREgresoTotalC, TotalSolesE);
+                GranREgresoTotal.append(linneesSEgreso);
+                break;
+            case "58mm":
+                String linneeSEgreso = String.format(Locale.getDefault(),"%-20s %11s", GranREgresoTotalC, TotalSolesE);
+                GranREgresoTotal.append(linneeSEgreso);
+                break;
+        }
+
         int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
         /** Imprimir Cierre X**/
@@ -857,8 +961,8 @@ public class CierreXTiendaFragment extends Fragment {
                         printama.setSmallText();
                         printama.printTextlnBold("VENTAS OTROS PRODUCTOS",Printama.CENTER);
                         printama.addNewLine(1);
-                        printama.printTextlnBold("PRODUCTO              "+"CANT."+"SOLES",Printama.RIGHT);
-                        printama.printTextlnBold( VProductoTiendaBuilder.toString() + "---------" + "    " + "---------", Printama.RIGHT);
+                        printama.printTextlnBold("PRODUCTO        " + "CANT.      " + "SOLES",Printama.RIGHT);
+                        printama.printTextlnBold( VProductoTiendaBuilder.toString() + "-------" + "    " + "-------", Printama.RIGHT);
                         printama.printTextlnBold(TotalProTienda.toString(),Printama.RIGHT);
 
                     }
@@ -896,6 +1000,20 @@ public class CierreXTiendaFragment extends Fragment {
                         printama.printTextlnBold("NRO DOCUMENTO "+"TIPO   "+"REF. "+" MONTO",Printama.RIGHT);
                         printama.printTextlnBold( ReporteTarjetasBuilder.toString() + "---------", Printama.RIGHT);
                         printama.printTextlnBold(RTarjetaTotal.toString(),Printama.RIGHT);
+
+                    }
+
+                    if(GlobalInfo.getReporteEgreso10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("REPORTE DE EGRESOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("ID   "+"TIPO DE EGRESOS      " + " MONTO", Printama.RIGHT);
+                        printama.printTextlnBold(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
+                        printama.printTextlnBold(GranREgresoTotal.toString(), Printama.RIGHT);
 
                     }
 
@@ -1001,6 +1119,20 @@ public class CierreXTiendaFragment extends Fragment {
 
                     }
 
+                    if(GlobalInfo.getReporteEgreso10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("REPORTE DE EGRESOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("ID              "+"TIPO DE EGRESOS          " + "  MONTO", Printama.RIGHT);
+                        printama.printTextlnBold(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
+                        printama.printTextlnBold(GranREgresoTotal.toString(), Printama.RIGHT);
+
+                    }
+
                     break;
 
                 case "65mm":
@@ -1099,6 +1231,20 @@ public class CierreXTiendaFragment extends Fragment {
                         printama.printTextlnBold("NRO DOCUMENTO     "+"TIPO         "+"REF.      "+"  MONTO",Printama.RIGHT);
                         printama.printTextln( ReporteTarjetasBuilder.toString() + "---------", Printama.RIGHT);
                         printama.printTextln(RTarjetaTotal.toString(),Printama.RIGHT);
+
+                    }
+
+                    if(GlobalInfo.getReporteEgreso10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("REPORTE DE EGRESOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold( "ID              "+"TIPO DE EGRESOS         " + "  MONTO", Printama.RIGHT);
+                        printama.printTextln(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
+                        printama.printTextln(GranREgresoTotal.toString(), Printama.RIGHT);
 
                     }
 

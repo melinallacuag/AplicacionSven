@@ -11,19 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 
 import com.anggastudio.sample.R;
-import com.anggastudio.sample.WebApiSVEN.Models.SettingMoneda;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingTEgreso;
 
 import java.util.ArrayList;
 
-public class MonedaAdapter extends ArrayAdapter<SettingMoneda> {
+public class TEgresoAdapter extends ArrayAdapter<SettingTEgreso> {
 
     private Context context;
-    private ArrayList<SettingMoneda> card;
+    private ArrayList<SettingTEgreso> card;
     public Resources res;
-    SettingMoneda currRowVal = null;
+    SettingTEgreso currRowVal = null;
     LayoutInflater inflater;
 
-    public MonedaAdapter(@NonNull Context context, int textViewResourceId, ArrayList<SettingMoneda> card, Resources resLocal) {
+    public TEgresoAdapter(@NonNull Context context, int textViewResourceId, ArrayList<SettingTEgreso> card, Resources resLocal) {
         super(context, textViewResourceId, card);
         this.context = context;
         this.card    = card;
@@ -47,14 +47,13 @@ public class MonedaAdapter extends ArrayAdapter<SettingMoneda> {
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
 
-        View row = inflater.inflate(R.layout.item_moneda, parent, false);
+        View row = inflater.inflate(R.layout.item_tegreso, parent, false);
         currRowVal = null;
-        currRowVal = (SettingMoneda) card.get(position);
-        TextView label = (TextView) row.findViewById(R.id.spinnerItemMoneda);
+        currRowVal = (SettingTEgreso) card.get(position);
+        TextView label = (TextView) row.findViewById(R.id.spinnerItemTEgreso);
 
-        label.setText(currRowVal.getMonedaDs());
+        label.setText(currRowVal.getEgresoDs());
 
         return row;
     }
-
 }

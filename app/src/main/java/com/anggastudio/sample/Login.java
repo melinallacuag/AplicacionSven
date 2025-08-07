@@ -10,9 +10,12 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +26,8 @@ import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Mangueras;
 import com.anggastudio.sample.WebApiSVEN.Models.Setting;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingMoneda;
+import com.anggastudio.sample.WebApiSVEN.Models.SettingTEgreso;
 import com.anggastudio.sample.WebApiSVEN.Models.SettingVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.Terminal;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoPago;
@@ -32,6 +37,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +50,7 @@ import retrofit2.Response;
 public class Login extends AppCompatActivity{
 
     private APIService mAPIService;
+   // private APIService mAPIService2;
     private NFCUtil nfcUtil;
 
     ImageButton configuracion,btnConfigurarLados,btnConfigurarPrecios;
@@ -84,10 +91,10 @@ public class Login extends AppCompatActivity{
         alertuser       = findViewById(R.id.textusuario);
         alertpassword   = findViewById(R.id.textcontraseña);
         configuracion   = findViewById(R.id.btnconfiguracion);
-        btnConfigurarLados = findViewById(R.id.btnConfigurarLados);
+        btnConfigurarLados   = findViewById(R.id.btnConfigurarLados);
         btnConfigurarPrecios = findViewById(R.id.btnConfigurarPrecios);
         imeii           = findViewById(R.id.imei);
-        terminalId     = findViewById(R.id.terminalId);
+        terminalId      = findViewById(R.id.terminalId);
 
         configuracion.setColorFilter(getResources().getColor(R.color.white));
         btnConfigurarLados.setColorFilter(getResources().getColor(R.color.white));
@@ -124,11 +131,31 @@ public class Login extends AppCompatActivity{
                             usuarioEntrada.getText().clear();
                             contraseñaEntrada.getText().clear();
 
+                            alertuserEntrada.setError(null);
+                            alertpasswordEntrada.setError(null);
                             alertuserEntrada.setErrorEnabled(false);
                             alertpasswordEntrada.setErrorEnabled(false);
 
                         }
                     });
+
+                    TextWatcher campoVacioWatcher = new TextWatcher() {
+                        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if (usuarioEntrada.hasFocus()) {
+                                alertuserEntrada.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                            } else if (contraseñaEntrada.hasFocus()) {
+                                alertpasswordEntrada.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                            }
+                        }
+
+                        @Override public void afterTextChanged(Editable s) {}
+                    };
+
+                    usuarioEntrada.addTextChangedListener(campoVacioWatcher);
+                    contraseñaEntrada.addTextChangedListener(campoVacioWatcher);
 
                     btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -147,6 +174,8 @@ public class Login extends AppCompatActivity{
 
                             findUsersEntradaPrecios(usuarioUserEntrada);
 
+                            alertuserEntrada.setError(null);
+                            alertpasswordEntrada.setError(null);
                             alertuserEntrada.setErrorEnabled(false);
                             alertpasswordEntrada.setErrorEnabled(false);
 
@@ -167,7 +196,7 @@ public class Login extends AppCompatActivity{
             @Override
             public void onClick(View v) {
 
-                if (GlobalInfo.getConfiguracionPL){
+                if (GlobalInfo.getConfiguracionPL || GlobalInfo.getsettingByImei10 == false){
 
                     if (!modalForzarEntrada.isShowing()) {
                         modalForzarEntrada.show();
@@ -189,11 +218,31 @@ public class Login extends AppCompatActivity{
                             usuarioEntrada.getText().clear();
                             contraseñaEntrada.getText().clear();
 
+                            alertuserEntrada.setError(null);
+                            alertpasswordEntrada.setError(null);
                             alertuserEntrada.setErrorEnabled(false);
                             alertpasswordEntrada.setErrorEnabled(false);
 
                         }
                     });
+
+                    TextWatcher campoVacioWatcher = new TextWatcher() {
+                        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                            if (usuarioEntrada.hasFocus()) {
+                                alertuserEntrada.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                            } else if (contraseñaEntrada.hasFocus()) {
+                                alertpasswordEntrada.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                            }
+                        }
+
+                        @Override public void afterTextChanged(Editable s) {}
+                    };
+
+                    usuarioEntrada.addTextChangedListener(campoVacioWatcher);
+                    contraseñaEntrada.addTextChangedListener(campoVacioWatcher);
 
                     btnAceptarCTFEntrada.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -212,6 +261,8 @@ public class Login extends AppCompatActivity{
 
                             findUsersLados(usuarioUserEntrada);
 
+                            alertuserEntrada.setError(null);
+                            alertpasswordEntrada.setError(null);
                             alertuserEntrada.setErrorEnabled(false);
                             alertpasswordEntrada.setErrorEnabled(false);
 
@@ -242,7 +293,7 @@ public class Login extends AppCompatActivity{
         /**
          * @OBTENER:Imei
          */
-       // imeii.setText("F6036B683498BFDA");
+      //  imeii.setText("B3280909EBF7B75E");
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
@@ -250,49 +301,30 @@ public class Login extends AppCompatActivity{
          * @INGRESAR:Login
          */
         btniniciar.setEnabled(true);
+        TextWatcher campoVacioWatcher = new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (inputUsuario.hasFocus()) {
+                    alertuser.setError(s.toString().trim().isEmpty() ? "* El campo usuario es obligatorio" : null);
+                } else if (inputContraseña.hasFocus()) {
+                    alertpassword.setError(s.toString().trim().isEmpty() ? "* El campo contraseña es obligatorio" : null);
+                }
+            }
+
+            @Override public void afterTextChanged(Editable s) {}
+        };
+
+        inputUsuario.addTextChangedListener(campoVacioWatcher);
+        inputContraseña.addTextChangedListener(campoVacioWatcher);
+
         btniniciar.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
 
                 try {
-                    Calendar calendarPrint = Calendar.getInstance(TimeZone.getTimeZone("America/Lima"));
-                    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                    String xFechaHoraImpresion = formatDate.format(calendarPrint.getTime());
-
-                    String providedDateTime = GlobalInfo.getTerminalValidarFechaHora10;
-
-                    if (providedDateTime == null) {
-                        Toast.makeText(getApplicationContext(), "Terminal no configurado, comuniquese con el administrador.", Toast.LENGTH_SHORT).show();
-                        btniniciar.setEnabled(false);
-                        btniniciar.setBackgroundColor(getResources().getColor(R.color.colorHumo));
-                        return;
-                    }
-
-                    Date currentDate = formatDate.parse(xFechaHoraImpresion);
-                    Date providedDate = formatDate.parse(providedDateTime);
-
-                    if (currentDate != null && providedDate != null) {
-
-                        long diffInMillis = Math.abs(currentDate.getTime() - providedDate.getTime());
-                        long diffInMinutes = diffInMillis / (1000 * 60);
-
-                        if (diffInMinutes <= 10) {
-                            btniniciar.setEnabled(true);
-                            btniniciar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-                        } else {
-                            btniniciar.setEnabled(false);
-                            btniniciar.setBackgroundColor(getResources().getColor(R.color.colorHumo));
-                            showAlert();
-                            return;
-                        }
-
-                    } else {
-                        btniniciar.setEnabled(false);
-                        btniniciar.setBackgroundColor(getResources().getColor(R.color.colorHumo));
-                        showAlert();
-                        return;
-                    }
 
                     usuarioUser    = inputUsuario.getText().toString();
                     contraseñaUser = inputContraseña.getText().toString();
@@ -305,6 +337,8 @@ public class Login extends AppCompatActivity{
                         return;
                     }
 
+                    alertuser.setError(null);
+                    alertpassword.setError(null);
                     alertuser.setErrorEnabled(false);
                     alertpassword.setErrorEnabled(false);
 
@@ -336,10 +370,96 @@ public class Login extends AppCompatActivity{
         getTipoPago();
 
         /**
-         * @OBTENER_APISERVICE:Terminal
+         * @LISTADO:SpinnerMoneda
          */
-        findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
+        getMoneda();
+        /**
+         * @LISTADO:SpinnerEgreso
+         */
+        getTEgreso();
 
+        /**
+         * @OBTENER_APISERVICE:Settings
+         */
+
+        GlobalInfo.getterminalCompanyID10 = Integer.valueOf(1);
+
+        findSetting(GlobalInfo.getterminalCompanyID10);
+
+        findCompany(GlobalInfo.getterminalCompanyID10);
+
+    }
+
+    private void validarCampoVacio(EditText campo, TextInputLayout contenedor, String mensajeError) {
+        String texto = campo.getText().toString().trim();
+        if (texto.isEmpty()) {
+            contenedor.setError(mensajeError);
+        } else {
+            contenedor.setError(null);
+            contenedor.setErrorEnabled(false);
+        }
+    }
+
+    /**
+     * @APISERVICE:SpinnerMoneda
+     */
+    private void getMoneda(){
+
+        Call<List<SettingMoneda>> call = mAPIService.getSettingMoneda();
+
+        call.enqueue(new Callback<List<SettingMoneda>>() {
+            @Override
+            public void onResponse(Call<List<SettingMoneda>> call, Response<List<SettingMoneda>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error Moneda: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getmonedaList10 = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SettingMoneda>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Moneda - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * @APISERVICE:SpinnerTEgreso
+     */
+    private void getTEgreso(){
+
+        Call<List<SettingTEgreso>> call = mAPIService.getSettingTEgreso();
+
+        call.enqueue(new Callback<List<SettingTEgreso>>() {
+            @Override
+            public void onResponse(Call<List<SettingTEgreso>> call, Response<List<SettingTEgreso>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error Egreso: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getegresoList10 = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SettingTEgreso>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Egreso - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void findUsersEntradaPrecios(String id){
@@ -493,6 +613,7 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getuserID10     = user.getUserID();
                         GlobalInfo.getuserName10   = user.getNames();
                         GlobalInfo.getuserPass10   = user.getPassword();
+                        GlobalInfo.getuseridentFID10 = user.getIdentFID();
                         GlobalInfo.getuserLocked10 = user.getLocked();
 
                         if (GlobalInfo.getuserLocked10 == false) {
@@ -503,8 +624,16 @@ public class Login extends AppCompatActivity{
                             String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
 
                             if(getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)){
-                                Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
-                                startActivity(new Intent( getApplicationContext(),Menu.class));
+
+                                if (!GlobalInfo.getsettingByImei10) {
+                                    findTerminal(GlobalInfo.getuseridentFID10.toUpperCase());
+                                    return;
+                                }
+
+                                if (validarHoraTerminal()) {
+                                    Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent( getApplicationContext(),Menu.class));
+                                }
                             }
                             else {
                                 Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
@@ -526,6 +655,33 @@ public class Login extends AppCompatActivity{
             }
         });
 
+    }
+
+    private boolean validarHoraTerminal() {
+        try {
+            String horaTerminal = GlobalInfo.getTerminalValidarFechaHora10;
+            if (horaTerminal == null) {
+                Toast.makeText(getApplicationContext(), "Terminal - IMEI no configurado. Contacte al administrador.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+            Date ahora = Calendar.getInstance(TimeZone.getTimeZone("America/Lima")).getTime();
+            Date horaValida = sdf.parse(horaTerminal);
+
+            long diffMin = Math.abs(ahora.getTime() - horaValida.getTime()) / (1000 * 60);
+            if (diffMin <= 10) {
+                return true;
+            } else {
+                Toast.makeText(getApplicationContext(), "La hora del terminal está desfasada.", Toast.LENGTH_SHORT).show();
+                showAlert();
+                return false;
+            }
+
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Error al validar la hora del terminal", Toast.LENGTH_SHORT).show();
+            return false;
+        }
     }
 
     /**
@@ -583,11 +739,13 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getConRfdPuntos               = terminal.getRfidPuntos();
                         GlobalInfo.getVistaQR                    = terminal.getMostrarQr();
                         GlobalInfo.getDobleImpresion             = terminal.getImprimirDoble();
+                        GlobalInfo.getReporteEgreso10            = terminal.getCierreX_REgreso();
+                        GlobalInfo.getterminalModalidad          = terminal.getVista_Modalidad();
 
                         /** Mostrar el listado de Datos*/
-                        findCompany(GlobalInfo.getterminalCompanyID10);
+                       /* findCompany(GlobalInfo.getterminalCompanyID10);
 
-                        findSetting(GlobalInfo.getterminalCompanyID10);
+                        findSetting(GlobalInfo.getterminalCompanyID10);*/
 
                         findLados(GlobalInfo.getterminalImei10);
 
@@ -599,6 +757,12 @@ public class Login extends AppCompatActivity{
                             imeiFound = true;
                             terminalId.setVisibility(View.VISIBLE);
                             terminalId.setText(GlobalInfo.getterminalID10);
+                            if (!GlobalInfo.getsettingByImei10) {
+                                if (validarHoraTerminal()) {
+                                    Toast.makeText(getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(getApplicationContext(), Menu.class));
+                                }
+                            }
                             return;
                         }
 
@@ -607,7 +771,7 @@ public class Login extends AppCompatActivity{
                     if (!imeiFound) {
                         terminalId.setVisibility(View.GONE);
                         imeii.setTextColor(getResources().getColor(R.color.colorError));
-                        Toast.makeText( getApplicationContext(), "Terminal no configurado, comuniquese con el administrador.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText( getApplicationContext(), "Terminal - imei no configurado, comuniquese con el administrador.", Toast.LENGTH_SHORT).show();
                     }
 
                 }catch (Exception ex){
@@ -751,6 +915,16 @@ public class Login extends AppCompatActivity{
                         GlobalInfo.getsettingRutaLogo210       = String.valueOf(setting.getRutaLogo2());
                         GlobalInfo.getsettingDescuentoRFID10   = setting.getDescuentoRFID();
                         GlobalInfo.getsettingValorIGV10        = setting.getValorIGV();
+                        GlobalInfo.getsettingDescuentoGll10    = setting.getDescuentoGll();
+                        GlobalInfo.getsettingByImei10          = setting.getByImei();
+
+                        /**
+                         * @OBTENER_APISERVICE:Terminal
+                         */
+                        if(GlobalInfo.getsettingByImei10){
+                            findTerminal(GlobalInfo.getterminalImei10.toUpperCase());
+                        }
+
                     }
 
                 }catch (Exception ex){

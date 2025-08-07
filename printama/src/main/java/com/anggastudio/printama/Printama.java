@@ -36,7 +36,6 @@ public class Printama {
 
     private static final int MAX_CHAR = 43;
     private static final int MAX_CHAR_WIDE = MAX_CHAR / 2;
-
     private static Printama printama;
     private final PrinterUtil util;
     private final BluetoothDevice printer;

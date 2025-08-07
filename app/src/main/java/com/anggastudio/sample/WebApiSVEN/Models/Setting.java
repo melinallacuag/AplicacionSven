@@ -23,6 +23,8 @@ public class Setting {
     private String rutaLogo2;
     private Integer descuentoRFID;
     private Double valorIGV;
+    private Double descuentoGll;
+    private Boolean byImei;
 
     public Integer getCompanyID() {
         return companyID;
@@ -190,5 +192,21 @@ public class Setting {
 
     public void setValorIGV(Double valorIGV) {
         this.valorIGV = valorIGV;
+    }
+
+    public Double getDescuentoGll() {
+        return descuentoGll;
+    }
+
+    public void setDescuentoGll(Double descuentoGll) {
+        this.descuentoGll = descuentoGll;
+    }
+
+    public Boolean getByImei() {
+        return byImei;
+    }
+
+    public void setByImei(Boolean byImei) {
+        this.byImei = byImei;
     }
 }

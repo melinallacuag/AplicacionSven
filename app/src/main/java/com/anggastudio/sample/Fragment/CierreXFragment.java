@@ -36,11 +36,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anggastudio.printama.Printama;
 import com.anggastudio.sample.Adapter.LadosAdapter;
+import com.anggastudio.sample.Adapter.ReporteEgresoAdapter;
 import com.anggastudio.sample.Adapter.ReporteTVehiculoAdapter;
 import com.anggastudio.sample.Adapter.ReporteTarjetasAdapter;
 import com.anggastudio.sample.Adapter.ReporteVendedorAdapter;
@@ -52,10 +54,12 @@ import com.anggastudio.sample.NFCUtil;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
+import com.anggastudio.sample.WebApiSVEN.Models.Egreso;
 import com.anggastudio.sample.WebApiSVEN.Models.Gratuita;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
+import com.anggastudio.sample.WebApiSVEN.Models.ReporteEgreso;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTVehiculo;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteTarjetas;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteVendedor;
@@ -91,17 +95,20 @@ public class CierreXFragment extends Fragment {
     TextView TotalDocAnulados,DocAnulados,NroDespacho,TotalDespacho,Cajero,Turno,FechaTrabajo,
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalPagoBruto,
-            TotalDescuento2,TotalIncremento,GranTotal,GranVendedorTotal,rgratuita,
+            TotalDescuento2,TotalIncremento,GranTotal,GranVendedorTotal,GranEgresoTotal,rgratuita,
             TotalCantidadProdTienda,TotalMontoProdTienda;
 
     String RAnuladosSoles10,RDespachosSoles10, TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,SProductosTotalIncremento,
-            TotalPagosSoles,TotalRTarjetasSoles,TotalRVendedorSoles,TotalTGratuita,
+            TotalPagosSoles,TotalRTarjetasSoles,TotalRVendedorSoles,TotalTGratuita,TotalREgresoSoles,
             SProductosTotalCantidadTienda,SProductosTotalSolesTienda,SProductosTotalDescTienda,SProductosTotalIncrementoTienda;
 
     Button imprimirCierreX;
     Dialog modalAlerta;
 
-    RecyclerView recyclerVProductosTienda,recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj,recyclerReporteVendedores;
+    RecyclerView recyclerReporteEgreso,recyclerVProductosTienda,recyclerVProducto,recyclerVTipoPago,recyclerVContometro,recyclerReporteTarj,recyclerReporteVendedores;
+
+    ReporteEgresoAdapter reporteEgresoAdapter;
+    List<ReporteEgreso> reporteEgresoList;
 
     ReporteTarjetasAdapter reporteTarjetasAdapter;
     List<ReporteTarjetas> reporteTarjetasList;
@@ -128,7 +135,9 @@ public class CierreXFragment extends Fragment {
 
     ImageView logoCierreX;
 
-    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc,RProductosTotalIncremento, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,RPagosTotalGratuita,
+    LinearLayout ventaContometro,reporteVendedor;
+
+    Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc,RProductosTotalIncremento, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,REgresoTotal,RPagosTotalGratuita,
             RProductosCantidadTienda,RProductosTotalSolesTienda,RProductosDescTienda,RProductosIncrementoTienda,MontoBruto,MontoBrutoTienda,montoBrutoTotal;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -170,6 +179,7 @@ public class CierreXFragment extends Fragment {
 
         GranTotal           = view.findViewById(R.id.GranTotal);
         GranVendedorTotal   = view.findViewById(R.id.GranVendedorTotal);
+        GranEgresoTotal     = view.findViewById(R.id.GranEgresoTotal);
 
         imprimirCierreX     = view.findViewById(R.id.imprimircierrex);
 
@@ -253,6 +263,7 @@ public class CierreXFragment extends Fragment {
         RPagosTotalSoles     = 0.00;
         RTarjetasTotal       = 0.00;
         RVendedorTotal       = 0.00;
+        REgresoTotal         = 0.00;
 
         RProductosCantidadTienda   = 0.00;
         RProductosTotalSolesTienda = 0.00;
@@ -274,6 +285,17 @@ public class CierreXFragment extends Fragment {
 
         /** Listado de Venta por Contometros  */
         recyclerVContometro = view.findViewById(R.id.recyclerVContometro);
+
+        ventaContometro = view.findViewById(R.id.ventaContometro);
+        reporteVendedor = view.findViewById(R.id.reporteVendedor);
+
+        ventaContometro.setVisibility(View.VISIBLE);
+        reporteVendedor.setVisibility(View.VISIBLE);
+
+        if(!GlobalInfo.getsettingByImei10){
+            ventaContometro.setVisibility(View.GONE);
+            reporteVendedor.setVisibility(View.GONE);
+        }
         recyclerVContometro.setLayoutManager(new LinearLayoutManager(getContext()));
         findVContometro(GlobalInfo.getterminalID10);
 
@@ -301,6 +323,11 @@ public class CierreXFragment extends Fragment {
         recyclerReporteVendedores = view.findViewById(R.id.recyclerReporteVendedores);
         recyclerReporteVendedores.setLayoutManager(new LinearLayoutManager(getContext()));
         findRVendedor(GlobalInfo.getterminalID10, String.valueOf(GlobalInfo.getterminalTurno10));
+
+        /** Reporte por Egreso */
+        recyclerReporteEgreso = view.findViewById(R.id.recyclerReporteEgreso);
+        recyclerReporteEgreso.setLayoutManager(new LinearLayoutManager(getContext()));
+        findREgreso(GlobalInfo.getterminalID10, GlobalInfo.getterminalTurno10);
 
         return view;
     }
@@ -748,6 +775,48 @@ public class CierreXFragment extends Fragment {
 
     }
 
+    /** API SERVICE - R. Egreso */
+    private void findREgreso(String id,Integer turno){
+
+        Call<List<ReporteEgreso>> call = mAPIService.findReporteEgresos(id,turno);
+
+        call.enqueue(new Callback<List<ReporteEgreso>>() {
+            @Override
+            public void onResponse(Call<List<ReporteEgreso>> call, Response<List<ReporteEgreso>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error R.egreso: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    reporteEgresoList = response.body();
+
+                    for(ReporteEgreso reporteEgreso: reporteEgresoList) {
+                            REgresoTotal += reporteEgreso.getMtoTotal();
+                    }
+
+                    TotalREgresoSoles = String.format(Locale.getDefault(), "%,.2f" ,REgresoTotal);
+                    GlobalInfo.getTotalREgresoSoles10 = TotalREgresoSoles;
+                    GranEgresoTotal.setText(TotalREgresoSoles);
+
+                    reporteEgresoAdapter = new ReporteEgresoAdapter(reporteEgresoList, getContext());
+                    recyclerReporteEgreso.setAdapter(reporteEgresoAdapter);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ReporteEgreso>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE r.Egreso - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
     /** API SERVICE - Optran Cambio de Turno*/
     private void findOptranTurno(String id){
 
@@ -944,7 +1013,7 @@ public class CierreXFragment extends Fragment {
                     VProductoTiendaBuilder.append(line).append("\n");
                     break;
                 case "58mm":
-                    String lineS = String.format(Locale.getDefault(), "%-24s %2s %10s", producto, cantidad, soles);
+                    String lineS = String.format(Locale.getDefault(), "%-10s %4s %10s", producto, cantidad, soles);
                     VProductoTiendaBuilder.append(lineS).append("\n");
                     break;
             }
@@ -1047,7 +1116,7 @@ public class CierreXFragment extends Fragment {
                 TotalProTienda.append(linest);
                 break;
             case "58mm":
-                String linesST = String.format(Locale.getDefault(), "%-26s %8s %10s", TotalProTiendaC,TSProductosTotalCantidadT, TSProductosTotalSolesT);
+                String linesST = String.format(Locale.getDefault(), "%-14s %4s %10s", TotalProTiendaC,TSProductosTotalCantidadT, TSProductosTotalSolesT);
                 TotalProTienda.append(linesST);
                 break;
         }
@@ -1182,6 +1251,46 @@ public class CierreXFragment extends Fragment {
                 break;
         }
 
+        /**  Reporte por Egreso **/
+        StringBuilder ReporteEgresoBuilder = new StringBuilder();
+
+        for(ReporteEgreso reporteEgreso: reporteEgresoList) {
+            String IDEgreso   = String.valueOf(reporteEgreso.getId());
+            String tipoEgreso     = reporteEgreso.getEgresoDs();
+            String solesEgreso    = String.format("%,10.2f",reporteEgreso.getMtoTotal());
+
+            switch (tipopapel) {
+                case "65mm":
+                case "80mm":
+                    String linneEgreso = String.format(Locale.getDefault(), "%-5s %27s %14s", IDEgreso,tipoEgreso,solesEgreso);
+                    ReporteEgresoBuilder.append(linneEgreso).append("\n");
+                    break;
+                case "58mm":
+                    String linnesEgreso = String.format(Locale.getDefault(), "%-3s %9s %8s",IDEgreso, tipoEgreso,solesEgreso);
+                    ReporteEgresoBuilder.append(linnesEgreso).append("\n");
+                    break;
+            }
+        }
+
+        /** Gran Total de R Egreso */
+
+        StringBuilder GranREgresoTotal = new StringBuilder();
+
+        String GranREgresoTotalC   = "GRAN TOTAL :";
+        String TotalSolesE           = GlobalInfo.getTotalREgresoSoles10;
+
+        switch (tipopapel) {
+            case "65mm":
+            case "80mm":
+                String linneesSEgreso = String.format(Locale.getDefault(),"%-36s %11s", GranREgresoTotalC, TotalSolesE);
+                GranREgresoTotal.append(linneesSEgreso);
+                break;
+            case "58mm":
+                String linneeSEgreso = String.format(Locale.getDefault(),"%-20s %11s", GranREgresoTotalC, TotalSolesE);
+                GranREgresoTotal.append(linneeSEgreso);
+                break;
+        }
+
         int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("58mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
         /** Imprimir Cierre X**/
@@ -1239,19 +1348,21 @@ public class CierreXFragment extends Fragment {
                     printama.printTextlnBold("Doc. Anulados     : "+ DocAnulados, Printama.LEFT);
                     printama.printTextlnBold("Total Doc. Anulados (S/) : "+ TotalDocAnulados, Printama.LEFT);
 
-                    if(GlobalInfo.getVentasContometros10) {
+                    if (GlobalInfo.getsettingByImei10) {
+                        if(GlobalInfo.getVentasContometros10) {
 
-                        printama.setSmallText();
-                        printSeparatorLine(printama, tipopapel);
-                        printama.addNewLine(1);
-                        printama.setSmallText();
-                        printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES", Printama.CENTER);
-                        printama.addNewLine(1);
-                        printama.printTextlnBold("L  " + " P       " + "C. I      " + "C. F  " + "VOL.", Printama.RIGHT);
-                        printama.setSmallText();
-                        printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
-                        printama.printTextlnBold(TotalVolumen.toString(), Printama.RIGHT);
+                            printama.setSmallText();
+                            printSeparatorLine(printama, tipopapel);
+                            printama.addNewLine(1);
+                            printama.setSmallText();
+                            printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES", Printama.CENTER);
+                            printama.addNewLine(1);
+                            printama.printTextlnBold("L  " + " P       " + "C. I      " + "C. F  " + "VOL.", Printama.RIGHT);
+                            printama.setSmallText();
+                            printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
+                            printama.printTextlnBold(TotalVolumen.toString(), Printama.RIGHT);
 
+                        }
                     }
 
 
@@ -1277,8 +1388,8 @@ public class CierreXFragment extends Fragment {
                         printama.setSmallText();
                         printama.printTextlnBold("VENTAS OTROS PRODUCTOS",Printama.CENTER);
                         printama.addNewLine(1);
-                        printama.printTextlnBold("PRODUCTO              "+"CANT."+"SOLES",Printama.RIGHT);
-                        printama.printTextlnBold( VProductoTiendaBuilder.toString() + "---------" + "    " + "---------", Printama.RIGHT);
+                        printama.printTextlnBold("PRODUCTO        " + "CANT.      " + "SOLES",Printama.RIGHT);
+                        printama.printTextlnBold( VProductoTiendaBuilder.toString() + "-------" + "    " + "-------", Printama.RIGHT);
                         printama.printTextlnBold(TotalProTienda.toString(),Printama.RIGHT);
 
                     }
@@ -1333,6 +1444,20 @@ public class CierreXFragment extends Fragment {
 
                     }
 
+                    if(GlobalInfo.getReporteEgreso10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("REPORTE DE EGRESOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("ID   "+"TIPO DE EGRESOS      " + " MONTO", Printama.RIGHT);
+                        printama.printTextlnBold(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
+                        printama.printTextlnBold(GranREgresoTotal.toString(), Printama.RIGHT);
+
+                    }
+
                     break;
 
                 case "80mm":
@@ -1384,19 +1509,21 @@ public class CierreXFragment extends Fragment {
                     printama.printTextlnBold("Doc. Anulados     : "+ DocAnulados, Printama.LEFT);
                     printama.printTextlnBold("Total Doc. Anulados (S/) : "+ TotalDocAnulados, Printama.LEFT);
 
-                    if(GlobalInfo.getVentasContometros10) {
+                    if (GlobalInfo.getsettingByImei10) {
+                        if (GlobalInfo.getVentasContometros10) {
 
-                        printama.setSmallText();
-                        printSeparatorLine(printama, tipopapel);
-                        printama.addNewLine(1);
-                        printama.setSmallText();
-                        printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES", Printama.CENTER);
-                        printama.addNewLine(1);
-                        printama.printTextlnBold("L    " + " P      " + "C. INICIO      " + "C. FINAL    " + "VOLUMEN", Printama.RIGHT);
-                        printama.setSmallText();
-                        printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
-                        printama.printTextlnBold(TotalVolumen.toString(), Printama.RIGHT);
+                            printama.setSmallText();
+                            printSeparatorLine(printama, tipopapel);
+                            printama.addNewLine(1);
+                            printama.setSmallText();
+                            printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES", Printama.CENTER);
+                            printama.addNewLine(1);
+                            printama.printTextlnBold("L    " + " P      " + "C. INICIO      " + "C. FINAL    " + "VOLUMEN", Printama.RIGHT);
+                            printama.setSmallText();
+                            printama.printTextlnBold(VContometroBuilder.toString() + "---------", Printama.RIGHT);
+                            printama.printTextlnBold(TotalVolumen.toString(), Printama.RIGHT);
 
+                        }
                     }
 
 
@@ -1478,6 +1605,20 @@ public class CierreXFragment extends Fragment {
 
                     }
 
+                    if(GlobalInfo.getReporteEgreso10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("REPORTE DE EGRESOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold("ID              "+"TIPO DE EGRESOS          " + "  MONTO", Printama.RIGHT);
+                        printama.printTextlnBold(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
+                        printama.printTextlnBold(GranREgresoTotal.toString(), Printama.RIGHT);
+
+                    }
+
                     break;
 
                 case "65mm":
@@ -1529,19 +1670,21 @@ public class CierreXFragment extends Fragment {
                     printama.printTextln("Doc. Anulados     : "+ DocAnulados, Printama.LEFT);
                     printama.printTextln("Total Doc. Anulados (S/) : "+ TotalDocAnulados, Printama.LEFT);
 
-                    if(GlobalInfo.getVentasContometros10) {
+                    if (GlobalInfo.getsettingByImei10) {
+                        if (GlobalInfo.getVentasContometros10) {
 
-                        printama.setSmallText();
-                        printSeparatorLine(printama, tipopapel);
-                        printama.addNewLine(1);
-                        printama.setSmallText();
-                        printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES", Printama.CENTER);
-                        printama.addNewLine(1);
-                        printama.printTextlnBold("L    " + " P      " + "C. INICIO      " + "C. FINAL    " + "VOLUMEN", Printama.RIGHT);
-                        printama.setSmallText();
-                        printama.printTextln(VContometroBuilder.toString() + "---------", Printama.RIGHT);
-                        printama.printTextln(TotalVolumen.toString(), Printama.RIGHT);
+                            printama.setSmallText();
+                            printSeparatorLine(printama, tipopapel);
+                            printama.addNewLine(1);
+                            printama.setSmallText();
+                            printama.printTextlnBold("VENTAS POR CONTOMETROS DIGITALES", Printama.CENTER);
+                            printama.addNewLine(1);
+                            printama.printTextlnBold("L    " + " P      " + "C. INICIO      " + "C. FINAL    " + "VOLUMEN", Printama.RIGHT);
+                            printama.setSmallText();
+                            printama.printTextln(VContometroBuilder.toString() + "---------", Printama.RIGHT);
+                            printama.printTextln(TotalVolumen.toString(), Printama.RIGHT);
 
+                        }
                     }
 
                     if(GlobalInfo.getVentasProductos10) {
@@ -1619,6 +1762,20 @@ public class CierreXFragment extends Fragment {
                         printama.printTextlnBold("NOMBRES             " + "NRO DESPACHOS         " + " SOLES", Printama.RIGHT);
                         printama.printTextln(ReporteVendedorBuilder.toString() + "---------", Printama.RIGHT);
                         printama.printTextln(GranRVendedorTotal.toString(), Printama.RIGHT);
+
+                    }
+
+                    if(GlobalInfo.getReporteEgreso10) {
+
+                        printama.setSmallText();
+                        printSeparatorLine(printama, tipopapel);
+                        printama.addNewLine(1);
+                        printama.setSmallText();
+                        printama.printTextlnBold("REPORTE DE EGRESOS",Printama.CENTER);
+                        printama.addNewLine(1);
+                        printama.printTextlnBold( "ID              "+"TIPO DE EGRESOS         " + "  MONTO", Printama.RIGHT);
+                        printama.printTextln(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
+                        printama.printTextln(GranREgresoTotal.toString(), Printama.RIGHT);
 
                     }
 

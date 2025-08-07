@@ -51,6 +51,8 @@ public class Terminal {
     private Boolean rfidPuntos;
     private Boolean mostrarQr;
     private Boolean imprimirDoble;
+    private Boolean cierreX_REgreso;
+    private Boolean vista_Modalidad;
 
     public String getTerminalID() {
         return terminalID;
@@ -442,5 +444,21 @@ public class Terminal {
 
     public void setImprimirDoble(Boolean imprimirDoble) {
         this.imprimirDoble = imprimirDoble;
+    }
+
+    public Boolean getCierreX_REgreso() {
+        return cierreX_REgreso;
+    }
+
+    public void setCierreX_REgreso(Boolean cierreX_REgreso) {
+        this.cierreX_REgreso = cierreX_REgreso;
+    }
+
+    public Boolean getVista_Modalidad() {
+        return vista_Modalidad;
+    }
+
+    public void setVista_Modalidad(Boolean vista_Modalidad) {
+        this.vista_Modalidad = vista_Modalidad;
     }
 }

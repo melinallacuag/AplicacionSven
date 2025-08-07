@@ -235,12 +235,12 @@
                 android:layout_weight="1">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/inputPlaca"
-                    android:fontFamily="@font/nunito_semibold"
-                    android:textSize="12sp"
-                    android:text="000-0000"
-                    android:inputType="textCapCharacters"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/nunito_semibold"
+                    android:inputType="textCapCharacters"
+                    android:text="000-0000"
+                    android:textSize="12sp" />
             </com.google.android.material.textfield.TextInputLayout>
             <Button
                 android:id="@+id/buscarPlacaFactura"
@@ -329,7 +329,7 @@
 
             <RadioButton
                 android:id="@+id/radioEfectivo"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="false"
@@ -340,7 +340,7 @@
 
             <RadioButton
                 android:id="@+id/radioTarjeta"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="false"
@@ -351,13 +351,24 @@
 
             <RadioButton
                 android:id="@+id/radioCredito"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="false"
                 android:text="Credito"
                 android:fontFamily="@font/nunito_extrabold"
                 android:textColor="@color/gris"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/radioCanje"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_extrabold"
+                android:text="Canje"
+                android:textColor="@color/gris"
+                android:visibility="gone"
                 android:textSize="12sp" />
 
         </RadioGroup>
@@ -412,6 +423,21 @@
             android:textColor="#fff"
             android:textSize="15sp"
             android:textStyle="bold"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/textMensajeCanje"
+            android:layout_width="match_parent"
+            android:layout_height="50sp"
+            android:layout_gravity="center"
+            android:background="@drawable/cardlogin"
+            android:backgroundTint="@color/colorNer"
+            android:fontFamily="@font/nunito_semibold"
+            android:text="Se realizara el modo de Canje"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="15sp"
             android:visibility="gone"/>
 
         <com.google.android.material.textfield.TextInputLayout
