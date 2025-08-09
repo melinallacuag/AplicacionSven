@@ -310,10 +310,10 @@ public class GlobalInfo {
     //public static final String BASE_URL = "http://192.168.0.245:8081/";
     //public static final String BASE_URL = "http://192.168.1.245:8081/";
   //  public static final String BASE_URL = "http://192.168.18.31:8082/";
- //   public static final String BASE_URL = "http://192.168.68.106:8082/";
+    public static final String BASE_URL = "http://192.168.68.106:8082/";
    // public static final String BASE_URL = "https://pos.apisven.com/";
 
-    public static final String BASE_URL = "http://192.168.1.245:8081/";
+    //public static final String BASE_URL = "http://192.168.1.245:8081/";
     //public static final String BASE_URL = "http://192.168.42.245:8081/";
     //public static final String BASE_URL = "http://192.168.18.43:8081/";
     // public static final String BASE_URL = "http://192.168.18.33:8081/";

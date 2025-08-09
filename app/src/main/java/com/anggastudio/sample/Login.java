@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.Articulos;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
@@ -368,6 +369,11 @@ public class Login extends AppCompatActivity{
          * @LISTADO:SpinnerTipoPago
          */
         getTipoPago();
+
+        /**
+         * @LISTADO:Articulos
+         */
+        getArticulos();
 
         /**
          * @LISTADO:SpinnerMoneda
@@ -1033,6 +1039,36 @@ public class Login extends AppCompatActivity{
         });
     }
 
+    /**
+     * @APISERVICE:Articulos
+     */
+    private void getArticulos(){
+
+        Call<List<Articulos>> call = mAPIService.getArticulos();
+
+        call.enqueue(new Callback<List<Articulos>>() {
+            @Override
+            public void onResponse(Call<List<Articulos>> call, Response<List<Articulos>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getApplicationContext(), "Codigo de error Articulos: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getarticulosList10 = response.body();
+
+                }catch (Exception ex){
+                    Toast.makeText(getApplicationContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Articulos>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error de conexión APICORE Articulos - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /**
      * @APISERVICE:SpinnerTipoVehiculo

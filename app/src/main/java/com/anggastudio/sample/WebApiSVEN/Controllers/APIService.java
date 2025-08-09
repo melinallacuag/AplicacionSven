@@ -1,6 +1,7 @@
 package com.anggastudio.sample.WebApiSVEN.Controllers;
 import com.anggastudio.sample.WebApiSVEN.Models.Anular;
 import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
+import com.anggastudio.sample.WebApiSVEN.Models.Articulos;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
 import com.anggastudio.sample.WebApiSVEN.Models.CTurno;
 import com.anggastudio.sample.WebApiSVEN.Models.CambioPrecios;
@@ -452,5 +453,11 @@ public interface APIService {
      */
     @GET("api/Ingresos/Anular/Listado/{ID}")
     Call<List<Ingresos>> findIngresosAnular(@Path("ID") Integer ID);
+
+    /**
+     * @Articulos
+     */
+    @GET("api/articulo/ListadoND")
+    Call<List<Articulos>> getArticulos();
 
 }

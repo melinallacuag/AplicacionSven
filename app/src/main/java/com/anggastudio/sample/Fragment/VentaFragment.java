@@ -4794,17 +4794,19 @@ public class VentaFragment extends Fragment implements NfcAdapter.ReaderCallback
                             mnMontoSoles = 0.00;
                         }
 
-                        if (mnClienteID.length() == 0 && mnClienteRUC.length() == 0  && GlobalInfo.getterminalNDespacho == true && !mnTipoPago.equals("S")) {
-                            mnTipoPago = "C";
-                            mnClienteID = "11111111";
-                            mnClienteRUC = "";
-                            mnClienteRS = "CLIENTE VARIOS";
-                            mnCliernteDR = "";
-                            mnNroPlaca = "000-0000";
-                            mnTarjND = "70100";
-                            mnTarjetaCredito = "0";
-                            mnOperacionREF = "";
-                            mnMontoSoles = 0.00;
+                        for (Articulos articulos : GlobalInfo.getarticulosList10) {
+                            if(mnClienteID.length() == 0 && mnClienteRUC.length() == 0 && articulos.getArticuloID().equals(GlobalInfo.getoptranArticuloID10) && !mnTipoPago.equals("S")){
+                                mnTipoPago = "C";
+                                mnClienteID = "11111111";
+                                mnClienteRUC = "";
+                                mnClienteRS = "CLIENTE VARIOS";
+                                mnCliernteDR = "";
+                                mnNroPlaca = "000-0000";
+                                mnTarjND = "70100";
+                                mnTarjetaCredito = "0";
+                                mnOperacionREF = "";
+                                mnMontoSoles = 0.00;
+                            }
                         }
 
                         switch (mnTipoPago) {
