@@ -1385,44 +1385,48 @@ public class DasboardFragment extends Fragment{
 
                     usersCTList = response.body();
 
-                    for (Users user : usersCTList) {
-
-                        GlobalInfo.getuserIDFE10 = user.getUserID();
-                        GlobalInfo.getuserNameFE10 = user.getNames();
-                        GlobalInfo.getuserPassFE10 = user.getPassword();
-                        GlobalInfo.getuserCancelFE10 = user.getCancel();
-
+                    if (usersCTList == null || usersCTList.isEmpty()) {
+                        Toast.makeText(getContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    if (GlobalInfo.getuserCancelFE10 == true) {
+                    Users user = usersCTList.get(0);
 
-                        String getName = usuarioUser.trim();
-                        String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
+                    GlobalInfo.getuserIDFE10     = user.getUserID();
+                    GlobalInfo.getuserPassFE10   = user.getPassword();
+                    GlobalInfo.getuserSuperFE10  = user.getSuper();
+                    GlobalInfo.getuserLockedFE0  = user.getLocked();
+                    GlobalInfo.getuserForzarCierreFE10 = user.getForzarCierre();
 
-                        if (getName.equals(GlobalInfo.getuserIDFE10) && getPass.equals(GlobalInfo.getuserPassFE10)) {
+                    String getName = usuarioUser.trim();
+                    String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
 
-                            try {
-                                Intent intent = new Intent(getContext(), Login.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    if (getName.equals(GlobalInfo.getuserIDFE10) && getPass.equals(GlobalInfo.getuserPassFE10)) {
+                        if(GlobalInfo.getuserLockedFE0){
+                            if(GlobalInfo.getuserForzarCierreFE10 || GlobalInfo.getuserSuperFE10){
+                                try {
+                                    Intent intent = new Intent(getContext(), Login.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                                cerrarTurno(GlobalInfo.getterminalID10);
+                                    cerrarTurno(GlobalInfo.getterminalID10);
 
-                                startActivity(intent);
-                                finalize();
+                                    startActivity(intent);
+                                    finalize();
 
-                                Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
-                            } catch (Throwable e) {
-                                e.printStackTrace();
+                                    Toast.makeText(getContext(), "SE GENERO EL CAMBIO DE TURNO ", Toast.LENGTH_SHORT).show();
+                                } catch (Throwable e) {
+                                    e.printStackTrace();
+                                }
+
+                                modalForzarEntrada.dismiss();
+                            }else{
+                                Toast.makeText(getContext(), "No tiene permisos para Forzar Cambiar de Turno.", Toast.LENGTH_SHORT).show();
                             }
-
-                            modalForzarEntrada.dismiss();
-
-                        } else {
-                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                     modalAlertaCTurnoActual.dismiss();
@@ -1459,44 +1463,47 @@ public class DasboardFragment extends Fragment{
 
                     usersCTList = response.body();
 
-                    for (Users user : usersCTList) {
-
-                        GlobalInfo.getuserIDFE10 = user.getUserID();
-                        GlobalInfo.getuserNameFE10 = user.getNames();
-                        GlobalInfo.getuserPassFE10 = user.getPassword();
-                        GlobalInfo.getuserCancelFE10 = user.getCancel();
-
+                    if (usersCTList == null || usersCTList.isEmpty()) {
+                        Toast.makeText(getContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    if (GlobalInfo.getuserCancelFE10 == true) {
+                    Users user = usersCTList.get(0);
 
-                        String getName = usuarioUser.trim();
-                        String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
+                    GlobalInfo.getuserIDFE10     = user.getUserID();
+                    GlobalInfo.getuserPassFE10   = user.getPassword();
+                    GlobalInfo.getuserSuperFE10  = user.getSuper();
+                    GlobalInfo.getuserLockedFE0 = user.getLocked();
+                    GlobalInfo.getuserForzarCierreFE10 = user.getForzarCierre();
 
-                        if (getName.equals(GlobalInfo.getuserIDFE10) && getPass.equals(GlobalInfo.getuserPassFE10)) {
+                    String getName = (usuarioUser != null) ? usuarioUser.trim() : "";
+                    String getPass = (contraseñaUser != null) ? PasswordChecker.checkpassword(contraseñaUser.trim()) : "";
 
-                            try {
-                                Intent intent = new Intent(getContext(), Login.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    if (getName.equals(GlobalInfo.getuserIDFE10) && getPass.equals(GlobalInfo.getuserPassFE10)) {
+                        if(GlobalInfo.getuserLockedFE0) {
+                            if (GlobalInfo.getuserForzarCierreFE10 || GlobalInfo.getuserSuperFE10) {
+                                try {
+                                    Intent intent = new Intent(getContext(), Login.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                                iniciarDia(GlobalInfo.getterminalID10);
+                                    iniciarDia(GlobalInfo.getterminalID10);
 
-                                startActivity(intent);
-                                finalize();
+                                    startActivity(intent);
+                                    finalize();
 
-                                Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
-                            } catch (Throwable e) {
-                                e.printStackTrace();
+                                    Toast.makeText(getContext(), "SE GENERO EL INICIO DE DÍA", Toast.LENGTH_SHORT).show();
+                                } catch (Throwable e) {
+                                    e.printStackTrace();
+                                }
+                                modalForzarEntrada.dismiss();
+                            } else {
+                                Toast.makeText(getContext(), "No tiene permisos para Forzar Inicio de Día.", Toast.LENGTH_SHORT).show();
                             }
-
-                            modalForzarEntrada.dismiss();
-
-                        } else {
-                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                     modalAlertaDiaActual.dismiss();

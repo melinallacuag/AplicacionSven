@@ -402,6 +402,17 @@
                 android:textColor="@color/gris"
                 android:textSize="14sp" />
 
+            <RadioButton
+                android:id="@+id/radioCredito"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="false"
+                android:text="Credito"
+                android:fontFamily="@font/nunito_extrabold"
+                android:textColor="@color/gris"
+                android:textSize="12sp" />
+
         </RadioGroup>
 
         <TextView
@@ -491,6 +502,21 @@
             android:orientation="horizontal">
 
             <Button
+                android:id="@+id/btnReimpresion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="2sp"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_extrabold"
+                android:text="Reimpresion"
+                android:textAllCaps="true"
+                android:backgroundTint="@color/colorSuccess"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:cornerRadius="10sp" />
+
+            <Button
                 android:id="@+id/btnGrabaImprimir"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -506,9 +532,6 @@
                 app:cornerRadius="10sp" />
 
         </LinearLayout>
-
-
-
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     </ScrollView>

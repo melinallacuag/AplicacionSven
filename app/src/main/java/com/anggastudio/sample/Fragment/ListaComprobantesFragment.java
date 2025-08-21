@@ -114,7 +114,7 @@ public class ListaComprobantesFragment extends Fragment  {
         BuscarRazonSocial       = view.findViewById(R.id.BuscarRazonSocial);
         btnConsultaComprobantes = view.findViewById(R.id.btnConsultaComprobantes);
 
-        btnConsultaComprobantes.setVisibility(View.GONE);
+        btnConsultaComprobantes.setVisibility(View.VISIBLE);
         BuscarRazonSocial.setIconifiedByDefault(false);
 
         /**
@@ -393,37 +393,41 @@ public class ListaComprobantesFragment extends Fragment  {
 
                     usersAnuladoList = response.body();
 
-                    for (Users user : usersAnuladoList) {
-
-                        GlobalInfo.getuserIDAnular10 = user.getUserID();
-                        GlobalInfo.getuserNameAnular10 = user.getNames();
-                        GlobalInfo.getuserPassAnular10 = user.getPassword();
-                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
-
+                    if (usersAnuladoList == null || usersAnuladoList.isEmpty()) {
+                        Toast.makeText(getContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    if (GlobalInfo.getuserCancelAnular10 == true) {
+                    Users user = usersAnuladoList.get(0);
 
-                        FragmentManager fragmentManager = getFragmentManager();
+                    GlobalInfo.getuserIDAnular10 = user.getUserID();
+                    GlobalInfo.getuserPassAnular10 = user.getPassword();
+                    GlobalInfo.getuserLockedAnular10 = user.getLocked();
+                    GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    GlobalInfo.getuserSuperAnular10  = user.getSuper();
 
-                        String getName = usuarioUser.trim();
-                        String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
+                    FragmentManager fragmentManager = getFragmentManager();
 
-                        if (getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)) {
+                    String getName = (usuarioUser != null) ? usuarioUser.trim() : "";
+                    String getPass = (contraseñaUser != null) ? PasswordChecker.checkpassword(contraseñaUser.trim()) : "";
 
-                            Anulars(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10,GlobalInfo.getterminalID10);
+                    if(getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)){
+                        if(GlobalInfo.getuserLockedAnular10){
+                            if(GlobalInfo.getuserCancelAnular10 || GlobalInfo.getuserSuperAnular10){
+                                Anulars(GlobalInfo.getconsultaventaTipoDocumentoID10, GlobalInfo.getconsultaventaSerieDocumento10, GlobalInfo.getconsultaventaNroDocumento10, GlobalInfo.getuserIDAnular10,GlobalInfo.getterminalID10);
 
-                            Toast.makeText(getContext(), "Se anulo correctamente", Toast.LENGTH_SHORT).show();
-                            fragmentManager.popBackStack();
+                                Toast.makeText(getContext(), "Se anulo correctamente", Toast.LENGTH_SHORT).show();
+                                fragmentManager.popBackStack();
 
-                            modalAnulacion.dismiss();
-
-                        } else {
-                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                                modalAnulacion.dismiss();
+                            }else{
+                                Toast.makeText(getContext(), "No tiene permisos para Anular.", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                     modalReimpresion.dismiss();

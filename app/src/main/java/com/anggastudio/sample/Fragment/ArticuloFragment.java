@@ -2666,78 +2666,81 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                     usersListNFC = response.body();
 
-                    for (Users user : usersListNFC) {
-                        GlobalInfo.getuserIDAnular10 = user.getUserID();
-                        GlobalInfo.getuserNameAnular10 = user.getNames();
-                        GlobalInfo.getuserPassAnular10 = user.getPassword();
-                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    if (usersListNFC == null || usersListNFC.isEmpty()) {
+                        Toast.makeText(getContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    if (GlobalInfo.getuserCancelAnular10 == true) {
+                    Users user = usersListNFC.get(0);
 
-                        String getName = usuarioNFC.getText().toString();
-                        String getPass = PasswordChecker.checkpassword(contraseñaNFC.getText().toString());
+                    GlobalInfo.getuserID10     = user.getUserID();
+                    GlobalInfo.getuserPass10   = user.getPassword();
+                    GlobalInfo.getuserLocked10 = user.getLocked();
+                    GlobalInfo.getuserSuper10  = user.getSuper();
+                    GlobalInfo.getuserAfiliar10 = user.getAfiliar();
 
-                        /**
-                         * @Modal-ListadoClientes-Descuento
-                         */
-                        modallistNFC = new Dialog(getContext());
-                        modallistNFC.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        modallistNFC.setContentView(R.layout.modal_list_nfc);
-                        modallistNFC.setCancelable(false);
+                    String getName = (usuarioUserNFC != null) ? usuarioUserNFC.trim() : "";
+                    String getPass = (contraseñaUserNFC != null) ? PasswordChecker.checkpassword(contraseñaUserNFC.trim()) : "";
 
-                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
+                    modallistNFC = new Dialog(getContext());
+                    modallistNFC.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    modallistNFC.setContentView(R.layout.modal_list_nfc);
+                    modallistNFC.setCancelable(false);
 
-                            recyclerListaClientesAfiliados = modallistNFC.findViewById(R.id.recyclerLClienteNFC);
-                            recyclerListaClientesAfiliados.setLayoutManager(new LinearLayoutManager(getContext()));
+                    if(getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)) {
+                        if (GlobalInfo.getuserLocked10) {
+                            if (GlobalInfo.getuserAfiliar10 || GlobalInfo.getuserSuper10) {
+                                recyclerListaClientesAfiliados = modallistNFC.findViewById(R.id.recyclerLClienteNFC);
+                                recyclerListaClientesAfiliados.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                            BuscarRazonSocial     = modallistNFC.findViewById(R.id.btnBuscadorClienteRZ);
-                            btnCancelarLCliente   = modallistNFC.findViewById(R.id.btnCancelarLCliente);
+                                BuscarRazonSocial     = modallistNFC.findViewById(R.id.btnBuscadorClienteRZ);
+                                btnCancelarLCliente   = modallistNFC.findViewById(R.id.btnCancelarLCliente);
 
-                            BuscarRazonSocial.setIconifiedByDefault(false);
+                                BuscarRazonSocial.setIconifiedByDefault(false);
 
-                            btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    BuscarRazonSocial.setQuery("", false);
-                                    modallistNFC.dismiss();
-                                }
-                            });
-
-                            /** Buscador por Razon Social */
-                            BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                @Override
-                                public boolean onQueryTextSubmit(String query) {
-                                    onQueryTextChange(query);
-                                    return true;
-                                }
-
-                                @Override
-                                public boolean onQueryTextChange(String newText) {
-                                    String userInput = newText.toLowerCase();
-                                    if (lRegistroClienteAdapter != null) {
-                                        lRegistroClienteAdapter.filtrado(userInput);
+                                btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        BuscarRazonSocial.setQuery("", false);
+                                        modallistNFC.dismiss();
                                     }
-                                    return true;
-                                }
-                            });
+                                });
 
-                            modalNFCLogin.dismiss();
+                                /** Buscador por Razon Social */
+                                BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                    @Override
+                                    public boolean onQueryTextSubmit(String query) {
+                                        onQueryTextChange(query);
+                                        return true;
+                                    }
 
-                            usuarioNFC.getText().clear();
-                            contraseñaNFC.getText().clear();
+                                    @Override
+                                    public boolean onQueryTextChange(String newText) {
+                                        String userInput = newText.toLowerCase();
+                                        if (lRegistroClienteAdapter != null) {
+                                            lRegistroClienteAdapter.filtrado(userInput);
+                                        }
+                                        return true;
+                                    }
+                                });
 
-                            /**
-                             * @APISERVICE-ListadoCliente-Descuento
-                             */
-                            findCliente(GlobalInfo.getnfcId10 , String.valueOf(GlobalInfo.getterminalCompanyID10));
+                                modalNFCLogin.dismiss();
 
+                                usuarioNFC.getText().clear();
+                                contraseñaNFC.getText().clear();
+
+                                /**
+                                 * @APISERVICE-ListadoCliente-Descuento
+                                 */
+                                findCliente(GlobalInfo.getnfcId10 , String.valueOf(GlobalInfo.getterminalCompanyID10));
+                            } else {
+                                Toast.makeText(getContext(), "No tiene permisos para Acceder al listado.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception ex) {
@@ -2815,78 +2818,82 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                     usersListNFC = response.body();
 
-                    for (Users user : usersListNFC) {
-                        GlobalInfo.getuserIDAnular10 = user.getUserID();
-                        GlobalInfo.getuserNameAnular10 = user.getNames();
-                        GlobalInfo.getuserPassAnular10 = user.getPassword();
-                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    if (usersListNFC == null || usersListNFC.isEmpty()) {
+                        Toast.makeText(getContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    if (GlobalInfo.getuserCancelAnular10 == true) {
+                    Users user = usersListNFC.get(0);
 
-                        String getName = usuarioNFC.getText().toString();
-                        String getPass = PasswordChecker.checkpassword(contraseñaNFC.getText().toString());
+                    GlobalInfo.getuserID10     = user.getUserID();
+                    GlobalInfo.getuserPass10   = user.getPassword();
+                    GlobalInfo.getuserLocked10 = user.getLocked();
+                    GlobalInfo.getuserSuper10  = user.getSuper();
+                    GlobalInfo.getuserAfiliar10 = user.getAfiliar();
 
-                        /**
-                         * @Modal-ListadoClientes-Puntos
-                         */
-                        modallistNFCPuntos = new Dialog(getContext());
-                        modallistNFCPuntos.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        modallistNFCPuntos.setContentView(R.layout.modal_list_puntos_nfc);
-                        modallistNFCPuntos.setCancelable(false);
+                    String getName = (usuarioUserNFC != null) ? usuarioUserNFC.trim() : "";
+                    String getPass = (contraseñaUserNFC != null) ? PasswordChecker.checkpassword(contraseñaUserNFC.trim()) : "";
 
-                        if (getName.equals(GlobalInfo.getuserNameAnular10) || getPass.equals(GlobalInfo.getuserPassAnular10)) {
 
-                            recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
-                            recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
+                    modallistNFC = new Dialog(getContext());
+                    modallistNFC.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    modallistNFC.setContentView(R.layout.modal_list_nfc);
+                    modallistNFC.setCancelable(false);
 
-                            BuscarRazonSocial     = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
-                            btnCancelarLCliente   = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
+                    if(getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)) {
+                        if (GlobalInfo.getuserLocked10) {
+                            if (GlobalInfo.getuserAfiliar10 || GlobalInfo.getuserSuper10) {
+                                recyclerLClientePuntosNFC = modallistNFCPuntos.findViewById(R.id.recyclerLClientePuntosNFC);
+                                recyclerLClientePuntosNFC.setLayoutManager(new LinearLayoutManager(getContext()));
 
-                            BuscarRazonSocial.setIconifiedByDefault(false);
+                                BuscarRazonSocial = modallistNFCPuntos.findViewById(R.id.btnBuscadorClienteRZ);
+                                btnCancelarLCliente = modallistNFCPuntos.findViewById(R.id.btnCancelarLCliente);
 
-                            btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    BuscarRazonSocial.setQuery("", false);
-                                    modallistNFCPuntos.dismiss();
-                                }
-                            });
+                                BuscarRazonSocial.setIconifiedByDefault(false);
 
-                            /** Buscador por Razon Social */
-                            BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                                @Override
-                                public boolean onQueryTextSubmit(String query) {
-                                    onQueryTextChange(query);
-                                    return true;
-                                }
-
-                                @Override
-                                public boolean onQueryTextChange(String newText) {
-                                    String userInput = newText.toLowerCase();
-                                    if (lRegistroClientePuntosAdapter != null) {
-                                        lRegistroClientePuntosAdapter.filtrado(userInput);
+                                btnCancelarLCliente.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        BuscarRazonSocial.setQuery("", false);
+                                        modallistNFCPuntos.dismiss();
                                     }
-                                    return true;
-                                }
-                            });
+                                });
 
-                            modalNFCLogin.dismiss();
+                                /** Buscador por Razon Social */
+                                BuscarRazonSocial.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                                    @Override
+                                    public boolean onQueryTextSubmit(String query) {
+                                        onQueryTextChange(query);
+                                        return true;
+                                    }
 
-                            usuarioNFC.getText().clear();
-                            contraseñaNFC.getText().clear();
+                                    @Override
+                                    public boolean onQueryTextChange(String newText) {
+                                        String userInput = newText.toLowerCase();
+                                        if (lRegistroClientePuntosAdapter != null) {
+                                            lRegistroClientePuntosAdapter.filtrado(userInput);
+                                        }
+                                        return true;
+                                    }
+                                });
 
-                            /**
-                             * @APISERVICE-ListadoCliente-Descuento
-                             */
-                            findClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+                                modalNFCLogin.dismiss();
 
+                                usuarioNFC.getText().clear();
+                                contraseñaNFC.getText().clear();
+
+                                /**
+                                 * @APISERVICE-ListadoCliente-Descuento
+                                 */
+                                findClientePuntos(GlobalInfo.getnfcId10, GlobalInfo.getterminalCompanyID10);
+                            } else {
+                                Toast.makeText(getContext(), "No tiene permisos para Acceder al listado.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception ex) {

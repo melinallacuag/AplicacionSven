@@ -2,19 +2,19 @@ package com.anggastudio.sample.WebApiSVEN.Models;
 
 public class TipoDocumento {
 
-    private Integer cardID;
+    private String cardID;
     private String names;
 
-    public TipoDocumento(Integer cardID, String names) {
+    public TipoDocumento(String cardID, String names) {
         this.cardID = cardID;
         this.names = names;
     }
 
-    public Integer getCardID() {
+    public String getCardID() {
         return cardID;
     }
 
-    public void setCardID(Integer cardID) {
+    public void setCardID(String cardID) {
         this.cardID = cardID;
     }
 

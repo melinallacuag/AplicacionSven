@@ -1,5 +1,7 @@
 package com.anggastudio.sample.WebApiSVEN.Models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Users {
 
     private String userID;
@@ -10,6 +12,10 @@ public class Users {
     private String mail;
     private Boolean locked;
     private Boolean cancel;
+    @SerializedName("super")
+    private Boolean isSuper;
+    private Boolean forzarCierre;
+    private Boolean afiliar;
 
     public String getUserID() {
         return userID;
@@ -73,5 +79,29 @@ public class Users {
 
     public void setCancel(Boolean cancel) {
         this.cancel = cancel;
+    }
+
+    public Boolean getSuper() {
+        return isSuper;
+    }
+
+    public void setSuper(Boolean isSuper) {
+        this.isSuper = isSuper;
+    }
+
+    public Boolean getForzarCierre() {
+        return forzarCierre;
+    }
+
+    public void setForzarCierre(Boolean forzarCierre) {
+        this.forzarCierre = forzarCierre;
+    }
+
+    public Boolean getAfiliar() {
+        return afiliar;
+    }
+
+    public void setAfiliar(Boolean afiliar) {
+        this.afiliar = afiliar;
     }
 }

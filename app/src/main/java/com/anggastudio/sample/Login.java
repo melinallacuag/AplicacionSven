@@ -294,7 +294,7 @@ public class Login extends AppCompatActivity{
         /**
          * @OBTENER:Imei
          */
-      //  imeii.setText("B3280909EBF7B75E");
+       // imeii.setText("8C7A39E8258F5D34");
         imeii.setText(ObtenerIMEI.getDeviceId(getApplicationContext()));
         GlobalInfo.getterminalImei10 = imeii.getText().toString();
 
@@ -485,35 +485,33 @@ public class Login extends AppCompatActivity{
 
                     usersEntradaList = response.body();
 
-                    for (Users user : usersEntradaList) {
-                        GlobalInfo.getuserIDAnular10 = user.getUserID();
-                        GlobalInfo.getuserNameAnular10 = user.getNames();
-                        GlobalInfo.getuserPassAnular10 = user.getPassword();
-                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
-                    }
+                    Users user = usersEntradaList.get(0);
 
-                    if (GlobalInfo.getuserCancelAnular10 == true) {
+                    GlobalInfo.getuserID10     = user.getUserID();
+                    GlobalInfo.getuserPass10   = user.getPassword();
+                    GlobalInfo.getuserSuper10  = user.getSuper();
+                    GlobalInfo.getuserLocked10 = user.getLocked();
 
-                        String getName = usuarioUserEntrada.trim();
-                        String getPass = PasswordChecker.checkpassword(contraseñaUserEntrada.trim());
+                    String getName = (usuarioUserEntrada != null) ? usuarioUserEntrada.trim() : "";
+                    String getPass = (contraseñaUserEntrada != null) ? PasswordChecker.checkpassword(contraseñaUserEntrada.trim()) : "";
 
-                        if (getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)) {
-
-                            startActivity(new Intent( getApplicationContext(),ConfigurarPrecios.class));
-
-                            modalForzarEntrada.dismiss();
-                            usuarioEntrada.getText().clear();
-                            contraseñaEntrada.getText().clear();
-
-                            alertuserEntrada.setErrorEnabled(false);
-                            alertpasswordEntrada.setErrorEnabled(false);
-
+                    if (getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)) {
+                        if (GlobalInfo.getuserLocked10) {
+                            if (GlobalInfo.getuserSuper10) {
+                                startActivity(new Intent( getApplicationContext(),ConfigurarPrecios.class));
+                                modalForzarEntrada.dismiss();
+                                usuarioEntrada.getText().clear();
+                                contraseñaEntrada.getText().clear();
+                                alertuserEntrada.setErrorEnabled(false);
+                                alertpasswordEntrada.setErrorEnabled(false);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "No tiene permisos para Configurar Lados.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception ex) {
@@ -547,35 +545,40 @@ public class Login extends AppCompatActivity{
 
                     usersEntradaList = response.body();
 
-                    for (Users user : usersEntradaList) {
-                        GlobalInfo.getuserIDAnular10 = user.getUserID();
-                        GlobalInfo.getuserNameAnular10 = user.getNames();
-                        GlobalInfo.getuserPassAnular10 = user.getPassword();
-                        GlobalInfo.getuserCancelAnular10 = user.getCancel();
+                    if (usersEntradaList == null || usersEntradaList.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
                     }
 
-                    if (GlobalInfo.getuserCancelAnular10 == true) {
+                    Users user = usersEntradaList.get(0);
 
-                        String getName = usuarioUserEntrada.trim();
-                        String getPass = PasswordChecker.checkpassword(contraseñaUserEntrada.trim());
+                    GlobalInfo.getuserID10     = user.getUserID();
+                    GlobalInfo.getuserPass10   = user.getPassword();
+                    GlobalInfo.getuserSuper10  = user.getSuper();
+                    GlobalInfo.getuserLocked10 = user.getLocked();
+                    GlobalInfo.getuserCancel10 = user.getCancel();
 
-                        if (getName.equals(GlobalInfo.getuserIDAnular10) && getPass.equals(GlobalInfo.getuserPassAnular10)) {
+                    String getName = (usuarioUserEntrada != null) ? usuarioUserEntrada.trim() : "";
+                    String getPass = (contraseñaUserEntrada != null) ? PasswordChecker.checkpassword(contraseñaUserEntrada.trim()) : "";
 
-                            startActivity(new Intent( getApplicationContext(),ConfigurarLados.class));
+                    if (getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)) {
+                        if (GlobalInfo.getuserLocked10) {
+                            if (GlobalInfo.getuserCancel10 || GlobalInfo.getuserSuper10) {
+                                startActivity(new Intent( getApplicationContext(),ConfigurarLados.class));
+                                modalForzarEntrada.dismiss();
+                                usuarioEntrada.getText().clear();
+                                contraseñaEntrada.getText().clear();
+                                alertuserEntrada.setErrorEnabled(false);
+                                alertpasswordEntrada.setErrorEnabled(false);
 
-                            modalForzarEntrada.dismiss();
-                            usuarioEntrada.getText().clear();
-                            contraseñaEntrada.getText().clear();
-
-                            alertuserEntrada.setErrorEnabled(false);
-                            alertpasswordEntrada.setErrorEnabled(false);
-
+                            } else {
+                                Toast.makeText(getApplicationContext(), "No tiene permisos para Configurar Lados.", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            Toast.makeText(getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
                         }
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "El usuario se encuentra bloqueado", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception ex) {
@@ -611,42 +614,37 @@ public class Login extends AppCompatActivity{
 
                     usersList = response.body();
 
-                    if (usersList != null && !usersList.isEmpty()) {
+                    if (usersList == null || usersList.isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Usuario no encontrado.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        Users user = usersList.get(0);
+                    Users user = usersList.get(0);
 
-                        inputUsuario.setText(user.getUserID());
-                        GlobalInfo.getuserID10     = user.getUserID();
-                        GlobalInfo.getuserName10   = user.getNames();
-                        GlobalInfo.getuserPass10   = user.getPassword();
-                        GlobalInfo.getuseridentFID10 = user.getIdentFID();
-                        GlobalInfo.getuserLocked10 = user.getLocked();
+                    inputUsuario.setText(user.getUserID());
+                    GlobalInfo.getuserID10     = user.getUserID();
+                    GlobalInfo.getuserName10   = user.getNames();
+                    GlobalInfo.getuserPass10   = user.getPassword();
+                    GlobalInfo.getuseridentFID10 = user.getIdentFID();
+                    GlobalInfo.getuserLocked10 = user.getLocked();
 
-                        if (GlobalInfo.getuserLocked10 == false) {
+                    String getName = (usuarioUser != null) ? usuarioUser.trim() : "";
+                    String getPass = (contraseñaUser != null) ? PasswordChecker.checkpassword(contraseñaUser.trim()) : "";
+
+                    if (getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)) {
+                        if (GlobalInfo.getuserLocked10) {
+                            if (!GlobalInfo.getsettingByImei10) {
+                                findTerminal(GlobalInfo.getuseridentFID10.toUpperCase());
+                                return;
+                            }
+                            if (validarHoraTerminal()) {
+                                Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent( getApplicationContext(),Menu.class));
+                            }
+                        } else {
                             Toast.makeText( getApplicationContext(), "El Usuario se encuentra bloqueado.", Toast.LENGTH_SHORT).show();
-                        }else {
-
-                            String getName = usuarioUser.trim();
-                            String getPass = PasswordChecker.checkpassword(contraseñaUser.trim());
-
-                            if(getName.equals(GlobalInfo.getuserID10) && getPass.equals(GlobalInfo.getuserPass10)){
-
-                                if (!GlobalInfo.getsettingByImei10) {
-                                    findTerminal(GlobalInfo.getuseridentFID10.toUpperCase());
-                                    return;
-                                }
-
-                                if (validarHoraTerminal()) {
-                                    Toast.makeText( getApplicationContext(), "Bienvenido al Sistema SVEN", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent( getApplicationContext(),Menu.class));
-                                }
-                            }
-                            else {
-                                Toast.makeText( getApplicationContext(), "El usuario o la contraseña son incorrectos", Toast.LENGTH_SHORT).show();
-                            }
-
                         }
-                    } else {
+                    }else{
                         Toast.makeText(getApplicationContext(), "El Usuario o la Contraseña son incorrectos", Toast.LENGTH_SHORT).show();
                     }
 

@@ -101,30 +101,35 @@ public class GlobalInfo {
     public static String getSloganCompany10;
 
     /**
-     * @USER:INGRESAR
+     * @USER:INGRESARLOGIN
      */
     public static String getuserID10;
     public static String getuserName10;
     public static String getuserPass10;
     public static String getuseridentFID10;
     public static Boolean getuserLocked10;
+    public static Boolean getuserCancel10;
+    public static Boolean getuserSuper10;
+    public static Boolean getuserAfiliar10;
 
     /**
      * @USER:ANULACION
      */
     public static String getuserIDAnular10;
-    public static String getuserNameAnular10;
     public static String getuserPassAnular10;
+    public static Boolean getuserLockedAnular10;
     public static Boolean getuserCancelAnular10;
+    public static Boolean getuserSuperAnular10;
 
     /**
      * @USER:ForzarCambioTurnoEInicioDia
      */
 
     public static String getuserIDFE10;
-    public static String getuserNameFE10;
     public static String getuserPassFE10;
-    public static Boolean getuserCancelFE10;
+    public static Boolean getuserLockedFE0;
+    public static Boolean getuserSuperFE10;
+    public static Boolean getuserForzarCierreFE10;
 
     /**
      * @CARA_MARGUERA
@@ -286,7 +291,7 @@ public class GlobalInfo {
      */
     public static String   getConsultaComprobanteNroSerie;
     public static String   getConsultaComprobanteNroDocumento;
-    public static int  getConsultaComprobanteTipoDocumento;
+    public static String  getConsultaComprobanteTipoDocumento;
 
     /**
      * Egreso
