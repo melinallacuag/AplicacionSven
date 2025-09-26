@@ -93,6 +93,7 @@
                     android:layout_marginTop="-4sp"
                     android:layout_marginStart="10sp"
                     android:layout_marginLeft="10sp"
+                    android:visibility="gone"
                     app:cornerRadius="10sp" />
 
                 <Button
@@ -164,6 +165,7 @@
                 android:gravity="center"
                 android:fontFamily="@font/nunito_black"
                 android:text="0"
+                android:visibility="gone"
                 android:textColor="@color/red_200"
                 android:textSize="16sp" />
         </LinearLayout>

@@ -1,5 +1,7 @@
 package com.anggastudio.sample.WebApiSVEN.Controllers;
+import com.anggastudio.sample.WebApiSVEN.Models.ActualizarCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.Anular;
+import com.anggastudio.sample.WebApiSVEN.Models.ApiResponse;
 import com.anggastudio.sample.WebApiSVEN.Models.Articulo;
 import com.anggastudio.sample.WebApiSVEN.Models.Articulos;
 import com.anggastudio.sample.WebApiSVEN.Models.CDia;
@@ -8,9 +10,11 @@ import com.anggastudio.sample.WebApiSVEN.Models.CambioPrecios;
 import com.anggastudio.sample.WebApiSVEN.Models.ClienteCredito;
 import com.anggastudio.sample.WebApiSVEN.Models.ClientePrecio;
 import com.anggastudio.sample.WebApiSVEN.Models.Company;
+import com.anggastudio.sample.WebApiSVEN.Models.Comprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Correlativo;
 import com.anggastudio.sample.WebApiSVEN.Models.DetalleVenta;
 import com.anggastudio.sample.WebApiSVEN.Models.Egreso;
+import com.anggastudio.sample.WebApiSVEN.Models.EliminarComp;
 import com.anggastudio.sample.WebApiSVEN.Models.Familia;
 import com.anggastudio.sample.WebApiSVEN.Models.Gratuita;
 import com.anggastudio.sample.WebApiSVEN.Models.Ingresos;
@@ -128,6 +132,9 @@ public interface APIService {
 
     @GET("api/cliente/listado/RUC/{clienteId}")
     Call<List<LClientes>> findClienteRUC(@Path("clienteId") String clienteId);
+
+    @GET("api/cliente/listado/RUCAPI/{clienteId}")
+    Call<List<LClientes>> findClienteRUCAPI(@Path("clienteId") String clienteId);
 
     /**
      * @DetalleVenta
@@ -459,5 +466,30 @@ public interface APIService {
      */
     @GET("api/articulo/ListadoND")
     Call<List<Articulos>> getArticulos();
+
+
+    /**
+     * @ConsultarComprobante
+     */
+    @GET("api/ConsultarComprobante/Listado/{TipoDocumento}/{SerieDocumento}/{NroDocumento}/{TerminalID}")
+    Call<List<Reimpresion>> findConsultarComprobante(@Path("TipoDocumento") String TipoDocumento, @Path("SerieDocumento") String SerieDocumento, @Path("NroDocumento") String NroDocumento, @Path("TerminalID") String TerminalID);
+
+    /**
+     * @ActualizarConsultarComprobante
+     */
+    @POST("api/ActualizarDatos/Actualizar")
+    Call<ApiResponse> ActualizarDatos(@Body Comprobante comprobante);
+
+    /**
+     * @ActualizarConsultarComprobante
+     */
+    @POST("api/ActualizarDatos/ActualizarCredito")
+    Call<ApiResponse> ActualizarCreditos(@Body ActualizarCredito actualizarCredito);
+
+    /**
+     * @EliminarComprobante
+     */
+    @POST("api/ActualizarDatos/Delete")
+    Call<ApiResponse> DeleteDatos(@Body EliminarComp eliminarComp);
 
 }

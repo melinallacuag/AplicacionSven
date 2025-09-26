@@ -157,7 +157,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
     List<LClientePuntos>  clientePuntosList;
 
     RecyclerView recyclerLClientePuntosNFC,recyclerListaClientesAfiliados,recyclerFamilia, recyclerArticulo, recyclerCarrito, recyclerLCliente,recyclerLClienteCredito;
-    Button buscarListSinPuntosNFC,btnCancelarNFC,btnAceptarNFC,
+    Button buscarRUCConsultaFac,buscarListSinPuntosNFC,btnCancelarNFC,btnAceptarNFC,
             btnAceptarErrorWifi,btnAceptarError,
             btnTodoArticulo,
             btnBoleta,btnCancelarBoleta,btnAgregarBoleta,btnGenerarBoleta,buscarPlacaBoleta,buscarDNIBoleta,btnCancelarLCliente,
@@ -1398,6 +1398,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                         buscarListNFC      = modalFactura.findViewById(R.id.buscarListNFC);
                         buscarListPuntosNFC  = modalFactura.findViewById(R.id.buscarListPuntosNFC);
                         textNumPuntos       = modalFactura.findViewById(R.id.textNumPuntos);
+                        buscarRUCConsultaFac = modalFactura.findViewById(R.id.buscarRUCConsultaFac);
 
                         alertRUC.setError(null);
                         alertRUC.setErrorEnabled(false);
@@ -1421,6 +1422,40 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                         inputRazSocial.setEnabled(true);
                         alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
                         alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+
+                        /**
+                         *
+                         */
+                        buscarRUCConsultaFac.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                                String campoRUC = inputRUC.getText().toString();
+
+                                if (campoRUC.isEmpty() || campoRUC == null) {
+                                    alertRUC.setError("* El campo RUC es obligatorio");
+                                    return;
+                                }else if (campoRUC.length() < 11){
+                                    alertRUC.setError("* El RUC debe tener 11 dígitos");
+                                    return;
+                                }
+
+                                findClienteRUCAPI(campoRUC);
+
+                                alertRUC.setErrorEnabled(false);
+
+                                inputPlaca.setText("000-0000");
+                                inputNFC.getText().clear();
+                                inputRazSocial.getText().clear();
+                                inputDireccion.getText().clear();
+
+                                inputRUC.setEnabled(true);
+                                inputRazSocial.setEnabled(true);
+                                alertRUC.setBoxBackgroundColorResource(R.color.transparentenew);
+                                alertRazSocial.setBoxBackgroundColorResource(R.color.transparentenew);
+
+                            }
+                        });
 
                         /**
                          * @MODAL:MostrarListadoClienteRUC
@@ -2255,10 +2290,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                                 Context context = requireContext();
 
-                                ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-                                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-
-                                if (networkInfo != null && networkInfo.isConnected()) {
+                                if (hayConexion(context)) {
 
                                         /** Variables de Detalle Venta **/
 
@@ -2322,7 +2354,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                                 break;
                                         }
 
-                                        if (mnClienteID != null && mnClienteID.isEmpty() && mnTipoDocumento == "03") {
+                                        if (mnClienteID != null && mnClienteID.isEmpty() && mnTipoDocumento.equals("03")) {
                                             mnTipoPago       = "E";
                                             mnNroPlaca       = "000-0000";
                                             mnClienteID      = "11111111";
@@ -2346,15 +2378,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
                                             mnobservacionPag, mnMontoSoles, GlobalInfo.getMarketMontoTotal,mnTarjND,mnobservacion);
 
                                 } else {
-
-                                    modal_ErrorWifi.show();
-                                    btnAceptarErrorWifi   = modal_ErrorWifi.findViewById(R.id.btnAceptarWifi);
-                                    btnAceptarErrorWifi.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            modal_ErrorWifi.dismiss();
-                                        }
-                                    });
+                                    mostrarErrorWifi();
                                     modal_CV_Articulo.dismiss();
                                 }
 
@@ -2543,6 +2567,19 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
 
         return view;
+    }
+
+    private boolean hayConexion(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+    }
+
+    private void mostrarErrorWifi() {
+        modal_ErrorWifi.show();
+        btnAceptarErrorWifi = modal_ErrorWifi.findViewById(R.id.btnAceptarWifi);
+        btnAceptarErrorWifi.setOnClickListener(v -> modal_ErrorWifi.dismiss());
     }
 
     /**
@@ -3418,15 +3455,7 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
             @Override
             public void onFailure(Call<List<Correlativo>> call, Throwable t) {
-
-                modal_ErrorServidor.show();
-                btnAceptarError   = modal_ErrorServidor.findViewById(R.id.btnAceptarError);
-                btnAceptarError.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        modal_ErrorServidor.dismiss();
-                    }
-                });
+                mostrarErrorWifi();
                 modal_CV_Articulo.dismiss();
 
             }
@@ -3885,6 +3914,11 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                     GlobalInfo.getlclientesList10 = response.body();
 
+                    if (GlobalInfo.getlclientesList10 == null || GlobalInfo.getlclientesList10.isEmpty()) {
+                        Toast.makeText(getContext(), "No se encontraron datos del RUC", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
                     LClientes lClientes = GlobalInfo.getlclientesList10.get(0);
 
                     GlobalInfo.getclienteId10  = String.valueOf(lClientes.getClienteID());
@@ -3897,6 +3931,57 @@ public class ArticuloFragment extends Fragment implements NfcAdapter.ReaderCallb
 
                 }catch (Exception ex){
                     Toast.makeText(getContext(),ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<LClientes>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE Cliente RUC - RED - WIFI", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
+     * @APISERVICE:BuscarClienteRUC
+     */
+    private  void findClienteRUCAPI(String id){
+
+        Call<List<LClientes>> call = mAPIService.findClienteRUCAPI(id);
+
+        call.enqueue(new Callback<List<LClientes>>() {
+            @Override
+            public void onResponse(Call<List<LClientes>> call, Response<List<LClientes>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getlclientesList10 = response.body();
+
+                    if (GlobalInfo.getlclientesList10 == null || GlobalInfo.getlclientesList10.isEmpty()) {
+                        Toast.makeText(getContext(), "No se encontraron datos del RUC", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    LClientes lClientes = GlobalInfo.getlclientesList10.get(0);
+
+                    if ("error".equalsIgnoreCase(lClientes.getClienteID()) || "error".equalsIgnoreCase(lClientes.getClienteRUC())) {
+                        Toast.makeText(getContext(), "RUC no encontrado o no existe", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    GlobalInfo.getclienteId10  = String.valueOf(lClientes.getClienteID());
+                    GlobalInfo.getclienteRUC10 = String.valueOf(lClientes.getClienteRUC());
+                    GlobalInfo.getclienteRZ10  = String.valueOf(lClientes.getClienteRZ());
+                    GlobalInfo.getclienteDR10  = String.valueOf(lClientes.getClienteDR());
+
+                    inputRazSocial.setText(GlobalInfo.getclienteRZ10);
+                    inputDireccion.setText(GlobalInfo.getclienteDR10);
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(),"Error: " + ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 

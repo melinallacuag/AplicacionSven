@@ -57,6 +57,7 @@ import com.anggastudio.sample.WebApiSVEN.Models.Company;
 import com.anggastudio.sample.WebApiSVEN.Models.Egreso;
 import com.anggastudio.sample.WebApiSVEN.Models.Gratuita;
 import com.anggastudio.sample.WebApiSVEN.Models.Lados;
+import com.anggastudio.sample.WebApiSVEN.Models.MontoEfectivo;
 import com.anggastudio.sample.WebApiSVEN.Models.Optran;
 import com.anggastudio.sample.WebApiSVEN.Models.RAnulados;
 import com.anggastudio.sample.WebApiSVEN.Models.ReporteEgreso;
@@ -96,7 +97,7 @@ public class CierreXFragment extends Fragment {
             FechaHoraFin,FechaHoraIni,TotalVolumenContometro,textSucural,textNombreEmpresa,
             TotalSolesproducto,TotalMontoPago,TotalMtogalones,TotalDescuento,totalPagoBruto,
             TotalDescuento2,TotalIncremento,GranTotal,GranVendedorTotal,GranEgresoTotal,rgratuita,
-            TotalCantidadProdTienda,TotalMontoProdTienda;
+            TotalCantidadProdTienda,TotalMontoProdTienda,DCaja;
 
     String RAnuladosSoles10,RDespachosSoles10, TVolumenContometro,SProductosTotalGLL,SProductosTotalSoles,SProductosTotalDesc,SProductosTotalIncremento,
             TotalPagosSoles,TotalRTarjetasSoles,TotalRVendedorSoles,TotalTGratuita,TotalREgresoSoles,
@@ -139,6 +140,10 @@ public class CierreXFragment extends Fragment {
 
     Double AnuladosSoles10,DespachosSoles10, RContometrosTotalGLL, RProductosTotalGLL, RProductosTotalSoles, RProductosTotalDesc,RProductosTotalIncremento, RPagosTotalSoles,RTarjetasTotal,RVendedorTotal,REgresoTotal,RPagosTotalGratuita,
             RProductosCantidadTienda,RProductosTotalSolesTienda,RProductosDescTienda,RProductosIncrementoTienda,MontoBruto,MontoBrutoTienda,montoBrutoTotal;
+
+    List<MontoEfectivo> montoEfectivoList;
+    private double efectivoDisponible = 0.0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -173,6 +178,7 @@ public class CierreXFragment extends Fragment {
         totalPagoBruto      = view.findViewById(R.id.totalpagobruto);
         TotalCantidadProdTienda  = view.findViewById(R.id.textMtoProductoTienda);
         TotalMontoProdTienda     = view.findViewById(R.id.TotalSolesProductoTienda);
+        DCaja                    = view.findViewById(R.id.DCaja);
 
         TotalDescuento2     = view.findViewById(R.id.TotalDescuento2);
         TotalIncremento     = view.findViewById(R.id.TotalIncremento);
@@ -328,6 +334,8 @@ public class CierreXFragment extends Fragment {
         recyclerReporteEgreso = view.findViewById(R.id.recyclerReporteEgreso);
         recyclerReporteEgreso.setLayoutManager(new LinearLayoutManager(getContext()));
         findREgreso(GlobalInfo.getterminalID10, GlobalInfo.getterminalTurno10);
+
+        findMontoEfectivo(GlobalInfo.getterminalID10,GlobalInfo.getterminalTurno10);
 
         return view;
     }
@@ -684,6 +692,46 @@ public class CierreXFragment extends Fragment {
         });
 
     }
+    /**Monto Efectivo para Caja */
+    private void findMontoEfectivo(String id,Integer turno){
+
+        Call<List<MontoEfectivo>> call = mAPIService.findMontoEfectivo(id,turno);
+
+        call.enqueue(new Callback<List<MontoEfectivo>>() {
+            @Override
+            public void onResponse(Call<List<MontoEfectivo>> call, Response<List<MontoEfectivo>> response) {
+                try {
+
+                    if(!response.isSuccessful()){
+                        Toast.makeText(getContext(), "Codigo de error MontoEfectivo: " + response.code(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    montoEfectivoList = response.body();
+
+                    if (montoEfectivoList != null && !montoEfectivoList.isEmpty()) {
+
+                        efectivoDisponible = montoEfectivoList.get(0).getSoles();
+                        DCaja.setText(String.format("%.2f", efectivoDisponible - REgresoTotal ));
+
+                        GlobalInfo.getTotalCajaSoles10 = String.format("%.2f",efectivoDisponible - REgresoTotal);
+                    } else {
+                        efectivoDisponible = 0.0;
+                    }
+
+
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MontoEfectivo>> call, Throwable t) {
+                Toast.makeText(getContext(), "Error de conexión APICORE MontoEfectivo - RED - WIFI", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
 
     /** API SERVICE - Venta por Tipo de Pago */
     private void findRTarjetas(String id,Integer turno){
@@ -799,6 +847,7 @@ public class CierreXFragment extends Fragment {
                     TotalREgresoSoles = String.format(Locale.getDefault(), "%,.2f" ,REgresoTotal);
                     GlobalInfo.getTotalREgresoSoles10 = TotalREgresoSoles;
                     GranEgresoTotal.setText(TotalREgresoSoles);
+                   // DCaja.setText(TotalREgresoSoles);
 
                     reporteEgresoAdapter = new ReporteEgresoAdapter(reporteEgresoList, getContext());
                     recyclerReporteEgreso.setAdapter(reporteEgresoAdapter);
@@ -1291,6 +1340,25 @@ public class CierreXFragment extends Fragment {
                 break;
         }
 
+        /** Gran Total de Caja */
+
+        StringBuilder GranCajaotal = new StringBuilder();
+
+        String GranCajaotalC   = "DINERO CAJA :";
+        String TotalSolesCaja  = GlobalInfo.getTotalCajaSoles10;
+
+        switch (tipopapel) {
+            case "65mm":
+            case "80mm":
+                String linnesCaja= String.format(Locale.getDefault(),"%-36s %11s", GranCajaotalC, TotalSolesCaja);
+                GranCajaotal.append(linnesCaja);
+                break;
+            case "58mm":
+                String linnesSCaja = String.format(Locale.getDefault(),"%-20s %11s", GranCajaotalC, TotalSolesCaja);
+                GranCajaotal.append(linnesSCaja);
+                break;
+        }
+
         int logoSize = (tipopapel.equals("80mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("58mm")) ? GlobalInfo.getTerminalImageW10 : (tipopapel.equals("65mm") ? GlobalInfo.getTerminalImageW10 : 400);
 
         /** Imprimir Cierre X**/
@@ -1455,6 +1523,7 @@ public class CierreXFragment extends Fragment {
                         printama.printTextlnBold("ID   "+"TIPO DE EGRESOS      " + " MONTO", Printama.RIGHT);
                         printama.printTextlnBold(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
                         printama.printTextlnBold(GranREgresoTotal.toString(), Printama.RIGHT);
+                        printama.printTextlnBold(GranCajaotal.toString(), Printama.RIGHT);
 
                     }
 
@@ -1616,6 +1685,7 @@ public class CierreXFragment extends Fragment {
                         printama.printTextlnBold("ID              "+"TIPO DE EGRESOS          " + "  MONTO", Printama.RIGHT);
                         printama.printTextlnBold(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
                         printama.printTextlnBold(GranREgresoTotal.toString(), Printama.RIGHT);
+                        printama.printTextlnBold(GranCajaotal.toString(), Printama.RIGHT);
 
                     }
 
@@ -1776,6 +1846,7 @@ public class CierreXFragment extends Fragment {
                         printama.printTextlnBold( "ID              "+"TIPO DE EGRESOS         " + "  MONTO", Printama.RIGHT);
                         printama.printTextln(ReporteEgresoBuilder.toString() + "---------", Printama.RIGHT);
                         printama.printTextln(GranREgresoTotal.toString(), Printama.RIGHT);
+                        printama.printTextln(GranCajaotal.toString(), Printama.RIGHT);
 
                     }
 

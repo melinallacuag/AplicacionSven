@@ -16,7 +16,9 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,11 @@ import com.anggastudio.sample.Adapter.TipoPagoAdapter;
 import com.anggastudio.sample.Numero_Letras;
 import com.anggastudio.sample.R;
 import com.anggastudio.sample.WebApiSVEN.Controllers.APIService;
+import com.anggastudio.sample.WebApiSVEN.Models.ActualizarCredito;
+import com.anggastudio.sample.WebApiSVEN.Models.ApiResponse;
+import com.anggastudio.sample.WebApiSVEN.Models.Comprobante;
+import com.anggastudio.sample.WebApiSVEN.Models.EliminarComp;
+import com.anggastudio.sample.WebApiSVEN.Models.Ingresos;
 import com.anggastudio.sample.WebApiSVEN.Models.ListaComprobante;
 import com.anggastudio.sample.WebApiSVEN.Models.Reimpresion;
 import com.anggastudio.sample.WebApiSVEN.Models.TipoDocumento;
@@ -50,10 +57,15 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.io.File;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.SplittableRandom;
+import java.util.TimeZone;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,10 +90,11 @@ public class ConsultaComprobantesFragment extends Fragment {
     RadioGroup radioFormaPago;
     RadioButton radioEfectivo,radioTarjeta,radioCredito,radioNombreFormaPago;
 
-    Button btnConsultar,btnReimpresion,btnGrabaImprimir;
+    Button btnConsultar,btnReimpresion,btnGrabaImprimir,btnGrabaCredito;
 
     TextView textMensajePEfectivo,textCTotal,textCAnulado;
 
+    private APIService mAPIService2;
     private APIService mAPIService;
 
     private List<Reimpresion> datosReimpresion;
@@ -139,13 +152,59 @@ public class ConsultaComprobantesFragment extends Fragment {
         btnConsultar      = view.findViewById(R.id.btnConsultar);
         btnReimpresion    = view.findViewById(R.id.btnReimpresion);
         btnGrabaImprimir  = view.findViewById(R.id.btnGrabaImprimir);
+        btnGrabaCredito = view.findViewById(R.id.btnGrabaCredito);
 
         btnReimpresion.setVisibility(View.GONE);
         btnGrabaImprimir.setVisibility(View.GONE);
+        btnGrabaCredito.setVisibility(View.GONE);
+
+        radioCredito.setVisibility(View.VISIBLE);
 
         /**
          * @OPCION:ConsultarDatos
          */
+        inputNroSerie.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String NroSerie = s.toString();
+
+                if (NroSerie.isEmpty()) {
+                    alertNroSerie.setError("* El Nro. Serie es obligatorio");
+                    return;
+                } else {
+                    alertNroSerie.setError(null);
+                    alertNroSerie.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        inputNroDocumento.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String NroDocumento = s.toString();
+
+                if (NroDocumento.isEmpty()) {
+                    alertNroDocumento.setError("* El Nro. Doc. es obligatorio");
+                    return;
+                } else {
+                    alertNroDocumento.setError(null);
+                    alertNroDocumento.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         btnConsultar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,7 +221,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                     return;
                 }
 
-                ConsultarDatos(GlobalInfo.getConsultaComprobanteTipoDocumento,GlobalInfo.getConsultaComprobanteNroSerie,GlobalInfo.getConsultaComprobanteNroDocumento);
+                ConsultarDatos(GlobalInfo.getConsultaComprobanteTipoDocumento,GlobalInfo.getConsultaComprobanteNroSerie,GlobalInfo.getConsultaComprobanteNroDocumento,GlobalInfo.getterminalID10);
             }
         });
 
@@ -172,16 +231,175 @@ public class ConsultaComprobantesFragment extends Fragment {
         btnReimpresion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Reimpresiones(GlobalInfo.getTipoPapel10,GlobalInfo.getConsultaComprobanteTipoDocumento,GlobalInfo.getConsultaComprobanteNroSerie,GlobalInfo.getConsultaComprobanteNroDocumento);
+                Reimpresion(GlobalInfo.getTipoPapel10,GlobalInfo.getConsultaComprobanteTipoDocumento,GlobalInfo.getConsultaComprobanteNroSerie,GlobalInfo.getConsultaComprobanteNroDocumento);
+            }
+        });
+
+        btnGrabaCredito.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                btnGrabaCredito.setEnabled(false);
+
+                String tipoDocumento  = GlobalInfo.getConsultaComprobanteTipoDocumento;
+                String serieDocumento = inputNroSerie.getText().toString();
+                String nroDocumento   = inputNroDocumento.getText().toString();
+                String nroplaca       = inputNroPlaca.getText().toString();
+                String obsacionCA     = inputObservacion.getText().toString();
+
+                if (nroplaca.isEmpty()) {
+                    alertNroPlaca.setError("* El campo Placa es obligatorio");
+                    btnGrabaCredito.setEnabled(true);
+                    return;
+                } else if (!nroplaca.matches("^[A-Za-z0-9-]+$")) {
+                    alertNroPlaca.setError("* Solo se permiten letras, números y guiones");
+                    btnGrabaCredito.setEnabled(true);
+                    return;
+                }
+
+                ActualizarDatosCredito(tipoDocumento, serieDocumento, nroDocumento,nroplaca, obsacionCA);
+
             }
         });
 
         /**
          * @OPCION:Grabar
          */
+        inputNroPlaca.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String placa = s.toString();
+
+                if (placa.isEmpty()) {
+                    alertNroPlaca.setError("* El campo Placa es obligatorio");
+                    return;
+                } else if (!placa.matches("^[A-Za-z0-9-]+$")) {
+                    alertNroPlaca.setError("* Solo se permiten letras, números y guiones");
+                    return;
+                } else {
+                    alertNroPlaca.setError(null);
+                    alertNroPlaca.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        inputOperacion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String operacionBoleta = s.toString();
+
+                if (operacionBoleta.isEmpty()) {
+                    alertOperacion.setError("* El campo Nro Operación es obligatorio");
+                    return;
+                } else if (operacionBoleta.length() < 4) {
+                    alertOperacion.setError("* El  Nro Operación debe tener mayor a 4 dígitos");
+                    return;
+                } else {
+                    alertOperacion.setError(null);
+                    alertOperacion.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        inputPEfectivo.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String pefectivoBoleta = s.toString();
+
+                if (pefectivoBoleta.isEmpty()) {
+                    alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
+                    return;
+                } else {
+                    alertPEfectivo.setError(null);
+                    alertPEfectivo.setErrorEnabled(false);
+                }
+
+                try {
+                    Double dosDecimales = Double.valueOf(pefectivoBoleta);
+                    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+
+                    if (dosDecimales != Double.parseDouble(decimalFormat.format(dosDecimales))) {
+                        alertPEfectivo.setError("* Por favor ingrese un valor con dos decimales solamente");
+                    } else {
+                        alertPEfectivo.setError(null);
+                        alertPEfectivo.setErrorEnabled(false);
+                    }
+
+                } catch (NumberFormatException e) {
+                    alertPEfectivo.setError("* Formato numérico no válido");
+                }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
         btnGrabaImprimir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                btnGrabaImprimir.setEnabled(false);
+
+                String tipoDocumento  = GlobalInfo.getConsultaComprobanteTipoDocumento;
+                String serieDocumento = inputNroSerie.getText().toString();
+                String nroDocumento   = inputNroDocumento.getText().toString();
+                String nroplaca       = inputNroPlaca.getText().toString();
+                String obsacionCA     = inputObservacion.getText().toString();
+                String operacion      = inputOperacion.getText().toString();
+                String PEfectivo      = inputPEfectivo.getText().toString();
+
+                if (nroplaca.isEmpty()) {
+                    alertNroPlaca.setError("* El campo Placa es obligatorio");
+                    btnGrabaImprimir.setEnabled(true);
+                    return;
+                } else if (!nroplaca.matches("^[A-Za-z0-9-]+$")) {
+                    alertNroPlaca.setError("* Solo se permiten letras, números y guiones");
+                    btnGrabaImprimir.setEnabled(true);
+                    return;
+                }
+
+                int pagoID;
+                if(radioEfectivo.isChecked()) {
+                    pagoID = 1;
+                }else if (radioTarjeta.isChecked()) {
+                    pagoID = 2;
+                    if (operacion.isEmpty()) {
+                        alertOperacion.setError("* El campo Nro Operación es obligatorio");
+                        btnGrabaImprimir.setEnabled(true);
+                        return;
+                    } else if (operacion.length() < 4) {
+                        alertOperacion.setError("* El  Nro Operación debe tener mayor a 4 dígitos");
+                        btnGrabaImprimir.setEnabled(true);
+                        return;
+                    }
+
+                    if (PEfectivo.isEmpty()) {
+                        alertPEfectivo.setError("* El campo Pago Efectivo es obligatorio");
+                        btnGrabaImprimir.setEnabled(true);
+                        return;
+                    }
+                }else{
+                    pagoID = 4;
+                }
+
+                EliminarDatos(tipoDocumento,serieDocumento,nroDocumento,nroplaca,obsacionCA,pagoID);
 
             }
         });
@@ -263,11 +481,128 @@ public class ConsultaComprobantesFragment extends Fragment {
     }
 
     /**
+     * @APISERVICE:ActualizarDatos
+     */
+    private void EliminarDatos(String tipoDocumento, String serieDocumento, String nroDocumento, String nroplaca, String obsacionCA,Integer pagoID) {
+
+        EliminarComp eliminarComp = new EliminarComp(tipoDocumento,serieDocumento,nroDocumento);
+
+        Call<ApiResponse> call = mAPIService.DeleteDatos(eliminarComp);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                btnGrabaImprimir.setEnabled(true);
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Se elimino correctamente COMPROBANTE" , Toast.LENGTH_SHORT).show();
+
+                    procesarActualizacion(tipoDocumento, serieDocumento, nroDocumento, nroplaca, obsacionCA, pagoID);
+
+                } else {
+                    Toast.makeText(getContext(), "Error al ELIMINAR: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                btnGrabaImprimir.setEnabled(true);
+                Toast.makeText(getContext(), "Error de conexión ELIMINAR COMPROBANTE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void procesarActualizacion(String tipoDocumento, String serieDocumento, String nroDocumento,
+                                       String nroplaca, String obsacionCA, Integer pagoID) {
+
+        double mtoTotalEfectivo = 0.0;
+        double mtoPagoPEN = 0.0;
+        int tarjetaID = 0;
+        String tarjetaDS = "";
+        String mnobservacionPag = "CONTADO";
+
+        if (pagoID == 1) {
+            mtoPagoPEN = Double.parseDouble(textCTotal.getText().toString());
+
+            ActualizarDatos(tipoDocumento, serieDocumento, nroDocumento,
+                    nroplaca, obsacionCA, pagoID, tarjetaID, tarjetaDS,
+                    mtoTotalEfectivo, mnobservacionPag, mtoPagoPEN);
+
+        } else if (pagoID == 2) {
+
+            mnobservacionPag = "TARJETA";
+            mtoPagoPEN = Double.parseDouble(textCTotal.getText().toString());
+
+            ActualizarDatos(tipoDocumento, serieDocumento, nroDocumento,
+                        nroplaca, obsacionCA, pagoID, tipoPago.getCardID(), inputOperacion.getText().toString(),
+                    Double.valueOf(inputPEfectivo.getText().toString()), mnobservacionPag, mtoPagoPEN);
+
+        }
+    }
+
+    /**
+     * @APISERVICE:ActualizarDatos
+     */
+    private void ActualizarDatos(String tipoDocumento, String serieDocumento, String nroDocumento,
+                                 String nroPlaca,String observacionCA, Integer pagoID,
+                                 Integer tarjetaID, String tarjetaDS, Double mtoTotalEfectivo, String observacionPA,Double mtoPagoPEN) {
+
+        Comprobante comprobante = new Comprobante(tipoDocumento,serieDocumento,nroDocumento,
+                nroPlaca,observacionCA,pagoID,
+                tarjetaID,tarjetaDS,mtoTotalEfectivo,observacionPA,mtoPagoPEN);
+
+        Call<ApiResponse> call = mAPIService.ActualizarDatos(comprobante);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                btnGrabaImprimir.setEnabled(true);
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Guardado correctamente COMPROBANTE" , Toast.LENGTH_SHORT).show();
+
+                    Reimpresion(GlobalInfo.getTipoPapel10, tipoDocumento, serieDocumento, nroDocumento);
+
+
+                } else {
+                    Toast.makeText(getContext(), "Error al guardar: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                btnGrabaImprimir.setEnabled(true);
+                Toast.makeText(getContext(), "Error de conexión COMPROBANTE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void ActualizarDatosCredito(String tipoDocumento, String serieDocumento, String nroDocumento, String nroPlaca,String observacionCA) {
+
+        ActualizarCredito actualizarCredito = new ActualizarCredito(tipoDocumento,serieDocumento,nroDocumento,nroPlaca,observacionCA);
+
+        Call<ApiResponse> call = mAPIService.ActualizarCreditos(actualizarCredito);
+        call.enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                btnGrabaCredito.setEnabled(true);
+                if (response.isSuccessful()) {
+                    Toast.makeText(getContext(), "Guardado correctamente COMPROBANTE" , Toast.LENGTH_SHORT).show();
+
+                    Reimpresion(GlobalInfo.getTipoPapel10, tipoDocumento, serieDocumento, nroDocumento);
+
+                } else {
+                    Toast.makeText(getContext(), "Error al guardar: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                btnGrabaCredito.setEnabled(true);
+                Toast.makeText(getContext(), "Error de conexión COMPROBANTE", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    /**
      * @APISERVICE:ConsultarDatos
      */
-    private void ConsultarDatos(String tipodoc, String seriedoc, String nrodoc) {
+    private void ConsultarDatos(String tipodoc, String seriedoc, String nrodoc, String terminalId) {
 
-        Call<List<Reimpresion>> call = mAPIService.findReimpresion(tipodoc, seriedoc, nrodoc);
+        Call<List<Reimpresion>> call = mAPIService.findConsultarComprobante(tipodoc, seriedoc, nrodoc,terminalId);
 
         call.enqueue(new Callback<List<Reimpresion>>() {
             @Override
@@ -283,6 +618,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                     Toast.makeText(getContext(), "No se encontró el comprobante", Toast.LENGTH_SHORT).show();
                     btnReimpresion.setVisibility(View.GONE);
                     btnGrabaImprimir.setVisibility(View.GONE);
+                    btnGrabaCredito.setVisibility(View.GONE);
                     textCTotal.setText(" ");
                     textCAnulado.setText(" ");
                     inputNroLado.getText().clear();
@@ -295,6 +631,13 @@ public class ConsultaComprobantesFragment extends Fragment {
                     inputPEfectivo.setText("0");
                     inputOperacion.getText().clear();
                     radioFormaPago.check(radioEfectivo.getId());
+
+                    alertNroPlaca.setError(null);
+                    alertNroPlaca.setErrorEnabled(false);
+                    alertOperacion.setError(null);
+                    alertOperacion.setErrorEnabled(false);
+                    alertPEfectivo.setError(null);
+                    alertPEfectivo.setErrorEnabled(false);
                     return;
                 }
 
@@ -349,19 +692,52 @@ public class ConsultaComprobantesFragment extends Fragment {
 
                 String formaPago    = String.valueOf(r.getPagoID());
 
-                if (formaPago.equals("2")) {
+                if (formaPago.equals("1")) {
+
+                    if (tipodoc.equals("98")) {
+                        radioFormaPago.check(radioEfectivo.getId());
+                        radioCredito.setVisibility(View.GONE);
+                        radioTarjeta.setVisibility(View.GONE);
+                        radioEfectivo.setVisibility(View.VISIBLE);
+                    }else{
+                        radioFormaPago.check(radioEfectivo.getId());
+                        radioCredito.setVisibility(View.GONE);
+                        radioTarjeta.setVisibility(View.VISIBLE);
+                        radioEfectivo.setVisibility(View.VISIBLE);
+                    }
+                } else if (formaPago.equals("2")) {
                     radioFormaPago.check(radioTarjeta.getId());
-                } else if (formaPago.equals("1")) {
-                    radioFormaPago.check(radioEfectivo.getId());
+                    radioCredito.setVisibility(View.GONE);
+                    radioTarjeta.setVisibility(View.VISIBLE);
+                    radioEfectivo.setVisibility(View.VISIBLE);
                 } else if (formaPago.equals("4")){
+                    radioCredito.setVisibility(View.VISIBLE);
+                    radioTarjeta.setVisibility(View.GONE);
+                    radioEfectivo.setVisibility(View.GONE);
                     radioFormaPago.check(radioCredito.getId());
+                }else{
+                    radioCredito.setVisibility(View.GONE);
+                    radioTarjeta.setVisibility(View.GONE);
+                    radioEfectivo.setVisibility(View.GONE);
                 }
 
                 inputOperacion.setText(String.valueOf(r.getTarjetaDS()));
                 inputPEfectivo.setText(String.valueOf(r.getMtoTotalEfectivo()));
 
+                String anuladoComp =  r.getAnulado();
+
                 btnReimpresion.setVisibility(View.VISIBLE);
-                btnGrabaImprimir.setVisibility(View.VISIBLE);
+
+                if(tipodoc.equals("98") || anuladoComp.equals("SI")){
+                    btnGrabaImprimir.setVisibility(View.GONE);
+                    btnGrabaCredito.setVisibility(View.GONE);
+                }else if(tipodoc.equals("99") || formaPago.equals("4")){
+                    btnGrabaCredito.setVisibility(View.VISIBLE);
+                    btnGrabaImprimir.setVisibility(View.GONE);
+                }else{
+                    btnGrabaCredito.setVisibility(View.GONE);
+                    btnGrabaImprimir.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override
@@ -374,7 +750,7 @@ public class ConsultaComprobantesFragment extends Fragment {
     /**
      * @APISERVICE:Reimpresiones
      */
-    private void Reimpresiones(String tipopapel,String tipodoc, String seriedoc, String nrodoc) {
+    private void Reimpresion(String tipopapel,String tipodoc, String seriedoc, String nrodoc) {
 
         Call<List<Reimpresion>> call = mAPIService.findReimpresion(tipodoc, seriedoc, nrodoc);
 
@@ -389,11 +765,6 @@ public class ConsultaComprobantesFragment extends Fragment {
                         return;
                     }
                     List<Reimpresion> reimpresionList = response.body();
-
-                    if (reimpresionList == null || reimpresionList.isEmpty()) {
-                        Toast.makeText(getContext(), "No se encontró el comprobante", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
 
                     Map<String, List<Reimpresion>> mapComprobantes = new HashMap<>();
 
@@ -431,6 +802,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                     String nroTarjetaPuntos  = "";
                     Double puntosGanados     = 0.00;
                     Double puntosDisponibles = 0.00;
+                    String referencia        = "";
 
 
                     String Cajero1           = GlobalInfo.getuserName10;
@@ -472,6 +844,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                         nroTarjetaPuntos  = String.valueOf(reimpresion.getNroTarjetaPuntos());
                         puntosGanados     = Double.valueOf(reimpresion.getPuntosGanados());
                         puntosDisponibles = Double.valueOf(reimpresion.getPuntosDisponibles());
+                        referencia        = String.valueOf(reimpresion.getReferencia());
 
                         NroComprobante    = serieDocumento1 + "-" + nroDocumento1;
 
@@ -627,18 +1000,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                     String finalNroTarjetaPuntos = nroTarjetaPuntos;
                     Double finalPuntosGanados = puntosGanados;
                     Double finalPuntosDisponibles = puntosDisponibles;
-                    String finalAnulado  = anulado1;
-
-
-                    textCTotal.setText(String.valueOf(finalMtoTotalEfectivo));
-                    textCAnulado.setText(finalAnulado);
-                    inputNroLado.setText(finalNroLado);
-                    inputNroPlaca.setText(finalNroPlaca);
-                    inputIdCliente.setText(finalClienteID);
-                    inputNroTPuntos.setText("");
-                    inputRazSocial.setText(finalClienteRZ);
-                    inputDireccion.setText(finalClienteDR);
-                    inputObservacion.setText(finalObservacion);
+                    String finalReferencia = referencia;
 
                     for (Map.Entry<String, List<Reimpresion>> entry : mapComprobantes.entrySet()) {
 
@@ -1045,7 +1407,7 @@ public class ConsultaComprobantesFragment extends Fragment {
 
                                                 case 4:
 
-                                                    printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                    printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                     printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                     break;
 
@@ -1191,7 +1553,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                                     break;
 
                                                 case 4:
-                                                    printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                    printama.printTextlnBold("CONDICION DE PAGO: "+ finalReferencia, Printama.LEFT);
                                                     printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                     break;
                                             }
@@ -1595,7 +1957,7 @@ public class ConsultaComprobantesFragment extends Fragment {
 
                                                 case 4:
 
-                                                    printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                    printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                     printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                     break;
 
@@ -1763,7 +2125,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                                     break;
 
                                                 case 4:
-                                                    printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                    printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                     printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                     break;
                                             }
@@ -2186,7 +2548,7 @@ public class ConsultaComprobantesFragment extends Fragment {
 
                                                 case 4:
 
-                                                    printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                    printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                     printama.printTextln("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                     break;
 
@@ -2355,7 +2717,7 @@ public class ConsultaComprobantesFragment extends Fragment {
                                                     break;
 
                                                 case 4:
-                                                    printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                    printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                     printama.printTextln("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                     break;
                                             }
@@ -2453,20 +2815,7 @@ public class ConsultaComprobantesFragment extends Fragment {
 
                     }
 
-                    btnReimpresion.setVisibility(View.GONE);
-                    btnGrabaImprimir.setVisibility(View.GONE);
-                    textCTotal.setText(" ");
-                    textCAnulado.setText(" ");
-                    inputNroLado.getText().clear();
-                    inputNroPlaca.getText().clear();
-                    inputIdCliente.getText().clear();
-                    inputNroTPuntos.getText().clear();
-                    inputRazSocial.getText().clear();
-                    inputDireccion.getText().clear();
-                    inputObservacion.getText().clear();
-                    inputPEfectivo.setText("0");
-                    inputOperacion.getText().clear();
-                    radioFormaPago.check(radioEfectivo.getId());
+
                 }catch (Exception ex){
                     Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                 }

@@ -160,18 +160,33 @@
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
             <Button
-                android:id="@+id/buscarRUCFactura"
-                android:layout_width="120sp"
+                android:id="@+id/buscarRUCConsultaFac"
+                android:layout_width="80sp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10sp"
-                android:text="@string/btn_sunat"
-                android:textSize="10sp"
+                android:layout_marginStart="5sp"
+                android:text="BUSCAR  SUNAT"
+                android:textSize="8sp"
+                app:cornerRadius="10sp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/colorCest"
+                android:fontFamily="@font/nunito_extrabold"
+                android:layout_marginTop="-8sp"
+                android:layout_marginLeft="5sp" />
+
+            <Button
+                android:id="@+id/buscarRUCFactura"
+                android:layout_width="85sp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5sp"
+                android:text="BUSCAR APPSVEN"
+                android:textSize="8sp"
                 app:cornerRadius="10sp"
                 android:textColor="@color/white"
                 android:backgroundTint="@color/colorSecondary"
                 android:fontFamily="@font/nunito_extrabold"
                 android:layout_marginTop="-8sp"
-                android:layout_marginLeft="10sp" />
+                android:layout_marginLeft="5sp" />
+
         </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -301,18 +316,6 @@
                 android:visibility="gone"
                 android:text="IGV" />
     </LinearLayout>
-        <TextView
-            android:id="@+id/textDiasCredito"
-            android:layout_width="120sp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10sp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:fontFamily="@font/nunito_black"
-            android:text="0"
-            android:visibility="gone"
-            android:textColor="@color/red_200"
-            android:textSize="16sp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -458,6 +461,29 @@
                 android:textSize="12sp"
                 android:inputType="number"
                 android:maxLength="8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/alertDiasCredito"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ingresar Días de Credito"
+            app:boxBackgroundMode="outline"
+            android:visibility="gone"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxCornerRadiusBottomEnd="15dp"
+            app:boxCornerRadiusTopEnd="15dp"
+            app:endIconMode="clear_text"
+            android:layout_weight="1">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/inputDiasCredito"
+                android:fontFamily="@font/nunito_semibold"
+                android:textSize="12sp"
+                android:inputType="number"
+                android:text="1"
+                android:maxLength="2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>

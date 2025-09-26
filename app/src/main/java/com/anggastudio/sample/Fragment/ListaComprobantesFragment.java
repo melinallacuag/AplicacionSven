@@ -529,6 +529,7 @@ public class ListaComprobantesFragment extends Fragment  {
                     String nroTarjetaPuntos  = "";
                     Double puntosGanados     = 0.00;
                     Double puntosDisponibles = 0.00;
+                    String referencia        = "";
 
 
                     String Cajero1           = GlobalInfo.getuserName10;
@@ -570,6 +571,7 @@ public class ListaComprobantesFragment extends Fragment  {
                         nroTarjetaPuntos  = String.valueOf(reimpresion.getNroTarjetaPuntos());
                         puntosGanados     = Double.valueOf(reimpresion.getPuntosGanados());
                         puntosDisponibles = Double.valueOf(reimpresion.getPuntosDisponibles());
+                        referencia        = String.valueOf(reimpresion.getReferencia());
 
                         NroComprobante    = serieDocumento1 + "-" + nroDocumento1;
 
@@ -725,6 +727,7 @@ public class ListaComprobantesFragment extends Fragment  {
                         String finalNroTarjetaPuntos = nroTarjetaPuntos;
                         Double finalPuntosGanados = puntosGanados;
                         Double finalPuntosDisponibles = puntosDisponibles;
+                        String finalReferencia = referencia;
 
                         for (Map.Entry<String, List<Reimpresion>> entry : mapComprobantes.entrySet()) {
 
@@ -1131,7 +1134,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                     case 4:
 
-                                                        printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                        printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                         printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                         break;
 
@@ -1277,7 +1280,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                                         break;
 
                                                     case 4:
-                                                        printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                        printama.printTextlnBold("CONDICION DE PAGO: "+ finalReferencia, Printama.LEFT);
                                                         printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                         break;
                                                 }
@@ -1681,7 +1684,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                     case 4:
 
-                                                        printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                        printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                         printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                         break;
 
@@ -1849,7 +1852,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                                         break;
 
                                                     case 4:
-                                                        printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                        printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                         printama.printTextlnBold("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                         break;
                                                 }
@@ -2272,7 +2275,7 @@ public class ListaComprobantesFragment extends Fragment  {
 
                                                     case 4:
 
-                                                        printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                        printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                         printama.printTextln("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                         break;
 
@@ -2441,7 +2444,7 @@ public class ListaComprobantesFragment extends Fragment  {
                                                         break;
 
                                                     case 4:
-                                                        printama.printTextlnBold("CONDICION DE PAGO: 30 DIAS DE", Printama.LEFT);
+                                                        printama.printTextlnBold("CONDICION DE PAGO: " + finalReferencia, Printama.LEFT);
                                                         printama.printTextln("CREDITO: S/ " + MtoTotalFF, Printama.RIGHT);
                                                         break;
                                                 }

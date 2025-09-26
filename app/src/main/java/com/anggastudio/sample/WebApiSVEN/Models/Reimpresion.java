@@ -36,6 +36,7 @@ public class Reimpresion {
     private String nroTarjetaPuntos;
     private Double puntosGanados;
     private Double puntosDisponibles;
+    private String referencia;
 
     public String getFechaDocumento() {
         return fechaDocumento;
@@ -307,5 +308,13 @@ public class Reimpresion {
 
     public void setPuntosDisponibles(Double puntosDisponibles) {
         this.puntosDisponibles = puntosDisponibles;
+    }
+
+    public String getReferencia() {
+        return referencia;
+    }
+
+    public void setReferencia(String referencia) {
+        this.referencia = referencia;
     }
 }

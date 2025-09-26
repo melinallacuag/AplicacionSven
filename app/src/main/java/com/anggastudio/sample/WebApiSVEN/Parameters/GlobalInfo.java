@@ -217,6 +217,7 @@ public class GlobalInfo {
     public static String  getclienteRUC10;
     public static String  getclienteRZ10;
     public static String  getclienteDR10;
+    public static String  getclienteCredito10;
 
     /**
      * @OPTRAN
@@ -298,6 +299,11 @@ public class GlobalInfo {
      */
     public static Integer getegresoID10;
     public static String getegresoAnulado10;
+
+    /**
+     * Caja
+     */
+    public static String getTotalCajaSoles10;
     /**
     *
      */
@@ -306,7 +312,7 @@ public class GlobalInfo {
     /**
      * @APIService
      */
-    public static final String BASE_URLs = "http://192.168.18.27:5001/";
+    public static final String BASE_URLs = "http://192.168.68.108:5001/";
     //public static final String BASE_URL = "http://4-fact.com:8081/";
     //public static final String BASE_URL = "http://192.168.1.14:8081/";
     //public static final String BASE_URL = "http://192.168.18.20:8081/";
@@ -315,7 +321,7 @@ public class GlobalInfo {
     //public static final String BASE_URL = "http://192.168.0.245:8081/";
     //public static final String BASE_URL = "http://192.168.1.245:8081/";
   //  public static final String BASE_URL = "http://192.168.18.31:8082/";
-    public static final String BASE_URL = "http://192.168.68.106:8082/";
+    public static final String BASE_URL = "http://192.168.68.107:8082/";
    // public static final String BASE_URL = "https://pos.apisven.com/";
 
     //public static final String BASE_URL = "http://192.168.1.245:8081/";
